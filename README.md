@@ -25,15 +25,19 @@ The **GNC Toolkit** is designed to support mission analysis, simulation, and fli
 - **MEKF**: Multiplicative Extended Kalman Filter for attitude estimation using quaternions.
 - **UKF**: Unscented Kalman Filter for handling high degrees of non-linearity.
 
+### Numerical Integrators
+- **RK4**: Fixed step Runge-Kutta 4.
+- **RK45**: Adaptive step Runge-Kutta-Fehlberg.
+- **RK853**: High-order adaptive Dormand-Prince.
+
+### Attitude Determination
+- **TRIAD**: Deterministic method using two vectors.
+- **QUEST**: Deterministic method using multiple vectors.
+
 ### C++ Library
 - High-performance implementations of estimation filters (KF, EKF, MEKF) utilizing the Eigen library.
 
 ## TODO
-
-### Numerical Integrators
-- [ ] Runge-Kutta 4 (RK4, fixed step)
-- [ ] Runge-Kutta-Fehlberg (RK45, variable step)
-- [ ] Dormand-Prince (RK853, variable step)
 
 ### Propagators
 - [ ] Cowell method (Integrate eqs of motion with disturbances)
@@ -41,10 +45,6 @@ The **GNC Toolkit** is designed to support mission analysis, simulation, and fli
 
 ### Attitude Dynamics
 - [ ] Rigid body euler equations
-
-### Deterministic Attitude Determination
-- [ ] TRIAD algorithm (using 2 vector e.g. sun and mag)
-- [ ] QUEST algorithm (using multiple vectors)
 
 ### Classical Control Algorithms
 - [ ] PID control (add anti-windup)

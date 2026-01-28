@@ -1,5 +1,5 @@
 import numpy as np
-from src.utils.quat_utils import quat_normalize, quat_conj
+from gnc_toolkit.utils.quat_utils import quat_normalize, quat_conj
 
 def quest(body_vectors, ref_vectors, weights=None):
     """

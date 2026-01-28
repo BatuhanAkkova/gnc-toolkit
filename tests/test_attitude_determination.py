@@ -4,9 +4,9 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from scipy.spatial.transform import Rotation as R
-from src.attitude_determination.triad import triad
-from src.attitude_determination.quest import quest
-from src.utils.quat_utils import quat_to_rmat, quat_mult, quat_inv
+from gnc_toolkit.attitude_determination.triad import triad
+from gnc_toolkit.attitude_determination.quest import quest
+from gnc_toolkit.utils.quat_utils import quat_to_rmat, quat_mult, quat_inv
 
 def test_triad_identity():
     # Case 1: Identity rotation

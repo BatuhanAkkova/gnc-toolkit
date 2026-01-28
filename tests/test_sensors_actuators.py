@@ -1,12 +1,12 @@
 import pytest
 import numpy as np
-from src.sensors.star_tracker import StarTracker
-from src.sensors.sun_sensor import SunSensor
-from src.sensors.magnetometer import Magnetometer
-from src.sensors.gyroscope import Gyroscope
-from src.actuators.reaction_wheel import ReactionWheel
-from src.actuators.magnetorquer import Magnetorquer
-from src.actuators.thruster import Thruster, ChemicalThruster, ElectricThruster
+from gnc_toolkit.sensors.star_tracker import StarTracker
+from gnc_toolkit.sensors.sun_sensor import SunSensor
+from gnc_toolkit.sensors.magnetometer import Magnetometer
+from gnc_toolkit.sensors.gyroscope import Gyroscope
+from gnc_toolkit.actuators.reaction_wheel import ReactionWheel
+from gnc_toolkit.actuators.magnetorquer import Magnetorquer
+from gnc_toolkit.actuators.thruster import Thruster, ChemicalThruster, ElectricThruster
 
 class TestSensors:
     def test_star_tracker(self):

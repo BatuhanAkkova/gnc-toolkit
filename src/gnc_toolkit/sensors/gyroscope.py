@@ -1,5 +1,5 @@
 import numpy as np
-from src.sensors.sensor import Sensor
+from gnc_toolkit.sensors.sensor import Sensor
 
 class Gyroscope(Sensor):
     """

@@ -1,5 +1,5 @@
 import numpy as np
-from src.actuators.actuator import Actuator
+from gnc_toolkit.actuators.actuator import Actuator
 
 class Thruster(Actuator):
     """

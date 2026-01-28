@@ -2,6 +2,47 @@
 
 A comprehensive Guidance, Navigation, and Control (GNC) toolkit for satellite simulation and estimation. This project provides high-fidelity environment models, disturbance calculations, and advanced estimation algorithms in both Python and C++.
 
+## Getting Started
+
+### Installation
+
+To use this toolkit in your own projects, you can install it in editable mode:
+
+```bash
+git clone https://github.com/BatuhanAkkova/gnc_toolkit.git
+cd gnc_toolkit
+pip install -e .
+```
+
+### Dependencies
+
+The following packages are required:
+- **NumPy**: Linear algebra and array operations.
+- **SciPy**: Numerical integration and optimization.
+- **PyMSIS**: NRLMSISE-00 atmospheric model.
+- **PPIGRF**: IGRF-13 magnetic field model.
+
+### Importing Guide
+
+The package is structured for easy access to its submodules. Here are some common examples:
+
+```python
+# Import estimation filters
+from gnc_toolkit.kalman_filters.mekf import MEKF
+from gnc_toolkit.kalman_filters.ukf import UKF_Attitude
+
+# Import environment models
+from gnc_toolkit.environment.density import NRLMSISE00
+from gnc_toolkit.environment.mag_field import igrf_field
+
+# Import disturbances
+from gnc_toolkit.disturbances.gravity import HarmonicsGravity
+from gnc_toolkit.disturbances.drag import LumpedDrag
+
+# Import utilities
+from gnc_toolkit.utils.quat_utils import quat_rot, quat_mult
+```
+
 ## Project Overview
 
 The **GNC Toolkit** is designed to support mission analysis, simulation, and flight software development for small satellites, with a particular emphasis on Very Low Earth Orbit (VLEO) environments. It includes modular components for:

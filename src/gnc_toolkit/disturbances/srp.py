@@ -1,5 +1,5 @@
 import numpy as np
-from src.environment.solar import Sun
+from gnc_toolkit.environment.solar import Sun
 
 class Canonball:
     """SRP canonball model."""

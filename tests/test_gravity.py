@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from gravity import point_mass_grav, j2_grav
+from gnc_toolkit.gravity import point_mass_grav, j2_grav
 
 def test_point_mass_grav():
     r = np.array([7000000.0, 0, 0]) # 7000 km

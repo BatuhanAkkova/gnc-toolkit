@@ -1,16 +1,16 @@
 import pytest
 import numpy as np
-from src.utils.quat_utils import (
+from gnc_toolkit.utils.quat_utils import (
     quat_normalize, quat_conj, quat_norm, quat_inv,
     quat_mult, quat_rot, quat_to_rmat, axis_angle_to_quat
 )
-from src.utils.time_utils import (
+from gnc_toolkit.utils.time_utils import (
     calc_jd, jd_to_datetime, day_to_mdtime, calc_gmst,
     calc_last, calc_lst, calc_doy, is_leap_year, convert_time
 )
-from src.utils.state_to_elements import eci2kepler, kepler2eci
-from src.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, elements2perifocal_dcm
-from src.utils.state_conversion import (
+from gnc_toolkit.utils.state_to_elements import eci2kepler, kepler2eci
+from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, elements2perifocal_dcm
+from gnc_toolkit.utils.state_conversion import (
     quat_to_dcm, quat_to_euler, dcm_to_quat, dcm_to_euler,
     euler_to_quat, euler_to_dcm, rot_x, rot_y, rot_z
 )

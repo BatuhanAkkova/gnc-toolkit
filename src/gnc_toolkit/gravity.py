@@ -1,5 +1,5 @@
 import numpy as np
-from src.utils.state_to_elements import eci2kepler, kepler2eci
+from gnc_toolkit.utils.state_to_elements import eci2kepler, kepler2eci
 
 def point_mass_grav(r):
     """Calculates the gravitational acceleration as point mass."""

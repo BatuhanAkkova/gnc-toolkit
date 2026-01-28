@@ -1,7 +1,7 @@
 import numpy as np
-from src.utils.frame_conversion import eci2geodetic, eci2llh
-from src.utils.time_utils import calc_jd
-from src.environment.solar import Sun
+from gnc_toolkit.utils.frame_conversion import eci2geodetic, eci2llh
+from gnc_toolkit.utils.time_utils import calc_jd
+from gnc_toolkit.environment.solar import Sun
 import pymsis
 
 class Exponential:

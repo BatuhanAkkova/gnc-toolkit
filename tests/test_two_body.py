@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from two_body import two_body_kepler
+from gnc_toolkit.two_body import two_body_kepler
 
 def test_two_body_circular_period():
     # Circular orbit propagation by one period should return to same state

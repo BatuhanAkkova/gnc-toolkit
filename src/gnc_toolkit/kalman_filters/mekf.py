@@ -1,5 +1,5 @@
 import numpy as np
-from src.utils.quat_utils import quat_mult, quat_normalize, quat_conj, quat_rot, skew_symmetric
+from gnc_toolkit.utils.quat_utils import quat_mult, quat_normalize, quat_conj, quat_rot, skew_symmetric
 
 class MEKF:
     """

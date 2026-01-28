@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Tuple
 from .time_utils import calc_gmst
-from src.utils.state_conversion import rot_z
+from gnc_toolkit.utils.state_conversion import rot_z
 
 def eci2ecef(reci, veci, jdut1, dut1=0) -> tuple[np.ndarray, np.ndarray]:
     """Converts ECI to ECEF."""

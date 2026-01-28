@@ -1,10 +1,10 @@
 import pytest
 import numpy as np
 import os
-from src.disturbances.gravity import TwoBodyGravity, J2Gravity, HarmonicsGravity
-from src.disturbances.drag import LumpedDrag
-from src.disturbances.srp import Canonball
-from src.environment.density import Exponential
+from gnc_toolkit.disturbances.gravity import TwoBodyGravity, J2Gravity, HarmonicsGravity
+from gnc_toolkit.disturbances.drag import LumpedDrag
+from gnc_toolkit.disturbances.srp import Canonball
+from gnc_toolkit.environment.density import Exponential
 
 # Constants
 MU = 398600.4418e9 # m^3/s^2
@@ -47,14 +47,10 @@ def test_j2_gravity_polar():
     assert not np.allclose(acc, two_body)
 
 def test_harmonics_gravity_loading():
-    # Test if it can load the file
-    file_path = os.path.join(os.path.dirname(__file__), '../egm2008.csv')
-    if os.path.exists(file_path):
-        model = HarmonicsGravity(mu=MU, n_max=2, m_max=2, file_path=file_path)
-        assert model.C is not None
-        assert model.S is not None
-    else:
-        pytest.fail("egm2008.csv not found for testing")
+    # Test if it can load the file using default logic
+    model = HarmonicsGravity(mu=MU, n_max=2, m_max=2)
+    # Check if coefficients were loaded (sum of abs values should be non-zero)
+    assert np.any(model.C != 0) or np.any(model.S != 0)
 
 def test_drag_opposes_velocity(ephemeris):
     r_eci, v_eci, jd = ephemeris

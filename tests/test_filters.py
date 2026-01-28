@@ -1,11 +1,11 @@
 import numpy as np
 import pytest
-from src.kalman_filters.ekf import EKF
-from src.kalman_filters.kf import KF
-from src.kalman_filters.mekf import MEKF
-from src.kalman_filters.ukf import UKF, UKF_Attitude
-from src.utils.quat_utils import quat_mult, quat_normalize, axis_angle_to_quat, quat_rot, quat_conj
-from src.sensors.sun_sensor import SunSensor
+from gnc_toolkit.kalman_filters.ekf import EKF
+from gnc_toolkit.kalman_filters.kf import KF
+from gnc_toolkit.kalman_filters.mekf import MEKF
+from gnc_toolkit.kalman_filters.ukf import UKF, UKF_Attitude
+from gnc_toolkit.utils.quat_utils import quat_mult, quat_normalize, axis_angle_to_quat, quat_rot, quat_conj
+from gnc_toolkit.sensors.sun_sensor import SunSensor
 
 def test_kf_initialization():
     dim_x = 2

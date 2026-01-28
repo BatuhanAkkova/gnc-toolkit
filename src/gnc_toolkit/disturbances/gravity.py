@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import csv
-from src.utils.frame_conversion import eci2ecef, ecef2eci
+from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci
 
 class TwoBodyGravity:
     """

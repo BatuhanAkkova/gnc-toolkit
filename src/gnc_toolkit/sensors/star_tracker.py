@@ -1,6 +1,6 @@
 import numpy as np
-from src.sensors.sensor import Sensor
-from src.utils.quat_utils import quat_mult
+from gnc_toolkit.sensors.sensor import Sensor
+from gnc_toolkit.utils.quat_utils import quat_mult
 
 class StarTracker(Sensor):
     """

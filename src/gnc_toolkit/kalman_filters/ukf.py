@@ -151,7 +151,7 @@ class UKF_Attitude(UKF):
     Covariance/Error: 6 dim (tangent space)
     """
     def __init__(self, q_init=None, bias_init=None, **kwargs):
-        from src.utils.quat_utils import quat_mult, quat_conj, axis_angle_to_quat, quat_normalize
+        from gnc_toolkit.utils.quat_utils import quat_mult, quat_conj, axis_angle_to_quat, quat_normalize
         
         self._quat_mult = quat_mult
         self._quat_conj = quat_conj

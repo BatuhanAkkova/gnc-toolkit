@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 import datetime
-from src.environment.density import Exponential, HarrisPriester, NRLMSISE00
-from src.environment.mag_field import tilted_dipole_field, igrf_field
+from gnc_toolkit.environment.density import Exponential, HarrisPriester, NRLMSISE00
+from gnc_toolkit.environment.mag_field import tilted_dipole_field, igrf_field
 
 def test_exponential_model():
     model = Exponential()

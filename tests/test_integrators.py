@@ -3,7 +3,7 @@ import numpy as np
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.integrators import RK4, RK45, RK853
+from gnc_toolkit.integrators import RK4, RK45, RK853
 
 @pytest.mark.parametrize("IntegratorClass", [RK4, RK45, RK853])
 def test_linear_ode(IntegratorClass):

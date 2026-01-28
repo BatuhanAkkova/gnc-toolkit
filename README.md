@@ -99,12 +99,11 @@ The **GNC Toolkit** is designed to support mission analysis, simulation, and fli
 - **Orbital Maneuvers**: Hohmann transfer, bi-elliptic transfer, phasing manouvers, plane change, combined plane change.
 - **Rendezvous**: Lambert problem, CW equations, CW targeting.
 
-## TODO
-
 ### Classical Control Algorithms
-- [ ] PID control (add anti-windup)
-- [ ] B-dot controller (magnetic detumbling)
+- **PID**: Proportional-Integral-Derivative controller.
+- **B-dot**: Magnetic detumbling controller.
 
+## TODO
 ### Optimal Control Algorithms
 - [ ] LQR controller (infinite horizon, via solving ARE)
 - [ ] LQE controller (duality of LQR for estimation)

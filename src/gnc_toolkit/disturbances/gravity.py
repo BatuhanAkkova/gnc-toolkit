@@ -2,6 +2,7 @@ import numpy as np
 import os
 import csv
 from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci
+from gnc_toolkit.utils.quat_utils import quat_conj, quat_rot
 
 class TwoBodyGravity:
     """
@@ -215,3 +216,37 @@ class HarmonicsGravity:
         # Rotate to ECI
         acc_eci, _ = ecef2eci(acc_ecef, np.zeros(3), jd)
         return acc_eci
+
+class GradientTorque:
+    """
+    Gravity Gradient Torque Calculation.
+    """
+    def __init__(self, mu=398600.4418e9):
+        self.mu = mu
+
+    def gravity_gradient_torque(self, J, r_eci, q_body2eci):
+        """
+        Calculates Gravity Gradient torque in Body Frame.
+        T_gg = 3 * mu / R^5 * (r_body x J * r_body)
+        (Note: r_body = -u_nadir_body * R. Formula using unit vector: 3*mu/R^3 * (u x Ju))
+        """
+        r_mag = np.linalg.norm(r_eci)
+        if r_mag == 0: return np.zeros(3)
+    
+        # Nadir vector (points to Earth Center)
+        nadir_eci = -r_eci / r_mag
+    
+        # Rotate Nadir to Body Frame
+        # q rotates Body to ECI. So we need inverse (ECI to Body) = q_conj
+        q_eci2body = quat_conj(q_body2eci)
+        nadir_body = quat_rot(q_eci2body, nadir_eci)
+    
+        # J * nadir_body
+        j_nadir = J @ nadir_body
+    
+        # Torque
+        # T = 3 * mu / R^3 * (nadir x J*nadir)
+        factor = 3 * self.mu / (r_mag**3)
+        t_gg = factor * np.cross(nadir_body, j_nadir)
+    
+        return t_gg

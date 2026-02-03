@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 from gnc_toolkit.classical_control.pid import PID
 from gnc_toolkit.classical_control.bdot import BDot
+from gnc_toolkit.classical_control.momentum_dumping import CrossProductLaw
 
 class TestPID:
     def test_proportional(self):
@@ -72,4 +73,23 @@ class TestBDot:
     def test_zero_dt(self):
         bdot = BDot(gain=1.0)
         moment = bdot.calculate_control_discrete(np.zeros(3), np.zeros(3), 0.0)
+        np.testing.assert_array_equal(moment, np.zeros(3))
+
+class TestCrossProductLaw:
+    def test_control_law(self):
+        gain = 0.5
+        ctrl = CrossProductLaw(gain=gain)
+        
+        # h = [1, 0, 0], B = [0, 0, 1e-4]
+        h = np.array([1.0, 0.0, 0.0])
+        b = np.array([0.0, 0.0, 1e-4])
+        
+        moment = ctrl.calculate_control(h, b)
+        expected = np.array([0.0, -5000.0, 0.0])
+        
+        np.testing.assert_array_almost_equal(moment, expected)
+
+    def test_zero_field(self):
+        ctrl = CrossProductLaw(gain=1.0)
+        moment = ctrl.calculate_control([1,1,1], [0,0,0])
         np.testing.assert_array_equal(moment, np.zeros(3))

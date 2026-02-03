@@ -185,13 +185,6 @@ class TestLQR(unittest.TestCase):
         u = fl_controller.compute_control(x, v)
         
         self.assertEqual(u, -6.0)
-        
-        # Multi-variable check
-        # dot_x1 = x2
-        # dot_x2 = x1^2 + u
-        # f = [x2, x1^2], g = [0; 1] ? 
-        # FL usually applies to inputs appearing in all eqs or chained form.
-        # Simple scalar test is sufficient for the math wrapper.
 
 if __name__ == '__main__':
     unittest.main()

@@ -80,13 +80,7 @@ def bi_elliptic_transfer(r1: float, r2: float, rb: float, mu: float = 398600.441
 def phasing_maneuver(a: float, T_phase: float, mu: float = 398600.4418) -> tuple[float, float]:
     """
     Calculates the Delta-V required for a phasing maneuver to correct a timing error
-    or shift position in the orbit. This assumes a single impulse to enter a 
-    phasing orbit and another to return (magnitude is typically 2 * dv_burn 
-    if returning to original orbit, but here we return the burn required to change 
-    period).
-    
-    Usually phasing is done by changing the period for one orbit (or k orbits).
-    T_target = T_original + T_phase
+    or shift position in the orbit.
     
     Args:
         a (float): Semi-major axis of the current circular orbit (km).

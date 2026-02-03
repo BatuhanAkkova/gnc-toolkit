@@ -113,7 +113,6 @@ class HarmonicsGravity:
         
         # Normalized Associated Legendre Polynomials Recursive Calculation
         # P[n][m]
-        # Implementation based on Montenbruck & Gill or Vallado
         
         P = np.zeros((self.n_max + 2, self.m_max + 2))
         

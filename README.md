@@ -46,6 +46,27 @@ from gnc_toolkit.disturbances.drag import LumpedDrag
 from gnc_toolkit.utils.quat_utils import quat_rot, quat_mult
 ```
 
+## 🔭 Examples
+
+The [examples/](examples/) directory contains demonstration scripts showcasing high-fidelity simulations. Key highlights:
+
+### Control Systems & Stability
+| Analysis | Visualization |
+| :--- | :--- |
+| **CubeSat Detumbling**<br>B-Dot magnetic control for kinetic energy dissipation using noisy magnetometer data. | ![Detumbling](assets/detumbling.png) |
+| **Momentum Dumping**<br>Reaction wheel desaturation using magnetorquers to manage accumulated angular momentum. | ![Momentum Dumping](assets/dumping.png) |
+
+### State Estimation & Navigation
+| Method | Visualization |
+| :--- | :--- |
+| **MEKF Attitude Estimation**<br>High-fidelity orientation tracking fusing star tracker and gyroscope data using Multiplicative Extended Kalman Filter. | ![MEKF](assets/attitude_est.png) |
+
+### Mission Operations & Guidance
+| Tool | Visualization |
+| :--- | :--- |
+| **Autonomous Rendezvous**<br>Precise multi-burn approach in GEO using Clohessy-Wiltshire relative targeting. | ![Rendezvous](assets/rendezvous.png) |
+| **VLEO Orbit Maintenance**<br>Maintaining altitude in high-drag environments using electric propulsion and hysteresis logic. | ![VLEO](assets/vleo_maintenance.png) |
+
 ## Project Overview
 
 The **GNC Toolkit** is designed to support the full lifecycle of small satellite missions, with a particular focus on Very Low Earth Orbit (VLEO) environments and complex attitude control scenarios.

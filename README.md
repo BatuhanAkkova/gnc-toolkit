@@ -1,5 +1,8 @@
 # GNC Toolkit
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+
 A comprehensive Guidance, Navigation, and Control (GNC) toolkit for spacecraft simulation, mission analysis, and state estimation. Built with Python, this toolkit provides high-fidelity environment models, disturbance calculations, and advanced control/estimation algorithms.
 
 ## Getting Started
@@ -75,6 +78,10 @@ The **GNC Toolkit** is designed to support the full lifecycle of small satellite
 - **Optimal**: LQR (Algebraic Riccati Equation solver) and LQE.
 - **Robust/Modern**: Sliding Mode Control and Model Predictive Control (MPC).
 - **Actuators**: Reaction Wheels (momentum management) and Thrusters (Chemical/Electric).
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
 
 ## Author
 

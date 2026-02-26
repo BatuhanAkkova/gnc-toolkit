@@ -30,22 +30,19 @@ def test_harris_priester_model():
     assert rho_space < rho
     assert rho_space >= 0.0
 
-def test_nrlmsise_model():
-    try:
-        import pymsis
-    except ImportError:
-        pytest.skip("pymsis not installed")
-
+def test_nrlmsise_model(mocker):
+    # Mock pymsis.calculate
+    mock_calc = mocker.patch("pymsis.calculate")
+    mock_calc.return_value = np.array([1.5e-12]) # Mock density
+    
     model = NRLMSISE00()
     r_eci = np.array([7000e3, 0.0, 0.0]) 
     date = datetime.datetime(2024, 1, 1, 12, 0, 0)
     
-    try:
-        rho = model.get_density(r_eci, date)
-        assert isinstance(rho, float)
-        assert rho >= 0.0
-    except Exception as e:
-        pytest.skip(f"NRLMSISE failed to run (likely missing data): {e}")
+    rho = model.get_density(r_eci, date)
+    assert isinstance(rho, float)
+    assert rho == 1.5e-12
+    mock_calc.assert_called_once()
 
 def test_tilted_dipole_field():
     # Test at some random position
@@ -61,16 +58,17 @@ def test_tilted_dipole_field():
     assert np.linalg.norm(B) < 1e-4
     assert np.linalg.norm(B) > 1e-6
 
-def test_igrf_field_import():    
-    try:
-        import ppigrf
-    except (ImportError, FileNotFoundError, OSError):
-        pytest.skip("ppigrf not installed or broken")
-        
+def test_igrf_field_mock(mocker):    
+    # Mock ppigrf.igrf
+    mock_igrf = mocker.patch("ppigrf.igrf")
+    mock_igrf.return_value = [1e-5, 2e-5, 3e-5]
+    
     lat = 0.0
     lon = 0.0
     alt = 600.0 # km
     date = datetime.datetime(2024, 1, 1)
     
-    res = igrf_field(lon, lat, alt, date)
+    res = igrf_field(lat, lon, alt, date)
     assert len(res) == 3
+    assert np.allclose(res, [1e-5, 2e-5, 3e-5])
+    mock_igrf.assert_called_once()

@@ -34,7 +34,7 @@ class Sun:
         e_rad = np.radians(e)
         
         # Distance is approx 1 AU
-        au = 149597870.7 # km
+        au = 149597870700.0 # meters (approx)
         
         x = np.cos(L_rad)
         y = np.cos(e_rad) * np.sin(L_rad)

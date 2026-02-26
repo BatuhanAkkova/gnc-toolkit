@@ -5,3 +5,18 @@ __pycache__/
 
 # Unit test / coverage reports
 .pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Build / Distribution
+build/
+dist/
+*.egg-info/
+
+# Documentation
+docs/_build/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/

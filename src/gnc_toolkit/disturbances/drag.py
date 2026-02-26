@@ -2,12 +2,14 @@ import numpy as np
 
 class LumpedDrag:
     """Lumped drag model."""
-    def __init__(self, density_model):
+    def __init__(self, density_model, co_rotate=True):
         """
         Args:
             density_model: Object with get_density(r_eci, jd) method.
+            co_rotate (bool): Whether to include atmospheric co-rotation.
         """
         self.density_model = density_model
+        self.co_rotate = co_rotate
 
     def get_acceleration(self, r_eci, v_eci, jd, mass, area, cd):
         """
@@ -28,9 +30,13 @@ class LumpedDrag:
         rho = self.density_model.get_density(r_eci, jd)
         
         # Velocity relative to rotating atmosphere
-        # w_earth = 7.2921159e-5 rad/s
-        w_earth = np.array([0, 0, 7.2921159e-5])
-        v_rel = v_eci - np.cross(w_earth, r_eci)
+        if self.co_rotate:
+            # w_earth = 7.2921159e-5 rad/s
+            w_earth = np.array([0, 0, 7.2921159e-5])
+            v_rel = v_eci - np.cross(w_earth, r_eci)
+        else:
+            v_rel = v_eci
+            
         v_rel_norm = np.linalg.norm(v_rel)
         
         # Drag force direction (opposing relative velocity)

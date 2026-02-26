@@ -137,8 +137,8 @@ class HarmonicsGravity:
                     c_nn = np.sqrt((2*n + 1) / (2*n)) 
                     P[n, n] = c_nn * np.sqrt(1 - sin_lat**2) * P[n-1, n-1]
                 else: # Tesseral
-                    anm = np.sqrt((2*n + 1) / (n - m)) * np.sqrt((2*n - 1) / (n + m))
-                    bnm = np.sqrt((2*n + 1) / (n - m)) * np.sqrt((n + m - 1) / (n - m - 1)) * np.sqrt((n - m - 1) / (2*n - 3))
+                    anm = np.sqrt(((2*n - 1) * (2*n + 1)) / ((n - m) * (n + m)))
+                    bnm = np.sqrt(((2*n + 1) * (n + m - 1) * (n - m - 1)) / ((2*n - 3) * (n + m) * (n - m)))
                     P[n, m] = anm * sin_lat * P[n-1, m] - bnm * P[n-2, m]
 
         # Summation
@@ -173,10 +173,14 @@ class HarmonicsGravity:
                 
                 # Derivative dP/dphi
                 if n == m:
-                     # Sectorial deriv
-                     # P_nn = c * cos^n phi
-                     # dP_nn/dphi = -n * tan_phi * P_nn
-                     dp_dphi = -n * sin_lat / np.sqrt(1 - sin_lat**2) * P[n, n] if abs(sin_lat) < 1 else 0
+                    # Sectorial deriv
+                    # P_nn = c * cos^n phi
+                    # dP_nn/dphi = -n * tan_phi * P_nn
+                    cos_lat_sq = 1 - sin_lat**2
+                    if cos_lat_sq > 1e-15:
+                        dp_dphi = -n * sin_lat / np.sqrt(cos_lat_sq) * P[n, n]
+                    else:
+                        dp_dphi = 0.0
                 else:
                     # Recursive deriv                    
                     #factor_nm = np.sqrt((2*n+1)/(2*n-1) * (n-m)/(n+m)) if (n+m) > 0 else 0
@@ -185,7 +189,11 @@ class HarmonicsGravity:
                     
                     term1 = n * sin_lat * P[n, m]
                     term2 = anm * P[n-1, m]
-                    dp_dphi = (term1 - term2) / np.sqrt(1 - sin_lat**2)
+                    cos_lat_sq = 1 - sin_lat**2
+                    if cos_lat_sq > 1e-15:
+                        dp_dphi = (term1 - term2) / np.sqrt(cos_lat_sq)
+                    else:
+                        dp_dphi = 0.0 # At poles
                 
                 # Accumulate
                 sum_r += (n + 1) * p_nm * geo_term

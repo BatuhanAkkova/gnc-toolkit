@@ -32,7 +32,11 @@ class Canonball:
         # Simple cylindrical shadow model
         nu = self.check_eclipse(r_eci, r_sun)
         
-        acc_mag = nu * self.P_sun * cr * (area / mass)
+        # SRP pressure at distance (Inverse Square Law)
+        au = 149597870700.0
+        p_dist = self.P_sun * (au / dist_sun)**2
+        
+        acc_mag = nu * p_dist * cr * (area / mass)
         
         return -acc_mag * u_sun # force away from sun
     

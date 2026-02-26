@@ -54,7 +54,7 @@ def test_harmonics_gravity_loading():
 
 def test_drag_opposes_velocity(ephemeris):
     r_eci, v_eci, jd = ephemeris
-    density_model = Exponential(rho0=1e-12) # Fake density model
+    density_model = Exponential(rho0=1e-12, H=1000.0) # Larger scale height for test
     model = LumpedDrag(density_model)
     
     mass = 100.0
@@ -67,15 +67,38 @@ def test_drag_opposes_velocity(ephemeris):
     # Check dot product is negative
     assert np.dot(acc, v_eci) < 0
 
-def test_srp_direction(ephemeris):
+def test_srp_with_mocked_sun(mocker, ephemeris):
     r_eci, _, jd = ephemeris
-    model = Canonball()
+    # Mock Sun.calculate_sun_eci
+    mock_sun = mocker.patch("gnc_toolkit.environment.solar.Sun.calculate_sun_eci")
+    # Sun on X axis, satellite on X axis -> Satellite in front of Sun
+    mock_sun.return_value = np.array([1.496e11, 0, 0]) 
     
+    model = Canonball()
     mass = 100.0
     area = 1.0
     cr = 1.0
     
     acc = model.get_acceleration(r_eci, jd, mass, area, cr)
-
-    # This test is weak without mocking sun position, but checks basic execution
+    
+    # SRP should push away from Sun
     assert acc.shape == (3,)
+    assert acc[0] < 0
+
+def test_drag_with_co_rotation(ephemeris):
+    r_eci, v_eci, jd = ephemeris
+    density_model = Exponential(rho0=1e-12, H=1000.0)
+    model = LumpedDrag(density_model, co_rotate=True)
+    
+    mass = 100.0
+    area = 1.0
+    cd = 2.2
+    
+    acc = model.get_acceleration(r_eci, v_eci, jd, mass, area, cd)
+    assert np.dot(acc, v_eci) < 0
+    
+    # Drag with co-rotation should be different from non-co-rotation
+    model_no_rot = LumpedDrag(density_model, co_rotate=False)
+    acc_no_rot = model_no_rot.get_acceleration(r_eci, v_eci, jd, mass, area, cd)
+    
+    assert not np.allclose(acc, acc_no_rot)

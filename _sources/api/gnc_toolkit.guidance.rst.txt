@@ -1,0 +1,29 @@
+gnc\_toolkit.guidance package
+=============================
+
+Submodules
+----------
+
+gnc\_toolkit.guidance.maneuvers module
+--------------------------------------
+
+.. automodule:: gnc_toolkit.guidance.maneuvers
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.guidance.rendezvous module
+---------------------------------------
+
+.. automodule:: gnc_toolkit.guidance.rendezvous
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.guidance
+   :members:
+   :show-inheritance:
+   :undoc-members:

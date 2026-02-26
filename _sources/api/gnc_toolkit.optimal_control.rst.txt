@@ -1,0 +1,53 @@
+gnc\_toolkit.optimal\_control package
+=====================================
+
+Submodules
+----------
+
+gnc\_toolkit.optimal\_control.feedback\_linearization module
+------------------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.feedback_linearization
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.lqe module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.lqe
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.lqr module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.lqr
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.mpc module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.mpc
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.sliding\_mode module
+--------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.sliding_mode
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.optimal_control
+   :members:
+   :show-inheritance:
+   :undoc-members:

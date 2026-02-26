@@ -1,0 +1,23 @@
+gnc\_toolkit package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   gnc_toolkit.classical_control
+   gnc_toolkit.guidance
+   gnc_toolkit.integrators
+   gnc_toolkit.kalman_filters
+   gnc_toolkit.optimal_control
+   gnc_toolkit.propagators
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit
+   :members:
+   :show-inheritance:
+   :undoc-members:

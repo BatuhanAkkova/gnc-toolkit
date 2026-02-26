@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.kalman_filters package &mdash; Your Project Name  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Your Project Name
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">gnc_toolkit.kalman_filters package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.ekf">gnc_toolkit.kalman_filters.ekf module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ekf.EKF"><code class="docutils literal notranslate"><span class="pre">EKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ekf.EKF.predict"><code class="docutils literal notranslate"><span class="pre">EKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ekf.EKF.update"><code class="docutils literal notranslate"><span class="pre">EKF.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.kf">gnc_toolkit.kalman_filters.kf module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.kf.KF"><code class="docutils literal notranslate"><span class="pre">KF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.kf.KF.predict"><code class="docutils literal notranslate"><span class="pre">KF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.kf.KF.update"><code class="docutils literal notranslate"><span class="pre">KF.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.mekf">gnc_toolkit.kalman_filters.mekf module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.mekf.MEKF"><code class="docutils literal notranslate"><span class="pre">MEKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.mekf.MEKF.predict"><code class="docutils literal notranslate"><span class="pre">MEKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.mekf.MEKF.update"><code class="docutils literal notranslate"><span class="pre">MEKF.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.ukf">gnc_toolkit.kalman_filters.ukf module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF"><code class="docutils literal notranslate"><span class="pre">UKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF.generate_sigma_points"><code class="docutils literal notranslate"><span class="pre">UKF.generate_sigma_points()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF.predict"><code class="docutils literal notranslate"><span class="pre">UKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF.update"><code class="docutils literal notranslate"><span class="pre">UKF.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF_Attitude"><code class="docutils literal notranslate"><span class="pre">UKF_Attitude</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Your Project Name</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.kalman_filters package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.kalman_filters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-kalman-filters-package">
+<h1>gnc_toolkit.kalman_filters package<a class="headerlink" href="#gnc-toolkit-kalman-filters-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.kalman_filters.ekf">
+<span id="gnc-toolkit-kalman-filters-ekf-module"></span><h2>gnc_toolkit.kalman_filters.ekf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.ekf" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ekf.EKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ekf.</span></span><span class="sig-name descname"><span class="pre">EKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Extended Kalman Filter (EKF).
+Suitable for non-linear estimation and navigation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ekf.EKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_jac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict step.
+fx: State transition function f(x, dt, u, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) -&gt; x_new
+F_jac: Function that returns the Jacobian of f at (x, dt, u) -&gt; F matrix
+dt: Time step
+u: Optional control input
+Q: Optional process noise covariance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ekf.EKF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_jac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update step.
+z: Measurement vector
+hx: Measurement function h(x, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs) -&gt; z_pred
+H_jac: Function that returns the Jacobian of h at x -&gt; H matrix
+R: Optional measurement noise covariance</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.kalman_filters.kf">
+<span id="gnc-toolkit-kalman-filters-kf-module"></span><h2>gnc_toolkit.kalman_filters.kf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.kf" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.kf.KF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.kf.</span></span><span class="sig-name descname"><span class="pre">KF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Standard Linear Kalman Filter (KF).
+Suitable for linear estimation and navigation (e.g., constant velocity models).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.kf.KF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict step.
+u: Control input vector
+F: State transition matrix
+Q: Process noise covariance
+B: Control input matrix</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.kf.KF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF.update" title="Link to this definition"></a></dt>
+<dd><p>Update step.
+z: Measurement vector
+H: Measurement matrix
+R: Measurement noise covariance</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.kalman_filters.mekf">
+<span id="gnc-toolkit-kalman-filters-mekf-module"></span><h2>gnc_toolkit.kalman_filters.mekf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.mekf" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.mekf.MEKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.mekf.</span></span><span class="sig-name descname"><span class="pre">MEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
+Reference: Crassidis and Junkins, “Optimal Estimation of Dynamic Systems”.
+State: [q_x, q_y, q_z, q_w, beta_x, beta_y, beta_z] (7x1)
+Error State: [delta_theta_x, delta_theta_y, delta_theta_z, delta_beta_x, delta_beta_y, delta_beta_z] (6x1)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.mekf.MEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omega_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>MEKF Prediction Step.
+omega_meas: Measured angular velocity (3x1)
+dt: Time step
+Q: Optional process noise covariance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.mekf.MEKF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF.update" title="Link to this definition"></a></dt>
+<dd><p>MEKF Update Step.
+z: Measured vector in body frame (normalized)
+z_ref: Reference vector in inertial frame (normalized)
+R: Optional measurement noise covariance</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.kalman_filters.ukf">
+<span id="gnc-toolkit-kalman-filters-ukf-module"></span><h2>gnc_toolkit.kalman_filters.ukf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.ukf" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ukf.</span></span><span class="sig-name descname"><span class="pre">UKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtract_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generalized Unscented Kalman Filter (UKF).
+Supports states on manifolds by providing custom add, subtract, and mean functions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF.generate_sigma_points">
+<span class="sig-name descname"><span class="pre">generate_sigma_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.generate_sigma_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.generate_sigma_points" title="Link to this definition"></a></dt>
+<dd><p>Generates sigma points around x using covariance P in tangent space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict step.
+dt: Time step
+fx: State transition function f(x, dt, <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs) -&gt; x_new
+Q: Optional process noise covariance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update step.
+z: Measurement vector
+hx: Measurement function h(x, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs) -&gt; z_pred
+R: Optional measurement noise covariance</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF_Attitude">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ukf.</span></span><span class="sig-name descname"><span class="pre">UKF_Attitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF_Attitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF_Attitude" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF" title="gnc_toolkit.kalman_filters.ukf.UKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">UKF</span></code></a></p>
+<p>Specialized UKF for Attitude Estimation.
+State: [q0, q1, q2, q3, bias_x, bias_y, bias_z] (7 dim)
+Covariance/Error: 6 dim (tangent space)</p>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.kalman_filters">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.kalman_filters" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

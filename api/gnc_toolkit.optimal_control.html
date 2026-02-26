@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.optimal_control package &mdash; Your Project Name  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Your Project Name
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">gnc_toolkit.optimal_control package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.feedback_linearization">gnc_toolkit.optimal_control.feedback_linearization module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization.compute_control"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization.compute_control()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.lqe">gnc_toolkit.optimal_control.lqe module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqe.LQE"><code class="docutils literal notranslate"><span class="pre">LQE</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqe.LQE.compute_gain"><code class="docutils literal notranslate"><span class="pre">LQE.compute_gain()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqe.LQE.solve"><code class="docutils literal notranslate"><span class="pre">LQE.solve()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.lqr">gnc_toolkit.optimal_control.lqr module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqr.LQR"><code class="docutils literal notranslate"><span class="pre">LQR</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqr.LQR.compute_gain"><code class="docutils literal notranslate"><span class="pre">LQR.compute_gain()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqr.LQR.solve"><code class="docutils literal notranslate"><span class="pre">LQR.solve()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.mpc">gnc_toolkit.optimal_control.mpc module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.LinearMPC"><code class="docutils literal notranslate"><span class="pre">LinearMPC</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.LinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">LinearMPC.solve()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.NonlinearMPC"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.NonlinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC.solve()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.sliding_mode">gnc_toolkit.optimal_control.sliding_mode module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController"><code class="docutils literal notranslate"><span class="pre">SlidingModeController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController.compute_control"><code class="docutils literal notranslate"><span class="pre">SlidingModeController.compute_control()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Your Project Name</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.optimal_control package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.optimal_control.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-optimal-control-package">
+<h1>gnc_toolkit.optimal_control package<a class="headerlink" href="#gnc-toolkit-optimal-control-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.optimal_control.feedback_linearization">
+<span id="gnc-toolkit-optimal-control-feedback-linearization-module"></span><h2>gnc_toolkit.optimal_control.feedback_linearization module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.feedback_linearization" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.feedback_linearization.</span></span><span class="sig-name descname"><span class="pre">FeedbackLinearization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/feedback_linearization.html#FeedbackLinearization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Feedback Linearization Controller.</p>
+<p>For a system of the form:
+dot_x = f(x) + g(x) u</p>
+<p>Computes the control input u that achieves the desired linear dynamics:
+dot_x = v</p>
+<p>The control law is:
+u = g(x)^-1 * (v - f(x))</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/feedback_linearization.html#FeedbackLinearization.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute the linearizing control input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – Current state vector.</p></li>
+<li><p><strong>v</strong> (<em>np.ndarray</em>) – Desired linear dynamics input (pseudo-control).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control input u.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control.lqe">
+<span id="gnc-toolkit-optimal-control-lqe-module"></span><h2>gnc_toolkit.optimal_control.lqe module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.lqe" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.lqe.LQE">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.lqe.</span></span><span class="sig-name descname"><span class="pre">LQE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/lqe.html#LQE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.lqe.LQE" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Linear Quadratic Estimator (LQE) / Kalman Filter.</p>
+<p>Designs an optimal observer gain L for the system:
+x_dot = Ax + Bu + Gw
+y = Cx + v</p>
+<p>Where:
+w is N(0, Q) (Process Noise)
+v is N(0, R) (Measurement Noise)</p>
+<p>The observer dynamics are:
+x_hat_dot = A x_hat + B u + L(y - C x_hat)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.lqe.LQE.compute_gain">
+<span class="sig-name descname"><span class="pre">compute_gain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/lqe.html#LQE.compute_gain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.lqe.LQE.compute_gain" title="Link to this definition"></a></dt>
+<dd><p>Compute the observer gain matrix L.
+L = P C.T inv(R)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.lqe.LQE.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/lqe.html#LQE.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.lqe.LQE.solve" title="Link to this definition"></a></dt>
+<dd><p>Solve the Continuous Algebraic Riccati Equation (CARE) for estimation.
+Mapping:
+X -&gt; P
+a -&gt; A.T
+b -&gt; C.T
+q -&gt; G Q G.T
+r -&gt; R</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control.lqr">
+<span id="gnc-toolkit-optimal-control-lqr-module"></span><h2>gnc_toolkit.optimal_control.lqr module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.lqr" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.lqr.LQR">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.lqr.</span></span><span class="sig-name descname"><span class="pre">LQR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/lqr.html#LQR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.lqr.LQR" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Linear Quadratic Regulator (LQR) Controller.</p>
+<p>Minimizes the cost function:
+J = integral(x.T * Q * x + u.T * R * u) dt</p>
+<p>The control law is u = -K * x</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.lqr.LQR.compute_gain">
+<span class="sig-name descname"><span class="pre">compute_gain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/lqr.html#LQR.compute_gain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.lqr.LQR.compute_gain" title="Link to this definition"></a></dt>
+<dd><p>Compute the feedback gain matrix K.
+K = inv(R) * B.T * P</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.lqr.LQR.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/lqr.html#LQR.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.lqr.LQR.solve" title="Link to this definition"></a></dt>
+<dd><p>Solve the Continuous Algebraic Riccati Equation (CARE).
+P * A + A.T * P - P * B * inv(R) * B.T * P + Q = 0</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control.mpc">
+<span id="gnc-toolkit-optimal-control-mpc-module"></span><h2>gnc_toolkit.optimal_control.mpc module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.mpc" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.mpc.LinearMPC">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.mpc.</span></span><span class="sig-name descname"><span class="pre">LinearMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc.html#LinearMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.mpc.LinearMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Linear Model Predictive Controller (MPC).</p>
+<p>Optimizes a finite horizon cost function subject to linear dynamics and constraints.
+Dynamics: x[k+1] = A x[k] + B u[k]
+Cost: sum_{k=0}^{N-1} (x[k].T Q x[k] + u[k].T R u[k]) + x[N].T P x[N]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.mpc.LinearMPC.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc.html#LinearMPC.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.mpc.LinearMPC.solve" title="Link to this definition"></a></dt>
+<dd><p>Solve the MPC optimization problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimal control sequence [u_0, u_1, …, u_{N-1}].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.mpc.NonlinearMPC">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.mpc.</span></span><span class="sig-name descname"><span class="pre">NonlinearMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dynamics_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc.html#NonlinearMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.mpc.NonlinearMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Nonlinear Model Predictive Controller (NMPC).</p>
+<p>Optimizes a finite horizon cost function subject to nonlinear dynamics.
+Dynamics: x[k+1] = f(x[k], u[k])
+Cost: sum_{k=0}^{N-1} L(x[k], u[k]) + V(x[N])</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.mpc.NonlinearMPC.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc.html#NonlinearMPC.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.mpc.NonlinearMPC.solve" title="Link to this definition"></a></dt>
+<dd><p>Solve the NMPC optimization problem using single shooting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimal control sequence [u_0, …, u_{N-1}].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control.sliding_mode">
+<span id="gnc-toolkit-optimal-control-sliding-mode-module"></span><h2>gnc_toolkit.optimal_control.sliding_mode module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.sliding_mode" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.sliding_mode.SlidingModeController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.sliding_mode.</span></span><span class="sig-name descname"><span class="pre">SlidingModeController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_gain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equivalent_control_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chattering_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/sliding_mode.html#SlidingModeController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Sliding Mode Controller (SMC).</p>
+<p>Implements a control law of the form:
+u = u_eq(x, t) - K * sign(s(x, t))</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.sliding_mode.SlidingModeController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/sliding_mode.html#SlidingModeController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute the control input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – State vector.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control input u.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.optimal_control" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

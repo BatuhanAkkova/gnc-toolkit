@@ -1,0 +1,53 @@
+gnc\_toolkit.integrators package
+================================
+
+Submodules
+----------
+
+gnc\_toolkit.integrators.dop853\_coeffs module
+----------------------------------------------
+
+.. automodule:: gnc_toolkit.integrators.dop853_coeffs
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.integrators.integrator module
+------------------------------------------
+
+.. automodule:: gnc_toolkit.integrators.integrator
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.integrators.rk4 module
+-----------------------------------
+
+.. automodule:: gnc_toolkit.integrators.rk4
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.integrators.rk45 module
+------------------------------------
+
+.. automodule:: gnc_toolkit.integrators.rk45
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.integrators.rk853 module
+-------------------------------------
+
+.. automodule:: gnc_toolkit.integrators.rk853
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.integrators
+   :members:
+   :show-inheritance:
+   :undoc-members:

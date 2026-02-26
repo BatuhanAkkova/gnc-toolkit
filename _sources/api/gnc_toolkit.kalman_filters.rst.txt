@@ -1,0 +1,45 @@
+gnc\_toolkit.kalman\_filters package
+====================================
+
+Submodules
+----------
+
+gnc\_toolkit.kalman\_filters.ekf module
+---------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.ekf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.kf module
+--------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.kf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.mekf module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.mekf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.ukf module
+---------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.ukf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.kalman_filters
+   :members:
+   :show-inheritance:
+   :undoc-members:

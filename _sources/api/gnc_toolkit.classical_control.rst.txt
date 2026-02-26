@@ -1,0 +1,37 @@
+gnc\_toolkit.classical\_control package
+=======================================
+
+Submodules
+----------
+
+gnc\_toolkit.classical\_control.bdot module
+-------------------------------------------
+
+.. automodule:: gnc_toolkit.classical_control.bdot
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.classical\_control.momentum\_dumping module
+--------------------------------------------------------
+
+.. automodule:: gnc_toolkit.classical_control.momentum_dumping
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.classical\_control.pid module
+------------------------------------------
+
+.. automodule:: gnc_toolkit.classical_control.pid
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.classical_control
+   :members:
+   :show-inheritance:
+   :undoc-members:

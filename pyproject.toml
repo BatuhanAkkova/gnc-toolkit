@@ -22,6 +22,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "pytest-mock",
+    "pytest-cov",
 ]
 
 [tool.setuptools.packages.find]

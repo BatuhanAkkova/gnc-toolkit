@@ -12,10 +12,8 @@
 
 
 # -- Project information -----------------------------------------------------
-project = 'Your Project Name'
-#replace with your project name
-author = 'Your Name'
-#replace with your name
+project = 'gnc-toolkit'
+author = 'Batuhan Akkova'
 
 
 # -- General configuration ---------------------------------------------------

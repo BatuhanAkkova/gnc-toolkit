@@ -224,6 +224,8 @@
 </div>
 
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">quat_mult</span><span class="p">,</span> <span class="n">quat_conj</span><span class="p">,</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_normalize</span>
+
 <div class="viewcode-block" id="UKF_Attitude">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.ukf.UKF_Attitude">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UKF_Attitude</span><span class="p">(</span><span class="n">UKF</span><span class="p">):</span>
@@ -232,9 +234,7 @@
 <span class="sd">    State: [q0, q1, q2, q3, bias_x, bias_y, bias_z] (7 dim)</span>
 <span class="sd">    Covariance/Error: 6 dim (tangent space)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bias_init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">quat_mult</span><span class="p">,</span> <span class="n">quat_conj</span><span class="p">,</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_normalize</span>
-        
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bias_init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_quat_mult</span> <span class="o">=</span> <span class="n">quat_mult</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_quat_conj</span> <span class="o">=</span> <span class="n">quat_conj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axis_angle_to_quat</span> <span class="o">=</span> <span class="n">axis_angle_to_quat</span>
@@ -272,7 +272,7 @@
         <span class="k">if</span> <span class="s1">&#39;alpha&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-2</span>
             
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dim_x</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">dim_p</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> 
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dim_x</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="n">dim_z</span><span class="p">,</span> <span class="n">dim_p</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> 
                          <span class="n">subtract_x</span><span class="o">=</span><span class="n">subtract_x</span><span class="p">,</span> <span class="n">add_x</span><span class="o">=</span><span class="n">add_x</span><span class="p">,</span> <span class="n">mean_x</span><span class="o">=</span><span class="n">mean_x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">q_init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">q_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>

@@ -106,6 +106,9 @@ The **GNC Toolkit** is designed to support the full lifecycle of small satellite
 - **Robust/Modern**: Sliding Mode Control and Model Predictive Control (MPC).
 - **Actuators**: Reaction Wheels (momentum management) and Thrusters (Chemical/Electric).
 
+## TODO
+[ ] Fix Lambert example error.
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.

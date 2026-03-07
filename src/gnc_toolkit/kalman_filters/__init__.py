@@ -8,3 +8,4 @@ from .ckf import CKF
 from .pf import ParticleFilter
 from .akf import AKF
 from .imm import IMM
+from .rts_smoother import rts_smoother

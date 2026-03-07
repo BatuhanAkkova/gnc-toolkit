@@ -209,4 +209,56 @@ def test_ukf_attitude_update():
     
     assert ukf.x.shape == (7,)
     assert np.isclose(np.linalg.norm(ukf.x[:4]), 1.0)
-    pass
+
+def test_rts_smoother():
+    """Test RTS Smoother with a linear constant velocity model."""
+    from gnc_toolkit.kalman_filters.rts_smoother import rts_smoother
+    
+    dt = 0.5
+    num_steps = 50
+    F = np.array([[1.0, dt], [0.0, 1.0]])
+    H = np.array([[1.0, 0.0]])
+    Q = np.eye(2) * 0.01
+    R = np.eye(1) * 0.5
+    
+    true_x = np.zeros((num_steps, 2))
+    z = np.zeros(num_steps)
+    
+    # Generate truth and measurements
+    x = np.array([0.0, 1.0])
+    for k in range(num_steps):
+        true_x[k] = x
+        z[k] = np.dot(H, x) + np.random.normal(0, np.sqrt(R[0,0]))
+        x = np.dot(F, x) + np.random.multivariate_normal(np.zeros(2), Q)
+        
+    # Forward Pass (KF)
+    kf = KF(dim_x=2, dim_z=1)
+    kf.F = F
+    kf.H = H
+    kf.Q = Q
+    kf.R = R
+    
+    xs_filt = []
+    ps_filt = []
+    
+    for k in range(num_steps):
+        kf.predict()
+        kf.update(z[k])
+        xs_filt.append(kf.x.copy())
+        ps_filt.append(kf.P.copy())
+        
+    # RTS Smoothing
+    Fs = [F] * (num_steps - 1)
+    Qs = [Q] * (num_steps - 1)
+    xs_smooth, ps_smooth = rts_smoother(xs_filt, ps_filt, Fs, Qs)
+    
+    # Calculate RMSE
+    rmse_filt = np.sqrt(np.mean((np.array(xs_filt)[:, 0] - true_x[:, 0])**2))
+    rmse_smooth = np.sqrt(np.mean((xs_smooth[:, 0] - true_x[:, 0])**2))
+    
+    print(f"\nRMSE Filtered: {rmse_filt:.4f}")
+    print(f"RMSE Smoothed: {rmse_smooth:.4f}")
+    
+    # Smoothed error should be lower than filtered error
+    assert rmse_smooth < rmse_filt
+    assert xs_smooth.shape == (num_steps, 2)

@@ -194,7 +194,7 @@ Foundation models that all other modules depend on.
 ### 5.4 Smoother Algorithms
 | Feature | Status | Notes |
 |---|---|---|
-| Rauch-Tung-Striebel (RTS) smoother | ⬜ | Post-pass attitude reconstruction |
+| Rauch-Tung-Striebel (RTS) smoother | ✅ | `rts_smoother.py` |
 | Fixed-interval smoother | ⬜ | |
 
 ---
@@ -457,7 +457,7 @@ Foundation models that all other modules depend on.
 | Phase | Focus Area | Key Deliverables |
 |---|---|---|
 | **Phase 1** (Foundation) | Frame transforms, attitude representations, test coverage | Full IAU 2006 ECI/ECEF, MRP, equinoctial elements, unit test parity with GMAT |
-| **Phase 2** (Navigation) | Orbit determination, GPS, RTS smoother | IOD (Gauss/Laplace), OD-EKF, GPS receiver model, RTS smoother |
+| **Phase 2** (Navigation) | Orbit determination, GPS, RTS smoother | IOD (Gauss/Laplace), OD-EKF, GPS receiver model, ✅ RTS smoother |
 | **Phase 3** (Guidance) | Attitude guidance, low-thrust, rendezvous | Q-law, ZEM/ZEV, Tschauner-Hempel, primer vector, attitude slew profiles |
 | **Phase 4** (Control) | Geometric control, FDIR, CMG | SO(3) attitude controller, CMG with singularity avoidance, IMM filter |
 | **Phase 5** (Mission Design) | Coverage, link budgets, ΔV budgeting, conjunction | Ground station access, Tsiolkovsky budget, Pc computation |

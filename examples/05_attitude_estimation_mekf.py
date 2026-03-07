@@ -170,7 +170,11 @@ def simulation():
     ax[1].legend(loc='right')
     
     plt.tight_layout()
-    plt.show()
+    # Save the plot to assets/
+    save_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'assets', 'attitude_est.png'))
+    plt.savefig(save_path)
+    print(f"Plot saved to: {save_path}")
+    plt.close()
 
 if __name__ == "__main__":
     simulation()

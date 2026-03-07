@@ -55,3 +55,39 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Analysis:** Verification of estimation consistency (Error vs. 3-sigma bounds).
 
 ![MEKF Attitude Estimation](../assets/attitude_est.png)
+
+## 6. Attitude Estimation with UKF (Navigation)
+**Script:** `06_ukf_attitude_estimation.py`
+**Scenario:** Using the Unscented Kalman Filter for orientation tracking in highly nonlinear regimes.
+**GNC Focus:**
+*   **Filter:** `UKF_Attitude` handling large initial errors and nonlinear measurement models.
+*   **Sensors:** Fusing multiple star tracker vector observations.
+
+![UKF Attitude Estimation](../assets/ukf_attitude.png)
+
+## 7. Deterministic Attitude Determination (QUEST)
+**Script:** `07_quest_estimation.py`
+**Scenario:** Finding the optimal attitude from simultaneous vector observations (Sun + Mag).
+**GNC Focus:**
+*   **Algorithm:** `QUEST` for deterministic inertial-to-body calculation.
+*   **Sensors:** `SunSensor` and `Magnetometer`.
+
+![QUEST Performance](../assets/quest_results.png)
+
+## 8. Orbital Maneuvers (Guidance)
+**Script:** `08_orbital_maneuvers.py`
+**Scenario:** Classic mission planning maneuvers: Hohmann Transfer and Plane Changes.
+**GNC Focus:**
+*   **Guidance:** Delta-V calculation for LEO-to-GEO transfers.
+*   **Efficiency:** Combined burned logic for fuel optimization.
+
+![Hohmann Transfer](../assets/hohmann_transfer.png)
+
+## 9. Lambert Solver (Guidance)
+**Script:** `09_lambert_solver.py`
+**Scenario:** Orbit targeting between two arbitrary positions in a fixed time of flight.
+**GNC Focus:**
+*   **Guidance:** Solving the multi-revolution Lambert problem.
+*   **Application:** Interplanetary or long-range intercept targeting.
+
+![Lambert Transfer](../assets/lambert_transfer.png)

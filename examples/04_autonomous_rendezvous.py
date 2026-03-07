@@ -200,10 +200,10 @@ def simulation():
     ax.set_title('Autonomous Rendezvous (Hill Frame)')
     ax.grid(True)
     ax.legend()
-    ax.axis('equal') # Important for geometry
-    
-    # Inset for Cross Track? Or seperate plot
-    # Let's verify Z deviation zeroed out
+    plt.tight_layout()
+    save_path_traj = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'assets', 'rendezvous.png'))
+    plt.savefig(save_path_traj)
+    print(f"Rendezvous plot saved to: {save_path_traj}")
     
     plt.figure()
     plt.plot(traj_t, traj_r[:, 2])
@@ -212,9 +212,13 @@ def simulation():
     plt.title('Cross-Track Motion')
     plt.grid(True)
     
+    save_path_cross = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'assets', 'cross_track.png'))
+    plt.savefig(save_path_cross)
+    print(f"Cross-track plot saved to: {save_path_cross}")
+
     print(f"Total Delta-V: {sum([np.linalg.norm(m[1]) for m in maneuvers])*1000:.2f} m/s")
     
-    plt.show()
+    plt.close('all')
 
 if __name__ == "__main__":
     simulation()

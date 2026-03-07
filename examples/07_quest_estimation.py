@@ -13,6 +13,7 @@ Scenario:
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 import sys
 import os
 from datetime import datetime
@@ -72,6 +73,31 @@ def run_example():
     
     error_angle = np.degrees(np.linalg.norm(euler_true - euler_est))
     print(f"Total Angular Error: {error_angle:.4f} degrees")
+    print("-" * 30)
+
+    # 4. Visualization
+    labels = ['Roll', 'Pitch', 'Yaw']
+    true_deg = np.degrees(euler_true)
+    est_deg = np.degrees(euler_est)
+    
+    plt.figure(figsize=(10, 6))
+    x = np.arange(len(labels))
+    width = 0.35
+    
+    plt.bar(x - width/2, true_deg, width, label='True Orientation')
+    plt.bar(x + width/2, est_deg, width, label='QUEST Estimated')
+    
+    plt.ylabel('Angle [deg]')
+    plt.title('QUEST Attitude Determination Performance')
+    plt.xticks(x, labels)
+    plt.legend()
+    plt.grid(True, axis='y', alpha=0.3)
+    
+    # Save the plot to assets/
+    save_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'assets', 'quest_results.png'))
+    plt.savefig(save_path)
+    print(f"Plot saved to: {save_path}")
+    plt.close()
 
 if __name__ == "__main__":
     run_example()

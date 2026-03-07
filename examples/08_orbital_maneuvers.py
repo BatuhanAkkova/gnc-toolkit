@@ -10,6 +10,7 @@ Scenario:
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 import sys
 import os
 
@@ -60,6 +61,45 @@ def run_example():
     print(f"Pure Circularization Burn: {dv2:.4f} km/s")
     print(f"Combined Burn Delta-V:     {dv_combined:.4f} km/s")
     print(f"Saving (vs Simple):        {(dv2 + dv_plane) - dv_combined:.4f} km/s")
+
+    # 4. Visualization
+    theta = np.linspace(0, 2*np.pi, 200)
+    
+    # Orbits
+    x_leo = r_leo * np.cos(theta)
+    y_leo = r_leo * np.sin(theta)
+    x_geo = r_geo * np.cos(theta)
+    y_geo = r_geo * np.sin(theta)
+    
+    # Transfer Ellipse (Apogee=r_geo, Perigee=r_leo)
+    a_trans = (r_leo + r_geo) / 2.0
+    e_trans = (r_geo - r_leo) / (r_geo + r_leo)
+    r_trans = a_trans * (1 - e_trans**2) / (1 + e_trans * np.cos(theta))
+    x_trans = r_trans * np.cos(theta)
+    y_trans = r_trans * np.sin(theta)
+    
+    plt.figure(figsize=(8, 8))
+    plt.plot(x_leo, y_leo, 'b--', label='Initial LEO')
+    plt.plot(x_geo, y_geo, 'g--', label='Target GEO')
+    # Filter transfer orbit to show only half (perigee at 0 to apogee at pi)
+    plt.plot(x_trans[theta <= np.pi], y_trans[theta <= np.pi], 'r', linewidth=2, label='Hohmann Transfer')
+    
+    plt.plot(r_leo, 0, 'ro', label='Burn 1')
+    plt.plot(-r_geo, 0, 'go', label='Burn 2')
+    plt.plot(0, 0, 'yo', markersize=10, label='Earth')
+    
+    plt.xlabel('X [km]')
+    plt.ylabel('Y [km]')
+    plt.title('Hohmann Transfer: LEO to GEO')
+    plt.legend()
+    plt.axis('equal')
+    plt.grid(True, alpha=0.3)
+    
+    # Save the plot to assets/
+    save_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'assets', 'hohmann_transfer.png'))
+    plt.savefig(save_path)
+    print(f"Plot saved to: {save_path}")
+    plt.close()
 
 if __name__ == "__main__":
     run_example()

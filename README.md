@@ -68,10 +68,10 @@ The [examples/](examples/) directory contains demonstration scripts showcasing h
 | :--- | :--- |
 | **Autonomous Rendezvous**<br>Precise multi-burn approach in GEO using Clohessy-Wiltshire relative targeting. | ![Autonomous Rendezvous](assets/rendezvous.png)<br>[04_autonomous_rendezvous.py](examples/04_autonomous_rendezvous.py) |
 | **VLEO Orbit Maintenance**<br>Maintaining altitude in high-drag environments using electric propulsion and hysteresis logic. | ![VLEO Orbit Maintenance](assets/vleo_maintenance.png)<br>[02_vleo_orbit_maintenance.py](examples/02_vleo_orbit_maintenance.py) |
-| **UKF Attitude Estimation**<br>Advanced orientation tracking using Unscented Kalman Filter for nonlinear systems. | [06_ukf_attitude_estimation.py](examples/06_ukf_attitude_estimation.py) |
-| **QUEST Determination**<br>Deterministic attitude solution from vector measurements. | [07_quest_estimation.py](examples/07_quest_estimation.py) |
-| **Orbital Maneuvers**<br>Hohmann transfer and plane change calculation. | [08_orbital_maneuvers.py](examples/08_orbital_maneuvers.py) |
-| **Lambert Solver**<br>Orbit targeting between two points. | ![Lambert Solver](assets/cross_track.png)<br>[09_lambert_solver.py](examples/09_lambert_solver.py) |
+| **UKF Attitude Estimation**<br>Advanced orientation tracking using Unscented Kalman Filter for nonlinear systems. | ![UKF Attitude Estimation](assets/ukf_attitude.png)<br>[06_ukf_attitude_estimation.py](examples/06_ukf_attitude_estimation.py) |
+| **QUEST Determination**<br>Deterministic attitude solution from vector measurements. | ![QUEST Determination](assets/quest_results.png)<br>[07_quest_estimation.py](examples/07_quest_estimation.py) |
+| **Orbital Maneuvers**<br>Hohmann transfer and plane change calculation. | ![Orbital Maneuvers](assets/hohmann_transfer.png)<br>[08_orbital_maneuvers.py](examples/08_orbital_maneuvers.py) |
+| **Lambert Solver**<br>Orbit targeting between two points. | ![Lambert Solver](assets/lambert_transfer.png)<br>[09_lambert_solver.py](examples/09_lambert_solver.py) |
 
 ## Project Overview
 

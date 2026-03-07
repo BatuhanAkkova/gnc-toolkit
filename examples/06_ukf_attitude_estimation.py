@@ -126,7 +126,11 @@ def run_example():
     plt.grid(True)
     
     plt.tight_layout()
-    plt.show()
+    # Save the plot to assets/
+    save_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'assets', 'ukf_attitude.png'))
+    plt.savefig(save_path)
+    print(f"Plot saved to: {save_path}")
+    plt.close()
 
 if __name__ == "__main__":
     run_example()

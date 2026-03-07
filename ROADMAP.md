@@ -139,21 +139,21 @@ Foundation models that all other modules depend on.
 ### 4.2 Missing Sensors
 | Feature | Status | Notes |
 |---|---|---|
-| GPS / GNSS receiver (pseudoranges, L1/L2) | ⬜ | Essential for autonomous orbit navigation |
-| Star catalog integration (Hipparcos / Tycho-2) | ⬜ | Needed for realistic star tracker sim |
-| Horizon / Earth sensor model | ⬜ | |
-| Coarse Sun Sensor (CSS) array | ⬜ | |
-| Accelerometer / IMU model | ⬜ | For drag-free and inertial navigation |
-| Altimeter / Radar altimeter model | ⬜ | Planetary landing missions |
-| LIDAR model (for proximity ops) | ⬜ | |
-| Camera / Optical sensor model | ⬜ | Visual odometry, terrain-relative nav |
+| GPS / GNSS receiver (pseudoranges, L1/L2) | ✅ | `gnss_receiver.py` |
+| Star catalog integration (Hipparcos / Tycho-2) | ✅ | `star_catalog.py` |
+| Horizon / Earth sensor model | ✅ | `horizon_sensor.py` |
+| Coarse Sun Sensor (CSS) array | ✅ | `sun_sensor_array.py` |
+| Accelerometer / IMU model | ✅ | `imu.py` (includes `Accelerometer` & `IMU`) |
+| Altimeter / Radar altimeter model | ✅ | `altimeter.py` |
+| LIDAR model (for proximity ops) | ✅ | `lidar.py` |
+| Camera / Optical sensor model | ✅ | `camera.py` |
 
 ### 4.3 Measurement Fidelity
 | Feature | Status | Notes |
 |---|---|---|
-| Allan variance / FOGM noise model | ⬜ | Higher-fidelity gyro modeling |
-| Sensor failure / fault injection | ⬜ | FDIR testing |
-| Sensor calibration residuals | ⬜ | |
+| Allan variance / FOGM noise model | ✅ | `sensor.py` (via `apply_fogm_noise`) |
+| Sensor failure / fault injection | ✅ | `sensor.py` (via `apply_faults`) |
+| Sensor calibration residuals | ✅ | `sensor.py` (via `apply_calibration`) |
 
 ---
 
@@ -175,12 +175,12 @@ Foundation models that all other modules depend on.
 | Extended Kalman Filter (EKF) | ✅ | `ekf.py` |
 | Multiplicative EKF (MEKF) | ✅ | `mekf.py` (attitude-specific) |
 | Unscented Kalman Filter (UKF) | ✅ | `ukf.py` |
-| Square-Root UKF | ⬜ | Numerically stable UKF for embedded use |
-| Ensemble Kalman Filter (EnKF) | ⬜ | Large-state applications |
-| Cubature Kalman Filter (CKF) | ⬜ | |
-| Particle Filter / Sequential Monte Carlo | ⬜ | Strongly non-Gaussian distributions |
-| Adaptive KF (noise covariance estimation) | ⬜ | |
-| Interacting Multiple Model (IMM) filter | ⬜ | Maneuvering target estimation |
+| Square-Root UKF | ✅ | `sr_ukf.py` |
+| Ensemble Kalman Filter (EnKF) | ✅ | `enkf.py` |
+| Cubature Kalman Filter (CKF) | ✅ | `ckf.py` |
+| Particle Filter / Sequential Monte Carlo | ✅ | `pf.py` |
+| Adaptive KF (noise covariance estimation) | ✅ | `akf.py` |
+| Interacting Multiple Model (IMM) filter | ✅ | `imm.py` |
 
 ### 5.3 Orbit Determination & Navigation
 | Feature | Status | Notes |

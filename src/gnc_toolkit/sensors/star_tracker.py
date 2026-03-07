@@ -51,4 +51,10 @@ class StarTracker(Sensor):
         # Ensure unit quaternion
         q_meas = q_meas / np.linalg.norm(q_meas)
         
+        # Apply faults
+        q_meas = self.apply_faults(q_meas)
+        
+        # Re-normalize if fault added noise
+        q_meas = q_meas / np.linalg.norm(q_meas)
+        
         return q_meas

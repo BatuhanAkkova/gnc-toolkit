@@ -32,14 +32,14 @@ def run_example():
     time = np.arange(0, t_max, dt)
     
     # 2. Sensors
-    gyro = Gyroscope(bias=np.array([0.01, -0.01, 0.005]), noise_std=0.001)
+    gyro = Gyroscope(initial_bias=np.array([0.01, -0.01, 0.005]), noise_std=0.001)
     st = StarTracker(noise_std=0.0001) # Very accurate
     
     # 3. Filter Initialization
-    ukf = UKF_Attitude(alpha=1e-3)
+    ukf = UKF_Attitude(alpha=1e-3, dim_z=9)
     ukf.P *= 0.1
     ukf.Q = np.eye(6) * 1e-6
-    ukf.R = np.eye(3) * 1e-8 # Star tracker is very accurate
+    ukf.R = np.eye(9) * 1e-8 # Star tracker is very accurate
     
     # Truth state
     q_true = np.array([0, 0, 0, 1.0])
@@ -63,9 +63,7 @@ def run_example():
         return np.concatenate([q_new, bias])
         
     def hx(x):
-        # ST measures quaternion directly, but we only "see" it as vectors usually.
-        # Here we'll simulate a vector measurement for the update.
-        # Let's assume ST measures 3 orthogonal vectors in inertial frame.
+        # ST measures 3 orthogonal vectors in inertial frame.
         v_ref = np.eye(3)
         q_conj = quat_conj(x[:4])
         v_meas = []
@@ -93,7 +91,12 @@ def run_example():
             q_conj_true = quat_conj(q_true)
             v_meas = []
             for v in np.eye(3):
-                v_meas.append(st.measure(quat_rot(q_conj_true, v)))
+                # Star tracker measures attitude, but here we simulate vector observations
+                # by rotating reference vectors and adding noise.
+                v_body = quat_rot(q_conj_true, v)
+                # Add gaussian noise to the vector components
+                v_noisy = v_body + np.random.normal(0, 0.0001, 3) 
+                v_meas.append(v_noisy / np.linalg.norm(v_noisy))
             z = np.array(v_meas).flatten()
             ukf.update(z, hx)
             
@@ -102,7 +105,7 @@ def run_example():
         q_err = quat_mult(quat_conj(ukf.x[:4]), q_true)
         angle_err = 2 * np.linalg.norm(q_err[:3]) * 180/np.pi
         
-        bias_err = np.linalg.norm(ukf.x[4:] - gyro.bias)
+        bias_err = np.linalg.norm(ukf.x[4:] - gyro.current_bias)
         
         results_t.append(t)
         results_q_err.append(angle_err)

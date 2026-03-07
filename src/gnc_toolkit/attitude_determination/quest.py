@@ -65,4 +65,4 @@ def quest(body_vectors, ref_vectors, weights=None):
     max_idx = np.argmax(vals)
     q_opt = vecs[:, max_idx]
     
-    return quat_normalize(quat_conj(q_opt))
+    return quat_normalize(q_opt)

@@ -21,7 +21,8 @@ from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 from gnc_toolkit.attitude_determination.quest import quest
-from gnc_toolkit.utils.quat_utils import quat_rot, quat_conj, quat_to_euler
+from gnc_toolkit.utils.quat_utils import quat_rot, quat_conj
+from gnc_toolkit.utils.state_conversion import quat_to_euler
 from gnc_toolkit.sensors.magnetometer import Magnetometer
 from gnc_toolkit.sensors.sun_sensor import SunSensor
 
@@ -31,7 +32,7 @@ def run_example():
     euler_true = np.radians([10, 20, 30])
     # For simplicity, let's just define a rotation matrix or quaternion
     from gnc_toolkit.utils.state_conversion import euler_to_quat
-    q_true = euler_to_quat(euler_true, seq="321")
+    q_true = euler_to_quat(euler_true, sequence="321")
     
     # 2. Reference Vectors (Inertial Frame)
     # e.g., Sun and Magnetic field
@@ -62,7 +63,7 @@ def run_example():
     q_est = quest(body_vectors, ref_vectors, weights=weights)
     
     # 5. Results
-    euler_est = quat_to_euler(q_est, seq="321")
+    euler_est = quat_to_euler(q_est, sequence="321")
     
     print("-" * 30)
     print(f"True Euler [deg]:  {np.degrees(euler_true)}")

@@ -55,23 +55,23 @@ The [examples/](examples/) directory contains demonstration scripts showcasing h
 ### Control Systems & Stability
 | Analysis | Visualization |
 | :--- | :--- |
-| **CubeSat Detumbling**<br>B-Dot magnetic control for kinetic energy dissipation using noisy magnetometer data. | [01_cubesat_detumbling.py](examples/01_cubesat_detumbling.py) |
-| **Momentum Dumping**<br>Reaction wheel desaturation using magnetorquers to manage accumulated angular momentum. | [03_momentum_dumping.py](examples/03_momentum_dumping.py) |
+| **CubeSat Detumbling**<br>B-Dot magnetic control for kinetic energy dissipation using noisy magnetometer data. | ![CubeSat Detumbling](assets/detumbling.png)<br>[01_cubesat_detumbling.py](examples/01_cubesat_detumbling.py) |
+| **Momentum Dumping**<br>Reaction wheel desaturation using magnetorquers to manage accumulated angular momentum. | ![Momentum Dumping](assets/dumping.png)<br>[03_momentum_dumping.py](examples/03_momentum_dumping.py) |
 
 ### State Estimation & Navigation
 | Method | Visualization |
 | :--- | :--- |
-| **MEKF Attitude Estimation**<br>High-fidelity orientation tracking fusing star tracker and gyroscope data using Multiplicative Extended Kalman Filter. | [05_attitude_estimation_mekf.py](examples/05_attitude_estimation_mekf.py) |
+| **MEKF Attitude Estimation**<br>High-fidelity orientation tracking fusing star tracker and gyroscope data using Multiplicative Extended Kalman Filter. | ![Attitude Estimation](assets/attitude_est.png)<br>[05_attitude_estimation_mekf.py](examples/05_attitude_estimation_mekf.py) |
 
 ### Mission Operations & Guidance
 | Tool | Visualization |
 | :--- | :--- |
-| **Autonomous Rendezvous**<br>Precise multi-burn approach in GEO using Clohessy-Wiltshire relative targeting. | [04_autonomous_rendezvous.py](examples/04_autonomous_rendezvous.py) |
-| **VLEO Orbit Maintenance**<br>Maintaining altitude in high-drag environments using electric propulsion and hysteresis logic. | [02_vleo_orbit_maintenance.py](examples/02_vleo_orbit_maintenance.py) |
+| **Autonomous Rendezvous**<br>Precise multi-burn approach in GEO using Clohessy-Wiltshire relative targeting. | ![Autonomous Rendezvous](assets/rendezvous.png)<br>[04_autonomous_rendezvous.py](examples/04_autonomous_rendezvous.py) |
+| **VLEO Orbit Maintenance**<br>Maintaining altitude in high-drag environments using electric propulsion and hysteresis logic. | ![VLEO Orbit Maintenance](assets/vleo_maintenance.png)<br>[02_vleo_orbit_maintenance.py](examples/02_vleo_orbit_maintenance.py) |
 | **UKF Attitude Estimation**<br>Advanced orientation tracking using Unscented Kalman Filter for nonlinear systems. | [06_ukf_attitude_estimation.py](examples/06_ukf_attitude_estimation.py) |
 | **QUEST Determination**<br>Deterministic attitude solution from vector measurements. | [07_quest_estimation.py](examples/07_quest_estimation.py) |
 | **Orbital Maneuvers**<br>Hohmann transfer and plane change calculation. | [08_orbital_maneuvers.py](examples/08_orbital_maneuvers.py) |
-| **Lambert Solver**<br>Orbit targeting between two points. | [09_lambert_solver.py](examples/09_lambert_solver.py) |
+| **Lambert Solver**<br>Orbit targeting between two points. | ![Lambert Solver](assets/cross_track.png)<br>[09_lambert_solver.py](examples/09_lambert_solver.py) |
 
 ## Project Overview
 

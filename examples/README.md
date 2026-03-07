@@ -13,6 +13,8 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Control:** B-Dot magnetic controller for kinetic energy dissipation.
 *   **Dynamics:** 6-DOF Rigid body Euler equations.
 
+![CubeSat Detumbling](../assets/detumbling.png)
+
 ## 2. VLEO Orbit Maintenance (Guidance & Control)
 **Script:** `02_vleo_orbit_maintenance.py`
 **Scenario:** A satellite in a 250 km Very Low Earth Orbit (VLEO) experiences high atmospheric drag.
@@ -22,6 +24,8 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Control:** Hysteresis-based thruster logic to maintain altitude within a +/- 100m deadband.
 *   **Actuators:** `ElectricThruster` model with fuel and power tracking.
 
+![VLEO Orbit Maintenance](../assets/vleo_maintenance.png)
+
 ## 3. Momentum Dumping (Actuator Management)
 **Script:** `03_momentum_dumping.py`
 **Scenario:** A spacecraft maintains Earth-pointing attitude while being subject to a constant disturbance torque (e.g., solar pressure). 
@@ -29,6 +33,8 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Actuators:** `ReactionWheels` (primary) and `Magnetorquers` (secondary).
 *   **Control Allocation:** Distributing torque demands to prevent wheel saturation.
 *   **Desaturation:** Cross-product law to use magnetorquers for dumping accumulated angular momentum.
+
+![Momentum Dumping](../assets/dumping.png)
 
 ## 4. Autonomous Rendezvous (Relative GNC)
 **Script:** `04_autonomous_rendezvous.py`
@@ -38,6 +44,8 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Navigation:** Relative state propagation using Clohessy-Wiltshire equations.
 *   **Control:** Execution of translational maneuvers to achieve proximity operations.
 
+![Autonomous Rendezvous](../assets/rendezvous.png)
+
 ## 5. Attitude Estimation with MEKF (Navigation)
 **Script:** `05_attitude_estimation_mekf.py`
 **Scenario:** Fusing sensors with different characteristics to provide a stable attitude estimate.
@@ -45,3 +53,5 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Filter:** `MEKF` (Multiplicative Extended Kalman Filter) handling quaternion states and rate-gyro biases.
 *   **Sensors:** `StarTracker` (accurate, absolute, low frequency) + `Gyroscope` (noisy, relative, high frequency).
 *   **Analysis:** Verification of estimation consistency (Error vs. 3-sigma bounds).
+
+![MEKF Attitude Estimation](../assets/attitude_est.png)

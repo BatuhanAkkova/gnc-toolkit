@@ -144,15 +144,15 @@ class UKF:
             
         return np.array(sigmas)
 
+from gnc_toolkit.utils.quat_utils import quat_mult, quat_conj, axis_angle_to_quat, quat_normalize
+
 class UKF_Attitude(UKF):
     """
     Specialized UKF for Attitude Estimation.
     State: [q0, q1, q2, q3, bias_x, bias_y, bias_z] (7 dim)
     Covariance/Error: 6 dim (tangent space)
     """
-    def __init__(self, q_init=None, bias_init=None, **kwargs):
-        from gnc_toolkit.utils.quat_utils import quat_mult, quat_conj, axis_angle_to_quat, quat_normalize
-        
+    def __init__(self, q_init=None, bias_init=None, dim_z=3, **kwargs):
         self._quat_mult = quat_mult
         self._quat_conj = quat_conj
         self._axis_angle_to_quat = axis_angle_to_quat
@@ -190,7 +190,7 @@ class UKF_Attitude(UKF):
         if 'alpha' not in kwargs:
             kwargs['alpha'] = 1e-2
             
-        super().__init__(dim_x=7, dim_z=3, dim_p=6, 
+        super().__init__(dim_x=7, dim_z=dim_z, dim_p=6, 
                          subtract_x=subtract_x, add_x=add_x, mean_x=mean_x, **kwargs)
         
         if q_init is None: q_init = np.array([0, 0, 0, 1.0])

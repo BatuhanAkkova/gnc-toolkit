@@ -4,10 +4,42 @@ gnc\_toolkit.kalman\_filters package
 Submodules
 ----------
 
+gnc\_toolkit.kalman\_filters.akf module
+---------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.akf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.ckf module
+---------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.ckf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.kalman\_filters.ekf module
 ---------------------------------------
 
 .. automodule:: gnc_toolkit.kalman_filters.ekf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.enkf module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.enkf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.imm module
+---------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.imm
    :members:
    :show-inheritance:
    :undoc-members:
@@ -24,6 +56,22 @@ gnc\_toolkit.kalman\_filters.mekf module
 ----------------------------------------
 
 .. automodule:: gnc_toolkit.kalman_filters.mekf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.pf module
+--------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.pf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.sr\_ukf module
+-------------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.sr_ukf
    :members:
    :show-inheritance:
    :undoc-members:

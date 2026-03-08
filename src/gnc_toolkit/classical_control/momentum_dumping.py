@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Union
+from typing import Union, Optional
 
 class CrossProductLaw:
     """
@@ -17,14 +17,16 @@ class CrossProductLaw:
     Resulting Torque: T = -k * [h_error - (h_error . b_unit) * b_unit]
     """
     
-    def __init__(self, gain: float):
+    def __init__(self, gain: float, max_dipole: Optional[float] = None):
         """
         Initialize the Cross-Product Law controller.
         
         Args:
             gain: The feedback gain k (> 0). [s^-1]
+            max_dipole: Maximum magnetic dipole moment (saturation) [Am^2].
         """
         self.gain = gain
+        self.max_dipole = max_dipole
         
     def calculate_control(
         self, 
@@ -50,7 +52,12 @@ class CrossProductLaw:
         if b_sq < 1e-18:
             return np.zeros(3)
             
-        # m = k * (h x B) / |B|^2
+        # dipole = k * (error_vec x B) / |B|^2
         dipole_moment = (self.gain / b_sq) * np.cross(h, b)
+        
+        if self.max_dipole is not None:
+            norm_m = np.linalg.norm(dipole_moment)
+            if norm_m > self.max_dipole:
+                dipole_moment *= (self.max_dipole / norm_m)
         
         return dipole_moment

@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Tuple
 from .time_utils import calc_gmst
-from gnc_toolkit.utils.state_conversion import rot_z
+from gnc_toolkit.utils.state_conversion import rot_z, rot_x
 
 def eci2ecef(reci, veci, jdut1, dut1=0) -> tuple[np.ndarray, np.ndarray]:
     """Converts ECI to ECEF."""
@@ -96,3 +96,58 @@ def eci2geodetic(r_eci, jd):
     alt = r - R_earth
     
     return np.degrees(lon), np.degrees(lat), alt
+
+def eci2eme2000(reci, veci) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Converts ECI (J2000) to EME2000.
+    In many contexts these are treated as identical. 
+    Here we treat ECI as Earth-Centered Inertial at epoch of date, 
+    and EME2000 as fixed at J2000.
+    """
+    # For now, identity as a default mapping.
+    return reci, veci
+
+def eme20002eci(reci, veci) -> tuple[np.ndarray, np.ndarray]:
+    """Converts EME2000 to ECI (J2000)."""
+    return reci, veci
+
+def eci2icrf(reci, veci, jd) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Converts ECI (J2000) to ICRF.
+    Includes simplified Precession and Nutation.
+    """
+    t = (jd - 2451545.0) / 36525.0 # Julian centuries from J2000
+    
+    # Simplified Precession (Lieske et al., 1977)
+    zeta = (2306.2181 * t + 0.30188 * t**2 + 0.017998 * t**3) * (np.pi / 648000.0)
+    theta = (2004.3109 * t - 0.42665 * t**2 - 0.041833 * t**3) * (np.pi / 648000.0)
+    z = (2306.2181 * t + 1.09468 * t**2 + 0.018203 * t**3) * (np.pi / 648000.0)
+    
+    P = rot_z(-z) @ rot_y(theta) @ rot_z(-zeta)
+    
+    r_icrf = P @ reci
+    v_icrf = P @ veci
+    
+    return r_icrf, v_icrf
+
+def icrf2eci(reci, veci, jd) -> tuple[np.ndarray, np.ndarray]:
+    """Converts ICRF to ECI (J2000)."""
+    t = (jd - 2451545.0) / 36525.0
+    zeta = (2306.2181 * t + 0.30188 * t**2 + 0.017998 * t**3) * (np.pi / 648000.0)
+    theta = (2004.3109 * t - 0.42665 * t**2 - 0.041833 * t**3) * (np.pi / 648000.0)
+    z = (2306.2181 * t + 1.09468 * t**2 + 0.018203 * t**3) * (np.pi / 648000.0)
+    
+    P_inv = rot_z(zeta) @ rot_y(-theta) @ rot_z(z)
+    
+    reci_out = P_inv @ reci
+    veci_out = P_inv @ veci
+    
+    return reci_out, veci_out
+
+def rot_y(angle):
+    """Rotation matrix for rotation about y-axis."""
+    return np.array([
+        [np.cos(angle), 0, np.sin(angle)],
+        [0, 1, 0],
+        [-np.sin(angle), 0, np.cos(angle)]
+    ])

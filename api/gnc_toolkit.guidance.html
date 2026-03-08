@@ -44,6 +44,14 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">gnc_toolkit.guidance package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.guidance.attitude_guidance">gnc_toolkit.guidance.attitude_guidance module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.attitude_blending"><code class="docutils literal notranslate"><span class="pre">attitude_blending()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.eigenaxis_slew_path_planning"><code class="docutils literal notranslate"><span class="pre">eigenaxis_slew_path_planning()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.nadir_pointing_reference"><code class="docutils literal notranslate"><span class="pre">nadir_pointing_reference()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.sun_pointing_reference"><code class="docutils literal notranslate"><span class="pre">sun_pointing_reference()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.target_tracking_reference"><code class="docutils literal notranslate"><span class="pre">target_tracking_reference()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.guidance.maneuvers">gnc_toolkit.guidance.maneuvers module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.bi_elliptic_transfer"><code class="docutils literal notranslate"><span class="pre">bi_elliptic_transfer()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.combined_plane_change"><code class="docutils literal notranslate"><span class="pre">combined_plane_change()</span></code></a></li>
@@ -91,6 +99,99 @@
 <h1>gnc_toolkit.guidance package<a class="headerlink" href="#gnc-toolkit-guidance-package" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.guidance.attitude_guidance">
+<span id="gnc-toolkit-guidance-attitude-guidance-module"></span><h2>gnc_toolkit.guidance.attitude_guidance module<a class="headerlink" href="#module-gnc_toolkit.guidance.attitude_guidance" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.attitude_guidance.attitude_blending">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.attitude_guidance.</span></span><span class="sig-name descname"><span class="pre">attitude_blending</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/attitude_guidance.html#attitude_blending"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.attitude_guidance.attitude_blending" title="Link to this definition"></a></dt>
+<dd><p>SLERP (Spherical Linear Interpolation) between two quaternions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q1</strong> – First quaternion [x, y, z, w]</p></li>
+<li><p><strong>q2</strong> – Second quaternion [x, y, z, w]</p></li>
+<li><p><strong>alpha</strong> – Blending factor [0, 1]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Blended quaternion [x, y, z, w]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.attitude_guidance.eigenaxis_slew_path_planning">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.attitude_guidance.</span></span><span class="sig-name descname"><span class="pre">eigenaxis_slew_path_planning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_initial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_final</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_span</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/attitude_guidance.html#eigenaxis_slew_path_planning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.attitude_guidance.eigenaxis_slew_path_planning" title="Link to this definition"></a></dt>
+<dd><p>Generate an eigenaxis slew profile between two orientations.
+Using SLERP (Spherical Linear Interpolation).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_initial</strong> – Initial quaternion [x, y, z, w]</p></li>
+<li><p><strong>q_final</strong> – Final quaternion [x, y, z, w]</p></li>
+<li><p><strong>time_span</strong> – Normalized time values [0, 1] (N,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of quaternions along the path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.attitude_guidance.nadir_pointing_reference">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.attitude_guidance.</span></span><span class="sig-name descname"><span class="pre">nadir_pointing_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/attitude_guidance.html#nadir_pointing_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.attitude_guidance.nadir_pointing_reference" title="Link to this definition"></a></dt>
+<dd><p>Generate a reference quaternion for Nadir pointing.
+Target frame: Z-axis points towards Earth center, Y-axis along orbit normal,
+X-axis completes the right-handed frame (approximately velocity direction).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos_eci</strong> – ECI position vector [m] (3,)</p></li>
+<li><p><strong>vel_eci</strong> – ECI velocity vector [m/s] (3,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference quaternion [x, y, z, w]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.attitude_guidance.sun_pointing_reference">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.attitude_guidance.</span></span><span class="sig-name descname"><span class="pre">sun_pointing_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sun_vec_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/attitude_guidance.html#sun_pointing_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.attitude_guidance.sun_pointing_reference" title="Link to this definition"></a></dt>
+<dd><p>Generate a reference quaternion for Sun pointing.
+Primary objective: Align Body X-axis with Sun vector.
+Secondary objective: Minimize rotation about Sun vector (constrained pointing).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sun_vec_eci</strong> – ECI Sun direction vector (3,)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference quaternion [x, y, z, w]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.attitude_guidance.target_tracking_reference">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.attitude_guidance.</span></span><span class="sig-name descname"><span class="pre">target_tracking_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/attitude_guidance.html#target_tracking_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.attitude_guidance.target_tracking_reference" title="Link to this definition"></a></dt>
+<dd><p>Generate a reference quaternion to track a target position.
+Target frame: Z-axis aligned with boresight (towards target).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos_eci</strong> – ECI position vector of spacecraft [m] (3,)</p></li>
+<li><p><strong>target_pos_eci</strong> – ECI position vector of target [m] (3,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference quaternion [x, y, z, w]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-gnc_toolkit.guidance.maneuvers">
 <span id="gnc-toolkit-guidance-maneuvers-module"></span><h2>gnc_toolkit.guidance.maneuvers module<a class="headerlink" href="#module-gnc_toolkit.guidance.maneuvers" title="Link to this heading"></a></h2>

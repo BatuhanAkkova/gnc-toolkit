@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.guidance.attitude_guidance &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.guidance.attitude_guidance</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.guidance.attitude_guidance</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">quat_normalize</span><span class="p">,</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_mult</span>
+
+<div class="viewcode-block" id="nadir_pointing_reference">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.nadir_pointing_reference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nadir_pointing_reference</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">vel_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a reference quaternion for Nadir pointing.</span>
+<span class="sd">    Target frame: Z-axis points towards Earth center, Y-axis along orbit normal,</span>
+<span class="sd">    X-axis completes the right-handed frame (approximately velocity direction).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        pos_eci: ECI position vector [m] (3,)</span>
+<span class="sd">        vel_eci: ECI velocity vector [m/s] (3,)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Reference quaternion [x, y, z, w]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pos_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">)</span>
+    <span class="n">vel_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vel_eci</span><span class="p">)</span>
+    
+    <span class="c1"># Z-axis (Nadir): Towards Earth center</span>
+    <span class="n">z_axis</span> <span class="o">=</span> <span class="o">-</span><span class="n">pos_eci</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">)</span>
+    
+    <span class="c1"># Y-axis: Negative of Orbit normal (to align with negative Z_eci for equatorial)</span>
+    <span class="n">orb_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">,</span> <span class="n">vel_eci</span><span class="p">)</span>
+    <span class="n">y_axis</span> <span class="o">=</span> <span class="o">-</span><span class="n">orb_normal</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">orb_normal</span><span class="p">)</span>
+    
+    <span class="c1"># X-axis: Complete the frame (approximates velocity direction in circular orbit)</span>
+    <span class="n">x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">)</span>
+    <span class="n">x_axis</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x_axis</span><span class="p">)</span>
+    
+    <span class="c1"># DCM from ECI to Body (R_eb)</span>
+    <span class="c1"># R_eb transforms vector from ECI to Body frame.</span>
+    <span class="c1"># The rows are the unit vectors of the body axes expressed in ECI.</span>
+    <span class="n">rmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">_rmat_to_quat</span><span class="p">(</span><span class="n">rmat</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sun_pointing_reference">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.sun_pointing_reference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sun_pointing_reference</span><span class="p">(</span><span class="n">sun_vec_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a reference quaternion for Sun pointing.</span>
+<span class="sd">    Primary objective: Align Body X-axis with Sun vector.</span>
+<span class="sd">    Secondary objective: Minimize rotation about Sun vector (constrained pointing).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        sun_vec_eci: ECI Sun direction vector (3,)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Reference quaternion [x, y, z, w]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sun_vec_eci</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sun_vec_eci</span><span class="p">)</span>
+    
+    <span class="c1"># Simple algorithm: find shortest rotation from ECI X to Sun vector</span>
+    <span class="n">eci_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+    
+    <span class="n">dot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eci_x</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dot</span> <span class="o">&gt;</span> <span class="mf">0.999999</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">dot</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.999999</span><span class="p">:</span>
+        <span class="c1"># 180 deg rotation about any orthogonal axis</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+    
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">eci_x</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">axis_angle_to_quat</span><span class="p">(</span><span class="n">axis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span> <span class="o">*</span> <span class="n">angle</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="target_tracking_reference">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.target_tracking_reference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">target_tracking_reference</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">target_pos_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a reference quaternion to track a target position.</span>
+<span class="sd">    Target frame: Z-axis aligned with boresight (towards target).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        pos_eci: ECI position vector of spacecraft [m] (3,)</span>
+<span class="sd">        target_pos_eci: ECI position vector of target [m] (3,)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Reference quaternion [x, y, z, w]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rel_pos</span> <span class="o">=</span> <span class="n">target_pos_eci</span> <span class="o">-</span> <span class="n">pos_eci</span>
+    <span class="n">z_axis</span> <span class="o">=</span> <span class="n">rel_pos</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel_pos</span><span class="p">)</span>
+    
+    <span class="c1"># Constrain Y-axis to be orthogonal to both Z and ECI Z (arbitrary for stability)</span>
+    <span class="n">eci_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">eci_z</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">0.99</span><span class="p">:</span>
+        <span class="n">eci_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+        
+    <span class="n">y_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">eci_z</span><span class="p">)</span>
+    <span class="n">y_axis</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">y_axis</span><span class="p">)</span>
+    <span class="n">x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">)</span>
+    
+    <span class="n">rmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">_rmat_to_quat</span><span class="p">(</span><span class="n">rmat</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="eigenaxis_slew_path_planning">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.eigenaxis_slew_path_planning">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eigenaxis_slew_path_planning</span><span class="p">(</span><span class="n">q_initial</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_final</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                                 <span class="n">time_span</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate an eigenaxis slew profile between two orientations.</span>
+<span class="sd">    Using SLERP (Spherical Linear Interpolation).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        q_initial: Initial quaternion [x, y, z, w]</span>
+<span class="sd">        q_final: Final quaternion [x, y, z, w]</span>
+<span class="sd">        time_span: Normalized time values [0, 1] (N,)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        List of quaternions along the path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_span</span><span class="p">:</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attitude_blending</span><span class="p">(</span><span class="n">q_initial</span><span class="p">,</span> <span class="n">q_final</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">path</span></div>
+
+
+<div class="viewcode-block" id="attitude_blending">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.attitude_blending">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">attitude_blending</span><span class="p">(</span><span class="n">q1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SLERP (Spherical Linear Interpolation) between two quaternions.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        q1: First quaternion [x, y, z, w]</span>
+<span class="sd">        q2: Second quaternion [x, y, z, w]</span>
+<span class="sd">        alpha: Blending factor [0, 1]</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Blended quaternion [x, y, z, w]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q1</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">q1</span><span class="p">)</span>
+    <span class="n">q2</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">q2</span><span class="p">)</span>
+    
+    <span class="n">dot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">)</span>
+    
+    <span class="c1"># If dot is negative, SLERP will take the long way.</span>
+    <span class="c1"># Flip one quaternion to take the short path.</span>
+    <span class="k">if</span> <span class="n">dot</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">q1</span> <span class="o">=</span> <span class="o">-</span><span class="n">q1</span>
+        <span class="n">dot</span> <span class="o">=</span> <span class="o">-</span><span class="n">dot</span>
+        
+    <span class="k">if</span> <span class="n">dot</span> <span class="o">&gt;</span> <span class="mf">0.9995</span><span class="p">:</span>
+        <span class="c1"># Linear interpolation for very small angles</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">q2</span> <span class="o">-</span> <span class="n">q1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        
+    <span class="n">theta_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">theta_0</span> <span class="o">*</span> <span class="n">alpha</span>
+    
+    <span class="n">sin_theta_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_0</span><span class="p">)</span>
+    <span class="n">sin_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    
+    <span class="n">s0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">dot</span> <span class="o">*</span> <span class="n">sin_theta</span> <span class="o">/</span> <span class="n">sin_theta_0</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">sin_theta</span> <span class="o">/</span> <span class="n">sin_theta_0</span>
+    
+    <span class="k">return</span> <span class="p">(</span><span class="n">s0</span> <span class="o">*</span> <span class="n">q1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">s1</span> <span class="o">*</span> <span class="n">q2</span><span class="p">)</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_rmat_to_quat</span><span class="p">(</span><span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal helper to convert 3x3 rotation matrix to quaternion [x, y, z, w].</span>
+<span class="sd">    Robust implementation (Shepperd&#39;s algorithm).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tr</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+    <span class="k">elif</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

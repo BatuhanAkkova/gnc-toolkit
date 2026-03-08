@@ -4,6 +4,14 @@ gnc\_toolkit.guidance package
 Submodules
 ----------
 
+gnc\_toolkit.guidance.attitude\_guidance module
+-----------------------------------------------
+
+.. automodule:: gnc_toolkit.guidance.attitude_guidance
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.guidance.maneuvers module
 --------------------------------------
 

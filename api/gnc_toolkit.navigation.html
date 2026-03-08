@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.navigation package &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">gnc_toolkit.navigation package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.angle_only_nav">gnc_toolkit.navigation.angle_only_nav module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation.update_unit_vector()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.gps_nav">gnc_toolkit.navigation.gps_nav module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation"><code class="docutils literal notranslate"><span class="pre">GPSNavigation</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps"><code class="docutils literal notranslate"><span class="pre">GPSNavigation.update_gps()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.orbit_determination">gnc_toolkit.navigation.orbit_determination module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.covariance"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.covariance</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.predict"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.state"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.state</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.update"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.relative_nav">gnc_toolkit.navigation.relative_nav module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.predict"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.state"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF.state</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.update"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.surface_nav">gnc_toolkit.navigation.surface_nav module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.predict"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.state"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF.state</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.update_landmark"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF.update_landmark()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation">Module contents</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.AngleOnlyNavigation"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation.update_unit_vector()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.GPSNavigation"><code class="docutils literal notranslate"><span class="pre">GPSNavigation</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.GPSNavigation.update_gps"><code class="docutils literal notranslate"><span class="pre">GPSNavigation.update_gps()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.OrbitDeterminationEKF"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.covariance"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.covariance</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.predict"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.state"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.state</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.update"><code class="docutils literal notranslate"><span class="pre">OrbitDeterminationEKF.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.RelativeNavigationEKF"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.RelativeNavigationEKF.predict"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.RelativeNavigationEKF.state"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF.state</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.RelativeNavigationEKF.update"><code class="docutils literal notranslate"><span class="pre">RelativeNavigationEKF.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.SurfaceNavigationEKF"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.predict"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF.predict()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.state"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF.state</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.update_landmark"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF.update_landmark()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.navigation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.navigation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-navigation-package">
+<h1>gnc_toolkit.navigation package<a class="headerlink" href="#gnc-toolkit-navigation-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.navigation.angle_only_nav">
+<span id="gnc-toolkit-navigation-angle-only-nav-module"></span><h2>gnc_toolkit.navigation.angle_only_nav module<a class="headerlink" href="#module-gnc_toolkit.navigation.angle_only_nav" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.angle_only_nav.</span></span><span class="sig-name descname"><span class="pre">AngleOnlyNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
+<p>Navigation using Line-of-Sight (LOS) measurements (unit vectors).
+Inherits orbital dynamics from OrbitDeterminationEKF.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector">
+<span class="sig-name descname"><span class="pre">update_unit_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos_eci</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation.update_unit_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector" title="Link to this definition"></a></dt>
+<dd><p>Update state using a unit vector measurement to a target.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_meas</strong> (<em>np.ndarray</em>) – Measured unit vector [ux, uy, uz] in ECI.</p></li>
+<li><p><strong>target_pos_eci</strong> (<em>np.ndarray</em>) – Position of the target being tracked in ECI [m].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.navigation.gps_nav">
+<span id="gnc-toolkit-navigation-gps-nav-module"></span><h2>gnc_toolkit.navigation.gps_nav module<a class="headerlink" href="#module-gnc_toolkit.navigation.gps_nav" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.gps_nav.GPSNavigation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.gps_nav.</span></span><span class="sig-name descname"><span class="pre">GPSNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
+<p>Navigation using GNSS (GPS) measurements.
+Processes position and velocity updates.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps">
+<span class="sig-name descname"><span class="pre">update_gps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_gps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation.update_gps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps" title="Link to this definition"></a></dt>
+<dd><p>Update state using GPS measurements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_meas</strong> (<em>np.ndarray</em>) – Measured position [x, y, z] in ECI [m].</p></li>
+<li><p><strong>v_meas</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measured velocity [vx, vy, vz] in ECI [m/s].</p></li>
+<li><p><strong>R_gps</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Custom measurement noise covariance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.navigation.orbit_determination">
+<span id="gnc-toolkit-navigation-orbit-determination-module"></span><h2>gnc_toolkit.navigation.orbit_determination module<a class="headerlink" href="#module-gnc_toolkit.navigation.orbit_determination" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.orbit_determination.</span></span><span class="sig-name descname"><span class="pre">OrbitDeterminationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Extended Kalman Filter for Orbit Determination (OD-EKF).
+Estimates position and velocity in ECI frame.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.covariance">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">covariance</span></span><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.covariance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform EKF prediction step.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Perform EKF update step with position measurement.
+z_pos: [x, y, z] measurement in ECI</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.navigation.relative_nav">
+<span id="gnc-toolkit-navigation-relative-nav-module"></span><h2>gnc_toolkit.navigation.relative_nav module<a class="headerlink" href="#module-gnc_toolkit.navigation.relative_nav" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.relative_nav.</span></span><span class="sig-name descname"><span class="pre">RelativeNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.
+Estimates relative position and velocity [x, y, z, vx, vy, vz].</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict relative state using CW equations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_rel_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update relative state using relative position measurement.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.navigation.surface_nav">
+<span id="gnc-toolkit-navigation-surface-nav-module"></span><h2>gnc_toolkit.navigation.surface_nav module<a class="headerlink" href="#module-gnc_toolkit.navigation.surface_nav" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.surface_nav.</span></span><span class="sig-name descname"><span class="pre">SurfaceNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic SLAM-like Surface Navigation EKF.
+Estimates lander/rover position and velocity [x, y, z, vx, vy, vz]
+using measurements to known landmarks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict state using constant velocity or constant acceleration model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Time step [s].</p></li>
+<li><p><strong>accel</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Constant acceleration input [m/s^2].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.update_landmark">
+<span class="sig-name descname"><span class="pre">update_landmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">landmark_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.update_landmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.update_landmark" title="Link to this definition"></a></dt>
+<dd><p>Update state using observed relative vector to a known landmark.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_obs</strong> (<em>np.ndarray</em>) – Measured relative vector [dx, dy, dz] in local frame.</p></li>
+<li><p><strong>landmark_pos</strong> (<em>np.ndarray</em>) – Known position of the landmark in local frame.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.navigation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.navigation" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.AngleOnlyNavigation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">AngleOnlyNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.AngleOnlyNavigation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
+<p>Navigation using Line-of-Sight (LOS) measurements (unit vectors).
+Inherits orbital dynamics from OrbitDeterminationEKF.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector">
+<span class="sig-name descname"><span class="pre">update_unit_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos_eci</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation.update_unit_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector" title="Link to this definition"></a></dt>
+<dd><p>Update state using a unit vector measurement to a target.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_meas</strong> (<em>np.ndarray</em>) – Measured unit vector [ux, uy, uz] in ECI.</p></li>
+<li><p><strong>target_pos_eci</strong> (<em>np.ndarray</em>) – Position of the target being tracked in ECI [m].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.GPSNavigation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">GPSNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.GPSNavigation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
+<p>Navigation using GNSS (GPS) measurements.
+Processes position and velocity updates.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.GPSNavigation.update_gps">
+<span class="sig-name descname"><span class="pre">update_gps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_gps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation.update_gps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.GPSNavigation.update_gps" title="Link to this definition"></a></dt>
+<dd><p>Update state using GPS measurements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_meas</strong> (<em>np.ndarray</em>) – Measured position [x, y, z] in ECI [m].</p></li>
+<li><p><strong>v_meas</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measured velocity [vx, vy, vz] in ECI [m/s].</p></li>
+<li><p><strong>R_gps</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Custom measurement noise covariance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">OrbitDeterminationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Extended Kalman Filter for Orbit Determination (OD-EKF).
+Estimates position and velocity in ECI frame.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.covariance">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">covariance</span></span><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.covariance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform EKF prediction step.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Perform EKF update step with position measurement.
+z_pos: [x, y, z] measurement in ECI</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">RelativeNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.
+Estimates relative position and velocity [x, y, z, vx, vy, vz].</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict relative state using CW equations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF.state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_rel_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update relative state using relative position measurement.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">SurfaceNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic SLAM-like Surface Navigation EKF.
+Estimates lander/rover position and velocity [x, y, z, vx, vy, vz]
+using measurements to known landmarks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict state using constant velocity or constant acceleration model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Time step [s].</p></li>
+<li><p><strong>accel</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Constant acceleration input [m/s^2].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF.state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF.update_landmark">
+<span class="sig-name descname"><span class="pre">update_landmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">landmark_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.update_landmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.update_landmark" title="Link to this definition"></a></dt>
+<dd><p>Update state using observed relative vector to a known landmark.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_obs</strong> (<em>np.ndarray</em>) – Measured relative vector [dx, dy, dz] in local frame.</p></li>
+<li><p><strong>landmark_pos</strong> (<em>np.ndarray</em>) – Known position of the landmark in local frame.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

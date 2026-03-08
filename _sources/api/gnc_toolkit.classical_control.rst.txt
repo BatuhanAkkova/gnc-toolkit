@@ -28,6 +28,14 @@ gnc\_toolkit.classical\_control.pid module
    :show-inheritance:
    :undoc-members:
 
+gnc\_toolkit.classical\_control.rate\_damping module
+----------------------------------------------------
+
+.. automodule:: gnc_toolkit.classical_control.rate_damping
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Module contents
 ---------------
 

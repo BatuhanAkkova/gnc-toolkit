@@ -12,10 +12,42 @@ gnc\_toolkit.optimal\_control.feedback\_linearization module
    :show-inheritance:
    :undoc-members:
 
+gnc\_toolkit.optimal\_control.finite\_horizon\_lqr module
+---------------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.finite_horizon_lqr
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.h2\_control module
+------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.h2_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.h\_infinity module
+------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.h_infinity
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.optimal\_control.lqe module
 ----------------------------------------
 
 .. automodule:: gnc_toolkit.optimal_control.lqe
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.lqg module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.lqg
    :members:
    :show-inheritance:
    :undoc-members:

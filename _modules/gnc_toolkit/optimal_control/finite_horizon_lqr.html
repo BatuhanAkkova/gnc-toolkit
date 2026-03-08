@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.optimal_control.finite_horizon_lqr &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.optimal_control.finite_horizon_lqr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.optimal_control.finite_horizon_lqr</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+
+<div class="viewcode-block" id="FiniteHorizonLQR">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FiniteHorizonLQR</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finite-Horizon Linear Quadratic Regulator (LQR).</span>
+<span class="sd">    </span>
+<span class="sd">    Minimizes:</span>
+<span class="sd">    J = x(T).T * P_f * x(T) + integral_0^T (x.T * Q(t) * x + u.T * R(t) * u) dt</span>
+<span class="sd">    </span>
+<span class="sd">    The optimal control law is u(t) = -K(t) * x(t), </span>
+<span class="sd">    where K(t) = R(t)^-1 * B(t).T * P(t)</span>
+<span class="sd">    and P(t) is the solution to the Differential Riccati Equation (DRE):</span>
+<span class="sd">    -P_dot = P*A + A.T*P - P*B*R^-1*B.T*P + Q, with P(T) = P_f</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A_fn</span><span class="p">,</span> <span class="n">B_fn</span><span class="p">,</span> <span class="n">Q_fn</span><span class="p">,</span> <span class="n">R_fn</span><span class="p">,</span> <span class="n">Pf</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Finite-Horizon LQR.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            A_fn (callable): Function A(t) returning nx x nx matrix</span>
+<span class="sd">            B_fn (callable): Function B(t) returning nx x nu matrix</span>
+<span class="sd">            Q_fn (callable): Function Q(t) returning nx x nx matrix</span>
+<span class="sd">            R_fn (callable): Function R(t) returning nu x nu matrix</span>
+<span class="sd">            Pf (np.ndarray): Final state cost matrix (nx x nx)</span>
+<span class="sd">            T (float): Final time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A_fn</span> <span class="o">=</span> <span class="n">A_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B_fn</span> <span class="o">=</span> <span class="n">B_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q_fn</span> <span class="o">=</span> <span class="n">Q_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_fn</span> <span class="o">=</span> <span class="n">R_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Pf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Pf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">T</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_trajectory</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_span</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="FiniteHorizonLQR.solve">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR.solve">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Solve the Differential Riccati Equation backwards in time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">def</span><span class="w"> </span><span class="nf">dre</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">p_flat</span><span class="p">):</span>
+            <span class="n">P</span> <span class="o">=</span> <span class="n">p_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_fn</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_fn</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q_fn</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_fn</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            
+            <span class="c1"># Using solve for R^-1 * B.T @ P</span>
+            <span class="n">K_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">P</span><span class="p">)</span>
+            <span class="n">P_dot</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">P</span> <span class="o">@</span> <span class="n">A</span> <span class="o">+</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">P</span> <span class="o">-</span> <span class="n">P</span> <span class="o">@</span> <span class="n">B</span> <span class="o">@</span> <span class="n">K_term</span> <span class="o">+</span> <span class="n">Q</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">P_dot</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="c1"># Solve backwards from T to 0</span>
+        <span class="n">t_eval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">dre</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pf</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t_eval</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;RK45&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Store trajectory (reverse it to be 0 to T)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_span</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_trajectory</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_span</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_trajectory</span></div>
+
+
+<div class="viewcode-block" id="FiniteHorizonLQR.get_gain">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR.get_gain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interpolate the gain matrix K at time t.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_trajectory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+            
+        <span class="c1"># Linear interpolation of P</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">P_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+                <span class="n">P_t</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_span</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_trajectory</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+        
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_fn</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_fn</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">P_t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">K</span></div>
+
+
+<div class="viewcode-block" id="FiniteHorizonLQR.compute_control">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR.compute_control">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute control input u = -K(t) * x</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gain</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">K</span> <span class="o">@</span> <span class="n">x</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

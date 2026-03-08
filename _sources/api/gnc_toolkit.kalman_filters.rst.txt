@@ -36,6 +36,14 @@ gnc\_toolkit.kalman\_filters.enkf module
    :show-inheritance:
    :undoc-members:
 
+gnc\_toolkit.kalman\_filters.fixed\_interval\_smoother module
+-------------------------------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.fixed_interval_smoother
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.kalman\_filters.imm module
 ---------------------------------------
 
@@ -64,6 +72,14 @@ gnc\_toolkit.kalman\_filters.pf module
 --------------------------------------
 
 .. automodule:: gnc_toolkit.kalman_filters.pf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.kalman\_filters.rts\_smoother module
+-------------------------------------------------
+
+.. automodule:: gnc_toolkit.kalman_filters.rts_smoother
    :members:
    :show-inheritance:
    :undoc-members:

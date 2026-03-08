@@ -103,5 +103,59 @@ class ElectricThruster(Thruster):
         if self.power_efficiency <= 0: return float('inf')
         
         ve = self.isp * self.g0
-        power = (thrust * ve) / (2 * self.power_efficiency)
-        return power
+
+class ThrusterCluster:
+    """
+    A collection of thrusters with a defined allocation logic.
+    Maps generalized force/torque to individual thruster on-times or throttle levels.
+    """
+    def __init__(self, thrusters, positions, directions):
+        """
+        Args:
+            thrusters (list of Thruster): List of thruster objects.
+            positions (np.array): (N, 3) positions of thrusters in body frame.
+            directions (np.array): (N, 3) thrust unit vectors in body frame.
+        """
+        self.thrusters = thrusters
+        self.N = len(thrusters)
+        self.pos = np.array(positions)
+        self.dir = np.array(directions)
+        
+        # Build Actuator Matrix A (6 x N for force + torque)
+        # Force_i = T_i * dir_i
+        # Torque_i = pos_i x (T_i * dir_i)
+        self.A = np.zeros((6, self.N))
+        for i in range(self.N):
+            self.A[0:3, i] = self.dir[i]
+            self.A[3:6, i] = np.cross(self.pos[i], self.dir[i])
+            
+        # Default allocator
+        from gnc_toolkit.actuators.allocation import PseudoInverseAllocator
+        self.allocator = PseudoInverseAllocator(self.A)
+
+    def command(self, force_torque_cmd, dt=None):
+        """
+        Distribute 6-DOF command to thrusters.
+        
+        Args:
+            force_torque_cmd (np.array): (6,) desired [Fx, Fy, Fz, Tx, Ty, Tz].
+            dt (float): Time step for MIB checks.
+            
+        Returns:
+            np.array: Delivered thrusts for each thruster.
+        """
+        # Allocate desired thrust levels
+        thrust_cmds = self.allocator.allocate(force_torque_cmd)
+        
+        # Apply individual thruster constraints (positive thrust only usually)
+        # Note: Linear allocation might produce negative thrust. 
+        # For unilateral thrusters, this requires more complex optimization (e.g. QP).
+        # Simple clip for now (will result in command error if impossible).
+        delivered_thrusts = []
+        for i, cmd in enumerate(thrust_cmds):
+            # Most thrusters are unilateral (cannot pull)
+            cmd_clamped = max(0.0, cmd)
+            delivered = self.thrusters[i].command(cmd_clamped, dt=dt)
+            delivered_thrusts.append(delivered)
+            
+        return np.array(delivered_thrusts)

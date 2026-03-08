@@ -186,5 +186,98 @@ class TestLQR(unittest.TestCase):
         
         self.assertEqual(u, -6.0)
 
+class TestLQG(unittest.TestCase):
+    def test_lqg_stability(self):
+        from gnc_toolkit.optimal_control.lqg import LQG
+        # Simple 1D system: x_dot = u + w, y = x + v
+        A = np.array([[1.0]]) # Unstable system
+        B = np.array([[1.0]])
+        C = np.array([[1.0]])
+        
+        Q_lqr = np.array([[1.0]])
+        R_lqr = np.array([[1.0]])
+        Q_lqe = np.array([[1.0]])
+        R_lqe = np.array([[1.0]])
+        
+        lqg = LQG(A, B, C, Q_lqr, R_lqr, Q_lqe, R_lqe)
+        
+        # Check gains exist
+        self.assertIsNotNone(lqg.K)
+        self.assertIsNotNone(lqg.L)
+        
+        # Initial state and estimate
+        x = np.array([1.0])
+        lqg.x_hat = np.array([0.0])
+        
+        # Simulate a few steps
+        dt = 0.01
+        u = np.array([0.0])
+        y = C @ x
+        for _ in range(500):
+            u = lqg.compute_control(y=y, dt=dt, u_last=u)
+            x_dot = A @ x + B @ u
+            x = x + x_dot * dt
+            y = C @ x
+            
+        # Should converge towards zero
+        self.assertLess(np.abs(x[0]), 1.0)
+        self.assertLess(np.abs(x[0] - lqg.x_hat[0]), 0.1)
+
+class TestFiniteHorizonLQR(unittest.TestCase):
+    def test_finite_horizon_lqr(self):
+        from gnc_toolkit.optimal_control.finite_horizon_lqr import FiniteHorizonLQR
+        # Double integrator
+        def A_fn(t): return np.array([[0, 1], [0, 0]])
+        def B_fn(t): return np.array([[0], [1]])
+        def Q_fn(t): return np.eye(2)
+        def R_fn(t): return np.eye(1)
+        Pf = np.eye(2) * 10.0
+        T = 2.0
+        
+        fhlqr = FiniteHorizonLQR(A_fn, B_fn, Q_fn, R_fn, Pf, T)
+        t_span, P_traj = fhlqr.solve(num_points=10)
+        
+        self.assertEqual(len(t_span), 10)
+        self.assertEqual(P_traj.shape, (10, 2, 2))
+        
+        # Check gain at t=0
+        K0 = fhlqr.get_gain(0.0)
+        self.assertEqual(K0.shape, (1, 2))
+        
+        # Gain at end should be R^-1 * B.T * Pf = [[0, 1]] * 10 = [[0, 10]]
+        KT = fhlqr.get_gain(2.0)
+        np.testing.assert_allclose(KT, [[0.0, 10.0]], atol=1e-5)
+
+class TestHInfinity(unittest.TestCase):
+    def test_h_infinity_scalar(self):
+        from gnc_toolkit.optimal_control.h_infinity import HInfinityController
+        # x_dot = x + w + u
+        # z = [x; u]
+        A = np.array([[1.0]])
+        B1 = np.array([[1.0]])
+        B2 = np.array([[1.0]])
+        Q = np.array([[1.0]])
+        R = np.array([[1.0]])
+        gamma = 2.0
+        
+        hinf = HInfinityController(A, B1, B2, Q, R, gamma)
+        K = hinf.compute_gain()
+        
+        # Check stability of A - B2*K
+        self.assertLess(A[0,0] - B2[0,0] * K[0,0], 0)
+        
+    def test_h_infinity_fail(self):
+        from gnc_toolkit.optimal_control.h_infinity import HInfinityController
+        A = np.array([[1.0]])
+        B1 = np.array([[10.0]]) # Huge disturbance
+        B2 = np.array([[1.0]])
+        Q = np.array([[1.0]])
+        R = np.array([[1.0]])
+        gamma = 0.1 # Too strict attenuation for large B1
+        
+        hinf = HInfinityController(A, B1, B2, Q, R, gamma)
+        with self.assertRaises(ValueError):
+            hinf.solve()
+
 if __name__ == '__main__':
     unittest.main()

@@ -147,3 +147,80 @@ def combined_plane_change(v1: float, v2: float, delta_i: float) -> float:
         float: Delta-V required (km/s).
     """
     return np.sqrt(v1**2 + v2**2 - 2 * v1 * v2 * np.cos(delta_i))
+
+def delta_v_budget(initial_mass: float, dv_total: float, isp: float) -> float:
+    """
+    Calculates the required propellant mass using the Tsiolkovsky rocket equation.
+    
+    Args:
+        initial_mass (float): Initial mass of the spacecraft (kg).
+        dv_total (float): Total Delta-V required (km/s).
+        isp (float): Specific impulse of the propulsion system (s).
+        
+    Returns:
+        float: Propellant mass required (kg).
+    """
+    g0 = 0.00980665 # standard gravity in km/s^2
+    mass_ratio = np.exp(dv_total / (isp * g0))
+    final_mass = initial_mass / mass_ratio
+    return initial_mass - final_mass
+
+def raan_change(v: float, i: float, delta_raan: float) -> float:
+    """
+    Calculates the Delta-V required for a Right Ascension of Ascending Node (RAAN) change.
+    Assuming circular orbit and maneuver performed at the poles (max efficiency).
+    
+    Args:
+        v (float): Orbital velocity (km/s).
+        i (float): Inclination (radians).
+        delta_raan (float): Desired RAAN change (radians).
+        
+    Returns:
+        float: Delta-V required (km/s).
+    """
+    # Formula for plane change alpha given i and delta_raan:
+    # cos(alpha) = cos^2(i) + sin^2(i) * cos(delta_raan)
+    cos_alpha = np.cos(i)**2 + np.sin(i)**2 * np.cos(delta_raan)
+    alpha = np.arccos(np.clip(cos_alpha, -1.0, 1.0))
+    return 2 * v * np.sin(alpha / 2.0)
+
+def optimal_combined_maneuver(r1: float, r2: float, delta_i: float, mu: float = 398600.4418) -> tuple[float, float, float]:
+    """
+    Calculates the optimal split of inclination change between two burns of a Hohmann transfer
+    to minimize total Delta-V.
+    
+    Args:
+        r1 (float): Initial circular orbit radius (km).
+        r2 (float): Final circular orbit radius (km).
+        delta_i (float): Total inclination change (radians).
+        mu (float): Gravitational parameter.
+        
+    Returns:
+        tuple[float, float, float]:
+            - dv_total (float): Minimum total Delta-V (km/s).
+            - di1 (float): Inclination change at first burn (radians).
+            - di2 (float): Inclination change at second burn (radians).
+    """
+    # Velocity parameters
+    a_trans = (r1 + r2) / 2.0
+    v_c1 = np.sqrt(mu / r1)
+    v_c2 = np.sqrt(mu / r2)
+    v_trans_p = np.sqrt(mu * (2/r1 - 1/a_trans))
+    v_trans_a = np.sqrt(mu * (2/r2 - 1/a_trans))
+    
+    # We want to minimize:
+    # f(di1) = sqrt(v_c1^2 + v_trans_p^2 - 2*v_c1*v_trans_p*cos(di1)) + 
+    #          sqrt(v_trans_a^2 + v_c2^2 - 2*v_trans_a*v_c2*cos(delta_i - di1))
+    
+    from scipy.optimize import minimize_scalar
+    
+    def objective(di1):
+        dv1 = np.sqrt(v_c1**2 + v_trans_p**2 - 2*v_c1*v_trans_p*np.cos(di1))
+        dv2 = np.sqrt(v_trans_a**2 + v_c2**2 - 2*v_trans_a*v_c2*np.cos(delta_i - di1))
+        return dv1 + dv2
+    
+    res = minimize_scalar(objective, bounds=(0, delta_i), method='bounded')
+    di1_opt = res.x
+    di2_opt = delta_i - di1_opt
+    
+    return float(res.fun), float(di1_opt), float(di2_opt)

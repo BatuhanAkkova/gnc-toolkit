@@ -7,6 +7,18 @@ def igrf_field(lat, lon, alt, time):
         raise ImportError("ppigrf not installed or data files missing.")
     return np.array(ppigrf.igrf(lon, lat, alt, time))
 
+def wmm_field(lat, lon, alt, date):
+    """
+    Get the World Magnetic Model (WMM) field.
+    Note: For high precision, use a dedicated WMM library. 
+    This is a placeholder for WMM logic, currently defaulting to IGRF 
+    as they are closely related for many GNC purposes if updated coefficients are used.
+    """
+    # In a real implementation, we would load WMM2020.COF here.
+    # For now, we will use IGRF as a proxy if ppigrf is available, 
+    # as WMM is often distributed as a specific subset of IGRF-like harmonics.
+    return igrf_field(lat, lon, alt, date)
+
 def tilted_dipole_field(r_ecef):
     """Calculates the magnetic field vector at a given position using the tilted dipole model."""
     B_0 = 3.12e-5 # Magnetic field strength at equator [T]

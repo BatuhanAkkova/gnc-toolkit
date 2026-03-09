@@ -1,7 +1,55 @@
 import numpy as np
 import pytest
-from gnc_toolkit.navigation.iod import gibbs_iod, herrick_gibbs_iod, laplace_iod, laplace_iod_from_observations
+from gnc_toolkit.navigation.iod import gibbs_iod, herrick_gibbs_iod, laplace_iod, laplace_iod_from_observations, gauss_iod
 from gnc_toolkit.utils.state_to_elements import kepler2eci
+
+def test_gauss_iod():
+    # Synthetic orbit context
+    a = 10000e3
+    ecc = 0.05
+    incl = np.radians(35.0)
+    raan = np.radians(10.0)
+    argp = np.radians(20.0)
+    
+    mu = 398600.4415e9
+    n = np.sqrt(mu / a**3)
+    
+    # Separation for Gauss
+    t2 = 1800.0
+    dt = 300.0
+    times = [t2 - dt, t2, t2 + dt]
+    
+    rho_hats = []
+    Rs = []
+    
+    # Ground station / Observer (fixed in ECI for test)
+    R_earth = 6378137.0
+    lat = np.radians(30.0)
+    R_obs = np.array([R_earth * np.cos(lat), 0, R_earth * np.sin(lat)])
+    
+    expected_state_t2 = None
+    
+    for t in times:
+        nu = n * t
+        r, v = kepler2eci(a, ecc, incl, raan, argp, nu)
+        
+        rho_vec = r - R_obs
+        rho_hats.append(rho_vec / np.linalg.norm(rho_vec))
+        Rs.append(R_obs)
+        
+        if abs(t - t2) < 1e-6:
+            expected_state_t2 = np.concatenate([r, v])
+            
+    # Run Gauss IOD
+    est_state = gauss_iod(
+        rho_hats[0], rho_hats[1], rho_hats[2], 
+        times[0], times[1], times[2], 
+        Rs[0], Rs[1], Rs[2], mu
+    )
+    
+    # Gauss is sensitive. For 10min total arc on 10k orbit, ~1% accuracy is typical for IOD
+    assert est_state[0:3] == pytest.approx(expected_state_t2[0:3], rel=2e-2)
+    assert est_state[3:6] == pytest.approx(expected_state_t2[3:6], rel=5e-2)
 
 def test_gibbs_iod():
     # Create synthetic data

@@ -90,4 +90,12 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Guidance:** Solving the multi-revolution Lambert problem.
 *   **Application:** Interplanetary or long-range intercept targeting.
 
-![Lambert Transfer](../assets/lambert_transfer.png)
+## 10. Initial Orbit Determination (Gauss IOD)
+**Script:** `10_gauss_iod_determination.py`
+**Scenario:** Determination of a satellite's state vector from three angles-only observations (Right Ascension/Declination) without prior orbit knowledge.
+**GNC Focus:**
+*   **Algorithm:** Robust `gauss_iod` with iterative refinement using universal variables.
+*   **Hybrid Estimation:** Fusing Gauss positions with Herrick-Gibbs velocity for high-accuracy short-arc determination.
+*   **Verification:** Comparing estimated $r, v$ against ground truth orbits.
+
+![Gauss IOD Results](../assets/gauss_iod_results.png)

@@ -90,8 +90,10 @@ def kepler2eci(a, ecc, incl, raan, argp, nu):
     r_pqw = np.array([np.cos(nu), np.sin(nu), 0]) * (p / (1 + ecc * np.cos(nu)))
     v_pqw = np.array([-np.sin(nu), ecc + np.cos(nu), 0]) * (np.sqrt(mu / p))
 
-    reci = np.dot(rot_z(-argp), np.dot(rot_x(-incl), np.dot(rot_z(-raan), r_pqw)))
-    veci = np.dot(rot_z(-argp), np.dot(rot_x(-incl), np.dot(rot_z(-raan), v_pqw)))
+    # Standard rotation: Rz(-RAAN) * Rx(-incl) * Rz(-argp)
+    R = rot_z(-raan) @ rot_x(-incl) @ rot_z(-argp)
+    reci = R @ r_pqw
+    veci = R @ v_pqw
 
     return reci, veci
 

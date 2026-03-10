@@ -258,3 +258,75 @@ class GradientTorque:
         t_gg = factor * np.cross(nadir_body, j_nadir)
     
         return t_gg
+
+class ThirdBodyGravity:
+    """
+    Luni-solar third-body gravity model.
+    Treats Sun and Moon as point masses.
+    """
+    def __init__(self, mu_sun=1.32712440018e20, mu_moon=4902.800066e9):
+        self.mu_sun = mu_sun
+        self.mu_moon = mu_moon
+        # Lazy imports to avoid circular dependency
+        from gnc_toolkit.environment.solar import Sun
+        from gnc_toolkit.environment.moon import Moon
+        self.sun_model = Sun()
+        self.moon_model = Moon()
+
+    def get_acceleration(self, r_eci, jd):
+        """
+        Calculate third-body acceleration in ECI frame.
+        a = sum( mu_k * ( (s_k - r)/(|s_k - r|^3) - s_k/|s_k|^3 ) )
+        """
+        r_sun = self.sun_model.calculate_sun_eci(jd) # already in meters
+        r_moon = self.moon_model.calculate_moon_eci(jd) # in meters
+        
+        acc = np.zeros(3)
+        
+        # Sun contribution
+        d_sun = r_sun - r_eci
+        acc += self.mu_sun * (d_sun / np.linalg.norm(d_sun)**3 - r_sun / np.linalg.norm(r_sun)**3)
+        
+        # Moon contribution
+        d_moon = r_moon - r_eci
+        acc += self.mu_moon * (d_moon / np.linalg.norm(d_moon)**3 - r_moon / np.linalg.norm(r_moon)**3)
+        
+        return acc
+
+class RelativisticCorrection:
+    """
+    General Relativistic corrections for gravity.
+    Includes Schwarzschild (static) and Lense-Thirring (frame-dragging).
+    Reference: IERS Conventions (2010), Chapter 10.
+    """
+    def __init__(self, mu=398600.4418e9, J_earth=None):
+        self.mu = mu
+        self.c = 299792458.0 # Speed of light [m/s]
+        # Earth angular momentum per unit mass S/m ~ Earth's spin
+        # S = I * omega
+        if J_earth is None:
+            # I_zz ~ 0.3308 * M * R^2
+            re = 6378137.0
+            omega = 7.292115e-5
+            self.S_vec = np.array([0, 0, 0.3308 * re**2 * omega]) # Simplified
+        else:
+            self.S_vec = J_earth
+
+    def get_acceleration(self, r_eci, v_eci):
+        """
+        Calculate relativistic acceleration correction.
+        """
+        r_mag = np.linalg.norm(r_eci)
+        v_mag = np.linalg.norm(v_eci)
+        
+        # Schwarzschild (Standard form)
+        # a = (mu/c^2 r^3) * [ (4*mu/r - v^2) * r + 4*(r.v)*v ]
+        term1 = 4 * self.mu / r_mag - v_mag**2
+        a_sch = (self.mu / (self.c**2 * r_mag**3)) * (term1 * r_eci + 4 * np.dot(r_eci, v_eci) * v_eci)
+        
+        # Lense-Thirring (Frame dragging)
+        # Standard formula: 2 * mu / (c^2 r^3) * [ (3/r^2) (r.S) r - S ] x v
+        term_lt = (2 * self.mu / (self.c**2 * r_mag**3)) * ( (3.0/r_mag**2) * np.dot(r_eci, self.S_vec) * r_eci - self.S_vec )
+        a_lt = np.cross(term_lt, v_eci)
+        
+        return a_sch + a_lt

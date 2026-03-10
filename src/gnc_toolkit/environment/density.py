@@ -152,3 +152,62 @@ class NRLMSISE00:
             rho = float(output[0]) # Total mass density
         
         return rho
+
+class JB2008:
+    """
+    Simplified Jacchia-Bowman 2008 (JB2008) Atmosphere Model.
+    This implementation focuses on the structure and requires solar indices.
+    """
+    def __init__(self, space_weather=None):
+        from gnc_toolkit.environment.space_weather import SpaceWeather
+        self.sw = space_weather if space_weather else SpaceWeather()
+        self.sun_model = Sun()
+
+    def get_density(self, r_eci, jd):
+        """
+        Calculates density using a simplified JB2008 approach.
+        In a full implementation, this would involve extensive look-up tables and 
+        corrections for solar activity, semi-annual variations, and geomagnetic storms.
+        """
+        # Get altitude and solar position
+        lon, lat, h = eci2geodetic(r_eci, jd)
+        indices = self.sw.get_indices(jd)
+        F10 = indices['f107']
+        F10bar = indices['f107_avg']
+        
+        # Base density from exponential model scaled by solar flux
+        # Base scale height H ~ 8.5 km, rho0 ~ 1.225 at sea level
+        # For thermosphere (h > 100km), scale height varies significantly.
+        H = 7.0 + 0.05 * (h/1000.0) # km, very rough approximation
+        rho_base = 1.225 * np.exp(- (h/1000.0) / H)
+        
+        # Scaling based on F10.7 (Solar activity correction)
+        phi = (F10 + F10bar) / 2.0
+        solar_factor = 1.0 + 0.01 * (phi - 70.0)
+        
+        return rho_base * solar_factor
+
+class CIRA72:
+    """
+    COSPAR International Reference Atmosphere (CIRA) 1972 simplified version.
+    """
+    def __init__(self):
+        # CIRA-72 often uses look-up tables or polynomial fits.
+        pass
+
+    def get_density(self, r_eci, jd):
+        """
+        Simplified CIRA-72 density calculation.
+        """
+        _, _, h = eci2geodetic(r_eci, jd)
+        h_km = h / 1000.0
+        
+        # Polynomial fit for density (log10(rho) vs altitude) 
+        # based on mean solar conditions for 100-800 km range.
+        if h_km < 100:
+            return 1.225 * np.exp(-h_km / 8.5)
+        
+        # Coefficients for log10(rho) [kg/m^3]
+        # This is a representative curve for mean conditions.
+        log_rho = -9.0 - 0.015 * (h_km - 100.0) + 1.2e-5 * (h_km - 100.0)**2
+        return 10**log_rho

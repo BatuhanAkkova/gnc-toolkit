@@ -12,10 +12,26 @@ gnc\_toolkit.navigation.angle\_only\_nav module
    :show-inheritance:
    :undoc-members:
 
+gnc\_toolkit.navigation.batch\_ls module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.navigation.batch_ls
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.navigation.gps\_nav module
 ---------------------------------------
 
 .. automodule:: gnc_toolkit.navigation.gps_nav
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.navigation.iod module
+----------------------------------
+
+.. automodule:: gnc_toolkit.navigation.iod
    :members:
    :show-inheritance:
    :undoc-members:

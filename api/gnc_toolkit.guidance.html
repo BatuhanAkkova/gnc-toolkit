@@ -55,9 +55,16 @@
 <li><a class="reference internal" href="#module-gnc_toolkit.guidance.maneuvers">gnc_toolkit.guidance.maneuvers module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.bi_elliptic_transfer"><code class="docutils literal notranslate"><span class="pre">bi_elliptic_transfer()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.combined_plane_change"><code class="docutils literal notranslate"><span class="pre">combined_plane_change()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.delta_v_budget"><code class="docutils literal notranslate"><span class="pre">delta_v_budget()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.hohmann_transfer"><code class="docutils literal notranslate"><span class="pre">hohmann_transfer()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.optimal_combined_maneuver"><code class="docutils literal notranslate"><span class="pre">optimal_combined_maneuver()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.phasing_maneuver"><code class="docutils literal notranslate"><span class="pre">phasing_maneuver()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.plane_change"><code class="docutils literal notranslate"><span class="pre">plane_change()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.raan_change"><code class="docutils literal notranslate"><span class="pre">raan_change()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.guidance.porkchop">gnc_toolkit.guidance.porkchop module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.porkchop.generate_porkchop_grid"><code class="docutils literal notranslate"><span class="pre">generate_porkchop_grid()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-gnc_toolkit.guidance.rendezvous">gnc_toolkit.guidance.rendezvous module</a><ul>
@@ -246,6 +253,27 @@ Using Law of Cosines.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.maneuvers.delta_v_budget">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.maneuvers.</span></span><span class="sig-name descname"><span class="pre">delta_v_budget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dv_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/maneuvers.html#delta_v_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.maneuvers.delta_v_budget" title="Link to this definition"></a></dt>
+<dd><p>Calculates the required propellant mass using the Tsiolkovsky rocket equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_mass</strong> (<em>float</em>) – Initial mass of the spacecraft (kg).</p></li>
+<li><p><strong>dv_total</strong> (<em>float</em>) – Total Delta-V required (km/s).</p></li>
+<li><p><strong>isp</strong> (<em>float</em>) – Specific impulse of the propulsion system (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Propellant mass required (kg).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.guidance.maneuvers.hohmann_transfer">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.maneuvers.</span></span><span class="sig-name descname"><span class="pre">hohmann_transfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600.4418</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/maneuvers.html#hohmann_transfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.maneuvers.hohmann_transfer" title="Link to this definition"></a></dt>
 <dd><p>Calculates the Delta-V requirements and transfer time for a Hohmann transfer
@@ -263,6 +291,34 @@ between two circular orbits.</p>
 <li><p>dv1 (float): Delta-V for the first burn (km/s).</p></li>
 <li><p>dv2 (float): Delta-V for the second burn (km/s).</p></li>
 <li><p>transfer_time (float): Time of flight for the transfer (s).</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.maneuvers.optimal_combined_maneuver">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.maneuvers.</span></span><span class="sig-name descname"><span class="pre">optimal_combined_maneuver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600.4418</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/maneuvers.html#optimal_combined_maneuver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.maneuvers.optimal_combined_maneuver" title="Link to this definition"></a></dt>
+<dd><p>Calculates the optimal split of inclination change between two burns of a Hohmann transfer
+to minimize total Delta-V.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>float</em>) – Initial circular orbit radius (km).</p></li>
+<li><p><strong>r2</strong> (<em>float</em>) – Final circular orbit radius (km).</p></li>
+<li><p><strong>delta_i</strong> (<em>float</em>) – Total inclination change (radians).</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>dv_total (float): Minimum total Delta-V (km/s).</p></li>
+<li><p>di1 (float): Inclination change at first burn (radians).</p></li>
+<li><p>di2 (float): Inclination change at second burn (radians).</p></li>
 </ul>
 </p>
 </dd>
@@ -316,6 +372,56 @@ Usually T_phase is small relative to orbital period.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.maneuvers.raan_change">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.maneuvers.</span></span><span class="sig-name descname"><span class="pre">raan_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_raan</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/maneuvers.html#raan_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.maneuvers.raan_change" title="Link to this definition"></a></dt>
+<dd><p>Calculates the Delta-V required for a Right Ascension of Ascending Node (RAAN) change.
+Assuming circular orbit and maneuver performed at the poles (max efficiency).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>float</em>) – Orbital velocity (km/s).</p></li>
+<li><p><strong>i</strong> (<em>float</em>) – Inclination (radians).</p></li>
+<li><p><strong>delta_raan</strong> (<em>float</em>) – Desired RAAN change (radians).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Delta-V required (km/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.guidance.porkchop">
+<span id="gnc-toolkit-guidance-porkchop-module"></span><h2>gnc_toolkit.guidance.porkchop module<a class="headerlink" href="#module-gnc_toolkit.guidance.porkchop" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.porkchop.generate_porkchop_grid">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.porkchop.</span></span><span class="sig-name descname"><span class="pre">generate_porkchop_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">departure_dates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrival_dates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_dep_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_dep_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_arr_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_arr_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600.4418</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/porkchop.html#generate_porkchop_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.porkchop.generate_porkchop_grid" title="Link to this definition"></a></dt>
+<dd><p>Generates a grid of C3 and V_infinity values for a range of departure and arrival dates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>departure_dates</strong> (<em>array-like</em>) – Array of departure times (e.g., seconds from epoch).</p></li>
+<li><p><strong>arrival_dates</strong> (<em>array-like</em>) – Array of arrival times (e.g., seconds from epoch).</p></li>
+<li><p><strong>r_dep_func</strong> (<em>callable</em>) – Function that returns position vector at departure time t.</p></li>
+<li><p><strong>v_dep_func</strong> (<em>callable</em>) – Function that returns velocity vector at departure time t.</p></li>
+<li><p><strong>r_arr_func</strong> (<em>callable</em>) – Function that returns position vector at arrival time t.</p></li>
+<li><p><strong>v_arr_func</strong> (<em>callable</em>) – Function that returns velocity vector at arrival time t.</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Containing grids for ‘c3’, ‘v_inf_arr’, ‘tof’, and the input axes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>

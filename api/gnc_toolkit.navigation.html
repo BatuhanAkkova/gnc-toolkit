@@ -51,11 +51,26 @@
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.batch_ls">gnc_toolkit.navigation.batch_ls module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD"><code class="docutils literal notranslate"><span class="pre">BatchLeastSquaresOD</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD.solve"><code class="docutils literal notranslate"><span class="pre">BatchLeastSquaresOD.solve()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.navigation.gps_nav">gnc_toolkit.navigation.gps_nav module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation"><code class="docutils literal notranslate"><span class="pre">GPSNavigation</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps"><code class="docutils literal notranslate"><span class="pre">GPSNavigation.update_gps()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.iod">gnc_toolkit.navigation.iod module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.iod.gauss_iod"><code class="docutils literal notranslate"><span class="pre">gauss_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.iod.gibbs_iod"><code class="docutils literal notranslate"><span class="pre">gibbs_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.iod.herrick_gibbs_iod"><code class="docutils literal notranslate"><span class="pre">herrick_gibbs_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.iod.laplace_iod"><code class="docutils literal notranslate"><span class="pre">laplace_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.iod.laplace_iod_from_observations"><code class="docutils literal notranslate"><span class="pre">laplace_iod_from_observations()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-gnc_toolkit.navigation.orbit_determination">gnc_toolkit.navigation.orbit_determination module</a><ul>
@@ -114,6 +129,11 @@
 <li><a class="reference internal" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.update_landmark"><code class="docutils literal notranslate"><span class="pre">SurfaceNavigationEKF.update_landmark()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.gauss_iod"><code class="docutils literal notranslate"><span class="pre">gauss_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.gibbs_iod"><code class="docutils literal notranslate"><span class="pre">gibbs_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.herrick_gibbs_iod"><code class="docutils literal notranslate"><span class="pre">herrick_gibbs_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.laplace_iod"><code class="docutils literal notranslate"><span class="pre">laplace_iod()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.laplace_iod_from_observations"><code class="docutils literal notranslate"><span class="pre">laplace_iod_from_observations()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -174,6 +194,22 @@ Inherits orbital dynamics from OrbitDeterminationEKF.</p>
 </dd></dl>
 
 </section>
+<section id="module-gnc_toolkit.navigation.batch_ls">
+<span id="gnc-toolkit-navigation-batch-ls-module"></span><h2>gnc_toolkit.navigation.batch_ls module<a class="headerlink" href="#module-gnc_toolkit.navigation.batch_ls" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.batch_ls.</span></span><span class="sig-name descname"><span class="pre">BatchLeastSquaresOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_guess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/batch_ls.html#BatchLeastSquaresOD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Differential Correction using Batch Least Squares for Orbit Determination.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/batch_ls.html#BatchLeastSquaresOD.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD.solve" title="Link to this definition"></a></dt>
+<dd><p>Solve OD using Batch Least Squares.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-gnc_toolkit.navigation.gps_nav">
 <span id="gnc-toolkit-navigation-gps-nav-module"></span><h2>gnc_toolkit.navigation.gps_nav module<a class="headerlink" href="#module-gnc_toolkit.navigation.gps_nav" title="Link to this heading"></a></h2>
 <dl class="py class">
@@ -197,6 +233,127 @@ Processes position and velocity updates.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.navigation.iod">
+<span id="gnc-toolkit-navigation-iod-module"></span><h2>gnc_toolkit.navigation.iod module<a class="headerlink" href="#module-gnc_toolkit.navigation.iod" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.gauss_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">gauss_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gauss_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.gauss_iod" title="Link to this definition"></a></dt>
+<dd><p>Gauss method for Initial Orbit Determination (3 line-of-sight vectors).
+Follows a specific 13-step algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_hat1</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
+<li><p><strong>rho_hat2</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
+<li><p><strong>rho_hat3</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
+<li><p><strong>t1</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
+<li><p><strong>t2</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
+<li><p><strong>t3</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
+<li><p><strong>R1</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
+<li><p><strong>R2</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
+<li><p><strong>R3</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[rx, ry, rz, vx, vy, vz] State at t2 [m, m/s]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.gibbs_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Gibbs method for Initial Orbit Determination (3 position vectors).
+Used for long-arc observations (separation &gt; 5 degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Velocity vector at time t2 [m/s]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>v2 (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.herrick_gibbs_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">herrick_gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#herrick_gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.herrick_gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Herrick-Gibbs method for IOD (3 position vectors, short arc).
+Used when separation between vectors is small (&lt; 5-10 degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
+<li><p><strong>dt21</strong> (<em>float</em>) – t2 - t1</p></li>
+<li><p><strong>dt32</strong> (<em>float</em>) – t3 - t2</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Velocity at t2</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>v2 (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.laplace_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">laplace_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.laplace_iod" title="Link to this definition"></a></dt>
+<dd><p>Laplace method for IOD using LOS derivatives at a single epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_hat</strong> (<em>np.ndarray</em>) – Unit LOS vector</p></li>
+<li><p><strong>rho_hat_dot</strong> (<em>np.ndarray</em>) – First derivative of unit LOS</p></li>
+<li><p><strong>rho_hat_ddot</strong> (<em>np.ndarray</em>) – Second derivative of unit LOS</p></li>
+<li><p><strong>R</strong> (<em>np.ndarray</em>) – Observer position vector [m]</p></li>
+<li><p><strong>R_dot</strong> (<em>np.ndarray</em>) – Observer velocity vector [m/s]</p></li>
+<li><p><strong>R_ddot</strong> (<em>np.ndarray</em>) – Observer acceleration vector [m/s^2]</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[rx, ry, rz, vx, vy, vz] State vector in ECI [m, m/s]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.laplace_iod_from_observations">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">laplace_iod_from_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod_from_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.laplace_iod_from_observations" title="Link to this definition"></a></dt>
+<dd><p>Helper to perform Laplace IOD from three LOS observations.
+Estimates derivatives using Lagrange interpolation at the middle epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_hats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 LOS unit vectors</p></li>
+<li><p><strong>Rs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 Observer position vectors [m]</p></li>
+<li><p><strong>times</strong> (<em>list</em><em> of </em><em>float</em>) – 3 observation timestamps [s]</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -450,6 +607,124 @@ using measurements to known landmarks.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.gauss_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">gauss_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gauss_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gauss_iod" title="Link to this definition"></a></dt>
+<dd><p>Gauss method for Initial Orbit Determination (3 line-of-sight vectors).
+Follows a specific 13-step algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_hat1</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
+<li><p><strong>rho_hat2</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
+<li><p><strong>rho_hat3</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
+<li><p><strong>t1</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
+<li><p><strong>t2</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
+<li><p><strong>t3</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
+<li><p><strong>R1</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
+<li><p><strong>R2</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
+<li><p><strong>R3</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[rx, ry, rz, vx, vy, vz] State at t2 [m, m/s]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.gibbs_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Gibbs method for Initial Orbit Determination (3 position vectors).
+Used for long-arc observations (separation &gt; 5 degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Velocity vector at time t2 [m/s]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>v2 (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.herrick_gibbs_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">herrick_gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#herrick_gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.herrick_gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Herrick-Gibbs method for IOD (3 position vectors, short arc).
+Used when separation between vectors is small (&lt; 5-10 degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
+<li><p><strong>dt21</strong> (<em>float</em>) – t2 - t1</p></li>
+<li><p><strong>dt32</strong> (<em>float</em>) – t3 - t2</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Velocity at t2</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>v2 (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.laplace_iod">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">laplace_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.laplace_iod" title="Link to this definition"></a></dt>
+<dd><p>Laplace method for IOD using LOS derivatives at a single epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_hat</strong> (<em>np.ndarray</em>) – Unit LOS vector</p></li>
+<li><p><strong>rho_hat_dot</strong> (<em>np.ndarray</em>) – First derivative of unit LOS</p></li>
+<li><p><strong>rho_hat_ddot</strong> (<em>np.ndarray</em>) – Second derivative of unit LOS</p></li>
+<li><p><strong>R</strong> (<em>np.ndarray</em>) – Observer position vector [m]</p></li>
+<li><p><strong>R_dot</strong> (<em>np.ndarray</em>) – Observer velocity vector [m/s]</p></li>
+<li><p><strong>R_ddot</strong> (<em>np.ndarray</em>) – Observer acceleration vector [m/s^2]</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[rx, ry, rz, vx, vy, vz] State vector in ECI [m, m/s]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.laplace_iod_from_observations">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">laplace_iod_from_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod_from_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.laplace_iod_from_observations" title="Link to this definition"></a></dt>
+<dd><p>Helper to perform Laplace IOD from three LOS observations.
+Estimates derivatives using Lagrange interpolation at the middle epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_hats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 LOS unit vectors</p></li>
+<li><p><strong>Rs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 Observer position vectors [m]</p></li>
+<li><p><strong>times</strong> (<em>list</em><em> of </em><em>float</em>) – 3 observation timestamps [s]</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

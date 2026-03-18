@@ -257,18 +257,18 @@ Foundation models that all other modules depend on.
 | H2 optimal control | ✅ | `h2_control.py` |
 | Linear MPC (constrained) | ✅ | `mpc.py` — SLSQP-based |
 | Nonlinear MPC (single-shooting) | ✅ | `mpc.py` — SLSQP-based |
-| MPC with CasADi / ACADOS backend | ⬜ | Production-grade real-time NMPC |
+| MPC with CasADi / ACADOS backend | ✅ | `mpc_casadi.py` — Production-grade real-time NMPC |
 
 ### 7.3 Nonlinear & Geometric Control
 | Feature | Status | Notes |
 |---|---|---|
 | Sliding Mode Control (SMC) | ✅ | `sliding_mode.py` |
 | Feedback Linearization | ✅ | `feedback_linearization.py` |
-| Geometric SO(3) attitude control (Lee et al.) | ⬜ | Global stability, avoids singularities |
-| Passivity-based control (PBC) | ⬜ | |
-| Backstepping control | ⬜ | |
-| Adaptive control (MRAC, L1) | ⬜ | Handles plant uncertainty online |
-| Incremental Nonlinear Dynamic Inversion (INDI) | ⬜ | Popular in aerospace applications |
+| Geometric SO(3) attitude control (Lee et al.) | ✅ | `geometric_control.py` |
+| Passivity-based control (PBC) | ✅ | `passivity_control.py` |
+| Backstepping control | ✅ | `backstepping_control.py` |
+| Adaptive control (MRAC, L1) | ✅ | `adaptive_control.py` |
+| Incremental Nonlinear Dynamic Inversion (INDI) | ✅ | `indi_control.py` |
 
 ### 7.4 Formation Flying Control
 | Feature | Status | Notes |

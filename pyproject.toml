@@ -18,6 +18,7 @@ dependencies = [
     "pymsis>=0.6.0",
     "ppigrf>=0.1.0",
     "sgp4>=2.21",
+    "casadi>=3.6.0",
 ]
 
 [project.optional-dependencies]

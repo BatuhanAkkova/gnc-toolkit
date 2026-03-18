@@ -7,6 +7,8 @@ import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 from gnc_toolkit.optimal_control.lqr import LQR
+from gnc_toolkit.optimal_control import CasadiNMPC
+
 
 class TestLQR(unittest.TestCase):
     def test_double_integrator(self):
@@ -278,6 +280,91 @@ class TestHInfinity(unittest.TestCase):
         hinf = HInfinityController(A, B1, B2, Q, R, gamma)
         with self.assertRaises(ValueError):
             hinf.solve()
+
+class TestNewControllers(unittest.TestCase):
+    def test_casadi_nmpc(self):
+        try:
+            import casadi as ca
+        except ImportError:
+            self.skipTest("CasADi not installed")
+            
+        nx = 2
+        nu = 1
+        horizon = 10
+        dt = 0.1
+        
+        def dynamics(x, u):
+            return ca.vertcat(x[1], u[0])
+            
+        def cost(x, u):
+             return x[0]**2 + x[1]**2 + 0.1 * u[0]**2
+             
+        def terminal_cost(x):
+             return 10.0 * (x[0]**2 + x[1]**2)
+             
+        nmpc = CasadiNMPC(nx=nx, nu=nu, horizon=horizon, dt=dt,
+                        dynamics_func=dynamics, cost_func=cost, terminal_cost_func=terminal_cost,
+                        u_min=[-10.0], u_max=[10.0], discrete=False)
+                        
+        x0 = np.array([1.0, 0.0])
+        U = nmpc.solve(x0)
+        
+        self.assertEqual(U.shape, (horizon, nu))
+        self.assertLess(U[0,0], 0)
+
+    def test_geometric_control(self):
+        from gnc_toolkit.optimal_control.geometric_control import GeometricController
+        J = np.diag([1.0, 2.0, 3.0])
+        kR = 10.0
+        kW = 2.0
+        ctrl = GeometricController(J, kR, kW)
+        
+        R = np.eye(3)
+        omega = np.zeros(3)
+        R_d = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+        omega_d = np.zeros(3)
+        
+        M = ctrl.compute_control(R, omega, R_d, omega_d)
+        self.assertEqual(len(M), 3)
+        self.assertGreater(M[2], 0)
+
+    def test_passivity_control(self):
+        from gnc_toolkit.optimal_control.passivity_control import PassivityBasedController
+        M = lambda q: np.eye(2)
+        C = lambda q, q_dot: np.zeros((2,2))
+        G = lambda q: np.zeros(2)
+        
+        K_d = np.eye(2)
+        Lambda = np.eye(2)
+        ctrl = PassivityBasedController(M, C, G, K_d, Lambda)
+        
+        u = ctrl.compute_control([1.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0])
+        self.assertEqual(len(u), 2)
+        self.assertLess(u[0], 0)
+
+    def test_backstepping_control(self):
+        from gnc_toolkit.optimal_control.backstepping_control import BacksteppingController
+        f = lambda x1, x2: np.zeros_like(x1)
+        g = lambda x1, x2: np.eye(1)
+        ctrl = BacksteppingController(f, g, k1=2.0, k2=1.0)
+        
+        u = ctrl.compute_control([1.0], [0.0], [0.0], [0.0])
+        self.assertEqual(len(u), 1)
+        self.assertAlmostEqual(u[0], -3.0)
+
+    def test_mrac(self):
+        from gnc_toolkit.optimal_control.adaptive_control import ModelReferenceAdaptiveControl
+        mrac = ModelReferenceAdaptiveControl([[-1.0]], [[1.0]], [[1.0]], [[1.0]], [[1.0]], lambda x: np.array([x[0]]))
+        u = mrac.compute_control([1.0], [1.0], [1.0])
+        self.assertEqual(len(u), 1)
+        mrac.update_theta(0.1)
+
+    def test_indi(self):
+        from gnc_toolkit.optimal_control.indi_control import INDIController
+        ctrl = INDIController(lambda x, x_dot: np.eye(1))
+        u = ctrl.compute_control([1.0], [2.0], [1.0], [0], [0])
+        self.assertEqual(len(u), 1)
+        self.assertAlmostEqual(u[0], 0.0)
 
 if __name__ == '__main__':
     unittest.main()

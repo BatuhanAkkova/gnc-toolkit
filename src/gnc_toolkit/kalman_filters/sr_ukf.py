@@ -140,14 +140,8 @@ class SRUKF:
         v: Vector to update with
         weight: Scalar weight (positive for update, negative for downdate)
         """
-        # Note: Scipy doesn't have a direct rank-1 update for Cholesky.
-        # We can implement it or use a simpler but slightly less efficient method for now.
-        # A proper implementation of 'cholupdate' is often needed in C++/Fortran.
-        # For Python, we can reconstruct the covariance, update, and re-Cholesky if needed,
-        # but that defeats the purpose of SRUKF stability.
-        # Instead, let's use a standard rank-1 update logic or the 're-cholesky' as fallback.
-        
-        # Better: use the formula S_new * S_new.T = S*S.T + sigma * v * v.T
+        # Note: Scipy doesn't have a direct rank-1 update for Cholesky.        
+        # S_new * S_new.T = S*S.T + sigma * v * v.T
         # For positive weights:
         if weight > 0:
             v_scaled = np.sqrt(weight) * v

@@ -35,9 +35,7 @@ class Gyroscope(Sensor):
         """
         dt = kwargs.get('dt', self.dt)
         
-        # Propagate bias (Random Walk / FOGM)
-        # Here we use the simplified random walk for bias stability as before, 
-        # but could also use FOGM if a correlation time tau was provided.
+        # Propagate bias (Random Walk)
         if self.bias_stability > 0:
             walk_std = self.bias_stability * np.sqrt(dt) 
             self.current_bias += np.random.normal(0, walk_std, 3)

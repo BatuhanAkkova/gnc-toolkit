@@ -27,7 +27,7 @@ class IMM:
         """
         Predict step (Mixing and model-specific prediction).
         """
-        # 1. Interaction (Mixing)
+        # Interaction (Mixing)
         # Calculate mixing probabilities cj = sum(Tij * mui)
         c = np.dot(self.mu, self.Phi)
         
@@ -51,7 +51,7 @@ class IMM:
                 dx = self.filters[i].x - x0[j]
                 P0[j] += mu_mixed[i, j] * (self.filters[i].P + np.outer(dx, dx))
                 
-        # 2. Model-specific Prediction
+        # Model-specific Prediction
         for i in range(self.N):
             self.filters[i].x = x0[i]
             self.filters[i].P = P0[i]
@@ -68,7 +68,7 @@ class IMM:
         """
         Update step (Model-specific update and mode probability update).
         """
-        # 1. Model-specific Update
+        # Model-specific Update
         likelihoods = np.zeros(self.N)
         for i in range(self.N):
             # We need to perform update and get likelihood

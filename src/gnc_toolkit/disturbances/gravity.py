@@ -330,3 +330,162 @@ class RelativisticCorrection:
         a_lt = np.cross(term_lt, v_eci)
         
         return a_sch + a_lt
+
+class OceanTidesGravity:
+    """
+    Ocean Tides Gravity Correction (Simplified Model).
+    Implements tidal corrections for n=2, m=1,2 using the four main
+    constituents: M2, S2, K1, O1 based on IERS 2010 coefficients.
+    Add this acceleration to other gravity models.
+    """
+    def __init__(self, mu=398600.4418e9, re=6378137.0):
+        self.mu = mu
+        self.re = re
+        
+        # Coefficients (Fully Normalized)
+        # Values in 10^-11 from IERS 2010
+        self.coefs = {
+            'M2': {'n': 2, 'm': 2, 'C+': 3.090e-11, 'S+': -1.155e-11},
+            'S2': {'n': 2, 'm': 2, 'C+': 0.573e-11, 'S+': -0.134e-11},
+            'K1': {'n': 2, 'm': 1, 'C+': -0.155e-11, 'S+': 0.621e-11},
+            'O1': {'n': 2, 'm': 1, 'C+': -0.177e-11, 'S+': 0.055e-11}
+        }
+
+    def _get_doodson_arguments(self, jd):
+        """
+        Calculates Doodson arguments for the main constituents.
+        """
+        from gnc_toolkit.utils.time_utils import calc_gmst
+        
+        T = (jd - 2451545.0) / 36525.0
+        n = jd - 2451545.0
+        
+        # GMST in radians
+        gmst = calc_gmst(jd)
+        
+        # Mean longitude of the Moon [rad]
+        s = np.radians((218.316 + 481267.8813 * T) % 360)
+        
+        # Mean longitude of the Sun [rad]
+        h = np.radians((280.459 + 0.98564736 * n) % 360)
+        
+        # Doodson Arguments
+        theta = {
+            'M2': 2 * (gmst + np.pi - s),
+            'S2': 2 * (gmst + np.pi - h),
+            'K1': gmst + np.pi,
+            'O1': gmst + np.pi - 2 * s
+        }
+        
+        return theta
+
+    def get_acceleration(self, r_eci, jd):
+        """
+        Calculate acceleration due to Ocean Tides in ECI frame.
+        
+        Args:
+            r_eci (np.ndarray): Position ECI [m]
+            jd (float): Julian Date
+            
+        Returns:
+            np.ndarray: Acceleration ECI [m/s^2]
+        """
+        # Get Doodson Arguments
+        theta = self._get_doodson_arguments(jd)
+        
+        # Calculate Delta C and Delta S
+        delta_C = np.zeros((3, 3))
+        delta_S = np.zeros((3, 3))
+        
+        for const, vals in self.coefs.items():
+            n = vals['n']
+            m = vals['m']
+            C_plus = vals['C+']
+            S_plus = vals['S+']
+            arg = theta[const]
+            
+            delta_C[n, m] += C_plus * np.cos(arg) + S_plus * np.sin(arg)
+            delta_S[n, m] += S_plus * np.cos(arg) - C_plus * np.sin(arg)
+
+        # Coordinate Conversion
+        r_ecef, _ = eci2ecef(r_eci, np.zeros(3), jd)
+        x, y, z = r_ecef
+        r_sq = x*x + y*y + z*z
+        r_mag = np.sqrt(r_sq)
+        
+        rho = self.re / r_mag
+        sin_lat = z / r_mag
+        cos_lat_sq = max(0, 1 - sin_lat**2)
+        cos_lat = np.sqrt(cos_lat_sq)
+        
+        # Evaluate Spherical Harmonics for n=2
+        n_max = 2
+        m_max = 2
+        P = np.zeros((n_max + 1, m_max + 1))
+        P[0, 0] = 1.0
+        P[1, 0] = np.sqrt(3) * sin_lat
+        P[1, 1] = np.sqrt(3) * cos_lat
+        
+        # n=2 coefficients
+        P[2, 0] = np.sqrt(5)/2 * (3 * sin_lat**2 - 1)
+        # Sectorial
+        P[2, 2] = np.sqrt(5/4) * cos_lat * P[1, 1]
+        # Tesseral
+        P[2, 1] = np.sqrt(5) * sin_lat * P[1, 1]
+
+        # Derivatives dP/dphi
+        dp_dphi = np.zeros((n_max + 1, m_max + 1))
+        if cos_lat_sq > 1e-15:
+            dp_dphi[1, 0] = np.sqrt(3) * cos_lat # d/dlat sin = cos
+            dp_dphi[1, 1] = -np.sqrt(3) * sin_lat # d/dlat cos = -sin
+            
+            # n=2
+            dp_dphi[2, 0] = np.sqrt(5) * 3 * sin_lat * cos_lat
+            dp_dphi[2, 1] = np.sqrt(15) * (cos_lat_sq - sin_lat**2)
+            dp_dphi[2, 2] = -np.sqrt(15) * sin_lat * cos_lat
+        else:
+            dp_dphi[:, :] = 0.0
+
+        # Summation
+        du_dr = 0
+        du_dlat = 0
+        du_dlon = 0
+        
+        lambda_lon = np.arctan2(y, x)
+        cos_mlon = np.array([1.0, np.cos(lambda_lon), np.cos(2 * lambda_lon)])
+        sin_mlon = np.array([0.0, np.sin(lambda_lon), np.sin(2 * lambda_lon)])
+
+        for n in [2]:
+            rho_n = rho**n
+            sum_r, sum_lat, sum_lon = 0, 0, 0
+            for m in [1, 2]:
+                C = delta_C[n, m]
+                S = delta_S[n, m]
+                
+                geo_term = (C * cos_mlon[m] + S * sin_mlon[m])
+                p_nm = P[n, m]
+                dp_dphi_nm = dp_dphi[n, m]
+                
+                sum_r += (n + 1) * p_nm * geo_term
+                sum_lat += dp_dphi_nm * geo_term
+                sum_lon += p_nm * m * (-C * sin_mlon[m] + S * cos_mlon[m])
+                
+            du_dr   -= (self.mu / r_sq) * rho_n * sum_r
+            du_dlat += (self.mu / r_mag)    * rho_n * sum_lat
+            du_dlon += (self.mu / r_mag)    * rho_n * sum_lon
+
+        # Rotate to ECEF
+        ar = du_dr
+        alat = (1.0 / r_mag) * du_dlat
+        alon = (1.0 / (r_mag * cos_lat)) * du_dlon if cos_lat > 1e-9 else 0
+        
+        sin_l, cos_l = sin_mlon[1], cos_mlon[1]
+        sin_b, cos_b = sin_lat, cos_lat
+        
+        ax = ar * (cos_l * cos_b) + alat * (-cos_l * sin_b) + alon * (-sin_l)
+        ay = ar * (sin_l * cos_b) + alat * (-sin_l * sin_b) + alon * (cos_l)
+        az = ar * (sin_b)         + alat * (cos_b)
+        
+        acc_ecef = np.array([ax, ay, az])
+        acc_eci, _ = ecef2eci(acc_ecef, np.zeros(3), jd)
+        return acc_eci

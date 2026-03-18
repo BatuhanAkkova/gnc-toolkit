@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.edl &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.edl</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.edl</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.environment.density</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
+
+<div class="viewcode-block" id="ballistic_entry_dynamics">
+<a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.ballistic_entry_dynamics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ballistic_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.986e14</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6371000.0</span><span class="p">,</span> <span class="n">rho_model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ODE for ballistic entry dynamics in Cartesian coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        t (float): Time (s).</span>
+<span class="sd">        state (np.ndarray): [x, y, z, vx, vy, vz] (m, m/s).</span>
+<span class="sd">        cd (float): Drag coefficient.</span>
+<span class="sd">        area (float): Reference area (m^2).</span>
+<span class="sd">        mass (float): Mass (kg).</span>
+<span class="sd">        mu (float): Gravitational parameter (m^3/s^2).</span>
+<span class="sd">        r_planet (float): Planet radius (m).</span>
+<span class="sd">        rho_model: Object with get_density(r_eci, jd) method.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: State derivative [vx, vy, vz, ax, ay, az].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">v_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+    <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span>
+    <span class="n">v_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_vec</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">rho_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Default to simple exponential for Earth if not provided</span>
+        <span class="n">rho_model</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">rho0</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
+        
+    <span class="c1"># Density calculation (assuming jd=0 for simplicity if using simple model)</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">rho_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    
+    <span class="c1"># Aerodynamic Drag</span>
+    <span class="n">dynamic_pressure</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">v_mag</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">drag_mag</span> <span class="o">=</span> <span class="n">dynamic_pressure</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">*</span> <span class="n">area</span>
+    <span class="n">a_drag</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">drag_mag</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_vec</span> <span class="o">/</span> <span class="n">v_mag</span><span class="p">)</span> <span class="k">if</span> <span class="n">v_mag</span> <span class="o">&gt;</span> <span class="mf">1e-6</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Gravity (Point mass)</span>
+    <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_vec</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="lifting_entry_dynamics">
+<a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.lifting_entry_dynamics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lifting_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">cd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bank_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.986e14</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6371000.0</span><span class="p">,</span> <span class="n">rho_model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ODE for lifting entry dynamics in Cartesian coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        t (float): Time (s).</span>
+<span class="sd">        state (np.ndarray): [x, y, z, vx, vy, vz] (m, m/s).</span>
+<span class="sd">        cl, cd: Lift and Drag coefficients.</span>
+<span class="sd">        bank_angle (float): Bank angle (rad).</span>
+<span class="sd">        area (float): Reference area (m^2).</span>
+<span class="sd">        mass (float): Mass (kg).</span>
+<span class="sd">        mu, r_planet: Planet parameters.</span>
+<span class="sd">        rho_model: Density model.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: State derivative.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">v_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+    <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span>
+    <span class="n">v_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_vec</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">rho_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rho_model</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">rho0</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
+        
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">rho_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">dynamic_pressure</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">v_mag</span><span class="o">**</span><span class="mi">2</span>
+    
+    <span class="c1"># Unit vectors for Drag, Lift</span>
+    <span class="n">u_v</span> <span class="o">=</span> <span class="n">v_vec</span> <span class="o">/</span> <span class="n">v_mag</span> <span class="k">if</span> <span class="n">v_mag</span> <span class="o">&gt;</span> <span class="mf">1e-6</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">u_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">v_vec</span><span class="p">)</span>
+    <span class="n">u_h</span> <span class="o">=</span> <span class="n">u_h</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u_h</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u_h</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">u_l_vertical</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">u_v</span><span class="p">,</span> <span class="n">u_h</span><span class="p">)</span> <span class="c1"># Lift vector in the vertical plane</span>
+    
+    <span class="c1"># Rotate lift vector by bank angle</span>
+    <span class="c1"># L = L_mag * (cos(bank) * u_l_vertical + sin(bank) * u_h)</span>
+    <span class="n">lift_mag</span> <span class="o">=</span> <span class="n">dynamic_pressure</span> <span class="o">*</span> <span class="n">cl</span> <span class="o">*</span> <span class="n">area</span>
+    <span class="n">drag_mag</span> <span class="o">=</span> <span class="n">dynamic_pressure</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">*</span> <span class="n">area</span>
+    
+    <span class="n">a_drag</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">drag_mag</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_v</span>
+    <span class="n">a_lift</span> <span class="o">=</span> <span class="p">(</span><span class="n">lift_mag</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bank_angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_l_vertical</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">bank_angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_h</span><span class="p">)</span>
+    
+    <span class="c1"># Gravity</span>
+    <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_vec</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span> <span class="o">+</span> <span class="n">a_lift</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="sutton_grave_heating">
+<a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.sutton_grave_heating">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sutton_grave_heating</span><span class="p">(</span><span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rn</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stagnation point heat flux estimation (W/m^2) using Sutton-Grave formula.</span>
+<span class="sd">    Simplified constant for Earth: k = 1.74153e-4 (for cooling Rn in meters)</span>
+<span class="sd">    q = k * sqrt(rho/rn) * v^3</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        rho (float): Density (kg/m^3).</span>
+<span class="sd">        v (float): Velocity (m/s).</span>
+<span class="sd">        rn (float): Nose radius (m).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Heat flux (W/m^2).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mf">1.74153e-4</span>
+    <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">/</span> <span class="n">rn</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="o">**</span><span class="mi">3</span></div>
+
+
+<div class="viewcode-block" id="calculate_g_load">
+<a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.calculate_g_load">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_g_load</span><span class="p">(</span><span class="n">acc_vec</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates G-load from acceleration vector.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        acc_vec (np.ndarray): Acceleration (m/s^2).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: G-load (multiples of g0).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">g0</span> <span class="o">=</span> <span class="mf">9.80665</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">acc_vec</span><span class="p">)</span> <span class="o">/</span> <span class="n">g0</span></div>
+
+
+<div class="viewcode-block" id="aerocapture_guidance">
+<a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.aerocapture_guidance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">aerocapture_guidance</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">target_apoapsis</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">planet_params</span><span class="p">,</span> <span class="n">rho_model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Predictive aerocapture guidance.</span>
+<span class="sd">    Adjusts bank angle or drag to target a specific exit apoapsis.</span>
+<span class="sd">    Returns: bank_angle (rad)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Simplified logic: predict exit state and adjust</span>
+    <span class="c1"># For a toolkit, we might use a numeric predictor-corrector</span>
+    <span class="k">return</span> <span class="mf">0.0</span> <span class="c1"># Placeholder for full NPC logic</span></div>
+
+
+<div class="viewcode-block" id="hazard_avoidance">
+<a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.hazard_avoidance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">hazard_avoidance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">hazards</span><span class="p">,</span> <span class="n">safety_margin</span><span class="o">=</span><span class="mf">50.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple hazard avoidance logic.</span>
+<span class="sd">    Computes a divert maneuver if a hazard is detected near the landing site.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        r (np.ndarray): Position (m).</span>
+<span class="sd">        v (np.ndarray): Velocity (m/s).</span>
+<span class="sd">        hazards (list): List of hazard positions [x, y, z].</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: Correction velocity delta_v (m/s).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hazards</span><span class="p">:</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">safety_margin</span><span class="p">:</span>
+            <span class="c1"># Divert away from hazard</span>
+            <span class="n">u_divert</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="n">dist</span>
+            <span class="k">return</span> <span class="n">u_divert</span> <span class="o">*</span> <span class="mf">5.0</span> <span class="c1"># 5 m/s nudge</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

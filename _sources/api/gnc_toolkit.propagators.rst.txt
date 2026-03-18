@@ -20,10 +20,26 @@ gnc\_toolkit.propagators.cowell module
    :show-inheritance:
    :undoc-members:
 
+gnc\_toolkit.propagators.encke module
+-------------------------------------
+
+.. automodule:: gnc_toolkit.propagators.encke
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.propagators.kepler module
 --------------------------------------
 
 .. automodule:: gnc_toolkit.propagators.kepler
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.propagators.sgp4\_propagator module
+------------------------------------------------
+
+.. automodule:: gnc_toolkit.propagators.sgp4_propagator
    :members:
    :show-inheritance:
    :undoc-members:

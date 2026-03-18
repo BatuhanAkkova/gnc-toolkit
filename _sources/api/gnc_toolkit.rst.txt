@@ -15,6 +15,17 @@ Subpackages
    gnc_toolkit.optimal_control
    gnc_toolkit.propagators
 
+Submodules
+----------
+
+gnc\_toolkit.edl module
+-----------------------
+
+.. automodule:: gnc_toolkit.edl
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Module contents
 ---------------
 

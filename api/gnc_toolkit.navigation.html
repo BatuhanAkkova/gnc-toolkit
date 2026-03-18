@@ -101,9 +101,21 @@
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-gnc_toolkit.navigation.terrain_nav">gnc_toolkit.navigation.terrain_nav module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN.match_features()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.terrain_nav.map_relative_localization_update"><code class="docutils literal notranslate"><span class="pre">map_relative_localization_update()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.navigation">Module contents</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.navigation.AngleOnlyNavigation"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation.update_unit_vector()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.FeatureMatchingTRN"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.FeatureMatchingTRN.match_features"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN.match_features()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gnc_toolkit.navigation.GPSNavigation"><code class="docutils literal notranslate"><span class="pre">GPSNavigation</span></code></a><ul>
@@ -134,6 +146,7 @@
 <li><a class="reference internal" href="#gnc_toolkit.navigation.herrick_gibbs_iod"><code class="docutils literal notranslate"><span class="pre">herrick_gibbs_iod()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.navigation.laplace_iod"><code class="docutils literal notranslate"><span class="pre">laplace_iod()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.navigation.laplace_iod_from_observations"><code class="docutils literal notranslate"><span class="pre">laplace_iod_from_observations()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.navigation.map_relative_localization_update"><code class="docutils literal notranslate"><span class="pre">map_relative_localization_update()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -464,6 +477,48 @@ using measurements to known landmarks.</p>
 </dd></dl>
 
 </section>
+<section id="module-gnc_toolkit.navigation.terrain_nav">
+<span id="gnc-toolkit-navigation-terrain-nav-module"></span><h2>gnc_toolkit.navigation.terrain_nav module<a class="headerlink" href="#module-gnc_toolkit.navigation.terrain_nav" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.terrain_nav.</span></span><span class="sig-name descname"><span class="pre">FeatureMatchingTRN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features">
+<span class="sig-name descname"><span class="pre">match_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_features</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN.match_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features" title="Link to this definition"></a></dt>
+<dd><p>Matches observed camera/LIDAR features to the map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of (map_pos, observed_pos)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.terrain_nav.map_relative_localization_update">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.terrain_nav.</span></span><span class="sig-name descname"><span class="pre">map_relative_localization_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#map_relative_localization_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.map_relative_localization_update" title="Link to this definition"></a></dt>
+<dd><p>EKF measurement update for TRN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – State estimate [pos, vel].</p></li>
+<li><p><strong>P</strong> (<em>np.ndarray</em>) – Covariance.</p></li>
+<li><p><strong>matches</strong> (<em>list</em>) – (map_pos, observed_pos) pairs.</p></li>
+<li><p><strong>R</strong> (<em>np.ndarray</em>) – Measurement noise covariance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(updated_x, updated_P)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-gnc_toolkit.navigation">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.navigation" title="Link to this heading"></a></h2>
 <dl class="py class">
@@ -482,6 +537,23 @@ Inherits orbital dynamics from OrbitDeterminationEKF.</p>
 <li><p><strong>u_meas</strong> (<em>np.ndarray</em>) – Measured unit vector [ux, uy, uz] in ECI.</p></li>
 <li><p><strong>target_pos_eci</strong> (<em>np.ndarray</em>) – Position of the target being tracked in ECI [m].</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.FeatureMatchingTRN">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">FeatureMatchingTRN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.FeatureMatchingTRN" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.FeatureMatchingTRN.match_features">
+<span class="sig-name descname"><span class="pre">match_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_features</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN.match_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.FeatureMatchingTRN.match_features" title="Link to this definition"></a></dt>
+<dd><p>Matches observed camera/LIDAR features to the map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of (map_pos, observed_pos)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -723,6 +795,28 @@ Estimates derivatives using Lagrange interpolation at the middle epoch.</p>
 <li><p><strong>Rs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 Observer position vectors [m]</p></li>
 <li><p><strong>times</strong> (<em>list</em><em> of </em><em>float</em>) – 3 observation timestamps [s]</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.map_relative_localization_update">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">map_relative_localization_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#map_relative_localization_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.map_relative_localization_update" title="Link to this definition"></a></dt>
+<dd><p>EKF measurement update for TRN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – State estimate [pos, vel].</p></li>
+<li><p><strong>P</strong> (<em>np.ndarray</em>) – Covariance.</p></li>
+<li><p><strong>matches</strong> (<em>list</em>) – (map_pos, observed_pos) pairs.</p></li>
+<li><p><strong>R</strong> (<em>np.ndarray</em>) – Measurement noise covariance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(updated_x, updated_P)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>

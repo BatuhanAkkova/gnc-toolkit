@@ -44,6 +44,16 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">gnc_toolkit package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.edl">gnc_toolkit.edl module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.edl.aerocapture_guidance"><code class="docutils literal notranslate"><span class="pre">aerocapture_guidance()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.edl.ballistic_entry_dynamics"><code class="docutils literal notranslate"><span class="pre">ballistic_entry_dynamics()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.edl.calculate_g_load"><code class="docutils literal notranslate"><span class="pre">calculate_g_load()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.edl.hazard_avoidance"><code class="docutils literal notranslate"><span class="pre">hazard_avoidance()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.edl.lifting_entry_dynamics"><code class="docutils literal notranslate"><span class="pre">lifting_entry_dynamics()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.edl.sutton_grave_heating"><code class="docutils literal notranslate"><span class="pre">sutton_grave_heating()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit">Module contents</a></li>
 </ul>
 </li>
@@ -124,6 +134,15 @@
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.target_tracking_reference"><code class="docutils literal notranslate"><span class="pre">target_tracking_reference()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.continuous_thrust">gnc_toolkit.guidance.continuous_thrust module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.apollo_dps_guidance"><code class="docutils literal notranslate"><span class="pre">apollo_dps_guidance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.direct_collocation_guidance"><code class="docutils literal notranslate"><span class="pre">direct_collocation_guidance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.gravity_turn_guidance"><code class="docutils literal notranslate"><span class="pre">gravity_turn_guidance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.indirect_optimal_guidance"><code class="docutils literal notranslate"><span class="pre">indirect_optimal_guidance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.q_law_guidance"><code class="docutils literal notranslate"><span class="pre">q_law_guidance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.zem_zev_guidance"><code class="docutils literal notranslate"><span class="pre">zem_zev_guidance()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.maneuvers">gnc_toolkit.guidance.maneuvers module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.bi_elliptic_transfer"><code class="docutils literal notranslate"><span class="pre">bi_elliptic_transfer()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.combined_plane_change"><code class="docutils literal notranslate"><span class="pre">combined_plane_change()</span></code></a></li>
@@ -142,7 +161,12 @@
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.rendezvous">gnc_toolkit.guidance.rendezvous module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.cw_equations"><code class="docutils literal notranslate"><span class="pre">cw_equations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.cw_targeting"><code class="docutils literal notranslate"><span class="pre">cw_targeting()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.is_within_corridor"><code class="docutils literal notranslate"><span class="pre">is_within_corridor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.optimize_rpo_collocation"><code class="docutils literal notranslate"><span class="pre">optimize_rpo_collocation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.primer_vector_analysis"><code class="docutils literal notranslate"><span class="pre">primer_vector_analysis()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.solve_lambert"><code class="docutils literal notranslate"><span class="pre">solve_lambert()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.solve_lambert_multi_rev"><code class="docutils literal notranslate"><span class="pre">solve_lambert_multi_rev()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.tschauner_hempel_propagation"><code class="docutils literal notranslate"><span class="pre">tschauner_hempel_propagation()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance">Module contents</a></li>
@@ -150,7 +174,23 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.integrators.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.ab_moulton">gnc_toolkit.integrators.ab_moulton module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator.integrate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.step"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.dop853_coeffs">gnc_toolkit.integrators.dop853_coeffs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.gauss_jackson">gnc_toolkit.integrators.gauss_jackson module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator.integrate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.step"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.integrator">gnc_toolkit.integrators.integrator module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator"><code class="docutils literal notranslate"><span class="pre">Integrator</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator.integrate"><code class="docutils literal notranslate"><span class="pre">Integrator.integrate()</span></code></a></li>
@@ -178,6 +218,14 @@
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk853.RK853"><code class="docutils literal notranslate"><span class="pre">RK853</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk853.RK853.integrate"><code class="docutils literal notranslate"><span class="pre">RK853.integrate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk853.RK853.step"><code class="docutils literal notranslate"><span class="pre">RK853.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.symplectic">gnc_toolkit.integrators.symplectic module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.symplectic.SymplecticIntegrator"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator.integrate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.step"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator.step()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -348,9 +396,21 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.navigation.html#module-gnc_toolkit.navigation.terrain_nav">gnc_toolkit.navigation.terrain_nav module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN.match_features()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.map_relative_localization_update"><code class="docutils literal notranslate"><span class="pre">map_relative_localization_update()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.navigation.html#module-gnc_toolkit.navigation">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.AngleOnlyNavigation"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector"><code class="docutils literal notranslate"><span class="pre">AngleOnlyNavigation.update_unit_vector()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.FeatureMatchingTRN"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.FeatureMatchingTRN.match_features"><code class="docutils literal notranslate"><span class="pre">FeatureMatchingTRN.match_features()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.GPSNavigation"><code class="docutils literal notranslate"><span class="pre">GPSNavigation</span></code></a><ul>
@@ -381,6 +441,7 @@
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.herrick_gibbs_iod"><code class="docutils literal notranslate"><span class="pre">herrick_gibbs_iod()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.laplace_iod"><code class="docutils literal notranslate"><span class="pre">laplace_iod()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.laplace_iod_from_observations"><code class="docutils literal notranslate"><span class="pre">laplace_iod_from_observations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.navigation.html#gnc_toolkit.navigation.map_relative_localization_update"><code class="docutils literal notranslate"><span class="pre">map_relative_localization_update()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -529,9 +590,24 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.encke">gnc_toolkit.propagators.encke module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.encke.EnckePropagator"><code class="docutils literal notranslate"><span class="pre">EnckePropagator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.encke.EnckePropagator.propagate"><code class="docutils literal notranslate"><span class="pre">EnckePropagator.propagate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.kepler">gnc_toolkit.propagators.kepler module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.kepler.KeplerPropagator"><code class="docutils literal notranslate"><span class="pre">KeplerPropagator</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.kepler.KeplerPropagator.propagate"><code class="docutils literal notranslate"><span class="pre">KeplerPropagator.propagate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.sgp4_propagator">gnc_toolkit.propagators.sgp4_propagator module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator"><code class="docutils literal notranslate"><span class="pre">Sgp4Propagator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate"><code class="docutils literal notranslate"><span class="pre">Sgp4Propagator.propagate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate_to_jd"><code class="docutils literal notranslate"><span class="pre">Sgp4Propagator.propagate_to_jd()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -541,6 +617,136 @@
 </li>
 </ul>
 </div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.edl">
+<span id="gnc-toolkit-edl-module"></span><h2>gnc_toolkit.edl module<a class="headerlink" href="#module-gnc_toolkit.edl" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.edl.aerocapture_guidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">aerocapture_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_apoapsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planet_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#aerocapture_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.aerocapture_guidance" title="Link to this definition"></a></dt>
+<dd><p>Predictive aerocapture guidance.
+Adjusts bank angle or drag to target a specific exit apoapsis.
+Returns: bank_angle (rad)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.edl.ballistic_entry_dynamics">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">ballistic_entry_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600000000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_planet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6371000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#ballistic_entry_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.ballistic_entry_dynamics" title="Link to this definition"></a></dt>
+<dd><p>ODE for ballistic entry dynamics in Cartesian coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>state</strong> (<em>np.ndarray</em>) – [x, y, z, vx, vy, vz] (m, m/s).</p></li>
+<li><p><strong>cd</strong> (<em>float</em>) – Drag coefficient.</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – Reference area (m^2).</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – Mass (kg).</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter (m^3/s^2).</p></li>
+<li><p><strong>r_planet</strong> (<em>float</em>) – Planet radius (m).</p></li>
+<li><p><strong>rho_model</strong> – Object with get_density(r_eci, jd) method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State derivative [vx, vy, vz, ax, ay, az].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.edl.calculate_g_load">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">calculate_g_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acc_vec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#calculate_g_load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.calculate_g_load" title="Link to this definition"></a></dt>
+<dd><p>Calculates G-load from acceleration vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>acc_vec</strong> (<em>np.ndarray</em>) – Acceleration (m/s^2).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>G-load (multiples of g0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.edl.hazard_avoidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">hazard_avoidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hazards</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safety_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#hazard_avoidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.hazard_avoidance" title="Link to this definition"></a></dt>
+<dd><p>Simple hazard avoidance logic.
+Computes a divert maneuver if a hazard is detected near the landing site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>np.ndarray</em>) – Position (m).</p></li>
+<li><p><strong>v</strong> (<em>np.ndarray</em>) – Velocity (m/s).</p></li>
+<li><p><strong>hazards</strong> (<em>list</em>) – List of hazard positions [x, y, z].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correction velocity delta_v (m/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.edl.lifting_entry_dynamics">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">lifting_entry_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bank_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600000000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_planet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6371000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#lifting_entry_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.lifting_entry_dynamics" title="Link to this definition"></a></dt>
+<dd><p>ODE for lifting entry dynamics in Cartesian coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>state</strong> (<em>np.ndarray</em>) – [x, y, z, vx, vy, vz] (m, m/s).</p></li>
+<li><p><strong>cl</strong> – Lift and Drag coefficients.</p></li>
+<li><p><strong>cd</strong> – Lift and Drag coefficients.</p></li>
+<li><p><strong>bank_angle</strong> (<em>float</em>) – Bank angle (rad).</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – Reference area (m^2).</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – Mass (kg).</p></li>
+<li><p><strong>mu</strong> – Planet parameters.</p></li>
+<li><p><strong>r_planet</strong> – Planet parameters.</p></li>
+<li><p><strong>rho_model</strong> – Density model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State derivative.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.edl.sutton_grave_heating">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">sutton_grave_heating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#sutton_grave_heating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.sutton_grave_heating" title="Link to this definition"></a></dt>
+<dd><p>Stagnation point heat flux estimation (W/m^2) using Sutton-Grave formula.
+Simplified constant for Earth: k = 1.74153e-4 (for cooling Rn in meters)
+q = k * sqrt(rho/rn) * v^3</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em>) – Density (kg/m^3).</p></li>
+<li><p><strong>v</strong> (<em>float</em>) – Velocity (m/s).</p></li>
+<li><p><strong>rn</strong> (<em>float</em>) – Nose radius (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Heat flux (W/m^2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-gnc_toolkit">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit" title="Link to this heading"></a></h2>

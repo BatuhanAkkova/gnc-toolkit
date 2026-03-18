@@ -87,6 +87,7 @@
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.guidance.html">gnc_toolkit.guidance package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.attitude_guidance">gnc_toolkit.guidance.attitude_guidance module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.continuous_thrust">gnc_toolkit.guidance.continuous_thrust module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.maneuvers">gnc_toolkit.guidance.maneuvers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.porkchop">gnc_toolkit.guidance.porkchop module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html#module-gnc_toolkit.guidance.rendezvous">gnc_toolkit.guidance.rendezvous module</a></li>
@@ -95,11 +96,14 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.ab_moulton">gnc_toolkit.integrators.ab_moulton module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.dop853_coeffs">gnc_toolkit.integrators.dop853_coeffs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.gauss_jackson">gnc_toolkit.integrators.gauss_jackson module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.integrator">gnc_toolkit.integrators.integrator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.rk4">gnc_toolkit.integrators.rk4 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.rk45">gnc_toolkit.integrators.rk45 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.rk853">gnc_toolkit.integrators.rk853 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators.symplectic">gnc_toolkit.integrators.symplectic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html#module-gnc_toolkit.integrators">Module contents</a></li>
 </ul>
 </li>
@@ -129,6 +133,7 @@
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#module-gnc_toolkit.navigation.orbit_determination">gnc_toolkit.navigation.orbit_determination module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#module-gnc_toolkit.navigation.relative_nav">gnc_toolkit.navigation.relative_nav module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#module-gnc_toolkit.navigation.surface_nav">gnc_toolkit.navigation.surface_nav module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#module-gnc_toolkit.navigation.terrain_nav">gnc_toolkit.navigation.terrain_nav module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html#module-gnc_toolkit.navigation">Module contents</a></li>
 </ul>
 </li>
@@ -150,10 +155,22 @@
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.base">gnc_toolkit.propagators.base module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.cowell">gnc_toolkit.propagators.cowell module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.encke">gnc_toolkit.propagators.encke module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.kepler">gnc_toolkit.propagators.kepler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.sgp4_propagator">gnc_toolkit.propagators.sgp4_propagator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html#module-gnc_toolkit.propagators">Module contents</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#gnc_toolkit.edl.aerocapture_guidance"><code class="docutils literal notranslate"><span class="pre">aerocapture_guidance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#gnc_toolkit.edl.ballistic_entry_dynamics"><code class="docutils literal notranslate"><span class="pre">ballistic_entry_dynamics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#gnc_toolkit.edl.calculate_g_load"><code class="docutils literal notranslate"><span class="pre">calculate_g_load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#gnc_toolkit.edl.hazard_avoidance"><code class="docutils literal notranslate"><span class="pre">hazard_avoidance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#gnc_toolkit.edl.lifting_entry_dynamics"><code class="docutils literal notranslate"><span class="pre">lifting_entry_dynamics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#gnc_toolkit.edl.sutton_grave_heating"><code class="docutils literal notranslate"><span class="pre">sutton_grave_heating()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>

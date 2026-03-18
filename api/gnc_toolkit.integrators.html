@@ -44,7 +44,23 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">gnc_toolkit.integrators package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.integrators.ab_moulton">gnc_toolkit.integrators.ab_moulton module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator.integrate()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.step"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.integrators.dop853_coeffs">gnc_toolkit.integrators.dop853_coeffs module</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.integrators.gauss_jackson">gnc_toolkit.integrators.gauss_jackson module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator.integrate()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.step"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.integrators.integrator">gnc_toolkit.integrators.integrator module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator"><code class="docutils literal notranslate"><span class="pre">Integrator</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator.integrate"><code class="docutils literal notranslate"><span class="pre">Integrator.integrate()</span></code></a></li>
@@ -72,6 +88,14 @@
 <li><a class="reference internal" href="#gnc_toolkit.integrators.rk853.RK853"><code class="docutils literal notranslate"><span class="pre">RK853</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.integrators.rk853.RK853.integrate"><code class="docutils literal notranslate"><span class="pre">RK853.integrate()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.integrators.rk853.RK853.step"><code class="docutils literal notranslate"><span class="pre">RK853.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.integrators.symplectic">gnc_toolkit.integrators.symplectic module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator.integrate()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.step"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator.step()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -110,8 +134,55 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
+<section id="module-gnc_toolkit.integrators.ab_moulton">
+<span id="gnc-toolkit-integrators-ab-moulton-module"></span><h2>gnc_toolkit.integrators.ab_moulton module<a class="headerlink" href="#module-gnc_toolkit.integrators.ab_moulton" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.ab_moulton.</span></span><span class="sig-name descname"><span class="pre">AdamsBashforthMoultonIntegrator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/ab_moulton.html#AdamsBashforthMoultonIntegrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integrator</span></code></a></p>
+<p>Adams-Bashforth-Moulton 8th order Integrator (Predictor-Corrector Ordinate Form).
+Treats the ODE system as a first-order system: dy/dt = f(t, y).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.integrate">
+<span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/ab_moulton.html#AdamsBashforthMoultonIntegrator.integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.integrate" title="Link to this definition"></a></dt>
+<dd><p>Integrate over a time span using Adams-Bashforth-Moulton 8th order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/ab_moulton.html#AdamsBashforthMoultonIntegrator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.step" title="Link to this definition"></a></dt>
+<dd><p>Single step interface (not recommended for multi-step integrators).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-gnc_toolkit.integrators.dop853_coeffs">
 <span id="gnc-toolkit-integrators-dop853-coeffs-module"></span><h2>gnc_toolkit.integrators.dop853_coeffs module<a class="headerlink" href="#module-gnc_toolkit.integrators.dop853_coeffs" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.integrators.gauss_jackson">
+<span id="gnc-toolkit-integrators-gauss-jackson-module"></span><h2>gnc_toolkit.integrators.gauss_jackson module<a class="headerlink" href="#module-gnc_toolkit.integrators.gauss_jackson" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.gauss_jackson.</span></span><span class="sig-name descname"><span class="pre">GaussJacksonIntegrator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/gauss_jackson.html#GaussJacksonIntegrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integrator</span></code></a></p>
+<p>Gauss-Jackson 8th order Integrator (Predictor-Corrector Summed Form).
+Specifically for second-order ODEs: dy/dt = [v, a].
+Assumes state y = [r, v] where r, v are 3D vectors.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.integrate">
+<span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/gauss_jackson.html#GaussJacksonIntegrator.integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.integrate" title="Link to this definition"></a></dt>
+<dd><p>Integrate over a time span using Gauss-Jackson 8th order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/gauss_jackson.html#GaussJacksonIntegrator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.step" title="Link to this definition"></a></dt>
+<dd><p>Single step interface.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-gnc_toolkit.integrators.integrator">
 <span id="gnc-toolkit-integrators-integrator-module"></span><h2>gnc_toolkit.integrators.integrator module<a class="headerlink" href="#module-gnc_toolkit.integrators.integrator" title="Link to this heading"></a></h2>
@@ -246,6 +317,33 @@ y_values: Array of state vectors</p>
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.rk853.RK853.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/rk853.html#RK853.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.rk853.RK853.step" title="Link to this definition"></a></dt>
 <dd><p>Perform a single adaptive RK853 step.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.integrators.symplectic">
+<span id="gnc-toolkit-integrators-symplectic-module"></span><h2>gnc_toolkit.integrators.symplectic module<a class="headerlink" href="#module-gnc_toolkit.integrators.symplectic" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.symplectic.SymplecticIntegrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.symplectic.</span></span><span class="sig-name descname"><span class="pre">SymplecticIntegrator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/symplectic.html#SymplecticIntegrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integrator</span></code></a></p>
+<p>Symplectic Integrator (Yoshida 4th order).
+Conserves Energy/Hamiltonian for conservative systems (like Two-Body gravity).
+Assumes state vector y = [r, v] where dy/dt = [v, a(r)].
+Specifically for systems where a depends only on r (a = f(r)).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.symplectic.SymplecticIntegrator.integrate">
+<span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/symplectic.html#SymplecticIntegrator.integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.integrate" title="Link to this definition"></a></dt>
+<dd><p>Integrate over time span.
+Note: Symplectic methods work BEST for TIME-INVARIANT potentials (a = f(r)).
+f: function that returns [v, a].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.integrators.symplectic.SymplecticIntegrator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/symplectic.html#SymplecticIntegrator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.step" title="Link to this definition"></a></dt>
+<dd><p>Single step wrapper.</p>
 </dd></dl>
 
 </dd></dl>

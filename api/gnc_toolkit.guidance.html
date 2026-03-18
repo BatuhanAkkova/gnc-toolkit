@@ -52,6 +52,15 @@
 <li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.target_tracking_reference"><code class="docutils literal notranslate"><span class="pre">target_tracking_reference()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-gnc_toolkit.guidance.continuous_thrust">gnc_toolkit.guidance.continuous_thrust module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.apollo_dps_guidance"><code class="docutils literal notranslate"><span class="pre">apollo_dps_guidance()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.direct_collocation_guidance"><code class="docutils literal notranslate"><span class="pre">direct_collocation_guidance()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.gravity_turn_guidance"><code class="docutils literal notranslate"><span class="pre">gravity_turn_guidance()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.indirect_optimal_guidance"><code class="docutils literal notranslate"><span class="pre">indirect_optimal_guidance()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.q_law_guidance"><code class="docutils literal notranslate"><span class="pre">q_law_guidance()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.zem_zev_guidance"><code class="docutils literal notranslate"><span class="pre">zem_zev_guidance()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.guidance.maneuvers">gnc_toolkit.guidance.maneuvers module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.bi_elliptic_transfer"><code class="docutils literal notranslate"><span class="pre">bi_elliptic_transfer()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.combined_plane_change"><code class="docutils literal notranslate"><span class="pre">combined_plane_change()</span></code></a></li>
@@ -70,7 +79,12 @@
 <li><a class="reference internal" href="#module-gnc_toolkit.guidance.rendezvous">gnc_toolkit.guidance.rendezvous module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.cw_equations"><code class="docutils literal notranslate"><span class="pre">cw_equations()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.cw_targeting"><code class="docutils literal notranslate"><span class="pre">cw_targeting()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.is_within_corridor"><code class="docutils literal notranslate"><span class="pre">is_within_corridor()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.optimize_rpo_collocation"><code class="docutils literal notranslate"><span class="pre">optimize_rpo_collocation()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.primer_vector_analysis"><code class="docutils literal notranslate"><span class="pre">primer_vector_analysis()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.solve_lambert"><code class="docutils literal notranslate"><span class="pre">solve_lambert()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.solve_lambert_multi_rev"><code class="docutils literal notranslate"><span class="pre">solve_lambert_multi_rev()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.tschauner_hempel_propagation"><code class="docutils literal notranslate"><span class="pre">tschauner_hempel_propagation()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-gnc_toolkit.guidance">Module contents</a></li>
@@ -195,6 +209,129 @@ Target frame: Z-axis aligned with boresight (towards target).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Reference quaternion [x, y, z, w]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.guidance.continuous_thrust">
+<span id="gnc-toolkit-guidance-continuous-thrust-module"></span><h2>gnc_toolkit.guidance.continuous_thrust module<a class="headerlink" href="#module-gnc_toolkit.guidance.continuous_thrust" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.continuous_thrust.apollo_dps_guidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.continuous_thrust.</span></span><span class="sig-name descname"><span class="pre">apollo_dps_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_go</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/continuous_thrust.html#apollo_dps_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.continuous_thrust.apollo_dps_guidance" title="Link to this definition"></a></dt>
+<dd><p>E-guidance (Apollo Descent Propulsion System style).
+Targets position, velocity, and acceleration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_go</strong> (<em>float</em>) – Time-to-go (s).</p></li>
+<li><p><strong>r</strong> – Current state.</p></li>
+<li><p><strong>v</strong> – Current state.</p></li>
+<li><p><strong>r_target</strong> – Target state.</p></li>
+<li><p><strong>v_target</strong> – Target state.</p></li>
+<li><p><strong>a_target</strong> – Target state.</p></li>
+<li><p><strong>gravity</strong> (<em>np.ndarray</em>) – Local gravity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Commanded acceleration (m/s^2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.continuous_thrust.direct_collocation_guidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.continuous_thrust.</span></span><span class="sig-name descname"><span class="pre">direct_collocation_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/continuous_thrust.html#direct_collocation_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.continuous_thrust.direct_collocation_guidance" title="Link to this definition"></a></dt>
+<dd><p>Direct transcription / collocation (Trapezoidal).
+Minimizes sum of acceleration squared.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.continuous_thrust.gravity_turn_guidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.continuous_thrust.</span></span><span class="sig-name descname"><span class="pre">gravity_turn_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_mag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'descent'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/continuous_thrust.html#gravity_turn_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.continuous_thrust.gravity_turn_guidance" title="Link to this definition"></a></dt>
+<dd><p>Gravity turn steering law. Thrust is aligned with velocity vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>np.ndarray</em>) – Velocity vector (m/s).</p></li>
+<li><p><strong>f_mag</strong> (<em>float</em>) – Thrust acceleration magnitude (m/s^2).</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – ‘descent’ (anti-parallel to v) or ‘ascent’ (parallel to v).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Thrust acceleration vector (m/s^2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.continuous_thrust.indirect_optimal_guidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.continuous_thrust.</span></span><span class="sig-name descname"><span class="pre">indirect_optimal_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/continuous_thrust.html#indirect_optimal_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.continuous_thrust.indirect_optimal_guidance" title="Link to this definition"></a></dt>
+<dd><p>Indirect optimal guidance using Pontryagin’s Minimum Principle (PMP).
+Solves for minimum energy (acceleration squared integral).
+This is a Boundary Value Problem (BVP).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(time_array, acceleration_profile)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.continuous_thrust.q_law_guidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.continuous_thrust.</span></span><span class="sig-name descname"><span class="pre">q_law_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_oe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/continuous_thrust.html#q_law_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.continuous_thrust.q_law_guidance" title="Link to this definition"></a></dt>
+<dd><p>Lyapunov-based Q-law guidance for low-thrust orbit transfers.
+Targets [a, e, i, raan, argp].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>np.ndarray</em>) – Position ECI (m).</p></li>
+<li><p><strong>v</strong> (<em>np.ndarray</em>) – Velocity ECI (m/s).</p></li>
+<li><p><strong>target_oe</strong> (<em>np.ndarray</em>) – Target Keplerian elements [a, e, i, raan, argp] (m, rad).</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter (m^3/s^2).</p></li>
+<li><p><strong>f_max</strong> (<em>float</em>) – Maximum thrust acceleration (m/s^2).</p></li>
+<li><p><strong>weights</strong> (<em>np.ndarray</em>) – Weights for each element in Q function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimal thrust acceleration vector in ECI (m/s^2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.continuous_thrust.zem_zev_guidance">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.continuous_thrust.</span></span><span class="sig-name descname"><span class="pre">zem_zev_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_go</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/continuous_thrust.html#zem_zev_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.continuous_thrust.zem_zev_guidance" title="Link to this definition"></a></dt>
+<dd><p>Zero-Effort Miss (ZEM) and Zero-Effort Velocity (ZEV) feedback guidance.
+Used for terminal intercept or landing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>np.ndarray</em>) – Current position (m).</p></li>
+<li><p><strong>v</strong> (<em>np.ndarray</em>) – Current velocity (m/s).</p></li>
+<li><p><strong>r_target</strong> (<em>np.ndarray</em>) – Target position (m).</p></li>
+<li><p><strong>v_target</strong> (<em>np.ndarray</em>) – Target velocity (m/s).</p></li>
+<li><p><strong>t_go</strong> (<em>float</em>) – Time-to-go (s).</p></li>
+<li><p><strong>gravity</strong> (<em>np.ndarray</em>) – Local gravity vector (m/s^2). Defaults to zero.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Commanded acceleration vector (m/s^2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -480,6 +617,76 @@ Assumes circular target orbit.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.rendezvous.is_within_corridor">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.rendezvous.</span></span><span class="sig-name descname"><span class="pre">is_within_corridor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_rel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cone_angle_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/rendezvous.html#is_within_corridor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.rendezvous.is_within_corridor" title="Link to this definition"></a></dt>
+<dd><p>Checks if the chaser is within a safe approach corridor (cone).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_rel</strong> – Relative position vector (Chaser - Target).</p></li>
+<li><p><strong>axis</strong> – Direction of the corridor axis (e.g., -VBAR or -RBAR).</p></li>
+<li><p><strong>cone_angle_deg</strong> – Half-angle of the approach cone.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if inside the corridor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.rendezvous.optimize_rpo_collocation">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.rendezvous.</span></span><span class="sig-name descname"><span class="pre">optimize_rpo_collocation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/rendezvous.html#optimize_rpo_collocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.rendezvous.optimize_rpo_collocation" title="Link to this definition"></a></dt>
+<dd><p>Optimizes a rendezvous trajectory using a simple collocation method (Hermite-Simpson).
+Minimizes total control effort (acceleration squared).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r0</strong> – Initial state.</p></li>
+<li><p><strong>v0</strong> – Initial state.</p></li>
+<li><p><strong>rf</strong> – Final state.</p></li>
+<li><p><strong>vf</strong> – Final state.</p></li>
+<li><p><strong>dt</strong> – Transfer time.</p></li>
+<li><p><strong>n_nodes</strong> – Number of collocation nodes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimized trajectory and control profile.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.rendezvous.primer_vector_analysis">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.rendezvous.</span></span><span class="sig-name descname"><span class="pre">primer_vector_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600.4418</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/rendezvous.html#primer_vector_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.rendezvous.primer_vector_analysis" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the optimality of a two-impulse Lambert transfer using Primer Vector Theory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r0</strong> – Initial state.</p></li>
+<li><p><strong>v0</strong> – Initial state.</p></li>
+<li><p><strong>rf</strong> – Final state.</p></li>
+<li><p><strong>vf</strong> – Final state.</p></li>
+<li><p><strong>dt</strong> – Transfer time.</p></li>
+<li><p><strong>mu</strong> – Gravitational parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Results including max primer magnitude and optimality flag.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.guidance.rendezvous.solve_lambert">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.rendezvous.</span></span><span class="sig-name descname"><span class="pre">solve_lambert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600.4418</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/rendezvous.html#solve_lambert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.rendezvous.solve_lambert" title="Link to this definition"></a></dt>
 <dd><p>Solves Lambert’s problem using a Universal Variable formulation.
@@ -503,6 +710,52 @@ Finds v1 and v2 given r1, r2, and time of flight dt.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.rendezvous.solve_lambert_multi_rev">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.rendezvous.</span></span><span class="sig-name descname"><span class="pre">solve_lambert_multi_rev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600.4418</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rev</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'left'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/rendezvous.html#solve_lambert_multi_rev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.rendezvous.solve_lambert_multi_rev" title="Link to this definition"></a></dt>
+<dd><p>Solves Lambert’s problem for N &gt;= 0 revolutions using Izzo’s algorithm approach.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Initial position vector (km).</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Final position vector (km).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Time of flight (s).</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter.</p></li>
+<li><p><strong>n_rev</strong> (<em>int</em>) – Number of full revolutions (N &gt;= 0).</p></li>
+<li><p><strong>branch</strong> (<em>str</em>) – ‘left’ or ‘right’ branch for N &gt; 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>v1, v2 (km/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.rendezvous.tschauner_hempel_propagation">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.rendezvous.</span></span><span class="sig-name descname"><span class="pre">tschauner_hempel_propagation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oe_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600.4418</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/rendezvous.html#tschauner_hempel_propagation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.rendezvous.tschauner_hempel_propagation" title="Link to this definition"></a></dt>
+<dd><p>Propagates relative state using Tschauner-Hempel equations for elliptical orbits.
+Independent variable is mapped from time to true anomaly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial relative state [x, y, z, vx, vy, vz] in LVLH.</p></li>
+<li><p><strong>oe_target</strong> (<em>tuple</em>) – Target orbital elements (a, e, i, raan, argp, nu0).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Time interval (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Final relative state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

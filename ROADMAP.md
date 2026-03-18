@@ -281,10 +281,10 @@ Foundation models that all other modules depend on.
 ### 7.5 Fault Detection, Isolation & Recovery (FDIR)
 | Feature | Status | Notes |
 |---|---|---|
-| Analytical redundancy / residual generation | ⬜ | |
-| Parity-space FDIR | ⬜ | |
-| Safe mode logic | ⬜ | |
-| Actuator failure accommodation | ⬜ | |
+| Analytical redundancy / residual generation | ✅ | `residual_generation.py` |
+| Parity-space FDIR | ✅ | `parity_space.py` |
+| Safe mode logic | ✅ | `safe_mode.py` |
+| Actuator failure accommodation | ✅ | `failure_accommodation.py` |
 
 ---
 
@@ -306,8 +306,6 @@ Foundation models that all other modules depend on.
 | Variable speed CMG (VSCMG) | ✅ | `vscmg.py` |
 | Thruster cluster / torque allocation | ✅ | `thruster.py` (`ThrusterCluster`) |
 | Solar sail model | ✅ | `solar_sail.py` |
-| Tethered system dynamics | ⬜ | |
-| Magnetically levitated reaction wheel | ⬜ | |
 
 ### 8.3 Actuator Dynamics & Allocation
 | Feature | Status | Notes |

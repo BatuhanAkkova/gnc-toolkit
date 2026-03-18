@@ -336,9 +336,10 @@ Foundation models that all other modules depend on.
 ### 9.3 Propellant & ΔV Budgeting
 | Feature | Status | Notes |
 |---|---|---|
-| Tsiolkovsky rocket equation | ⬜ | Mass budget for maneuvers |
-| Maneuver sequence optimizer | ⬜ | Minimize total ΔV for mission profile |
-| Lifetime / reentry prediction (drag-based) | ⬜ | |
+| Tsiolkovsky rocket equation | ✅ | `budgeting.py` (Multi-stage support) |
+| Maneuver sequence optimizer | ✅ | `budgeting.py` (`ManeuverSequence`) |
+| Lifetime / reentry prediction (drag-based) | ✅ | `budgeting.py` (`predict_lifetime`) |
+
 
 ### 9.4 Link Budget & Communications
 | Feature | Status | Notes |

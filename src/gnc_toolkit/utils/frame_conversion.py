@@ -151,3 +151,28 @@ def rot_y(angle):
         [0, 1, 0],
         [-np.sin(angle), 0, np.cos(angle)]
     ])
+
+def llh2ecef(lat_rad, lon_rad, alt_m) -> np.ndarray:
+    """
+    Converts Geodetic coordinates (LLH) to ECEF.
+    
+    Args:
+        lat_rad (float): Latitude in radians.
+        lon_rad (float): Longitude in radians.
+        alt_m (float): Altitude in meters above ellipsoid.
+        
+    Returns:
+        np.ndarray: Position in ECEF [m].
+    """
+    a = 6378137.0          # Semi-major axis [m]
+    f = 1.0 / 298.257223563 # Flattening
+    e2 = f * (2.0 - f)    # Square of eccentricity
+
+    N = a / np.sqrt(1.0 - e2 * np.sin(lat_rad)**2)
+    
+    x = (N + alt_m) * np.cos(lat_rad) * np.cos(lon_rad)
+    y = (N + alt_m) * np.cos(lat_rad) * np.sin(lon_rad)
+    z = (N * (1.0 - e2) + alt_m) * np.sin(lat_rad)
+    
+    return np.array([x, y, z])
+

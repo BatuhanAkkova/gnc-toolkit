@@ -321,16 +321,16 @@ Foundation models that all other modules depend on.
 ### 9.1 Coverage & Access
 | Feature | Status | Notes |
 |---|---|---|
-| Ground station access windows | ⬜ | Link budget and pass planning |
+| Ground station access windows | ✅ | `coverage.py` |
 | Constellation coverage analysis | ⬜ | Coverage gap and revisit time |
-| Ground track visualization | ⬜ | |
-| Lighting conditions analysis | ⬜ | Eclipse fraction, beta angle |
+| Ground track visualization | ✅ | `coverage.py` |
+| Lighting conditions analysis | ✅ | `coverage.py` |
 
 ### 9.2 Launch & Deployment
 | Feature | Status | Notes |
 |---|---|---|
-| Launch window calculator | ⬜ | Pork-chop plots |
-| Trajectory-to-orbit injection | ⬜ | |
+| Launch window calculator | ✅ | `launch.py` |
+| Trajectory-to-orbit injection | ✅ | `launch.py` |
 | Constellation deployment sequencing | ⬜ | |
 
 ### 9.3 Propellant & ΔV Budgeting

@@ -343,9 +343,9 @@ Foundation models that all other modules depend on.
 ### 9.4 Link Budget & Communications
 | Feature | Status | Notes |
 |---|---|---|
-| Friis link budget calculator | ⬜ | |
-| Doppler shift calculator | ⬜ | |
-| Atmospheric attenuation model | ⬜ | |
+| Friis link budget calculator | ✅ | `communications.py` |
+| Doppler shift calculator | ✅ | `communications.py` |
+| Atmospheric attenuation model | ✅ | `communications.py` |
 
 ### 9.5 Space Situational Awareness
 | Feature | Status | Notes |

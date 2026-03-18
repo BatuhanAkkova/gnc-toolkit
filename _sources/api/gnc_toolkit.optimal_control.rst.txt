@@ -4,6 +4,22 @@ gnc\_toolkit.optimal\_control package
 Submodules
 ----------
 
+gnc\_toolkit.optimal\_control.adaptive\_control module
+------------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.adaptive_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.backstepping\_control module
+----------------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.backstepping_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.optimal\_control.feedback\_linearization module
 ------------------------------------------------------------
 
@@ -20,6 +36,14 @@ gnc\_toolkit.optimal\_control.finite\_horizon\_lqr module
    :show-inheritance:
    :undoc-members:
 
+gnc\_toolkit.optimal\_control.geometric\_control module
+-------------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.geometric_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 gnc\_toolkit.optimal\_control.h2\_control module
 ------------------------------------------------
 
@@ -32,6 +56,14 @@ gnc\_toolkit.optimal\_control.h\_infinity module
 ------------------------------------------------
 
 .. automodule:: gnc_toolkit.optimal_control.h_infinity
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.indi\_control module
+--------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.indi_control
    :members:
    :show-inheritance:
    :undoc-members:
@@ -64,6 +96,22 @@ gnc\_toolkit.optimal\_control.mpc module
 ----------------------------------------
 
 .. automodule:: gnc_toolkit.optimal_control.mpc
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.mpc\_casadi module
+------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.mpc_casadi
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.optimal\_control.passivity\_control module
+-------------------------------------------------------
+
+.. automodule:: gnc_toolkit.optimal_control.passivity_control
    :members:
    :show-inheritance:
    :undoc-members:

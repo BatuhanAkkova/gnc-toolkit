@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.fdir.safe_mode &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.fdir.safe_mode</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.fdir.safe_mode</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+
+<div class="viewcode-block" id="SystemMode">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SystemMode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SystemMode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NOMINAL</span> <span class="o">=</span> <span class="s2">&quot;NOMINAL&quot;</span>
+    <span class="n">SAFE</span> <span class="o">=</span> <span class="s2">&quot;SAFE&quot;</span>
+    <span class="n">RECOVERY</span> <span class="o">=</span> <span class="s2">&quot;RECOVERY&quot;</span></div>
+
+
+<div class="viewcode-block" id="SafeModeCondition">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeCondition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SafeModeCondition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines a condition that triggers safe mode.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">trigger_time_sec</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a safe mode condition.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            check_fn: A function that returns True if the condition is violated (faulty state)</span>
+<span class="sd">            trigger_time_sec: Duration the condition must be violated before triggering</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_fn</span> <span class="o">=</span> <span class="n">check_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trigger_time_sec</span> <span class="o">=</span> <span class="n">trigger_time_sec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">violated_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+        
+<div class="viewcode-block" id="SafeModeCondition.update">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeCondition.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the condition state and check if it should trigger.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if safety condition triggered, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_fn</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">violated_start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">violated_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">violated_start_time</span>
+            <span class="k">if</span> <span class="n">elapsed</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger_time_sec</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">violated_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+            
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+<div class="viewcode-block" id="SafeModeLogic">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeLogic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SafeModeLogic</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages system mode transitions based on fault conditions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_mode</span><span class="p">:</span> <span class="n">SystemMode</span> <span class="o">=</span> <span class="n">SystemMode</span><span class="o">.</span><span class="n">NOMINAL</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize safe mode logic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">initial_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SafeModeCondition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        
+<div class="viewcode-block" id="SafeModeLogic.add_condition">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeLogic.add_condition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">SafeModeCondition</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a trigger condition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">condition</span></div>
+
+        
+<div class="viewcode-block" id="SafeModeLogic.update">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeLogic.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SystemMode</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update mode logic based on conditions.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Current SystemMode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If already in SAFE mode, check if we can recover (not handled automatically here, requires command)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">SystemMode</span><span class="o">.</span><span class="n">SAFE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span>
+            
+        <span class="c1"># Check all conditions</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">cond</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cond</span><span class="o">.</span><span class="n">update</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">SystemMode</span><span class="o">.</span><span class="n">SAFE</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
+                    <span class="s2">&quot;from_mode&quot;</span><span class="p">:</span> <span class="n">SystemMode</span><span class="o">.</span><span class="n">NOMINAL</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="s2">&quot;to_mode&quot;</span><span class="p">:</span> <span class="n">SystemMode</span><span class="o">.</span><span class="n">SAFE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Condition </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> triggered&quot;</span>
+                <span class="p">})</span>
+                <span class="k">break</span>
+                
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span></div>
+
+
+<div class="viewcode-block" id="SafeModeLogic.force_mode">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeLogic.force_mode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">force_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">SystemMode</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Commanded&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Force mode transition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">old_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
+            <span class="s2">&quot;from_mode&quot;</span><span class="p">:</span> <span class="n">old_mode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;to_mode&quot;</span><span class="p">:</span> <span class="n">mode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">reason</span>
+        <span class="p">})</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

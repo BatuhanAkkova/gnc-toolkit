@@ -1,0 +1,191 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.optimal_control.backstepping_control &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.optimal_control.backstepping_control</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.optimal_control.backstepping_control</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<div class="viewcode-block" id="BacksteppingController">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BacksteppingController</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Backstepping Controller for generic 2nd order nonlinear systems.</span>
+<span class="sd">    </span>
+<span class="sd">    System model:</span>
+<span class="sd">    x1_dot = x2</span>
+<span class="sd">    x2_dot = f(x) + g(x) * u</span>
+<span class="sd">    </span>
+<span class="sd">    where x = [x1, x2].</span>
+<span class="sd">    Commonly used for mechanical systems with rigid body dynamics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_func</span><span class="p">,</span> <span class="n">g_func</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Backstepping Controller.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            f_func (callable): Function returns f(x1, x2). scalar/array [n].</span>
+<span class="sd">            g_func (callable): Function returns g(x1, x2). matrix/scalar [n x m].</span>
+<span class="sd">            k1 (np.ndarray or float): Gain matrix for tracking error e1.</span>
+<span class="sd">            k2 (np.ndarray or float): Gain matrix for virtual error e2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="n">k1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">=</span> <span class="n">k2</span>
+
+<div class="viewcode-block" id="BacksteppingController.compute_control">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController.compute_control">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x1_d</span><span class="p">,</span> <span class="n">x1_dot_d</span><span class="p">,</span> <span class="n">x1_ddot_d</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute control input u.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x1 (np.ndarray): State 1 (e.g., position) [n].</span>
+<span class="sd">            x2 (np.ndarray): State 2 (e.g., velocity) [n].</span>
+<span class="sd">            x1_d (np.ndarray): Desired State 1 [n].</span>
+<span class="sd">            x1_dot_d (np.ndarray): Desired Velocity [n].</span>
+<span class="sd">            x1_ddot_d (np.ndarray, optional): Desired Acceleration [n].</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Control effort u [m].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+        <span class="n">x1_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x1_d</span><span class="p">)</span>
+        <span class="n">x1_dot_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x1_dot_d</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x1_ddot_d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x1_ddot_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x1_d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1_ddot_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x1_ddot_d</span><span class="p">)</span>
+
+        <span class="c1"># 1. Step 1: Virtual Control Error e1</span>
+        <span class="c1"># e1 = x1 - x1_d</span>
+        <span class="n">e1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x1_d</span>
+
+        <span class="c1"># 2. Virtual Control Law alpha</span>
+        <span class="c1"># alpha = -k1 * e1 + x1_dot_d</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">@</span> <span class="n">e1</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">*</span> <span class="n">e1</span>
+        <span class="n">alpha</span> <span class="o">+=</span> <span class="n">x1_dot_d</span>
+
+        <span class="c1"># 3. Virtual Error e2</span>
+        <span class="c1"># e2 = x2 - alpha</span>
+        <span class="n">e2</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">alpha</span>
+
+        <span class="c1"># 4. Compute alpha_dot</span>
+        <span class="c1"># d/dt(alpha) = -k1 * d/dt(e1) + d/dt(x1_dot_d)</span>
+        <span class="c1"># d/dt(e1) = x2 - x1_dot_d</span>
+        <span class="n">e1_dot</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1_dot_d</span>
+        <span class="n">alpha_dot</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">@</span> <span class="n">e1_dot</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">*</span> <span class="n">e1_dot</span>
+        <span class="n">alpha_dot</span> <span class="o">+=</span> <span class="n">x1_ddot_d</span>
+
+        <span class="c1"># 5. Get System Dynamics</span>
+        <span class="n">f_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+        <span class="n">g_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+
+        <span class="c1"># 6. Control Law Step 2</span>
+        <span class="c1"># u = g_inv * (-e1 - f + alpha_dot - k2 * e2)</span>
+        <span class="c1"># Assuming g is invertible (square or full rank)</span>
+        <span class="n">inner_term</span> <span class="o">=</span> <span class="o">-</span><span class="n">e1</span> <span class="o">-</span> <span class="n">f_val</span> <span class="o">+</span> <span class="n">alpha_dot</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">@</span> <span class="n">e2</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">*</span> <span class="n">e2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">g_val</span><span class="p">)</span> <span class="ow">or</span> <span class="n">g_val</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">()</span> <span class="ow">or</span> <span class="n">g_val</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">inner_term</span> <span class="o">/</span> <span class="n">g_val</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># pinv for robustness to non-square systems or singularity</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">g_val</span><span class="p">)</span> <span class="o">@</span> <span class="n">inner_term</span>
+
+        <span class="k">return</span> <span class="n">u</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

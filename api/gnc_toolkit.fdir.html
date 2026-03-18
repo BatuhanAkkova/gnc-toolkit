@@ -1,0 +1,782 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.fdir package &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">gnc_toolkit.fdir package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.fdir.failure_accommodation">gnc_toolkit.fdir.failure_accommodation module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.allocate"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.allocate()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.set_health"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.set_health()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.update_allocation_matrix"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.update_allocation_matrix()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.fdir.parity_space">gnc_toolkit.fdir.parity_space module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.detect_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.detect_fault()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.get_parity_vector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.get_parity_vector()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.isolate_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.isolate_fault()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.fdir.residual_generation">gnc_toolkit.fdir.residual_generation module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.check_threshold"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.check_threshold()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.gyro_vs_quaternion_residual"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.gyro_vs_quaternion_residual()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator.step"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.fdir.safe_mode">gnc_toolkit.fdir.safe_mode module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition.update"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.add_condition"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.add_condition()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.force_mode"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.force_mode()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.update"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode"><code class="docutils literal notranslate"><span class="pre">SystemMode</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode.NOMINAL"><code class="docutils literal notranslate"><span class="pre">SystemMode.NOMINAL</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode.RECOVERY"><code class="docutils literal notranslate"><span class="pre">SystemMode.RECOVERY</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode.SAFE"><code class="docutils literal notranslate"><span class="pre">SystemMode.SAFE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.fdir">Module contents</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation.allocate"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.allocate()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation.set_health"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.set_health()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation.update_allocation_matrix"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.update_allocation_matrix()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.AnalyticalRedundancy"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.AnalyticalRedundancy.check_threshold"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.check_threshold()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.AnalyticalRedundancy.gyro_vs_quaternion_residual"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.gyro_vs_quaternion_residual()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ObserverResidualGenerator"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ObserverResidualGenerator.step"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator.step()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector.detect_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.detect_fault()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector.get_parity_vector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.get_parity_vector()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector.isolate_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.isolate_fault()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeCondition"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeCondition.update"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition.update()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.add_condition"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.add_condition()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.conditions"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.conditions</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.force_mode"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.force_mode()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.history"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.history</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.update"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.fdir package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.fdir.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-fdir-package">
+<h1>gnc_toolkit.fdir package<a class="headerlink" href="#gnc-toolkit-fdir-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.fdir.failure_accommodation">
+<span id="gnc-toolkit-fdir-failure-accommodation-module"></span><h2>gnc_toolkit.fdir.failure_accommodation module<a class="headerlink" href="#module-gnc_toolkit.fdir.failure_accommodation" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.failure_accommodation.</span></span><span class="sig-name descname"><span class="pre">ActuatorAccommodation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Accommodates actuator failures by updating control allocation weights.</p>
+<dl class="simple">
+<dt>Standard control allocation problem:</dt><dd><p>tau = B * u</p>
+</dd>
+<dt>where:</dt><dd><p>tau: Desired control effort (e.g., torque)
+u: Actuator commands
+B: Control allocation / geometry matrix (k x m)</p>
+</dd>
+</dl>
+<p>We want to find u such that tau = B * u while minimizing some cost,
+often u^T * W * u, where W is a weight matrix.</p>
+<dl class="simple">
+<dt>Minimum norm solution with weights:</dt><dd><p>u = W^{-1} * B^T * (B * W^{-1} * B^T)^{-1} * tau</p>
+</dd>
+</dl>
+<p>We can also use a “health” vector h (m x 1) where h_i in [0, 1].
+If h_i = 0, actuator i is failed and we set its weight to infinity
+(or remove it from the allocation).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.allocate">
+<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.allocate" title="Link to this definition"></a></dt>
+<dd><p>Allocate control effort to actuators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tau</strong> – Desired control effort (k x 1)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Actuator commands (m x 1)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>u</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.set_health">
+<span class="sig-name descname"><span class="pre">set_health</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation.set_health"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.set_health" title="Link to this definition"></a></dt>
+<dd><p>Set the health status of an actuator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – Actuator index (0 to m-1)</p></li>
+<li><p><strong>status</strong> – Health status (1.0 = healthy, 0.0 = completely failed)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.update_allocation_matrix">
+<span class="sig-name descname"><span class="pre">update_allocation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">W_diag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation.update_allocation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.update_allocation_matrix" title="Link to this definition"></a></dt>
+<dd><p>Compute the pseudo-inverse allocation matrix based on current weights and health.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pseudo-inverse matrix (m x k)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>B_pinv</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.fdir.parity_space">
+<span id="gnc-toolkit-fdir-parity-space-module"></span><h2>gnc_toolkit.fdir.parity_space module<a class="headerlink" href="#module-gnc_toolkit.fdir.parity_space" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.parity_space.ParitySpaceDetector">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.parity_space.</span></span><span class="sig-name descname"><span class="pre">ParitySpaceDetector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements Parity Space methods for Fault Detection and Isolation (FDI)
+in redundant sensor systems.</p>
+<dl class="simple">
+<dt>Measurement model:</dt><dd><p>y = M * x + v + f</p>
+</dd>
+<dt>where:</dt><dd><p>y: Measurement vector (p x 1)
+M: Geometry/Mixing matrix (p x n, p &gt; n)
+x: True state (n x 1)
+v: Measurement noise
+f: Fault vector</p>
+</dd>
+<dt>Parity space matrix P satisfies:</dt><dd><p>P * M = 0
+P * P^T = I</p>
+</dd>
+<dt>Parity vector:</dt><dd><p>p_vec = P * y</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.parity_space.ParitySpaceDetector.detect_fault">
+<span class="sig-name descname"><span class="pre">detect_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector.detect_fault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.detect_fault" title="Link to this definition"></a></dt>
+<dd><p>Detect if a fault is present.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> – Measurement vector</p></li>
+<li><p><strong>threshold</strong> – Magnitude threshold for the parity vector norm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if fault detected, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.parity_space.ParitySpaceDetector.get_parity_vector">
+<span class="sig-name descname"><span class="pre">get_parity_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector.get_parity_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.get_parity_vector" title="Link to this definition"></a></dt>
+<dd><p>Calculate the parity vector for a given measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> – Measurement vector (p x 1)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parity vector (p-n x 1)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>p_vec</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.parity_space.ParitySpaceDetector.isolate_fault">
+<span class="sig-name descname"><span class="pre">isolate_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector.isolate_fault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.isolate_fault" title="Link to this definition"></a></dt>
+<dd><p>Isolate which sensor is faulty by finding the column of P
+that best aligns with the parity vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> – Measurement vector</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Isolated sensor index (0 to p-1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.fdir.residual_generation">
+<span id="gnc-toolkit-fdir-residual-generation-module"></span><h2>gnc_toolkit.fdir.residual_generation module<a class="headerlink" href="#module-gnc_toolkit.fdir.residual_generation" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.residual_generation.</span></span><span class="sig-name descname"><span class="pre">AnalyticalRedundancy</span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#AnalyticalRedundancy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Detects faults by comparing two signals that should be algebraically or dynamically related.</p>
+<p>Example: Comparing integrated gyro rates with star tracker quaternions,
+or comparing two redundant sensor outputs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.check_threshold">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">check_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#AnalyticalRedundancy.check_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.check_threshold" title="Link to this definition"></a></dt>
+<dd><p>Checks if the residual exceeds a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> – Residual vector</p></li>
+<li><p><strong>threshold</strong> – Scalar threshold</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if fault detected, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.gyro_vs_quaternion_residual">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">gyro_vs_quaternion_residual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_dot_measured</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_dot_calculated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#AnalyticalRedundancy.gyro_vs_quaternion_residual"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.gyro_vs_quaternion_residual" title="Link to this definition"></a></dt>
+<dd><p>Calculates residual between measured quaternion rate (from ST) and calculated from gyro.</p>
+<p>q_dot_calculated = 0.5 * q otimes [0, omega]^T</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_dot_measured</strong> – Measured quaternion rate</p></li>
+<li><p><strong>q_dot_calculated</strong> – Calculated quaternion rate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Residual vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.residual_generation.</span></span><span class="sig-name descname"><span class="pre">ObserverResidualGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#ObserverResidualGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generates residuals using a Luenberger observer or similar linear observer.</p>
+<dl class="simple">
+<dt>System model:</dt><dd><p>x_{k+1} = A x_k + B u_k
+y_k     = C x_k + D u_k</p>
+</dd>
+<dt>Observer:</dt><dd><p>x_hat_{k+1} = A x_hat_k + B u_k + L (y_k - y_hat_k)
+y_hat_k     = C x_hat_k + D u_k</p>
+</dd>
+<dt>Residual:</dt><dd><p>r_k = y_k - y_hat_k</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#ObserverResidualGenerator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator.step" title="Link to this definition"></a></dt>
+<dd><p>Perform one step of the observer and return the residual.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> – Input vector (m x 1)</p></li>
+<li><p><strong>y</strong> – Measurement vector (p x 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Residual vector (p x 1)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>r</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.fdir.safe_mode">
+<span id="gnc-toolkit-fdir-safe-mode-module"></span><h2>gnc_toolkit.fdir.safe_mode module<a class="headerlink" href="#module-gnc_toolkit.fdir.safe_mode" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SafeModeCondition">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.safe_mode.</span></span><span class="sig-name descname"><span class="pre">SafeModeCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_time_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Defines a condition that triggers safe mode.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SafeModeCondition.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeCondition.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition.update" title="Link to this definition"></a></dt>
+<dd><p>Update the condition state and check if it should trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if safety condition triggered, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SafeModeLogic">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.safe_mode.</span></span><span class="sig-name descname"><span class="pre">SafeModeLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SystemMode.NOMINAL</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages system mode transitions based on fault conditions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SafeModeLogic.add_condition">
+<span class="sig-name descname"><span class="pre">add_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition" title="gnc_toolkit.fdir.safe_mode.SafeModeCondition"><span class="pre">SafeModeCondition</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.add_condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.add_condition" title="Link to this definition"></a></dt>
+<dd><p>Add a trigger condition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SafeModeLogic.force_mode">
+<span class="sig-name descname"><span class="pre">force_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Commanded'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.force_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.force_mode" title="Link to this definition"></a></dt>
+<dd><p>Force mode transition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SafeModeLogic.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.update" title="Link to this definition"></a></dt>
+<dd><p>Update mode logic based on conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current SystemMode</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SystemMode">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.safe_mode.</span></span><span class="sig-name descname"><span class="pre">SystemMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SystemMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SystemMode.NOMINAL">
+<span class="sig-name descname"><span class="pre">NOMINAL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NOMINAL'</span></span><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SystemMode.NOMINAL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SystemMode.RECOVERY">
+<span class="sig-name descname"><span class="pre">RECOVERY</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RECOVERY'</span></span><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SystemMode.RECOVERY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SystemMode.SAFE">
+<span class="sig-name descname"><span class="pre">SAFE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SAFE'</span></span><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SystemMode.SAFE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.fdir">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.fdir" title="Link to this heading"></a></h2>
+<p>Fault Detection, Isolation &amp; Recovery (FDIR) module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ActuatorAccommodation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.</span></span><span class="sig-name descname"><span class="pre">ActuatorAccommodation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ActuatorAccommodation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Accommodates actuator failures by updating control allocation weights.</p>
+<dl class="simple">
+<dt>Standard control allocation problem:</dt><dd><p>tau = B * u</p>
+</dd>
+<dt>where:</dt><dd><p>tau: Desired control effort (e.g., torque)
+u: Actuator commands
+B: Control allocation / geometry matrix (k x m)</p>
+</dd>
+</dl>
+<p>We want to find u such that tau = B * u while minimizing some cost,
+often u^T * W * u, where W is a weight matrix.</p>
+<dl class="simple">
+<dt>Minimum norm solution with weights:</dt><dd><p>u = W^{-1} * B^T * (B * W^{-1} * B^T)^{-1} * tau</p>
+</dd>
+</dl>
+<p>We can also use a “health” vector h (m x 1) where h_i in [0, 1].
+If h_i = 0, actuator i is failed and we set its weight to infinity
+(or remove it from the allocation).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ActuatorAccommodation.allocate">
+<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ActuatorAccommodation.allocate" title="Link to this definition"></a></dt>
+<dd><p>Allocate control effort to actuators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tau</strong> – Desired control effort (k x 1)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Actuator commands (m x 1)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>u</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ActuatorAccommodation.set_health">
+<span class="sig-name descname"><span class="pre">set_health</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation.set_health"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ActuatorAccommodation.set_health" title="Link to this definition"></a></dt>
+<dd><p>Set the health status of an actuator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – Actuator index (0 to m-1)</p></li>
+<li><p><strong>status</strong> – Health status (1.0 = healthy, 0.0 = completely failed)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ActuatorAccommodation.update_allocation_matrix">
+<span class="sig-name descname"><span class="pre">update_allocation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">W_diag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation.update_allocation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ActuatorAccommodation.update_allocation_matrix" title="Link to this definition"></a></dt>
+<dd><p>Compute the pseudo-inverse allocation matrix based on current weights and health.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pseudo-inverse matrix (m x k)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>B_pinv</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.AnalyticalRedundancy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.</span></span><span class="sig-name descname"><span class="pre">AnalyticalRedundancy</span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#AnalyticalRedundancy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.AnalyticalRedundancy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Detects faults by comparing two signals that should be algebraically or dynamically related.</p>
+<p>Example: Comparing integrated gyro rates with star tracker quaternions,
+or comparing two redundant sensor outputs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.AnalyticalRedundancy.check_threshold">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">check_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#AnalyticalRedundancy.check_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.AnalyticalRedundancy.check_threshold" title="Link to this definition"></a></dt>
+<dd><p>Checks if the residual exceeds a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> – Residual vector</p></li>
+<li><p><strong>threshold</strong> – Scalar threshold</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if fault detected, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.AnalyticalRedundancy.gyro_vs_quaternion_residual">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">gyro_vs_quaternion_residual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_dot_measured</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_dot_calculated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#AnalyticalRedundancy.gyro_vs_quaternion_residual"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.AnalyticalRedundancy.gyro_vs_quaternion_residual" title="Link to this definition"></a></dt>
+<dd><p>Calculates residual between measured quaternion rate (from ST) and calculated from gyro.</p>
+<p>q_dot_calculated = 0.5 * q otimes [0, omega]^T</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_dot_measured</strong> – Measured quaternion rate</p></li>
+<li><p><strong>q_dot_calculated</strong> – Calculated quaternion rate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Residual vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ObserverResidualGenerator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.</span></span><span class="sig-name descname"><span class="pre">ObserverResidualGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#ObserverResidualGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ObserverResidualGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generates residuals using a Luenberger observer or similar linear observer.</p>
+<dl class="simple">
+<dt>System model:</dt><dd><p>x_{k+1} = A x_k + B u_k
+y_k     = C x_k + D u_k</p>
+</dd>
+<dt>Observer:</dt><dd><p>x_hat_{k+1} = A x_hat_k + B u_k + L (y_k - y_hat_k)
+y_hat_k     = C x_hat_k + D u_k</p>
+</dd>
+<dt>Residual:</dt><dd><p>r_k = y_k - y_hat_k</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ObserverResidualGenerator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#ObserverResidualGenerator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ObserverResidualGenerator.step" title="Link to this definition"></a></dt>
+<dd><p>Perform one step of the observer and return the residual.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> – Input vector (m x 1)</p></li>
+<li><p><strong>y</strong> – Measurement vector (p x 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Residual vector (p x 1)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>r</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ParitySpaceDetector">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.</span></span><span class="sig-name descname"><span class="pre">ParitySpaceDetector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ParitySpaceDetector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements Parity Space methods for Fault Detection and Isolation (FDI)
+in redundant sensor systems.</p>
+<dl class="simple">
+<dt>Measurement model:</dt><dd><p>y = M * x + v + f</p>
+</dd>
+<dt>where:</dt><dd><p>y: Measurement vector (p x 1)
+M: Geometry/Mixing matrix (p x n, p &gt; n)
+x: True state (n x 1)
+v: Measurement noise
+f: Fault vector</p>
+</dd>
+<dt>Parity space matrix P satisfies:</dt><dd><p>P * M = 0
+P * P^T = I</p>
+</dd>
+<dt>Parity vector:</dt><dd><p>p_vec = P * y</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ParitySpaceDetector.detect_fault">
+<span class="sig-name descname"><span class="pre">detect_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector.detect_fault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ParitySpaceDetector.detect_fault" title="Link to this definition"></a></dt>
+<dd><p>Detect if a fault is present.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> – Measurement vector</p></li>
+<li><p><strong>threshold</strong> – Magnitude threshold for the parity vector norm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if fault detected, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ParitySpaceDetector.get_parity_vector">
+<span class="sig-name descname"><span class="pre">get_parity_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector.get_parity_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ParitySpaceDetector.get_parity_vector" title="Link to this definition"></a></dt>
+<dd><p>Calculate the parity vector for a given measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> – Measurement vector (p x 1)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parity vector (p-n x 1)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>p_vec</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.ParitySpaceDetector.isolate_fault">
+<span class="sig-name descname"><span class="pre">isolate_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector.isolate_fault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.ParitySpaceDetector.isolate_fault" title="Link to this definition"></a></dt>
+<dd><p>Isolate which sensor is faulty by finding the column of P
+that best aligns with the parity vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> – Measurement vector</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Isolated sensor index (0 to p-1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeCondition">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.</span></span><span class="sig-name descname"><span class="pre">SafeModeCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_time_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeCondition" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Defines a condition that triggers safe mode.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeCondition.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeCondition.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeCondition.update" title="Link to this definition"></a></dt>
+<dd><p>Update the condition state and check if it should trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if safety condition triggered, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.</span></span><span class="sig-name descname"><span class="pre">SafeModeLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SystemMode.NOMINAL</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages system mode transitions based on fault conditions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.add_condition">
+<span class="sig-name descname"><span class="pre">add_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition" title="gnc_toolkit.fdir.safe_mode.SafeModeCondition"><span class="pre">SafeModeCondition</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.add_condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.add_condition" title="Link to this definition"></a></dt>
+<dd><p>Add a trigger condition.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.conditions">
+<span class="sig-name descname"><span class="pre">conditions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeCondition" title="gnc_toolkit.fdir.SafeModeCondition"><span class="pre">SafeModeCondition</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.conditions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.force_mode">
+<span class="sig-name descname"><span class="pre">force_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Commanded'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.force_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.force_mode" title="Link to this definition"></a></dt>
+<dd><p>Force mode transition.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.history">
+<span class="sig-name descname"><span class="pre">history</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.history" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.update" title="Link to this definition"></a></dt>
+<dd><p>Update mode logic based on conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current SystemMode</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

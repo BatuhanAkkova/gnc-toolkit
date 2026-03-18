@@ -44,6 +44,21 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">gnc_toolkit.optimal_control package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.adaptive_control">gnc_toolkit.optimal_control.adaptive_control module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.compute_control"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.compute_control()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.update_theta"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.update_theta()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.backstepping_control">gnc_toolkit.optimal_control.backstepping_control module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController"><code class="docutils literal notranslate"><span class="pre">BacksteppingController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController.compute_control"><code class="docutils literal notranslate"><span class="pre">BacksteppingController.compute_control()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.feedback_linearization">gnc_toolkit.optimal_control.feedback_linearization module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization.compute_control"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization.compute_control()</span></code></a></li>
@@ -60,6 +75,15 @@
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.geometric_control">gnc_toolkit.optimal_control.geometric_control module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.GeometricController"><code class="docutils literal notranslate"><span class="pre">GeometricController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.GeometricController.compute_control"><code class="docutils literal notranslate"><span class="pre">GeometricController.compute_control()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.hat_map"><code class="docutils literal notranslate"><span class="pre">hat_map()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.vee_map"><code class="docutils literal notranslate"><span class="pre">vee_map()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.h2_control">gnc_toolkit.optimal_control.h2_control module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.h2_control.H2Controller"><code class="docutils literal notranslate"><span class="pre">H2Controller</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.h2_control.H2Controller.solve"><code class="docutils literal notranslate"><span class="pre">H2Controller.solve()</span></code></a></li>
@@ -72,6 +96,17 @@
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.h_infinity.HInfinityController.compute_control"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_control()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.h_infinity.HInfinityController.compute_gain"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_gain()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.h_infinity.HInfinityController.solve"><code class="docutils literal notranslate"><span class="pre">HInfinityController.solve()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.indi_control">gnc_toolkit.optimal_control.indi_control module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIController"><code class="docutils literal notranslate"><span class="pre">INDIController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIController.compute_control"><code class="docutils literal notranslate"><span class="pre">INDIController.compute_control()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD.compute_v"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD.compute_v()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -111,6 +146,20 @@
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.mpc_casadi">gnc_toolkit.optimal_control.mpc_casadi module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC.solve"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC.solve()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.passivity_control">gnc_toolkit.optimal_control.passivity_control module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.passivity_control.PassivityBasedController"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.passivity_control.PassivityBasedController.compute_control"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController.compute_control()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.sliding_mode">gnc_toolkit.optimal_control.sliding_mode module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController"><code class="docutils literal notranslate"><span class="pre">SlidingModeController</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController.compute_control"><code class="docutils literal notranslate"><span class="pre">SlidingModeController.compute_control()</span></code></a></li>
@@ -119,6 +168,14 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#module-gnc_toolkit.optimal_control">Module contents</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.BacksteppingController"><code class="docutils literal notranslate"><span class="pre">BacksteppingController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.BacksteppingController.compute_control"><code class="docutils literal notranslate"><span class="pre">BacksteppingController.compute_control()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.CasadiNMPC"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.CasadiNMPC.solve"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC.solve()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.FeedbackLinearization"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.FeedbackLinearization.compute_control"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization.compute_control()</span></code></a></li>
 </ul>
@@ -129,6 +186,10 @@
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.FiniteHorizonLQR.solve"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR.solve()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.GeometricController"><code class="docutils literal notranslate"><span class="pre">GeometricController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.GeometricController.compute_control"><code class="docutils literal notranslate"><span class="pre">GeometricController.compute_control()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.H2Controller"><code class="docutils literal notranslate"><span class="pre">H2Controller</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.H2Controller.solve"><code class="docutils literal notranslate"><span class="pre">H2Controller.solve()</span></code></a></li>
 </ul>
@@ -137,6 +198,14 @@
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.HInfinityController.compute_control"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_control()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.HInfinityController.compute_gain"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_gain()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.HInfinityController.solve"><code class="docutils literal notranslate"><span class="pre">HInfinityController.solve()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIController"><code class="docutils literal notranslate"><span class="pre">INDIController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIController.compute_control"><code class="docutils literal notranslate"><span class="pre">INDIController.compute_control()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIOuterLoopPD"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIOuterLoopPD.compute_v"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD.compute_v()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQE"><code class="docutils literal notranslate"><span class="pre">LQE</span></code></a><ul>
@@ -158,8 +227,17 @@
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.LinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">LinearMPC.solve()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.compute_control"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.compute_control()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.update_theta"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.update_theta()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.NonlinearMPC"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC</span></code></a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.NonlinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC.solve()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.PassivityBasedController"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.optimal_control.PassivityBasedController.compute_control"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController.compute_control()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gnc_toolkit.optimal_control.SlidingModeController"><code class="docutils literal notranslate"><span class="pre">SlidingModeController</span></code></a><ul>
@@ -200,6 +278,91 @@
 <h1>gnc_toolkit.optimal_control package<a class="headerlink" href="#gnc-toolkit-optimal-control-package" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.optimal_control.adaptive_control">
+<span id="gnc-toolkit-optimal-control-adaptive-control-module"></span><h2>gnc_toolkit.optimal_control.adaptive_control module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.adaptive_control" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.adaptive_control.</span></span><span class="sig-name descname"><span class="pre">ModelReferenceAdaptiveControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gamma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q_lyap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/adaptive_control.html#ModelReferenceAdaptiveControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model Reference Adaptive Controller (MRAC) for state-space systems.</p>
+<p>Plant with parametric uncertainty:
+dx/dt = A * x + B * (u + theta^T * phi(x))</p>
+<p>Reference Model:
+dx_m/dt = A_m * x_m + B_m * r</p>
+<p>Adaptive estimate update law:
+d_theta_hat/dt = Gamma * phi(x) * e^T * P * B</p>
+<p>where e = x - x_m, and P solves A_m^T * P + P * A_m = -Q.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/adaptive_control.html#ModelReferenceAdaptiveControl.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input u.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – Current plant state [n].</p></li>
+<li><p><strong>x_m</strong> (<em>np.ndarray</em>) – Current reference model state [n].</p></li>
+<li><p><strong>r</strong> (<em>np.ndarray</em>) – Reference input [m].</p></li>
+<li><p><strong>kx</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optimal gain for A + B*kx = A_m. Defaults to using values that assume A=A_m.</p></li>
+<li><p><strong>kr</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optimal gain for B*kr = B_m. Defaults to ones.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control effort u [m].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.update_theta">
+<span class="sig-name descname"><span class="pre">update_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/adaptive_control.html#ModelReferenceAdaptiveControl.update_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.update_theta" title="Link to this definition"></a></dt>
+<dd><p>Update the parameter estimate using Euler integration.
+Should be called after compute_control and plant simulation step.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control.backstepping_control">
+<span id="gnc-toolkit-optimal-control-backstepping-control-module"></span><h2>gnc_toolkit.optimal_control.backstepping_control module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.backstepping_control" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.backstepping_control.BacksteppingController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.backstepping_control.</span></span><span class="sig-name descname"><span class="pre">BacksteppingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/backstepping_control.html#BacksteppingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Backstepping Controller for generic 2nd order nonlinear systems.</p>
+<p>System model:
+x1_dot = x2
+x2_dot = f(x) + g(x) * u</p>
+<p>where x = [x1, x2].
+Commonly used for mechanical systems with rigid body dynamics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.backstepping_control.BacksteppingController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1_dot_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1_ddot_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/backstepping_control.html#BacksteppingController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input u.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State 1 (e.g., position) [n].</p></li>
+<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State 2 (e.g., velocity) [n].</p></li>
+<li><p><strong>x1_d</strong> (<em>np.ndarray</em>) – Desired State 1 [n].</p></li>
+<li><p><strong>x1_dot_d</strong> (<em>np.ndarray</em>) – Desired Velocity [n].</p></li>
+<li><p><strong>x1_ddot_d</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Desired Acceleration [n].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control effort u [m].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-gnc_toolkit.optimal_control.feedback_linearization">
 <span id="gnc-toolkit-optimal-control-feedback-linearization-module"></span><h2>gnc_toolkit.optimal_control.feedback_linearization module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.feedback_linearization" title="Link to this heading"></a></h2>
@@ -271,6 +434,55 @@ and P(t) is the solution to the Differential Riccati Equation (DRE):
 </dd></dl>
 
 </section>
+<section id="module-gnc_toolkit.optimal_control.geometric_control">
+<span id="gnc-toolkit-optimal-control-geometric-control-module"></span><h2>gnc_toolkit.optimal_control.geometric_control module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.geometric_control" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.geometric_control.GeometricController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.geometric_control.</span></span><span class="sig-name descname"><span class="pre">GeometricController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kW</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/geometric_control.html#GeometricController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.geometric_control.GeometricController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Geometric Controller on SO(3) for attitude tracking.
+Based on Lee et al. (2010), “Geometric Numerical Integration of Differential Equations”.
+Provides global stability and avoids singularities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.geometric_control.GeometricController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_omega_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/geometric_control.html#GeometricController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.geometric_control.GeometricController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control torque.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>np.ndarray</em>) – Current rotation matrix [3x3].</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Current angular velocity [3].</p></li>
+<li><p><strong>R_d</strong> (<em>np.ndarray</em>) – Desired rotation matrix [3x3].</p></li>
+<li><p><strong>omega_d</strong> (<em>np.ndarray</em>) – Desired angular velocity [3].</p></li>
+<li><p><strong>d_omega_d</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Desired angular acceleration [3]. Defaults to zeros.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control torque [3].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.geometric_control.hat_map">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.geometric_control.</span></span><span class="sig-name descname"><span class="pre">hat_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/geometric_control.html#hat_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.geometric_control.hat_map" title="Link to this definition"></a></dt>
+<dd><p>Hat map (skew-symmetric matrix generator).
+Converts a vector in R^3 to a skew-symmetric matrix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.geometric_control.vee_map">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.geometric_control.</span></span><span class="sig-name descname"><span class="pre">vee_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/geometric_control.html#vee_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.geometric_control.vee_map" title="Link to this definition"></a></dt>
+<dd><p>Vee map (skew-symmetric extractor).
+Converts a skew-symmetric matrix to a vector in R^3.</p>
+</dd></dl>
+
+</section>
 <section id="module-gnc_toolkit.optimal_control.h2_control">
 <span id="gnc-toolkit-optimal-control-h2-control-module"></span><h2>gnc_toolkit.optimal_control.h2_control module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.h2_control" title="Link to this heading"></a></h2>
 <dl class="py class">
@@ -325,6 +537,61 @@ Minimizes J = integral(x.T*Q*x + u.T*R*u - gamma^2 * w.T*w) dt</p>
 <dd><p>Solve the H-infinity Riccati Equation:
 P*A + A.T*P + P*(B1*B1.T/gamma^2 - B2*inv(R)*B2.T)*P + Q = 0</p>
 </dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control.indi_control">
+<span id="gnc-toolkit-optimal-control-indi-control-module"></span><h2>gnc_toolkit.optimal_control.indi_control module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.indi_control" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.indi_control.INDIController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.indi_control.</span></span><span class="sig-name descname"><span class="pre">INDIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.indi_control.INDIController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Incremental Nonlinear Dynamic Inversion (INDI) Controller.</p>
+<p>Exploits fast control rates and sensor measurements to reduce model dependence.
+System Model:
+x_ddot = f(x, x_dot) + g(x, x_dot) * u</p>
+<p>INDI discrete approximation:
+u = u0 + g(x0, x_dot0)^-1 * (v - x_ddot0)</p>
+<p>where:
+- u0: Previous control input.
+- x_ddot0: Measured/estimated acceleration at current step.
+- v: Desired acceleration (e.g., from outer-loop PD controller).
+- x0, x_dot0: State measurements at current step.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.indi_control.INDIController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_ddot0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dot0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.indi_control.INDIController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input u.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u0</strong> (<em>np.ndarray</em>) – Previous control input [m].</p></li>
+<li><p><strong>x_ddot0</strong> (<em>np.ndarray</em>) – Measured/estimated acceleration [n].</p></li>
+<li><p><strong>v</strong> (<em>np.ndarray</em>) – Desired acceleration [n].</p></li>
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Current state 1 (e.g. position) [n].</p></li>
+<li><p><strong>x_dot0</strong> (<em>np.ndarray</em>) – Current state 2 (e.g. velocity) [n].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New control effort u [m].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.indi_control.</span></span><span class="sig-name descname"><span class="pre">INDIOuterLoopPD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Kp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIOuterLoopPD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper for outer-loop tracking (computes desired acceleration v).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD.compute_v">
+<span class="sig-name descname"><span class="pre">compute_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dot_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_ddot_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIOuterLoopPD.compute_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD.compute_v" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -506,6 +773,74 @@ Cost: sum_{k=0}^{N-1} L(x[k], u[k]) + V(x[N])</p>
 </dd></dl>
 
 </section>
+<section id="module-gnc_toolkit.optimal_control.mpc_casadi">
+<span id="gnc-toolkit-optimal-control-mpc-casadi-module"></span><h2>gnc_toolkit.optimal_control.mpc_casadi module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.mpc_casadi" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.mpc_casadi.</span></span><span class="sig-name descname"><span class="pre">CasadiNMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamics_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc_casadi.html#CasadiNMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Production-grade Nonlinear Model Predictive Controller (NMPC) using CasADi.</p>
+<p>Optimizes a finite horizon cost function subject to nonlinear dynamics and constraints.
+Uses Multiple Shooting formulation for numerical stability and faster convergence.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_guess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc_casadi.html#CasadiNMPC.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC.solve" title="Link to this definition"></a></dt>
+<dd><p>Solve the NMPC optimization problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p></li>
+<li><p><strong>u_guess</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Initial guess for control inputs [N, nu].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimal control sequence [N, nu].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.optimal_control.passivity_control">
+<span id="gnc-toolkit-optimal-control-passivity-control-module"></span><h2>gnc_toolkit.optimal_control.passivity_control module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.passivity_control" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.passivity_control.PassivityBasedController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.passivity_control.</span></span><span class="sig-name descname"><span class="pre">PassivityBasedController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Lambda</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/passivity_control.html#PassivityBasedController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.passivity_control.PassivityBasedController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Passivity-Based Controller for Euler-Lagrange mechanical systems.</p>
+<p>Exploits the energy properties and skew-symmetric property of (M_dot - 2C).
+Commonly known as the Slotine &amp; Li controller.
+System: M(q) * q_ddot + C(q, q_dot) * q_dot + G(q) = u</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.passivity_control.PassivityBasedController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_dot_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_ddot_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/passivity_control.html#PassivityBasedController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.passivity_control.PassivityBasedController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>np.ndarray</em>) – Current positions [n].</p></li>
+<li><p><strong>q_dot</strong> (<em>np.ndarray</em>) – Current velocities [n].</p></li>
+<li><p><strong>q_d</strong> (<em>np.ndarray</em>) – Desired positions [n].</p></li>
+<li><p><strong>q_dot_d</strong> (<em>np.ndarray</em>) – Desired velocities [n].</p></li>
+<li><p><strong>q_ddot_d</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Desired accelerations [n]. Defaults to zeros.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control effort u [n].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-gnc_toolkit.optimal_control.sliding_mode">
 <span id="gnc-toolkit-optimal-control-sliding-mode-module"></span><h2>gnc_toolkit.optimal_control.sliding_mode module<a class="headerlink" href="#module-gnc_toolkit.optimal_control.sliding_mode" title="Link to this heading"></a></h2>
 <dl class="py class">
@@ -540,6 +875,70 @@ u = u_eq(x, t) - K * sign(s(x, t))</p>
 </section>
 <section id="module-gnc_toolkit.optimal_control">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.optimal_control" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.BacksteppingController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">BacksteppingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/backstepping_control.html#BacksteppingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.BacksteppingController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Backstepping Controller for generic 2nd order nonlinear systems.</p>
+<p>System model:
+x1_dot = x2
+x2_dot = f(x) + g(x) * u</p>
+<p>where x = [x1, x2].
+Commonly used for mechanical systems with rigid body dynamics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.BacksteppingController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1_dot_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1_ddot_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/backstepping_control.html#BacksteppingController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.BacksteppingController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input u.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State 1 (e.g., position) [n].</p></li>
+<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State 2 (e.g., velocity) [n].</p></li>
+<li><p><strong>x1_d</strong> (<em>np.ndarray</em>) – Desired State 1 [n].</p></li>
+<li><p><strong>x1_dot_d</strong> (<em>np.ndarray</em>) – Desired Velocity [n].</p></li>
+<li><p><strong>x1_ddot_d</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Desired Acceleration [n].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control effort u [m].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.CasadiNMPC">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">CasadiNMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamics_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc_casadi.html#CasadiNMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.CasadiNMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Production-grade Nonlinear Model Predictive Controller (NMPC) using CasADi.</p>
+<p>Optimizes a finite horizon cost function subject to nonlinear dynamics and constraints.
+Uses Multiple Shooting formulation for numerical stability and faster convergence.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.CasadiNMPC.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_guess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc_casadi.html#CasadiNMPC.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.CasadiNMPC.solve" title="Link to this definition"></a></dt>
+<dd><p>Solve the NMPC optimization problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p></li>
+<li><p><strong>u_guess</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Initial guess for control inputs [N, nu].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimal control sequence [N, nu].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.optimal_control.FeedbackLinearization">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">FeedbackLinearization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/feedback_linearization.html#FeedbackLinearization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.FeedbackLinearization" title="Link to this definition"></a></dt>
@@ -605,6 +1004,38 @@ and P(t) is the solution to the Differential Riccati Equation (DRE):
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.GeometricController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">GeometricController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kW</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/geometric_control.html#GeometricController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.GeometricController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Geometric Controller on SO(3) for attitude tracking.
+Based on Lee et al. (2010), “Geometric Numerical Integration of Differential Equations”.
+Provides global stability and avoids singularities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.GeometricController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_omega_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/geometric_control.html#GeometricController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.GeometricController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control torque.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>np.ndarray</em>) – Current rotation matrix [3x3].</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Current angular velocity [3].</p></li>
+<li><p><strong>R_d</strong> (<em>np.ndarray</em>) – Desired rotation matrix [3x3].</p></li>
+<li><p><strong>omega_d</strong> (<em>np.ndarray</em>) – Desired angular velocity [3].</p></li>
+<li><p><strong>d_omega_d</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Desired angular acceleration [3]. Defaults to zeros.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control torque [3].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.optimal_control.H2Controller">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">H2Controller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q_lqr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_lqr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q_lqe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_lqe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G_lqe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/h2_control.html#H2Controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.H2Controller" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.optimal_control.lqg.LQG" title="gnc_toolkit.optimal_control.lqg.LQG"><code class="xref py py-class docutils literal notranslate"><span class="pre">LQG</span></code></a></p>
@@ -653,6 +1084,58 @@ Minimizes J = integral(x.T*Q*x + u.T*R*u - gamma^2 * w.T*w) dt</p>
 <dd><p>Solve the H-infinity Riccati Equation:
 P*A + A.T*P + P*(B1*B1.T/gamma^2 - B2*inv(R)*B2.T)*P + Q = 0</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.INDIController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">INDIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.INDIController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Incremental Nonlinear Dynamic Inversion (INDI) Controller.</p>
+<p>Exploits fast control rates and sensor measurements to reduce model dependence.
+System Model:
+x_ddot = f(x, x_dot) + g(x, x_dot) * u</p>
+<p>INDI discrete approximation:
+u = u0 + g(x0, x_dot0)^-1 * (v - x_ddot0)</p>
+<p>where:
+- u0: Previous control input.
+- x_ddot0: Measured/estimated acceleration at current step.
+- v: Desired acceleration (e.g., from outer-loop PD controller).
+- x0, x_dot0: State measurements at current step.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.INDIController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_ddot0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dot0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.INDIController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input u.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u0</strong> (<em>np.ndarray</em>) – Previous control input [m].</p></li>
+<li><p><strong>x_ddot0</strong> (<em>np.ndarray</em>) – Measured/estimated acceleration [n].</p></li>
+<li><p><strong>v</strong> (<em>np.ndarray</em>) – Desired acceleration [n].</p></li>
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Current state 1 (e.g. position) [n].</p></li>
+<li><p><strong>x_dot0</strong> (<em>np.ndarray</em>) – Current state 2 (e.g. velocity) [n].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New control effort u [m].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.INDIOuterLoopPD">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">INDIOuterLoopPD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Kp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIOuterLoopPD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.INDIOuterLoopPD" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper for outer-loop tracking (computes desired acceleration v).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.INDIOuterLoopPD.compute_v">
+<span class="sig-name descname"><span class="pre">compute_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dot_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_ddot_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/indi_control.html#INDIOuterLoopPD.compute_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.INDIOuterLoopPD.compute_v" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -795,6 +1278,50 @@ Cost: sum_{k=0}^{N-1} (x[k].T Q x[k] + u[k].T R u[k]) + x[N].T P x[N]</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">ModelReferenceAdaptiveControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gamma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q_lyap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/adaptive_control.html#ModelReferenceAdaptiveControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model Reference Adaptive Controller (MRAC) for state-space systems.</p>
+<p>Plant with parametric uncertainty:
+dx/dt = A * x + B * (u + theta^T * phi(x))</p>
+<p>Reference Model:
+dx_m/dt = A_m * x_m + B_m * r</p>
+<p>Adaptive estimate update law:
+d_theta_hat/dt = Gamma * phi(x) * e^T * P * B</p>
+<p>where e = x - x_m, and P solves A_m^T * P + P * A_m = -Q.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/adaptive_control.html#ModelReferenceAdaptiveControl.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input u.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – Current plant state [n].</p></li>
+<li><p><strong>x_m</strong> (<em>np.ndarray</em>) – Current reference model state [n].</p></li>
+<li><p><strong>r</strong> (<em>np.ndarray</em>) – Reference input [m].</p></li>
+<li><p><strong>kx</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optimal gain for A + B*kx = A_m. Defaults to using values that assume A=A_m.</p></li>
+<li><p><strong>kr</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optimal gain for B*kr = B_m. Defaults to ones.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control effort u [m].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.update_theta">
+<span class="sig-name descname"><span class="pre">update_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/adaptive_control.html#ModelReferenceAdaptiveControl.update_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.update_theta" title="Link to this definition"></a></dt>
+<dd><p>Update the parameter estimate using Euler integration.
+Should be called after compute_control and plant simulation step.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.optimal_control.NonlinearMPC">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">NonlinearMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dynamics_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_cost_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/mpc.html#NonlinearMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.NonlinearMPC" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -812,6 +1339,39 @@ Cost: sum_{k=0}^{N-1} L(x[k], u[k]) + V(x[N])</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Optimal control sequence [u_0, …, u_{N-1}].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.PassivityBasedController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.optimal_control.</span></span><span class="sig-name descname"><span class="pre">PassivityBasedController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Lambda</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/passivity_control.html#PassivityBasedController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.PassivityBasedController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Passivity-Based Controller for Euler-Lagrange mechanical systems.</p>
+<p>Exploits the energy properties and skew-symmetric property of (M_dot - 2C).
+Commonly known as the Slotine &amp; Li controller.
+System: M(q) * q_ddot + C(q, q_dot) * q_dot + G(q) = u</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.optimal_control.PassivityBasedController.compute_control">
+<span class="sig-name descname"><span class="pre">compute_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_dot_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_ddot_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/optimal_control/passivity_control.html#PassivityBasedController.compute_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.optimal_control.PassivityBasedController.compute_control" title="Link to this definition"></a></dt>
+<dd><p>Compute control input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>np.ndarray</em>) – Current positions [n].</p></li>
+<li><p><strong>q_dot</strong> (<em>np.ndarray</em>) – Current velocities [n].</p></li>
+<li><p><strong>q_d</strong> (<em>np.ndarray</em>) – Desired positions [n].</p></li>
+<li><p><strong>q_dot_d</strong> (<em>np.ndarray</em>) – Desired velocities [n].</p></li>
+<li><p><strong>q_ddot_d</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Desired accelerations [n]. Defaults to zeros.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control effort u [n].</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>

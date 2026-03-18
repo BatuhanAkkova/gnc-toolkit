@@ -1,0 +1,45 @@
+gnc\_toolkit.fdir package
+=========================
+
+Submodules
+----------
+
+gnc\_toolkit.fdir.failure\_accommodation module
+-----------------------------------------------
+
+.. automodule:: gnc_toolkit.fdir.failure_accommodation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.fdir.parity\_space module
+--------------------------------------
+
+.. automodule:: gnc_toolkit.fdir.parity_space
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.fdir.residual\_generation module
+---------------------------------------------
+
+.. automodule:: gnc_toolkit.fdir.residual_generation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.fdir.safe\_mode module
+-----------------------------------
+
+.. automodule:: gnc_toolkit.fdir.safe_mode
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.fdir
+   :members:
+   :show-inheritance:
+   :undoc-members:

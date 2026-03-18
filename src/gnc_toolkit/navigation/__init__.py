@@ -4,6 +4,7 @@ from .gps_nav import GPSNavigation
 from .relative_nav import RelativeNavigationEKF
 from .surface_nav import SurfaceNavigationEKF
 from .iod import gibbs_iod, herrick_gibbs_iod, gauss_iod, laplace_iod, laplace_iod_from_observations
+from .terrain_nav import FeatureMatchingTRN, map_relative_localization_update
 
 __all__ = [
     "OrbitDeterminationEKF",
@@ -15,5 +16,7 @@ __all__ = [
     "herrick_gibbs_iod",
     "gauss_iod",
     "laplace_iod",
-    "laplace_iod_from_observations"
+    "laplace_iod_from_observations",
+    "FeatureMatchingTRN",
+    "map_relative_localization_update"
 ]

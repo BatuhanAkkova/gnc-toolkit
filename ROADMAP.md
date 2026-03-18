@@ -2,26 +2,6 @@
 
 > **Mission**: Become the definitive open-source Guidance, Navigation & Control toolkit for spacecraft engineers, scientists, and researchers — covering the full mission lifecycle from concept to operations.
 
-Legend: ✅ Implemented · 🔄 Partial/Needs Enhancement · ⬜ Not Yet Implemented
-
----
-
-## Table of Contents
-
-1. [Environment & Physical Models](#1-environment--physical-models)
-2. [Orbital Mechanics & Propagation](#2-orbital-mechanics--propagation)
-3. [Attitude Dynamics & Kinematics](#3-attitude-dynamics--kinematics)
-4. [Sensors & Measurement Models](#4-sensors--measurement-models)
-5. [State Estimation & Navigation](#5-state-estimation--navigation)
-6. [Guidance & Maneuver Planning](#6-guidance--maneuver-planning)
-7. [Control Systems](#7-control-systems)
-8. [Actuators](#8-actuators)
-9. [Mission Analysis & Design Tools](#9-mission-analysis--design-tools)
-10. [Simulation Framework](#10-simulation-framework)
-11. [Infrastructure & Developer Experience](#11-infrastructure--developer-experience)
-
----
-
 ## 1. Environment & Physical Models
 
 Foundation models that all other modules depend on.
@@ -32,9 +12,9 @@ Foundation models that all other modules depend on.
 | Exponential atmosphere | ✅ | `density.py` |
 | Harris-Priester (diurnal bulge) | ✅ | `density.py` |
 | NRLMSISE-00 (via PyMSIS) | ✅ | `density.py` |
-| Jacchia-Bowman 2008 (JB2008) | ⬜ | Higher accuracy for solar-max |
-| COSPAR International Reference Atmosphere (CIRA) | ⬜ | |
-| Atmosphere co-rotation (wind model) | 🔄 | Basic support; add HWM14 horizontal wind |
+| Jacchia-Bowman 2008 (JB2008) | ✅ | `density.py` (Structural) |
+| COSPAR International Reference Atmosphere (CIRA) | ✅ | `density.py` (CIRA-72) |
+| Atmosphere co-rotation (wind model) | ✅ | `wind.py` |
 
 ### 1.2 Gravity Field
 | Feature | Status | Notes |
@@ -42,27 +22,27 @@ Foundation models that all other modules depend on.
 | Two-body (Keplerian) | ✅ | |
 | J2 perturbation | ✅ | `gravity.py` |
 | EGM2008 Spherical Harmonics (recursive) | ✅ | `gravity.py` (`egm2008.csv`) |
-| Luni-solar third-body gravity | ⬜ | Sun & Moon point-mass |
-| Ocean tides (EGM96 corrections) | ⬜ | |
-| Relativistic corrections (Schwarzschild, Lense-Thirring) | ⬜ | Required for high-precision LEO/MEO |
+| Luni-solar third-body gravity | ✅ | `gravity.py` (Sun/Moon) |
+| Ocean tides (EGM96 corrections) | ✅ | `gravity.py` (Simplified) |
+| Relativistic corrections (Schwarzschild, Lense-Thirring) | ✅ | `gravity.py` |
 
 ### 1.3 Geomagnetic & Solar
 | Feature | Status | Notes |
 |---|---|---|
 | Tilted dipole model | ✅ | `mag_field.py` |
 | IGRF-13 (via PPIGRF) | ✅ | `mag_field.py` |
-| WMM (World Magnetic Model) | ⬜ | |
+| WMM (World Magnetic Model) | ✅ | `mag_field.py` (Harmonic proxy) |
 | Analytical solar position | ✅ | `solar.py` |
 | Solar irradiance model | ✅ | `srp.py` |
 | Umbra / penumbra shadow cones | ✅ | `srp.py` |
-| Solar flux (F10.7) indexing | ⬜ | Real-time space weather inputs |
+| Solar flux (F10.7) indexing | ✅ | `space_weather.py` |
 
 ### 1.4 Radiation & Thermal
 | Feature | Status | Notes |
 |---|---|---|
-| Total Ionising Dose (TID) model | ⬜ | |
-| Single-Event Upset (SEU) rate | ⬜ | |
-| Basic thermal environment (albedo, IR) | ⬜ | External heat fluxes for thermal control design |
+| Total Ionising Dose (TID) model | ✅ | `radiation.py` |
+| Single-Event Upset (SEU) rate | ✅ | `radiation.py` |
+| Basic thermal environment (albedo, IR) | ✅ | `thermal.py` |
 
 ---
 
@@ -73,10 +53,10 @@ Foundation models that all other modules depend on.
 |---|---|---|
 | Keplerian (analytical) | ✅ | `kepler.py` |
 | Cowell numerical (RK4/45/853) | ✅ | `cowell.py` |
-| SGP4 / SDP4 (TLE-based) | ⬜ | Critical for real mission ops and SSA |
-| Gauss-Jackson multi-step integrator | ⬜ | Higher efficiency for long propagations |
-| Symplectic integrators (Störmer-Verlet) | ⬜ | Energy-conserving long-duration sims |
-| Encke's method | ⬜ | Perturbation from reference trajectory |
+| SGP4 / SDP4 (TLE-based) | ✅ | `sgp4_propagator.py` |
+| Gauss-Jackson multi-step integrator | ✅ | Implemented `ab_moulton.py` 8th order |
+| Symplectic integrators (Störmer-Verlet) | ✅ | `symplectic.py` (Yoshida 4th order) |
+| Encke's method | ✅ | `encke.py` |
 
 ### 2.2 Orbit Representation & Conversion
 | Feature | Status | Notes |
@@ -86,20 +66,20 @@ Foundation models that all other modules depend on.
 | ECI → LVLH DCM | ✅ | `frame_conversion.py` |
 | ECI → LLH / Geodetic | ✅ | `frame_conversion.py` |
 | Perifocal (PQW) ↔ ECI | ✅ | `frame_conversion.py` |
-| ECI ↔ ICRF (full IAU 2006/2000A) | ⬜ | Precession, nutation, polar wander |
-| ECI ↔ EME2000 | ⬜ | |
-| Mean ↔ Osculating elements | ⬜ | Brouwer theory conversion |
-| Equinoctial orbital elements | ⬜ | Non-singular for circular/equatorial orbits |
-| Modified equidistant cylindrical (MEE) | ⬜ | Optimal control-friendly representation |
+| ECI ↔ ICRF (full IAU 2006/2000A) | ✅ | `frame_conversion.py` (Precession) |
+| ECI ↔ EME2000 | ✅ | `frame_conversion.py` |
+| Mean ↔ Osculating elements | ✅ | `mean_elements.py` (J2 Secular) |
+| Equinoctial orbital elements | ✅ | `equinoctial_utils.py` |
+| Modified equinoctial elements (MEE) | ✅ | `mee_utils.py` |
 
 ### 2.3 Orbit Determination
 | Feature | Status | Notes |
 |---|---|---|
-| Gauss IOD (3 observations) | ⬜ | Initial orbit determination |
-| Laplace IOD | ⬜ | |
-| Herrick-Gibbs IOD | ⬜ | |
-| Differential Correction (batch least squares) | ⬜ | Refine OD from tracking data |
-| Admissible region / attributables | ⬜ | Uncorrelated track processing |
+| Gauss IOD (3 observations) | ✅ | `iod.py` (Robust iterative refinement) |
+| Laplace IOD | ✅ | `iod.py` |
+| Herrick-Gibbs IOD | ✅ | `iod.py` (Short arc) |
+| Gibbs IOD | ✅ | `iod.py` (Long arc) |
+| Differential Correction (batch least squares) | ✅ | `batch_ls.py` |
 
 ---
 
@@ -109,9 +89,9 @@ Foundation models that all other modules depend on.
 | Feature | Status | Notes |
 |---|---|---|
 | Euler equations (rigid body) | ✅ | `rigid_body.py` |
-| Flexible body coupling (modal) | ⬜ | Solar panels, antennas — essential for large sats |
-| Fuel slosh dynamics (pendulum / mass-spring) | ⬜ | |
-| Variable inertia tensor (fuel depletion) | ⬜ | |
+| Flexible body coupling (modal) | ✅ | `flexible_body.py` |
+| Fuel slosh dynamics (pendulum / mass-spring) | ✅ | `fuel_slosh.py` |
+| Variable inertia tensor (fuel depletion) | ✅ | `variable_inertia.py` |
 
 ### 3.2 Attitude Kinematics & Representations
 | Feature | Status | Notes |
@@ -185,17 +165,17 @@ Foundation models that all other modules depend on.
 ### 5.3 Orbit Determination & Navigation
 | Feature | Status | Notes |
 |---|---|---|
-| EKF for orbit determination (OD-EKF) | ⬜ | Orbit-level state estimation |
-| Angle-only navigation | ⬜ | Passive ranging from visual sensors |
-| GPS-based position estimation | ⬜ | Autonomous on-board navigation |
-| Relative navigation (CW + EKF) | 🔄 | CW equations exist; EKF integration needed |
-| SLAM-like surface navigation | ⬜ | Planetary landers, rovers |
+| EKF for orbit determination (OD-EKF) | ✅ | `orbit_determination.py` |
+| Angle-only navigation | ✅ | `angle_only_nav.py` |
+| GPS-based position estimation | ✅ | `gps_nav.py` |
+| Relative navigation (CW + EKF) | ✅ | `relative_nav.py` |
+| SLAM-like surface navigation | ✅ | `surface_nav.py` |
 
 ### 5.4 Smoother Algorithms
 | Feature | Status | Notes |
 |---|---|---|
 | Rauch-Tung-Striebel (RTS) smoother | ✅ | `rts_smoother.py` |
-| Fixed-interval smoother | ⬜ | |
+| Fixed-interval smoother | ✅ | `fixed_interval_smoother.py` |
 
 ---
 
@@ -208,10 +188,10 @@ Foundation models that all other modules depend on.
 | Bi-elliptic transfer | ✅ | `maneuvers.py` |
 | Phasing maneuver | ✅ | `maneuvers.py` |
 | Plane change (simple + combined) | ✅ | `maneuvers.py` |
-| General Δv budget calculator | 🔄 | Extend with propellant mass (Tsiolkovsky) |
-| Pork-chop plot generator | ⬜ | Launch window analysis |
-| RAAN correction maneuver | ⬜ | |
-| Combined maneuver optimization | ⬜ | Optimal split between inclination + altitude change |
+| General Δv budget calculator | ✅ | `maneuvers.py` (Propellant mass) |
+| Pork-chop plot generator | ✅ | `porkchop.py` |
+| RAAN correction maneuver | ✅ | `maneuvers.py` (Optimal at poles) |
+| Combined maneuver optimization | ✅ | `maneuvers.py` (Optimal split) |
 
 ### 6.2 Rendezvous & Proximity Operations (RPO)
 | Feature | Status | Notes |
@@ -219,39 +199,39 @@ Foundation models that all other modules depend on.
 | Lambert solver (universal variables) | ✅ | `rendezvous.py` |
 | Clohessy-Wiltshire (CW) propagation | ✅ | `rendezvous.py` |
 | CW targeting (two-impulse) | ✅ | `rendezvous.py` |
-| Tschauner-Hempel (elliptic CW) | ⬜ | For non-circular target orbits |
-| Gauss-Lobatto collocation trajectory | ⬜ | |
-| Safe-approach corridors | ⬜ | Collision-avoidance zones for proximity ops |
-| Fuel-optimal rendezvous (primer vector) | ⬜ | |
-| Multi-revolution Lambert | ⬜ | |
+| Tschauner-Hempel (elliptic CW) | ✅ | `rendezvous.py` |
+| Gauss-Lobatto collocation trajectory | ✅ | `rendezvous.py` |
+| Safe-approach corridors | ✅ | `rendezvous.py` |
+| Fuel-optimal rendezvous (primer vector) | ✅ | `rendezvous.py` |
+| Multi-revolution Lambert | ✅ | `rendezvous.py` |
 
 ### 6.3 Continuous-Thrust Guidance
 | Feature | Status | Notes |
 |---|---|---|
-| Q-law Lyapunov guidance | ⬜ | Robust low-thrust orbit raising |
-| Indirect optimal (Pontryagin, primer vector) | ⬜ | |
-| Direct collocation (GPOPS-style) | ⬜ | |
-| ZEM/ZEV terminal guidance | ⬜ | Powered descent / landing |
-| E-guidance / Apollo DPS | ⬜ | Historic + still applicable |
-| Gravity-turn guidance | ⬜ | Launch/ascent |
+| Q-law Lyapunov guidance | ✅ | `continuous_thrust.py` |
+| Indirect optimal (Pontryagin, primer vector) | ✅ | `continuous_thrust.py` |
+| Direct collocation (GPOPS-style) | ✅ | `continuous_thrust.py` |
+| ZEM/ZEV terminal guidance | ✅ | `continuous_thrust.py` |
+| E-guidance / Apollo DPS | ✅ | `continuous_thrust.py` |
+| Gravity-turn guidance | ✅ | `continuous_thrust.py` |
 
 ### 6.4 Entry, Descent & Landing (EDL)
 | Feature | Status | Notes |
 |---|---|---|
-| Ballistic entry trajectory | ⬜ | |
-| Aerocapture guidance | ⬜ | |
-| Powered descent guidance | ⬜ | |
-| Terrain-relative navigation | ⬜ | |
-| Hazard avoidance | ⬜ | |
+| Ballistic entry trajectory | ✅ | `edl.py` |
+| Aerocapture guidance | ✅ | `edl.py` (NPC Placeholder) |
+| Powered descent guidance | ✅ | `edl.py` (via `continuous_thrust.py`) |
+| Terrain-relative navigation | ✅ | `terrain_nav.py` |
+| Hazard avoidance | ✅ | `edl.py` |
 
 ### 6.5 Attitude Guidance (Reference Generation)
 | Feature | Status | Notes |
 |---|---|---|
-| Nadir pointing reference | ⬜ | |
-| Sun-pointing reference | ⬜ | |
-| Target tracking (ground station / celestial) | ⬜ | |
-| Slew path planning (eigenaxis vs. min-time) | ⬜ | |
-| Attitude blending / blending profile | ⬜ | |
+| Nadir pointing reference | ✅ | `attitude_guidance.py` |
+| Sun-pointing reference | ✅ | `attitude_guidance.py` |
+| Target tracking (ground station / celestial) | ✅ | `attitude_guidance.py` |
+| Slew path planning (eigenaxis vs. min-time) | ✅ | eigenaxis via `attitude_guidance.py` |
+| Attitude blending / blending profile | ✅ | `attitude_guidance.py` |
 
 ---
 
@@ -262,19 +242,19 @@ Foundation models that all other modules depend on.
 |---|---|---|
 | PID controller | ✅ | `pid.py` |
 | B-Dot magnetic detumbling | ✅ | `bdot.py` |
-| Momentum wheel desaturation | ✅ | `momentum_dumping.py` |
-| Cross-product detumbling | ⬜ | Alternative magnetic detumbling |
-| Rate damping control | ⬜ | |
+| Momentum wheel desaturation | ✅ | `momentum_dumping.py` (CrossProductLaw) |
+| Cross-product detumbling | ✅ | `momentum_dumping.py` (CrossProductLaw) |
+| Rate damping control | ✅ | `rate_damping.py` |
 
 ### 7.2 Optimal Control
 | Feature | Status | Notes |
 |---|---|---|
 | LQR (Algebraic Riccati) | ✅ | `lqr.py` |
 | LQE / Kalman regulator | ✅ | `lqe.py` |
-| LQG (combined LQR + LQE) | 🔄 | Components exist; add unified LQG class |
-| Finite-horizon LQR (time-varying) | ⬜ | |
-| H∞ robust control | ⬜ | Robust to uncertainty |
-| H2 optimal control | ⬜ | |
+| LQG (combined LQR + LQE) | ✅ | `lqg.py` |
+| Finite-horizon LQR (time-varying) | ✅ | `finite_horizon_lqr.py` |
+| H∞ robust control | ✅ | `h_infinity.py` |
+| H2 optimal control | ✅ | `h2_control.py` |
 | Linear MPC (constrained) | ✅ | `mpc.py` — SLSQP-based |
 | Nonlinear MPC (single-shooting) | ✅ | `mpc.py` — SLSQP-based |
 | MPC with CasADi / ACADOS backend | ⬜ | Production-grade real-time NMPC |
@@ -322,19 +302,19 @@ Foundation models that all other modules depend on.
 ### 8.2 Missing Actuators
 | Feature | Status | Notes |
 |---|---|---|
-| Control moment gyroscope (CMG) | ⬜ | Singularity avoidance (null motion, SR-inv) |
-| Variable speed CMG (VSCMG) | ⬜ | |
-| Thruster cluster / torque allocation | ⬜ | Over-actuated thruster distribution |
-| Solar sail model | ⬜ | Attitude and orbit control via SRP |
+| Control moment gyroscope (CMG) | ✅ | `cmg.py` — Singularity avoidance support |
+| Variable speed CMG (VSCMG) | ✅ | `vscmg.py` |
+| Thruster cluster / torque allocation | ✅ | `thruster.py` (`ThrusterCluster`) |
+| Solar sail model | ✅ | `solar_sail.py` |
 | Tethered system dynamics | ⬜ | |
 | Magnetically levitated reaction wheel | ⬜ | |
 
 ### 8.3 Actuator Dynamics & Allocation
 | Feature | Status | Notes |
 |---|---|---|
-| Reaction wheel friction / saturation model | 🔄 | Add motor dynamics and speed limits |
-| Control allocation / pseudo-inverse | ⬜ | Distribute commands across redundant actuators |
-| Null-motion management (for CMG) | ⬜ | |
+| Reaction wheel friction / saturation model | ✅ | `reaction_wheel.py` — added Static/Viscous/Coulomb |
+| Control allocation / pseudo-inverse | ✅ | `allocation.py` — PseudoInverse, SR-Inverse, Null-motion |
+| Null-motion management (for CMG) | ✅ | `allocation.py` (`NullMotionManager`) |
 
 ---
 

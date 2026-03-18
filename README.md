@@ -72,6 +72,7 @@ The [examples/](examples/) directory contains demonstration scripts showcasing h
 | **QUEST Determination**<br>Deterministic attitude solution from vector measurements. | ![QUEST Determination](assets/quest_results.png)<br>[07_quest_estimation.py](examples/07_quest_estimation.py) |
 | **Orbital Maneuvers**<br>Hohmann transfer and plane change calculation. | ![Orbital Maneuvers](assets/hohmann_transfer.png)<br>[08_orbital_maneuvers.py](examples/08_orbital_maneuvers.py) |
 | **Lambert Solver**<br>Orbit targeting between two points. | ![Lambert Solver](assets/lambert_transfer.png)<br>[09_lambert_solver.py](examples/09_lambert_solver.py) |
+| **Gauss IOD**<br>Initial Orbit Determination from 3-LoS vectors using robust universal variables. | ![Gauss IOD](assets/gauss_iod_results.png)<br>[10_gauss_iod_determination.py](examples/10_gauss_iod_determination.py) |
 
 ## Project Overview
 
@@ -93,6 +94,7 @@ The **GNC Toolkit** is designed to support the full lifecycle of small satellite
 ### Estimation & Navigation
 - **Kalman Filtering**: KF, EKF, MEKF (for quaternions), and UKF.
 - **Attitude Determination**: Deterministic TRIAD and QUEST algorithms.
+- **Initial Orbit Determination (IOD)**: Robust Gauss and Laplace methods.
 - **Sensors**: Realistic Star Tracker, Sun Sensor, Magnetometer, and Gyroscope models with bias and noise.
 
 ### Guidance & Mission Analysis
@@ -105,9 +107,6 @@ The **GNC Toolkit** is designed to support the full lifecycle of small satellite
 - **Optimal**: LQR (Algebraic Riccati Equation solver) and LQE.
 - **Robust/Modern**: Sliding Mode Control and Model Predictive Control (MPC).
 - **Actuators**: Reaction Wheels (momentum management) and Thrusters (Chemical/Electric).
-
-## TODO
-[ ] Fix Lambert example error.
 
 ## License
 

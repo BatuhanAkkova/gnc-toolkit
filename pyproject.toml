@@ -17,6 +17,7 @@ dependencies = [
     "scipy>=1.7.0",
     "pymsis>=0.6.0",
     "ppigrf>=0.1.0",
+    "sgp4>=2.21",
 ]
 
 [project.optional-dependencies]

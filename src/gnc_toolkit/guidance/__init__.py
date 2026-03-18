@@ -19,3 +19,10 @@ from .attitude_guidance import (
     eigenaxis_slew_path_planning,
     attitude_blending
 )
+
+from .continuous_thrust import (
+    q_law_guidance,
+    zem_zev_guidance,
+    gravity_turn_guidance,
+    apollo_dps_guidance
+)

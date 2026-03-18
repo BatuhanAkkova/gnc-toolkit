@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.mission_design package &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">gnc_toolkit.mission_design package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.coverage">gnc_toolkit.mission_design.coverage module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_lighting_conditions"><code class="docutils literal notranslate"><span class="pre">calculate_lighting_conditions()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.launch">gnc_toolkit.mission_design.launch module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.calculate_launch_windows"><code class="docutils literal notranslate"><span class="pre">calculate_launch_windows()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.compute_injection_state"><code class="docutils literal notranslate"><span class="pre">compute_injection_state()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper"><code class="docutils literal notranslate"><span class="pre">eci2_ecef_or_inverse_wrapper()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.mission_design">Module contents</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_launch_windows"><code class="docutils literal notranslate"><span class="pre">calculate_launch_windows()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_lighting_conditions"><code class="docutils literal notranslate"><span class="pre">calculate_lighting_conditions()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.compute_injection_state"><code class="docutils literal notranslate"><span class="pre">compute_injection_state()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.mission_design package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.mission_design.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-mission-design-package">
+<h1>gnc_toolkit.mission_design package<a class="headerlink" href="#gnc-toolkit-mission-design-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.mission_design.coverage">
+<span id="gnc-toolkit-mission-design-coverage-module"></span><h2>gnc_toolkit.mission_design.coverage module<a class="headerlink" href="#module-gnc_toolkit.mission_design.coverage" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.coverage.calculate_access_windows">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.coverage.</span></span><span class="sig-name descname"><span class="pre">calculate_access_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_alt_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_elevation_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_access_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.coverage.calculate_access_windows" title="Link to this definition"></a></dt>
+<dd><p>Calculates access windows (visibility) from a Ground Station for a given trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array</strong> (<em>np.ndarray</em>) – Position history in ECI [m], shape (N, 3).</p></li>
+<li><p><strong>gs_lat_deg</strong> (<em>float</em>) – Ground Station Latitude [deg].</p></li>
+<li><p><strong>gs_lon_deg</strong> (<em>float</em>) – Ground Station Longitude [deg].</p></li>
+<li><p><strong>gs_alt_m</strong> (<em>float</em>) – Ground Station Altitude [m].</p></li>
+<li><p><strong>min_elevation_deg</strong> (<em>float</em>) – Minimum elevation for visibility [deg].</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Containing ‘visible_intervals’ (list of dicts), ‘elevation_history’ (degrees).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.coverage.calculate_ground_track">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.coverage.</span></span><span class="sig-name descname"><span class="pre">calculate_ground_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_ground_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.coverage.calculate_ground_track" title="Link to this definition"></a></dt>
+<dd><p>Calculates ground track coordinates (Lat, Lon, Alt) over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array</strong> (<em>np.ndarray</em>) – Position history in ECI [m], shape (N, 3).</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Containing ‘lat_deg’, ‘lon_deg’, ‘alt_m’ arrays.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.coverage.calculate_lighting_conditions">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.coverage.</span></span><span class="sig-name descname"><span class="pre">calculate_lighting_conditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_lighting_conditions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.coverage.calculate_lighting_conditions" title="Link to this definition"></a></dt>
+<dd><p>Calculates Beta angle and Eclipse status over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array</strong> (<em>np.ndarray</em>) – Position history in ECI [m], shape (N, 3).</p></li>
+<li><p><strong>v_eci_array</strong> (<em>np.ndarray</em>) – Velocity history in ECI [m/s], shape (N, 3).</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Containing ‘beta_angle_deg’, ‘eclipse_state’ (1 for Sun, 0 for shade).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.mission_design.launch">
+<span id="gnc-toolkit-mission-design-launch-module"></span><h2>gnc_toolkit.mission_design.launch module<a class="headerlink" href="#module-gnc_toolkit.mission_design.launch" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.launch.calculate_launch_windows">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.launch.</span></span><span class="sig-name descname"><span class="pre">calculate_launch_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raan_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#calculate_launch_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.launch.calculate_launch_windows" title="Link to this definition"></a></dt>
+<dd><p>Calculates launch windows by finding times when the launch site intersects the target orbit plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jd_start</strong> (<em>float</em>) – Start Julian Date.</p></li>
+<li><p><strong>jd_end</strong> (<em>float</em>) – End Julian Date.</p></li>
+<li><p><strong>inc_deg</strong> (<em>float</em>) – Target Inclination [deg].</p></li>
+<li><p><strong>raan_deg</strong> (<em>float</em>) – Target RAAN [deg].</p></li>
+<li><p><strong>lat_deg</strong> (<em>float</em>) – Launch site Latitude [deg].</p></li>
+<li><p><strong>lon_deg</strong> (<em>float</em>) – Launch site Longitude [deg].</p></li>
+<li><p><strong>step_sec</strong> (<em>float</em>) – Search step size [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of dicts with ‘jd’, ‘type’ (Ascending/Descending), and ‘azimuth_deg’.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.launch.compute_injection_state">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.launch.</span></span><span class="sig-name descname"><span class="pre">compute_injection_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flight_path_angle_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_mps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#compute_injection_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.launch.compute_injection_state" title="Link to this definition"></a></dt>
+<dd><p>Computes ECI state vector at insertion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat_deg</strong> (<em>float</em>) – Latitude [deg].</p></li>
+<li><p><strong>lon_deg</strong> (<em>float</em>) – Longitude [deg].</p></li>
+<li><p><strong>alt_m</strong> (<em>float</em>) – Altitude [m].</p></li>
+<li><p><strong>azimuth_deg</strong> (<em>float</em>) – Azimuth from North [deg].</p></li>
+<li><p><strong>flight_path_angle_deg</strong> (<em>float</em>) – Flight Path Angle from horizontal [deg].</p></li>
+<li><p><strong>speed_mps</strong> (<em>float</em>) – Speed magnitude [m/s].</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date at injection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(r_eci [m], v_eci [m/s])</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.launch.</span></span><span class="sig-name descname"><span class="pre">eci2_ecef_or_inverse_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#eci2_ecef_or_inverse_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper" title="Link to this definition"></a></dt>
+<dd><p>Temporary local wrapper to use ecef2eci avoiding import loop or correct usage</p>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.mission_design">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.mission_design" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_access_windows">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_access_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_alt_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_elevation_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_access_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_access_windows" title="Link to this definition"></a></dt>
+<dd><p>Calculates access windows (visibility) from a Ground Station for a given trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array</strong> (<em>np.ndarray</em>) – Position history in ECI [m], shape (N, 3).</p></li>
+<li><p><strong>gs_lat_deg</strong> (<em>float</em>) – Ground Station Latitude [deg].</p></li>
+<li><p><strong>gs_lon_deg</strong> (<em>float</em>) – Ground Station Longitude [deg].</p></li>
+<li><p><strong>gs_alt_m</strong> (<em>float</em>) – Ground Station Altitude [m].</p></li>
+<li><p><strong>min_elevation_deg</strong> (<em>float</em>) – Minimum elevation for visibility [deg].</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Containing ‘visible_intervals’ (list of dicts), ‘elevation_history’ (degrees).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_ground_track">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_ground_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_ground_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_ground_track" title="Link to this definition"></a></dt>
+<dd><p>Calculates ground track coordinates (Lat, Lon, Alt) over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array</strong> (<em>np.ndarray</em>) – Position history in ECI [m], shape (N, 3).</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Containing ‘lat_deg’, ‘lon_deg’, ‘alt_m’ arrays.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_launch_windows">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_launch_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raan_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#calculate_launch_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_launch_windows" title="Link to this definition"></a></dt>
+<dd><p>Calculates launch windows by finding times when the launch site intersects the target orbit plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jd_start</strong> (<em>float</em>) – Start Julian Date.</p></li>
+<li><p><strong>jd_end</strong> (<em>float</em>) – End Julian Date.</p></li>
+<li><p><strong>inc_deg</strong> (<em>float</em>) – Target Inclination [deg].</p></li>
+<li><p><strong>raan_deg</strong> (<em>float</em>) – Target RAAN [deg].</p></li>
+<li><p><strong>lat_deg</strong> (<em>float</em>) – Launch site Latitude [deg].</p></li>
+<li><p><strong>lon_deg</strong> (<em>float</em>) – Launch site Longitude [deg].</p></li>
+<li><p><strong>step_sec</strong> (<em>float</em>) – Search step size [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of dicts with ‘jd’, ‘type’ (Ascending/Descending), and ‘azimuth_deg’.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_lighting_conditions">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_lighting_conditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_lighting_conditions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_lighting_conditions" title="Link to this definition"></a></dt>
+<dd><p>Calculates Beta angle and Eclipse status over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array</strong> (<em>np.ndarray</em>) – Position history in ECI [m], shape (N, 3).</p></li>
+<li><p><strong>v_eci_array</strong> (<em>np.ndarray</em>) – Velocity history in ECI [m/s], shape (N, 3).</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Containing ‘beta_angle_deg’, ‘eclipse_state’ (1 for Sun, 0 for shade).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.compute_injection_state">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">compute_injection_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flight_path_angle_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_mps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#compute_injection_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.compute_injection_state" title="Link to this definition"></a></dt>
+<dd><p>Computes ECI state vector at insertion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat_deg</strong> (<em>float</em>) – Latitude [deg].</p></li>
+<li><p><strong>lon_deg</strong> (<em>float</em>) – Longitude [deg].</p></li>
+<li><p><strong>alt_m</strong> (<em>float</em>) – Altitude [m].</p></li>
+<li><p><strong>azimuth_deg</strong> (<em>float</em>) – Azimuth from North [deg].</p></li>
+<li><p><strong>flight_path_angle_deg</strong> (<em>float</em>) – Flight Path Angle from horizontal [deg].</p></li>
+<li><p><strong>speed_mps</strong> (<em>float</em>) – Speed magnitude [m/s].</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date at injection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(r_eci [m], v_eci [m/s])</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

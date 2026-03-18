@@ -74,7 +74,7 @@ def simulation():
     t_transfer = 2.0 * 3600 # 2 hours
     r_target_1 = np.array([0.0, -1.0, 0.0]) # 1 km behind, 0 radial/cross
     
-    # 1. Calculate Maneuver 1 (Depart)
+    # Calculate Maneuver 1 (Depart)
     v_req_1 = cw_targeting(current_r, r_target_1, t_transfer, n)
     dv_1 = v_req_1 - current_v
     print(f"Burn 1 (Start): dV = {np.linalg.norm(dv_1)*1000:.3f} m/s")
@@ -100,11 +100,11 @@ def simulation():
     # --- PHASE 2: POSITION CORRECTION & STATION KEEPING ---
     print("\n--- Phase 2: Position Correction & Hold ---")
     
-    # 1. Check Position Error
+    # Check Position Error
     pos_err = current_r - r_target_1
     print(f"Arrival Position Error: {np.linalg.norm(pos_err)*1000:.3f} m")
     
-    # 2. Correction Maneuver (Target r_target_1 in 10 minutes)
+    # Correction Maneuver (Target r_target_1 in 10 minutes)
     t_corr = 600.0 # 10 mins
     v_req_corr = cw_targeting(current_r, r_target_1, t_corr, n)
     dv_corr_start = v_req_corr - current_v
@@ -127,7 +127,7 @@ def simulation():
     maneuvers.append((current_t, dv_corr_stop))
     current_v = np.array([0.0, 0.0, 0.0])
     
-    # 3. Station Keeping (Hold for 30 minutes)
+    # Station Keeping (Hold for 30 minutes)
     print(f"Holding at Point 1 for 30 mins...")
     t_hold = 1800.0 # 30 mins
     steps_hold = int(t_hold / dt_sim)

@@ -89,8 +89,7 @@ def simulation():
         w = y_curr[4:7]
         q = q / np.linalg.norm(q)
         
-        # 1. Quaternion Kinematics: q_dot = 0.5 * q x [w; 0]
-        # (Using matrix form)
+        # Quaternion Kinematics: q_dot = 0.5 * q x [w; 0]
         wx, wy, wz = w
         Omega = np.array([
             [0, wz, -wy, wx],
@@ -100,7 +99,7 @@ def simulation():
         ])
         q_dot = 0.5 * Omega @ q
         
-        # 2. Rigid Body Dynamics
+        # Rigid Body Dynamics
         w_dot = euler_equations(J, w, torque_ext_body)
         
         return np.concatenate((q_dot, w_dot))
@@ -117,7 +116,7 @@ def simulation():
     
     print("Starting Simulation...")
     while t < t_max:
-        # A. Environment (Orbit)
+        # Environment (Orbit)
         # Propagate Orbit in ECI (Polar)
         theta = n * t
         r_eci = r_orbit * np.array([np.cos(theta), 0, np.sin(theta)])
@@ -126,18 +125,12 @@ def simulation():
         jd_day, jd_frac = calc_jd(epoch.year, epoch.month, epoch.day, epoch.hour, epoch.minute, epoch.second + t)
         jd = jd_day + jd_frac
         
-        # B. Magnetic Field (ECEF -> ECI)
-        # 1. Convert Position ECI -> ECEF
+        # Magnetic Field (ECEF -> ECI)
         r_ecef, _ = eci2ecef(r_eci, np.zeros(3), jd)
-        
-        # 2. Get Field in ECEF
         b_ecef = tilted_dipole_field(r_ecef)
-        
-        # 3. Rotate Field ECEF -> ECI
-        # ecef2eci rotates vector same as position
         b_eci_true, _ = ecef2eci(b_ecef, np.zeros(3), jd)
         
-        # C. Sensors & Actuators
+        # Sensors & Actuators
         q_curr = state[0:4]
         q_inv = quat_conj(q_curr) # ECI -> Body
         
@@ -154,15 +147,15 @@ def simulation():
         m_actual = mtq.command(m_cmd)
         b_body_prev = b_body_meas
         
-        # D. Disturbance Torques
-        # 1. Gravity Gradient
+        # Disturbance Torques
+        # Gravity Gradient
         t_gg = gg.gravity_gradient_torque(J, r_eci, q_curr)
         
-        # E. Total Torque
+        # Total Torque
         t_ctrl = np.cross(m_actual, b_body_true)
         t_total = t_ctrl + t_gg
         
-        # F. Propagate
+        # Propagate
         state, t, _ = integrator.step(dynamics, t, state, dt, torque_ext_body=t_total)
         state[0:4] = quat_normalize(state[0:4])
         

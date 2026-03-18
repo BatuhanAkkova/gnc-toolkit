@@ -87,7 +87,7 @@ def simulation():
     print(f"True Bias: {np.rad2deg(gyro_bias_true)} deg/s")
     
     while t < duration:
-        # A. Propagate Truth
+        # Propagate Truth
         dw = euler_equations(J, w_true, np.zeros(3)) * dt_sim
         w_true += dw
         
@@ -96,20 +96,17 @@ def simulation():
         curr_dq = axis_angle_to_quat(axis * angle)
         q_true = quat_normalize(quat_mult(q_true, curr_dq))
         
-        # B. Sensors
         # Gyro Measurement
         w_meas = gyro.measure(w_true, dt=dt_sim)
         
-        # C. Filter Prediction (High Rate)
+        # Filter Prediction (High Rate)
         mekf.predict(w_meas, dt_sim)
         
-        # D. Filter Update (Low Rate)
+        # Filter Update (Low Rate)
         if t > 0 and (t % dt_st < dt_sim):
             # Star Tracker Measurement
             q_st = st.measure(q_true) # Measure [x,y,z,w]
             
-            # Since MEKF.update currently expects vectors, we provide two pseudo-vector 
-            # observations from the ST quaternion.
             # v_meas = R(q_st)^T * v_ref
             q_inv_st = quat_conj(q_st)
             
@@ -120,7 +117,7 @@ def simulation():
             mekf.update(v1_meas, v1_ref)
             mekf.update(v2_meas, v2_ref)
 
-        # E. Analysis
+        # Analysis
         # Attitude Error (Angle between q_est and q_true)
         # q_err = q_est * q_true_inv
         q_err = quat_mult(mekf.q, quat_conj(q_true))

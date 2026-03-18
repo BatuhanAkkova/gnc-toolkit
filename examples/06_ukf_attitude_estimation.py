@@ -26,16 +26,16 @@ from gnc_toolkit.sensors.star_tracker import StarTracker
 from gnc_toolkit.utils.quat_utils import quat_mult, quat_normalize, axis_angle_to_quat, quat_rot, quat_conj
 
 def run_example():
-    # 1. Configuration
+    # Configuration
     dt = 0.1
     t_max = 100.0
     time = np.arange(0, t_max, dt)
     
-    # 2. Sensors
+    # Sensors
     gyro = Gyroscope(initial_bias=np.array([0.01, -0.01, 0.005]), noise_std=0.001)
     st = StarTracker(noise_std=0.0001) # Very accurate
     
-    # 3. Filter Initialization
+    # Filter Initialization
     ukf = UKF_Attitude(alpha=1e-3, dim_z=9)
     ukf.P *= 0.1
     ukf.Q = np.eye(6) * 1e-6
@@ -45,7 +45,7 @@ def run_example():
     q_true = np.array([0, 0, 0, 1.0])
     omega_true = np.array([0.05, 0.02, -0.01]) # Constant rate
     
-    # 4. Simulation Loop
+    # Simulation Loop
     results_t = []
     results_q_err = []
     results_bias_err = []
@@ -91,10 +91,7 @@ def run_example():
             q_conj_true = quat_conj(q_true)
             v_meas = []
             for v in np.eye(3):
-                # Star tracker measures attitude, but here we simulate vector observations
-                # by rotating reference vectors and adding noise.
                 v_body = quat_rot(q_conj_true, v)
-                # Add gaussian noise to the vector components
                 v_noisy = v_body + np.random.normal(0, 0.0001, 3) 
                 v_meas.append(v_noisy / np.linalg.norm(v_noisy))
             z = np.array(v_meas).flatten()
@@ -111,7 +108,7 @@ def run_example():
         results_q_err.append(angle_err)
         results_bias_err.append(bias_err)
 
-    # 5. Plotting
+    # Plotting
     plt.figure(figsize=(10, 6))
     plt.subplot(2, 1, 1)
     plt.plot(results_t, results_q_err)

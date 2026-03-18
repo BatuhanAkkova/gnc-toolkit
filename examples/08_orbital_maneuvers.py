@@ -22,7 +22,7 @@ from gnc_toolkit.guidance.maneuvers import hohmann_transfer, plane_change, combi
 def run_example():
     mu = 398600.4418 # Earth's Gravitational Parameter [km^3/s^2]
     
-    # 1. Hohmann Transfer: LEO to GEO
+    # Hohmann Transfer: LEO to GEO
     r_leo = 7000.0 # km
     r_geo = 42164.0 # km
     
@@ -37,7 +37,7 @@ def run_example():
     print(f"Time of Flight: {tof/3600:.2f} hours")
     print()
     
-    # 2. Simple Plane Change at GEO
+    # Simple Plane Change at GEO
     v_geo = np.sqrt(mu / r_geo) # Velocity at GEO
     inc_change = np.radians(28.5) # 28.5 deg to 0 deg
     
@@ -49,8 +49,7 @@ def run_example():
     print(f"Delta-V Required: {dv_plane:.4f} km/s")
     print()
     
-    # 3. Combined Plane Change and Circularization
-    # Often more efficient to do plane change at the second burn of Hohmann
+    # Combined Plane Change and Circularization
     a_trans = (r_leo + r_geo) / 2.0
     v_trans_a = np.sqrt(mu * (2/r_geo - 1/a_trans)) # Velocity at apogee of transfer orbit
     v_final = np.sqrt(mu / r_geo) # Final circular velocity (at GEO)
@@ -62,7 +61,7 @@ def run_example():
     print(f"Combined Burn Delta-V:     {dv_combined:.4f} km/s")
     print(f"Saving (vs Simple):        {(dv2 + dv_plane) - dv_combined:.4f} km/s")
 
-    # 4. Visualization
+    # Visualization
     theta = np.linspace(0, 2*np.pi, 200)
     
     # Orbits

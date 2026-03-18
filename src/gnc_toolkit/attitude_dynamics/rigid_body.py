@@ -36,7 +36,6 @@ def euler_equations(J: np.ndarray, omega: np.ndarray, torque: np.ndarray) -> np.
     rhs = torque - gyro_term
     
     # Solve for angular acceleration (omega_dot)
-    # Using np.linalg.solve is numerically more stable/efficient than inverting J
     omega_dot = np.linalg.solve(J, rhs)
     
     return omega_dot

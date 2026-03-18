@@ -77,7 +77,6 @@ def simulation():
     drag_model = LumpedDrag(density_model)
 
     # Controller Settings
-    # We maintain Mean SMA within a specific energy band
     deadband_low = 10.0 # m (Start thrusting if SMA drops 10m below target)
     deadband_high = 0.0 # m (Stop thrusting when SMA returns to target)
     
@@ -102,19 +101,18 @@ def simulation():
     def perturbation_acc(t, r, v):
         r_mag = np.linalg.norm(r)
         
-        # 1. Atmospheric Drag
+        # Atmospheric Drag
         jd_curr = jd_epoch + t / 86400.0
         
         # Acceleration
         a_drag = drag_model.get_acceleration(r, v, jd_curr, mass, area, Cd)
         
-        # 2. J2 Perturbation
-        # CowellPropagator adds TwoBody. So we need ONLY J2 perturbation.
+        # J2 Perturbation
         a_j2_full = j2_model.get_acceleration(r)
         a_kep = -mu / (r_mag**3) * r
         a_j2_pert = a_j2_full - a_kep
         
-        # 3. Control Logic (SMA Hysteresis)
+        # Control Logic (SMA Hysteresis)
         sma_curr = get_sma(r, v, mu)
         sma_err = sma_ref - sma_curr # Positive if SMA is lower than target
         

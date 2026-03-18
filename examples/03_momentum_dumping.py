@@ -76,7 +76,7 @@ def simulation():
     print(f"Starting Momentum Dumping Simulation. Disturbance: {T_dist_inertial} Nm")
     
     while t < duration:
-        # A. Environment (Magnetic Field)
+        # Environment (Magnetic Field)
         # Position in Orbit
         theta = n * t
         r_eci = r_orbit * np.array([np.cos(theta), 0, np.sin(theta)])
@@ -84,7 +84,7 @@ def simulation():
         b_eci = tilted_dipole_field(r_eci)
         b_norm = np.linalg.norm(b_eci)
         
-        # B. Momentum Management Logic
+        # Momentum Management Logic
         h_norm = np.linalg.norm(h_rw)
         
         # Hysteresis Logic
@@ -110,9 +110,7 @@ def simulation():
             # Resulting Magnetic Torque
             T_mag = np.cross(m_cmd, b_eci)
             
-        # C. Dynamics (Momentum Budget)
-        # h_dot = T_external + T_control_magnetics
-        
+        # Dynamics (Momentum Budget)
         h_dot = T_dist_inertial + T_mag
         
         h_rw = h_rw + h_dot * dt
@@ -138,7 +136,7 @@ def simulation():
     
     fig, ax = plt.subplots(3, 1, figsize=(10, 10), sharex=True)
     
-    # 1. Momentum Norm
+    # Momentum Norm
     ax[0].plot(t_arr, h_norm_arr, 'k', linewidth=2, label='RW Momentum')
     ax[0].axhline(h_sat, color='r', linestyle='--', label='Saturation')
     ax[0].axhline(dump_threshold_on, color='orange', linestyle=':', label='Dump Start')
@@ -148,7 +146,7 @@ def simulation():
     ax[0].legend()
     ax[0].grid(True)
     
-    # 2. Momentum Components
+    # Momentum Components
     ax[1].plot(t_arr, h_arr[:, 0], label='Hx')
     ax[1].plot(t_arr, h_arr[:, 1], label='Hy')
     ax[1].plot(t_arr, h_arr[:, 2], label='Hz')
@@ -156,7 +154,7 @@ def simulation():
     ax[1].grid(True)
     ax[1].legend()
     
-    # 3. Magnetorquer Activity
+    # Magnetorquer Activity
     ax[2].plot(t_arr, m_arr[:, 0], label='Mx')
     ax[2].plot(t_arr, m_arr[:, 1], label='My')
     ax[2].plot(t_arr, m_arr[:, 2], label='Mz')

@@ -44,6 +44,26 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">gnc_toolkit.mission_design package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.budgeting">gnc_toolkit.mission_design.budgeting module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.add_maneuver"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.add_maneuver()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_budget_history"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_budget_history()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_dv"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_dv()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_propellant"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_propellant()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.calculate_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_delta_v()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.calculate_propellant_mass"><code class="docutils literal notranslate"><span class="pre">calculate_propellant_mass()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.calculate_staged_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_staged_delta_v()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.predict_lifetime"><code class="docutils literal notranslate"><span class="pre">predict_lifetime()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.communications">gnc_toolkit.mission_design.communications module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.communications.calculate_atmospheric_attenuation"><code class="docutils literal notranslate"><span class="pre">calculate_atmospheric_attenuation()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.communications.calculate_doppler_shift"><code class="docutils literal notranslate"><span class="pre">calculate_doppler_shift()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.communications.calculate_friis_link_budget"><code class="docutils literal notranslate"><span class="pre">calculate_friis_link_budget()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.mission_design.coverage">gnc_toolkit.mission_design.coverage module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
@@ -57,11 +77,25 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#module-gnc_toolkit.mission_design">Module contents</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.add_maneuver"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.add_maneuver()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.get_budget_history"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_budget_history()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.get_total_dv"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_dv()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.get_total_propellant"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_propellant()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_atmospheric_attenuation"><code class="docutils literal notranslate"><span class="pre">calculate_atmospheric_attenuation()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_delta_v()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_doppler_shift"><code class="docutils literal notranslate"><span class="pre">calculate_doppler_shift()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_friis_link_budget"><code class="docutils literal notranslate"><span class="pre">calculate_friis_link_budget()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_launch_windows"><code class="docutils literal notranslate"><span class="pre">calculate_launch_windows()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_lighting_conditions"><code class="docutils literal notranslate"><span class="pre">calculate_lighting_conditions()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_propellant_mass"><code class="docutils literal notranslate"><span class="pre">calculate_propellant_mass()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_staged_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_staged_delta_v()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.compute_injection_state"><code class="docutils literal notranslate"><span class="pre">compute_injection_state()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.predict_lifetime"><code class="docutils literal notranslate"><span class="pre">predict_lifetime()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -96,6 +130,257 @@
 <h1>gnc_toolkit.mission_design package<a class="headerlink" href="#gnc-toolkit-mission-design-package" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.mission_design.budgeting">
+<span id="gnc-toolkit-mission-design-budgeting-module"></span><h2>gnc_toolkit.mission_design.budgeting module<a class="headerlink" href="#module-gnc_toolkit.mission_design.budgeting" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.ManeuverSequence">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.budgeting.</span></span><span class="sig-name descname"><span class="pre">ManeuverSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tracks a sequence of maneuvers and accurately budgets propellant consumption over time.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.ManeuverSequence.add_maneuver">
+<span class="sig-name descname"><span class="pre">add_maneuver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.add_maneuver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.add_maneuver" title="Link to this definition"></a></dt>
+<dd><p>Adds a maneuver to the sequence and updates the current mass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the maneuver.</p></li>
+<li><p><strong>dv</strong> (<em>float</em>) – Delta-V of the maneuver (km/s).</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Optional description.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_budget_history">
+<span class="sig-name descname"><span class="pre">get_budget_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.get_budget_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_budget_history" title="Link to this definition"></a></dt>
+<dd><p>Returns the history of the maneuver budget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of dictionaries with installment details.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_dv">
+<span class="sig-name descname"><span class="pre">get_total_dv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.get_total_dv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_dv" title="Link to this definition"></a></dt>
+<dd><p>Total Delta-V applied.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_propellant">
+<span class="sig-name descname"><span class="pre">get_total_propellant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.get_total_propellant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_propellant" title="Link to this definition"></a></dt>
+<dd><p>Total propellant consumed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.calculate_delta_v">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.budgeting.</span></span><span class="sig-name descname"><span class="pre">calculate_delta_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propellant_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#calculate_delta_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.calculate_delta_v" title="Link to this definition"></a></dt>
+<dd><p>Calculates the Delta-V available from a given propellant mass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_mass</strong> (<em>float</em>) – Initial mass of the spacecraft (kg).</p></li>
+<li><p><strong>propellant_mass</strong> (<em>float</em>) – Mass of the propellant to be consumed (kg).</p></li>
+<li><p><strong>isp</strong> (<em>float</em>) – Specific impulse (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Delta-V available (km/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.calculate_propellant_mass">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.budgeting.</span></span><span class="sig-name descname"><span class="pre">calculate_propellant_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#calculate_propellant_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.calculate_propellant_mass" title="Link to this definition"></a></dt>
+<dd><p>Calculates the required propellant mass using the Tsiolkovsky rocket equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_mass</strong> (<em>float</em>) – Initial mass of the spacecraft (kg).</p></li>
+<li><p><strong>dv</strong> (<em>float</em>) – Delta-V required (km/s).</p></li>
+<li><p><strong>isp</strong> (<em>float</em>) – Specific impulse (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Propellant mass required (kg).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.calculate_staged_delta_v">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.budgeting.</span></span><span class="sig-name descname"><span class="pre">calculate_staged_delta_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#calculate_staged_delta_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.calculate_staged_delta_v" title="Link to this definition"></a></dt>
+<dd><p>Calculates the total Delta-V for a multi-stage rocket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stages</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of dictionaries ordered from first stage (bottom) to last (top).
+Each dict must contain:
+- ‘m_dry’ (float): Dry mass of the stage (kg).
+- ‘m_prop’ (float): Propellant mass of the stage (kg).
+- ‘isp’ (float): Specific impulse of the stage (s).
+- ‘m0_payload’ (float, optional): Payload mass above this stage (kg). If omitted, it’s calculated from subsequent stages.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Total Delta-V (km/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.budgeting.predict_lifetime">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.budgeting.</span></span><span class="sig-name descname"><span class="pre">predict_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd_epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_days</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#predict_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.budgeting.predict_lifetime" title="Link to this definition"></a></dt>
+<dd><p>Predicts the orbital lifetime due to atmospheric drag using numerical integration.
+Saves and returns the time of reentry (altitude &lt; 100km).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Initial position vector [km].</p></li>
+<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – Initial velocity vector [km/s].</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – Spacecraft mass [kg].</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – Equivalent cross-sectional area [m^2].</p></li>
+<li><p><strong>cd</strong> (<em>float</em>) – Drag coefficient.</p></li>
+<li><p><strong>density_model</strong> – Object with <cite>get_density(r_eci, jd)</cite> method.</p></li>
+<li><p><strong>jd_epoch</strong> (<em>float</em>) – Julian Date epoch.</p></li>
+<li><p><strong>max_days</strong> (<em>float</em>) – Maximum prediction duration in days.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Approximate time step for solver output [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Breakdown of prediction results:</dt><dd><ul class="simple">
+<li><p>’reentry_detected’ (bool)</p></li>
+<li><p>’lifetime_days’ (float)</p></li>
+<li><p>’final_altitude’ (float)</p></li>
+<li><p>’trajectory’ (dict with ‘t’, ‘r’, ‘v’)</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.mission_design.communications">
+<span id="gnc-toolkit-mission-design-communications-module"></span><h2>gnc_toolkit.mission_design.communications module<a class="headerlink" href="#module-gnc_toolkit.mission_design.communications" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.communications.calculate_atmospheric_attenuation">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.communications.</span></span><span class="sig-name descname"><span class="pre">calculate_atmospheric_attenuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elevation_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_hz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/communications.html#calculate_atmospheric_attenuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.communications.calculate_atmospheric_attenuation" title="Link to this definition"></a></dt>
+<dd><p>Calculates atmospheric attenuation using a simplified cosecant model.</p>
+<dl class="simple">
+<dt>Formula:</dt><dd><p>L_atm = A_zenith / sin(elevation)
+where A_zenith is a base attenuation dependent on frequency band.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elevation_deg</strong> (<em>float</em>) – Elevation angle [deg].</p></li>
+<li><p><strong>frequency_hz</strong> (<em>float</em>) – Frequency [Hz].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric attenuation [dB].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.communications.calculate_doppler_shift">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.communications.</span></span><span class="sig-name descname"><span class="pre">calculate_doppler_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_tx_hz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_ecef_rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ecef_rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_ecef_tx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ecef_tx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/communications.html#calculate_doppler_shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.communications.calculate_doppler_shift" title="Link to this definition"></a></dt>
+<dd><p>Calculates the Doppler shift for a signal sent from TX to RX.</p>
+<dl class="simple">
+<dt>Formula:</dt><dd><p>delta_f = - f_tx * (v_rel / c)
+where v_rel = dot(r_rel, v_rel_vec) / <a href="#id1"><span class="problematic" id="id2">|r_rel|</span></a>
+r_rel = r_rx - r_tx
+v_rel_vec = v_rx - v_tx</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_tx_hz</strong> (<em>float</em>) – Transmitter frequency [Hz].</p></li>
+<li><p><strong>r_ecef_rx</strong> (<em>np.ndarray</em>) – Receiver position in ECEF [m], shape (3,).</p></li>
+<li><p><strong>v_ecef_rx</strong> (<em>np.ndarray</em>) – Receiver velocity in ECEF [m/s], shape (3,).</p></li>
+<li><p><strong>r_ecef_tx</strong> (<em>np.ndarray</em>) – Transmitter position in ECEF [m], shape (3,).</p></li>
+<li><p><strong>v_ecef_tx</strong> (<em>np.ndarray</em>) – Transmitter velocity in ECEF [m/s], shape (3,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Containing:</dt><dd><p>’f_rx_hz’ (float): Received frequency [Hz].
+‘doppler_shift_hz’ (float): Doppler shift [Hz].</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.communications.calculate_friis_link_budget">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.communications.</span></span><span class="sig-name descname"><span class="pre">calculate_friis_link_budget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_tx_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_tx_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_rx_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_hz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">losses_misc_db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_atm_db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/communications.html#calculate_friis_link_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.communications.calculate_friis_link_budget" title="Link to this definition"></a></dt>
+<dd><p>Calculates the link budget using Friis transmission equation.</p>
+<dl class="simple">
+<dt>Formula:</dt><dd><p>Pr (dBW) = Pt (dBW) + Gt (dB) + Gr (dB) - Lfs (dB) - Latm (dB) - Lmisc (dB)
+Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_tx_w</strong> (<em>float</em>) – Transmitter power [W].</p></li>
+<li><p><strong>g_tx_db</strong> (<em>float</em>) – Transmitter antenna gain [dB].</p></li>
+<li><p><strong>g_rx_db</strong> (<em>float</em>) – Receiver antenna gain [dB].</p></li>
+<li><p><strong>frequency_hz</strong> (<em>float</em>) – Carrier frequency [Hz].</p></li>
+<li><p><strong>distance_m</strong> (<em>float</em>) – Distance between Tx and Rx [m].</p></li>
+<li><p><strong>losses_misc_db</strong> (<em>float</em><em>, </em><em>optional</em>) – Miscellaneous losses (pointing, line, etc.) [dB]. Default 0.</p></li>
+<li><p><strong>l_atm_db</strong> (<em>float</em><em>, </em><em>optional</em>) – Atmospheric attenuation [dB]. Default 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Containing:</dt><dd><p>’p_rx_dbw’ (float): Received power [dBW].
+‘p_rx_w’ (float): Received power [W].
+‘l_fs_db’ (float): Free space path loss [dB].</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-gnc_toolkit.mission_design.coverage">
 <span id="gnc-toolkit-mission-design-coverage-module"></span><h2>gnc_toolkit.mission_design.coverage module<a class="headerlink" href="#module-gnc_toolkit.mission_design.coverage" title="Link to this heading"></a></h2>
@@ -229,6 +514,54 @@
 </section>
 <section id="module-gnc_toolkit.mission_design">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.mission_design" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.ManeuverSequence">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">ManeuverSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.ManeuverSequence" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tracks a sequence of maneuvers and accurately budgets propellant consumption over time.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.ManeuverSequence.add_maneuver">
+<span class="sig-name descname"><span class="pre">add_maneuver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.add_maneuver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.ManeuverSequence.add_maneuver" title="Link to this definition"></a></dt>
+<dd><p>Adds a maneuver to the sequence and updates the current mass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the maneuver.</p></li>
+<li><p><strong>dv</strong> (<em>float</em>) – Delta-V of the maneuver (km/s).</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Optional description.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.ManeuverSequence.get_budget_history">
+<span class="sig-name descname"><span class="pre">get_budget_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.get_budget_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.ManeuverSequence.get_budget_history" title="Link to this definition"></a></dt>
+<dd><p>Returns the history of the maneuver budget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of dictionaries with installment details.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.ManeuverSequence.get_total_dv">
+<span class="sig-name descname"><span class="pre">get_total_dv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.get_total_dv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.ManeuverSequence.get_total_dv" title="Link to this definition"></a></dt>
+<dd><p>Total Delta-V applied.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.ManeuverSequence.get_total_propellant">
+<span class="sig-name descname"><span class="pre">get_total_propellant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#ManeuverSequence.get_total_propellant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.ManeuverSequence.get_total_propellant" title="Link to this definition"></a></dt>
+<dd><p>Total propellant consumed.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_access_windows">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_access_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs_alt_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_elevation_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_access_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_access_windows" title="Link to this definition"></a></dt>
@@ -247,6 +580,123 @@
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Containing ‘visible_intervals’ (list of dicts), ‘elevation_history’ (degrees).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_atmospheric_attenuation">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_atmospheric_attenuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elevation_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_hz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/communications.html#calculate_atmospheric_attenuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_atmospheric_attenuation" title="Link to this definition"></a></dt>
+<dd><p>Calculates atmospheric attenuation using a simplified cosecant model.</p>
+<dl class="simple">
+<dt>Formula:</dt><dd><p>L_atm = A_zenith / sin(elevation)
+where A_zenith is a base attenuation dependent on frequency band.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elevation_deg</strong> (<em>float</em>) – Elevation angle [deg].</p></li>
+<li><p><strong>frequency_hz</strong> (<em>float</em>) – Frequency [Hz].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric attenuation [dB].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_delta_v">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_delta_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propellant_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#calculate_delta_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_delta_v" title="Link to this definition"></a></dt>
+<dd><p>Calculates the Delta-V available from a given propellant mass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_mass</strong> (<em>float</em>) – Initial mass of the spacecraft (kg).</p></li>
+<li><p><strong>propellant_mass</strong> (<em>float</em>) – Mass of the propellant to be consumed (kg).</p></li>
+<li><p><strong>isp</strong> (<em>float</em>) – Specific impulse (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Delta-V available (km/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_doppler_shift">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_doppler_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_tx_hz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_ecef_rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ecef_rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_ecef_tx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ecef_tx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/communications.html#calculate_doppler_shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_doppler_shift" title="Link to this definition"></a></dt>
+<dd><p>Calculates the Doppler shift for a signal sent from TX to RX.</p>
+<dl class="simple">
+<dt>Formula:</dt><dd><p>delta_f = - f_tx * (v_rel / c)
+where v_rel = dot(r_rel, v_rel_vec) / <a href="#id3"><span class="problematic" id="id4">|r_rel|</span></a>
+r_rel = r_rx - r_tx
+v_rel_vec = v_rx - v_tx</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_tx_hz</strong> (<em>float</em>) – Transmitter frequency [Hz].</p></li>
+<li><p><strong>r_ecef_rx</strong> (<em>np.ndarray</em>) – Receiver position in ECEF [m], shape (3,).</p></li>
+<li><p><strong>v_ecef_rx</strong> (<em>np.ndarray</em>) – Receiver velocity in ECEF [m/s], shape (3,).</p></li>
+<li><p><strong>r_ecef_tx</strong> (<em>np.ndarray</em>) – Transmitter position in ECEF [m], shape (3,).</p></li>
+<li><p><strong>v_ecef_tx</strong> (<em>np.ndarray</em>) – Transmitter velocity in ECEF [m/s], shape (3,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Containing:</dt><dd><p>’f_rx_hz’ (float): Received frequency [Hz].
+‘doppler_shift_hz’ (float): Doppler shift [Hz].</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_friis_link_budget">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_friis_link_budget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_tx_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_tx_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_rx_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_hz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">losses_misc_db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_atm_db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/communications.html#calculate_friis_link_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_friis_link_budget" title="Link to this definition"></a></dt>
+<dd><p>Calculates the link budget using Friis transmission equation.</p>
+<dl class="simple">
+<dt>Formula:</dt><dd><p>Pr (dBW) = Pt (dBW) + Gt (dB) + Gr (dB) - Lfs (dB) - Latm (dB) - Lmisc (dB)
+Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_tx_w</strong> (<em>float</em>) – Transmitter power [W].</p></li>
+<li><p><strong>g_tx_db</strong> (<em>float</em>) – Transmitter antenna gain [dB].</p></li>
+<li><p><strong>g_rx_db</strong> (<em>float</em>) – Receiver antenna gain [dB].</p></li>
+<li><p><strong>frequency_hz</strong> (<em>float</em>) – Carrier frequency [Hz].</p></li>
+<li><p><strong>distance_m</strong> (<em>float</em>) – Distance between Tx and Rx [m].</p></li>
+<li><p><strong>losses_misc_db</strong> (<em>float</em><em>, </em><em>optional</em>) – Miscellaneous losses (pointing, line, etc.) [dB]. Default 0.</p></li>
+<li><p><strong>l_atm_db</strong> (<em>float</em><em>, </em><em>optional</em>) – Atmospheric attenuation [dB]. Default 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Containing:</dt><dd><p>’p_rx_dbw’ (float): Received power [dBW].
+‘p_rx_w’ (float): Received power [W].
+‘l_fs_db’ (float): Free space path loss [dB].</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
@@ -323,6 +773,49 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_propellant_mass">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_propellant_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#calculate_propellant_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_propellant_mass" title="Link to this definition"></a></dt>
+<dd><p>Calculates the required propellant mass using the Tsiolkovsky rocket equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_mass</strong> (<em>float</em>) – Initial mass of the spacecraft (kg).</p></li>
+<li><p><strong>dv</strong> (<em>float</em>) – Delta-V required (km/s).</p></li>
+<li><p><strong>isp</strong> (<em>float</em>) – Specific impulse (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Propellant mass required (kg).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_staged_delta_v">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_staged_delta_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#calculate_staged_delta_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_staged_delta_v" title="Link to this definition"></a></dt>
+<dd><p>Calculates the total Delta-V for a multi-stage rocket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stages</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of dictionaries ordered from first stage (bottom) to last (top).
+Each dict must contain:
+- ‘m_dry’ (float): Dry mass of the stage (kg).
+- ‘m_prop’ (float): Propellant mass of the stage (kg).
+- ‘isp’ (float): Specific impulse of the stage (s).
+- ‘m0_payload’ (float, optional): Payload mass above this stage (kg). If omitted, it’s calculated from subsequent stages.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Total Delta-V (km/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.mission_design.compute_injection_state">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">compute_injection_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flight_path_angle_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_mps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#compute_injection_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.compute_injection_state" title="Link to this definition"></a></dt>
 <dd><p>Computes ECI state vector at insertion.</p>
@@ -343,6 +836,43 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.predict_lifetime">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">predict_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd_epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_days</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#predict_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.predict_lifetime" title="Link to this definition"></a></dt>
+<dd><p>Predicts the orbital lifetime due to atmospheric drag using numerical integration.
+Saves and returns the time of reentry (altitude &lt; 100km).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Initial position vector [km].</p></li>
+<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – Initial velocity vector [km/s].</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – Spacecraft mass [kg].</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – Equivalent cross-sectional area [m^2].</p></li>
+<li><p><strong>cd</strong> (<em>float</em>) – Drag coefficient.</p></li>
+<li><p><strong>density_model</strong> – Object with <cite>get_density(r_eci, jd)</cite> method.</p></li>
+<li><p><strong>jd_epoch</strong> (<em>float</em>) – Julian Date epoch.</p></li>
+<li><p><strong>max_days</strong> (<em>float</em>) – Maximum prediction duration in days.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Approximate time step for solver output [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Breakdown of prediction results:</dt><dd><ul class="simple">
+<li><p>’reentry_detected’ (bool)</p></li>
+<li><p>’lifetime_days’ (float)</p></li>
+<li><p>’final_altitude’ (float)</p></li>
+<li><p>’trajectory’ (dict with ‘t’, ‘r’, ‘v’)</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>

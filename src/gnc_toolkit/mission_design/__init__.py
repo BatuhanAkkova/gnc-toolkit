@@ -9,10 +9,24 @@ from .launch import (
     compute_injection_state
 )
 
+from .budgeting import (
+    calculate_propellant_mass,
+    calculate_delta_v,
+    calculate_staged_delta_v,
+    ManeuverSequence,
+    predict_lifetime
+)
+
 __all__ = [
     'calculate_access_windows',
     'calculate_ground_track',
     'calculate_lighting_conditions',
     'calculate_launch_windows',
-    'compute_injection_state'
+    'compute_injection_state',
+    'calculate_propellant_mass',
+    'calculate_delta_v',
+    'calculate_staged_delta_v',
+    'ManeuverSequence',
+    'predict_lifetime'
 ]
+

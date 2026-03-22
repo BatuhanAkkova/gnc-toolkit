@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.optimal_control.adaptive_control</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Model Reference Adaptive Control (MRAC) for state-space systems.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_continuous_lyapunov</span>
 
 <div class="viewcode-block" id="ModelReferenceAdaptiveControl">
@@ -145,25 +149,14 @@
         <span class="k">if</span> <span class="n">kr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>                <span class="c1"># Assume B = B_m</span>
             
-        <span class="c1"># phi(x)</span>
-        <span class="n">phi_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># [k x 1]</span>
-        
-        <span class="c1"># Control Law</span>
-        <span class="c1"># u = kx * x + kr * r - theta_hat^T * phi_x</span>
-        <span class="c1"># theta_hat.T * phi_x -&gt; [nu x 1]</span>
+        <span class="n">phi_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># [k x 1]</span>
         <span class="n">adaptive_term</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_hat</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">phi_x</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        
         <span class="n">u</span> <span class="o">=</span> <span class="n">kx</span> <span class="o">@</span> <span class="n">x</span> <span class="o">+</span> <span class="n">kr</span> <span class="o">@</span> <span class="n">r</span> <span class="o">-</span> <span class="n">adaptive_term</span>
         
-        <span class="c1"># 1. Update Law update (for the NEXT step simulation)</span>
-        <span class="c1"># d_theta_hat = Gamma * phi(x) * e^T * P * B</span>
+        <span class="c1"># Parameter derivative for Euler update: d_theta = Gamma * phi(x) * e.T * P * B</span>
         <span class="n">e</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x_m</span>
-        <span class="c1"># e^T * P * B -&gt; [1 x m]</span>
-        <span class="n">error_term</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span>
-        <span class="c1"># d_theta = Gamma * phi_x * error_term -&gt; [k x m]</span>
-        <span class="n">d_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Gamma</span> <span class="o">@</span> <span class="n">phi_x</span> <span class="o">@</span> <span class="n">error_term</span>
-        
-        <span class="c1"># Keep derivative in a temporary variable</span>
+        <span class="n">error_term</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span>  <span class="c1"># [1 x m]</span>
+        <span class="n">d_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Gamma</span> <span class="o">@</span> <span class="n">phi_x</span> <span class="o">@</span> <span class="n">error_term</span>         <span class="c1"># [k x m]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">d_theta_hat</span> <span class="o">=</span> <span class="n">d_theta</span>
         
         <span class="k">return</span> <span class="n">u</span></div>

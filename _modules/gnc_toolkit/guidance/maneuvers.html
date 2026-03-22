@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.guidance.maneuvers</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Orbital maneuver calculations (Hohmann, Bi-elliptic, Phasing, Plane Change).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="hohmann_transfer">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.hohmann_transfer">[docs]</a>
@@ -170,30 +174,13 @@
 <span class="sd">            - total_dv (float): Total Delta-V (entry + exit) (km/s).</span>
 <span class="sd">            - t_wait (float): Duration of the phasing orbit (s).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Current period</span>
     <span class="n">T_curr</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">3</span> <span class="o">/</span> <span class="n">mu</span><span class="p">)</span>
-    
-    <span class="c1"># Target period for the phasing orbit</span>
-    <span class="c1"># If intended to move &quot;forward&quot; (catch up), need a shorter period (faster).</span>
-    <span class="c1"># If intended to move &quot;backward&quot; (wait), need a longer period (slower).</span>
-    <span class="n">T_phasing</span> <span class="o">=</span> <span class="n">T_curr</span> <span class="o">+</span> <span class="n">T_phase</span>
-    
-    <span class="c1"># Semi-major axis of phasing orbit</span>
+    <span class="n">T_phasing</span> <span class="o">=</span> <span class="n">T_curr</span> <span class="o">+</span> <span class="n">T_phase</span>  <span class="c1"># phasing orbit period</span>
     <span class="n">a_phasing</span> <span class="o">=</span> <span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">T_phasing</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
-    
-    <span class="c1"># Velocity in current circular orbit</span>
     <span class="n">v_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
-    
-    <span class="c1"># Velocity at periapsis (or apoapsis) of phasing orbit at the connection point</span>
-    <span class="c1"># Energy conservation: v^2/2 - mu/r = -mu/2a</span>
-    <span class="c1"># burn at radius &#39;a&#39;.</span>
     <span class="n">v_phasing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">a_phasing</span><span class="p">))</span>
-    
     <span class="n">dv_burn</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v_phasing</span> <span class="o">-</span> <span class="n">v_c</span><span class="p">)</span>
-    
-    <span class="c1"># perform this burn to enter phasing orbit, and same burn to exit</span>
-    <span class="n">total_dv</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dv_burn</span>
-    
+    <span class="n">total_dv</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dv_burn</span>  <span class="c1"># two burns: entry and exit</span>
     <span class="k">return</span> <span class="n">total_dv</span><span class="p">,</span> <span class="n">T_phasing</span></div>
 
 
@@ -292,16 +279,13 @@
 <span class="sd">            - di1 (float): Inclination change at first burn (radians).</span>
 <span class="sd">            - di2 (float): Inclination change at second burn (radians).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Velocity parameters</span>
     <span class="n">a_trans</span> <span class="o">=</span> <span class="p">(</span><span class="n">r1</span> <span class="o">+</span> <span class="n">r2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
     <span class="n">v_c1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r1</span><span class="p">)</span>
     <span class="n">v_c2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r2</span><span class="p">)</span>
     <span class="n">v_trans_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="n">r1</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">a_trans</span><span class="p">))</span>
     <span class="n">v_trans_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="n">r2</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">a_trans</span><span class="p">))</span>
     
-    <span class="c1"># We want to minimize:</span>
-    <span class="c1"># f(di1) = sqrt(v_c1^2 + v_trans_p^2 - 2*v_c1*v_trans_p*cos(di1)) + </span>
-    <span class="c1">#          sqrt(v_trans_a^2 + v_c2^2 - 2*v_trans_a*v_c2*cos(delta_i - di1))</span>
+    <span class="c1"># Minimize: f(di1) = ||dv1(di1)|| + ||dv2(delta_i - di1)||</span>
     
     <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize_scalar</span>
     

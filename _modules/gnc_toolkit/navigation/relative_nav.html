@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.navigation.relative_nav</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.ekf</span><span class="w"> </span><span class="kn">import</span> <span class="n">EKF</span>
 
 <div class="viewcode-block" id="RelativeNavigationEKF">
@@ -100,7 +104,6 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">fx</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
             <span class="c1"># State vector: [x, y, z, vx, vy, vz]</span>
             <span class="c1"># Use discrete-time CW propagation</span>
-            <span class="c1"># (Simplified: linear system x_next = F * x)</span>
             <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cw_transition_matrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">F</span> <span class="o">@</span> <span class="n">x</span>
             

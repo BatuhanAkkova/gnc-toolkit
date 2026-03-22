@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.integrators.ab_moulton</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Adams-Bashforth-Moulton 8th order predictor-corrector integrator.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.rk4</span><span class="w"> </span><span class="kn">import</span> <span class="n">RK4</span>
 
@@ -104,7 +108,7 @@
         <span class="n">t_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">t0</span><span class="p">]</span>
         <span class="n">y_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
 
-        <span class="c1"># 1. Initialize with RK4 to fill 8 initial points of derivatives</span>
+        <span class="c1"># Initialize with RK4 to fill 8 initial points of derivatives</span>
         <span class="n">rk4</span> <span class="o">=</span> <span class="n">RK4</span><span class="p">()</span>
         
         <span class="n">history_dy</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># History of state derivatives: dy/dt = f(t, y)</span>
@@ -130,7 +134,7 @@
                 <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
                 <span class="k">break</span>
 
-            <span class="c1"># A. Predictor Step: y^{p}_{n+1} = y_n + h * sum(p_j * dy_{n-j})</span>
+            <span class="c1"># Predictor Step: y^{p}_{n+1} = y_n + h * sum(p_j * dy_{n-j})</span>
             <span class="n">sum_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
                 <span class="n">sum_p</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_coeffs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">history_dy</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
@@ -139,8 +143,7 @@
             <span class="n">next_t</span> <span class="o">=</span> <span class="n">curr_t</span> <span class="o">+</span> <span class="n">h</span>
             <span class="n">dy_p</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_p</span><span class="p">)</span> <span class="c1"># Evaluate predicted derivative</span>
             
-            <span class="c1"># B. Corrector Step: y_{n+1} = y_n + h * sum(c_j * dy_{n+1-j})</span>
-            <span class="c1"># Include predicted derivative in history stream for corrector coefficients multiplication</span>
+            <span class="c1"># Corrector Step: y_{n+1} = y_n + h * sum(c_j * dy_{n+1-j})</span>
             <span class="n">temp_history_dy</span> <span class="o">=</span> <span class="n">history_dy</span> <span class="o">+</span> <span class="p">[</span><span class="n">dy_p</span><span class="p">]</span>
             <span class="n">sum_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
@@ -149,7 +152,7 @@
             <span class="n">y_c</span> <span class="o">=</span> <span class="n">curr_y</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sum_c</span>
             <span class="n">dy_c</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_c</span><span class="p">)</span> <span class="c1"># Evaluate corrected derivative</span>
             
-            <span class="c1"># C. Update step</span>
+            <span class="c1"># Update step</span>
             <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y_c</span>
             <span class="n">curr_t</span> <span class="o">=</span> <span class="n">next_t</span>
             

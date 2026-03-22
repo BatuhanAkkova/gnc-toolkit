@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.propagators.sgp4_propagator</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">SGP4/SDP4 Analytical Propagator.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Propagator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sgp4.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Satrec</span><span class="p">,</span> <span class="n">jday</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_jd</span><span class="p">,</span> <span class="n">calc_gmst</span> <span class="c1"># If available</span>

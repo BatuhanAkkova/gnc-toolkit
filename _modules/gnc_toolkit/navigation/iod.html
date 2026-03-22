@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.navigation.iod</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Initial Orbit Determination (IOD) methods (Gibbs, Gauss, Laplace).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="gibbs_iod">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.iod.gibbs_iod">[docs]</a>
@@ -90,7 +94,6 @@
     <span class="n">h_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
     <span class="n">h_hat</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h_hat</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r3</span><span class="p">,</span> <span class="n">h_hat</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-4</span> <span class="o">*</span> <span class="n">r3_mag</span><span class="p">:</span>
-        <span class="c1"># Not perfectly coplanar, but we proceed</span>
         <span class="k">pass</span>
 
     <span class="c1"># Gibbs vectors</span>
@@ -101,8 +104,6 @@
     <span class="k">if</span> <span class="n">L</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         
-    <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">L</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span> <span class="o">/</span> <span class="n">r2_mag</span> <span class="o">+</span> <span class="n">L</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span> <span class="c1"># Placeholder for logic</span>
-    <span class="c1"># Re-evaluating v2 formula: v2 = sqrt(mu/(N_mag*D_mag)) * [ (D x r2)/r2_mag + N ]</span>
     <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">L</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span> <span class="o">/</span> <span class="n">r2_mag</span> <span class="o">+</span> <span class="n">N</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">v2</span></div>
@@ -139,7 +140,6 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">gauss_iod</span><span class="p">(</span><span class="n">rho_hat1</span><span class="p">,</span> <span class="n">rho_hat2</span><span class="p">,</span> <span class="n">rho_hat3</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">R1</span><span class="p">,</span> <span class="n">R2</span><span class="p">,</span> <span class="n">R3</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">398600.4415e9</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gauss method for Initial Orbit Determination (3 line-of-sight vectors).</span>
-<span class="sd">    Follows a specific 13-step algorithm.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        rho_hat1, rho_hat2, rho_hat3 (np.ndarray): LOS unit vectors</span>
@@ -150,23 +150,22 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        np.ndarray: [rx, ry, rz, vx, vy, vz] State at t2 [m, m/s]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># 1. Calculate the time intervals</span>
+    <span class="c1"># Calculate the time intervals</span>
     <span class="n">tau1</span> <span class="o">=</span> <span class="n">t1</span> <span class="o">-</span> <span class="n">t2</span>
     <span class="n">tau3</span> <span class="o">=</span> <span class="n">t3</span> <span class="o">-</span> <span class="n">t2</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="n">tau3</span> <span class="o">-</span> <span class="n">tau1</span>
     
-    <span class="c1"># 2. Calculate the cross products</span>
-    <span class="c1"># p1 = rho_hat2 x rho_hat3, p2 = rho_hat1 x rho_hat3, p3 = rho_hat1 x rho_hat2</span>
+    <span class="c1"># Calculate the cross products</span>
     <span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">rho_hat2</span><span class="p">,</span> <span class="n">rho_hat3</span><span class="p">)</span>
     <span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">rho_hat1</span><span class="p">,</span> <span class="n">rho_hat3</span><span class="p">)</span>
     <span class="n">p3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">rho_hat1</span><span class="p">,</span> <span class="n">rho_hat2</span><span class="p">)</span>
     
-    <span class="c1"># 3. Calculate D0 = rho_hat1 dot (rho_hat2 x rho_hat3)</span>
+    <span class="c1"># Calculate D0</span>
     <span class="n">D0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rho_hat1</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">D0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-18</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;LOS vectors are nearly coplanar (D0 is too small).&quot;</span><span class="p">)</span>
         
-    <span class="c1"># 4. Calculate six scalar quantities</span>
+    <span class="c1"># Calculate six scalar quantities</span>
     <span class="n">D11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
     <span class="n">D21</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
     <span class="n">D31</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R3</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
@@ -179,19 +178,19 @@
     <span class="n">D23</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
     <span class="n">D33</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R3</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
     
-    <span class="c1"># 5. Calculate A and B (Signs from user prompt/curtis compatibility)</span>
+    <span class="c1"># Calculate A and B</span>
     <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">D0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">tau3</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">D12</span> <span class="o">+</span> <span class="n">D22</span> <span class="o">+</span> <span class="p">(</span><span class="n">tau1</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">D32</span><span class="p">)</span>
     <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">6.0</span> <span class="o">*</span> <span class="n">D0</span><span class="p">))</span> <span class="o">*</span> <span class="p">((</span><span class="n">tau3</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">tau</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tau3</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">D12</span> <span class="o">+</span> <span class="p">(</span><span class="n">tau</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">tau1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tau1</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">D32</span><span class="p">)</span>
     
-    <span class="c1"># 6. Calculate E and R2^2</span>
+    <span class="c1"># Calculate E and R2^2</span>
     <span class="n">E</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span> <span class="n">rho_hat2</span><span class="p">)</span>
     
-    <span class="c1"># 7. Calculate a, b and c</span>
+    <span class="c1"># Calculate a, b and c</span>
     <span class="n">a_coeff</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">A</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">A</span> <span class="o">*</span> <span class="n">E</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span> <span class="n">R2</span><span class="p">))</span>
     <span class="n">b_coeff</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">*</span> <span class="n">B</span> <span class="o">*</span> <span class="p">(</span><span class="n">A</span> <span class="o">+</span> <span class="n">E</span><span class="p">)</span>
     <span class="n">c_coeff</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">B</span><span class="o">**</span><span class="mi">2</span>
     
-    <span class="c1"># 8. Find roots: x^8 + ax^6 + bx^3 + c = 0</span>
+    <span class="c1"># Find roots: x^8 + ax^6 + bx^3 + c = 0</span>
     <span class="n">poly_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">a_coeff</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">b_coeff</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">c_coeff</span><span class="p">]</span>
     <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roots</span><span class="p">(</span><span class="n">poly_coeffs</span><span class="p">)</span>
     <span class="n">real_positive_roots</span> <span class="o">=</span> <span class="n">roots</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">roots</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">real</span>
@@ -199,8 +198,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No physical (positive real) root found for Gauss radius r2.&quot;</span><span class="p">)</span>
     <span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">real_positive_roots</span><span class="p">)</span>
     
-    <span class="c1"># 9. Calculate initial rho1, rho2, rho3</span>
-    <span class="c1"># Use series-based coefficients for initial guess (consistent with r2)</span>
+    <span class="c1"># Calculate initial rho1, rho2, rho3</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">/</span> <span class="n">r2</span><span class="o">**</span><span class="mi">3</span>
     <span class="n">f1</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">tau1</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">f3</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">tau3</span><span class="o">**</span><span class="mi">2</span>
@@ -214,19 +212,19 @@
     <span class="n">rhs</span> <span class="o">=</span> <span class="n">R2</span> <span class="o">-</span> <span class="n">c1</span> <span class="o">*</span> <span class="n">R1</span> <span class="o">-</span> <span class="n">c3</span> <span class="o">*</span> <span class="n">R3</span>
     <span class="n">rho1</span><span class="p">,</span> <span class="n">rho2</span><span class="p">,</span> <span class="n">rho3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
     
-    <span class="c1"># 10. Initial position vectors</span>
+    <span class="c1"># Initial position vectors</span>
     <span class="n">r1_vec</span> <span class="o">=</span> <span class="n">R1</span> <span class="o">+</span> <span class="n">rho1</span> <span class="o">*</span> <span class="n">rho_hat1</span>
     <span class="n">r2_vec</span> <span class="o">=</span> <span class="n">R2</span> <span class="o">+</span> <span class="n">rho2</span> <span class="o">*</span> <span class="n">rho_hat2</span>
     <span class="n">r3_vec</span> <span class="o">=</span> <span class="n">R3</span> <span class="o">+</span> <span class="n">rho3</span> <span class="o">*</span> <span class="n">rho_hat3</span>
     
-    <span class="c1"># 11. Initial velocity vector</span>
+    <span class="c1"># Initial velocity vector</span>
     <span class="n">v2_vec</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">denom</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">f3</span> <span class="o">*</span> <span class="n">r1_vec</span> <span class="o">+</span> <span class="n">f1</span> <span class="o">*</span> <span class="n">r3_vec</span><span class="p">)</span>
     
-    <span class="c1"># 12. Iterative Refinement (Curtis Algorithm 5.4 with Tight Damping)</span>
+    <span class="c1"># Iterative Refinement</span>
     <span class="n">rho1_old</span><span class="p">,</span> <span class="n">rho2_old</span><span class="p">,</span> <span class="n">rho3_old</span> <span class="o">=</span> <span class="n">rho1</span><span class="p">,</span> <span class="n">rho2</span><span class="p">,</span> <span class="n">rho3</span>
     <span class="n">n</span><span class="p">,</span> <span class="n">nmax</span><span class="p">,</span> <span class="n">tol</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mf">1e-8</span>
     <span class="n">diff1</span> <span class="o">=</span> <span class="n">diff2</span> <span class="o">=</span> <span class="n">diff3</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">alpha_relax</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># Very cautious updates to ensure stability</span>
+    <span class="n">alpha_relax</span> <span class="o">=</span> <span class="mf">0.1</span>
 
     <span class="n">r2_vec_best</span> <span class="o">=</span> <span class="n">r2_vec</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">v2_vec_best</span> <span class="o">=</span> <span class="n">v2_vec</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -315,17 +313,14 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_kepler_U</span><span class="p">(</span><span class="n">tau</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">vr0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve universal Kepler&#39;s equation for x using Newton-Raphson.&quot;&quot;&quot;</span>
-    <span class="c1"># Robust initial guess (Curtis Algorithm 3.3)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">tau</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-9</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span> <span class="o">*</span> <span class="n">tau</span> <span class="o">/</span> <span class="n">r0</span>
     
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
         <span class="n">psi</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">alpha</span>
         <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span> <span class="o">=</span> <span class="n">_stumpff</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>
         
-        <span class="c1"># f(x) = (r0*vr0/sqrt(mu))*x^2*c2 + (1-alpha*r0)*x^3*c3 + r0*x - sqrt(mu)*tau</span>
         <span class="n">r_dot_v_sqrt_mu</span> <span class="o">=</span> <span class="n">r0</span> <span class="o">*</span> <span class="n">vr0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">r_dot_v_sqrt_mu</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">c2</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">r0</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">c3</span> <span class="o">+</span> <span class="n">r0</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span> <span class="o">*</span> <span class="n">tau</span>
-        <span class="c1"># f&#39;(x) = r0*vr0/sqrt(mu)*x*(1-psi*c3) + (1-alpha*r0)*x^2*c2 + r0</span>
         <span class="n">deriv</span> <span class="o">=</span> <span class="n">r_dot_v_sqrt_mu</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">psi</span> <span class="o">*</span> <span class="n">c3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">r0</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">c2</span> <span class="o">+</span> <span class="n">r0</span>
         
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">deriv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span> <span class="c1"># Avoid ZeroDivision</span>
@@ -355,7 +350,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        np.ndarray: [rx, ry, rz, vx, vy, vz] State vector in ECI [m, m/s]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Determinants for Laplace method (Standard textbook definition)</span>
+    <span class="c1"># Determinants for Laplace method</span>
     <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rho_hat</span><span class="p">,</span> <span class="n">rho_hat_dot</span><span class="p">,</span> <span class="n">rho_hat_ddot</span><span class="p">]))</span>
     
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-18</span><span class="p">:</span>
@@ -371,27 +366,23 @@
     <span class="n">cos_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rho_hat</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span> <span class="o">/</span> <span class="n">R_mag</span>
     
     <span class="c1"># Solve 8th order polynomial for r (radius of satellite)</span>
-    <span class="c1"># r^8 - (A^2 + 2*R*A*cos_phi + R^2)*r^6 - (2*A*B + 2*R*B*cos_phi)*r^3 - B^2 = 0</span>
-    
     <span class="n">poly</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="mf">1.0</span><span class="p">,</span>                               <span class="c1"># r^8</span>
-        <span class="mf">0.0</span><span class="p">,</span>                               <span class="c1"># r^7</span>
+        <span class="mf">1.0</span><span class="p">,</span> <span class="c1"># r^8</span>
+        <span class="mf">0.0</span><span class="p">,</span> <span class="c1"># r^7</span>
         <span class="o">-</span><span class="p">(</span><span class="n">A</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">R_mag</span> <span class="o">*</span> <span class="n">A</span> <span class="o">*</span> <span class="n">cos_phi</span> <span class="o">+</span> <span class="n">R_mag</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="c1"># r^6</span>
-        <span class="mf">0.0</span><span class="p">,</span>                               <span class="c1"># r^5</span>
-        <span class="mf">0.0</span><span class="p">,</span>                               <span class="c1"># r^4</span>
-        <span class="o">-</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">R_mag</span> <span class="o">*</span> <span class="n">B</span> <span class="o">*</span> <span class="n">cos_phi</span><span class="p">),</span>    <span class="c1"># r^3</span>
-        <span class="mf">0.0</span><span class="p">,</span>                               <span class="c1"># r^2</span>
-        <span class="mf">0.0</span><span class="p">,</span>                               <span class="c1"># r^1</span>
-        <span class="o">-</span><span class="n">B</span><span class="o">**</span><span class="mi">2</span>                              <span class="c1"># r^0</span>
+        <span class="mf">0.0</span><span class="p">,</span> <span class="c1"># r^5</span>
+        <span class="mf">0.0</span><span class="p">,</span> <span class="c1"># r^4</span>
+        <span class="o">-</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">R_mag</span> <span class="o">*</span> <span class="n">B</span> <span class="o">*</span> <span class="n">cos_phi</span><span class="p">),</span> <span class="c1"># r^3</span>
+        <span class="mf">0.0</span><span class="p">,</span> <span class="c1"># r^2</span>
+        <span class="mf">0.0</span><span class="p">,</span> <span class="c1"># r^1</span>
+        <span class="o">-</span><span class="n">B</span><span class="o">**</span><span class="mi">2</span> <span class="c1"># r^0</span>
     <span class="p">]</span>
     
     <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roots</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
-    <span class="c1"># We need the positive real root</span>
     <span class="n">real_positive_roots</span> <span class="o">=</span> <span class="n">roots</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">roots</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">real</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_positive_roots</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No physical (positive real) root found for Laplace IOD.&quot;</span><span class="p">)</span>
         
-    <span class="c1"># Usually choose root closest to earth-radius for LEO, but pick the first positive one</span>
     <span class="n">r_mag</span> <span class="o">=</span> <span class="n">real_positive_roots</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     
     <span class="n">rho</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span>
@@ -399,8 +390,7 @@
     <span class="c1"># Position</span>
     <span class="n">r_vec</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">rho_hat</span> <span class="o">+</span> <span class="n">R</span>
     
-    <span class="c1"># Velocity</span>
-    <span class="c1"># rho_dot = -(D3 + (mu/r^3)*D4) / (2*D)  -- Note the 2 in the divisor!</span>
+    <span class="c1"># Velocity approximation using Laplace derivatives</span>
     <span class="n">D3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rho_hat</span><span class="p">,</span> <span class="n">R_ddot</span><span class="p">,</span> <span class="n">rho_hat_ddot</span><span class="p">]))</span>
     <span class="n">D4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rho_hat</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">rho_hat_ddot</span><span class="p">]))</span>
     <span class="n">rho_dot</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">D3</span> <span class="o">+</span> <span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">D4</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">)</span>
@@ -432,11 +422,6 @@
     <span class="n">tau31</span> <span class="o">=</span> <span class="n">t3</span> <span class="o">-</span> <span class="n">t1</span>
     
     <span class="c1"># Lagrange interpolation coefficients for derivatives at t2</span>
-    <span class="c1"># L(t) = L1*l1(t) + L2*l2(t) + L3*l3(t)</span>
-    <span class="c1"># l1&#39;(t2) = (t2-t3) / ((t1-t2)(t1-t3))</span>
-    <span class="c1"># l2&#39;(t2) = (2*t2 - t1 - t3) / ((t2-t1)(t2-t3))</span>
-    <span class="c1"># l3&#39;(t2) = (t2-t1) / ((t3-t1)(t3-t2))</span>
-    
     <span class="n">l1_dot</span> <span class="o">=</span> <span class="o">-</span><span class="n">tau32</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="n">tau21</span> <span class="o">*</span> <span class="o">-</span><span class="n">tau31</span><span class="p">)</span>
     <span class="n">l2_dot</span> <span class="o">=</span> <span class="p">(</span><span class="n">tau21</span> <span class="o">-</span> <span class="n">tau32</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tau21</span> <span class="o">*</span> <span class="o">-</span><span class="n">tau32</span><span class="p">)</span>
     <span class="n">l3_dot</span> <span class="o">=</span> <span class="n">tau21</span> <span class="o">/</span> <span class="p">(</span><span class="n">tau31</span> <span class="o">*</span> <span class="n">tau32</span><span class="p">)</span>
@@ -445,10 +430,6 @@
     <span class="n">R_dot</span> <span class="o">=</span> <span class="n">l1_dot</span> <span class="o">*</span> <span class="n">R1</span> <span class="o">+</span> <span class="n">l2_dot</span> <span class="o">*</span> <span class="n">R2</span> <span class="o">+</span> <span class="n">l3_dot</span> <span class="o">*</span> <span class="n">R3</span>
     
     <span class="c1"># Second derivatives at t2</span>
-    <span class="c1"># l1&#39;&#39;(t2) = 2 / ((t1-t2)(t1-t3))</span>
-    <span class="c1"># l2&#39;&#39;(t2) = 2 / ((t2-t1)(t2-t3))</span>
-    <span class="c1"># l3&#39;&#39;(t2) = 2 / ((t3-t1)(t3-t2))</span>
-    
     <span class="n">l1_ddot</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="n">tau21</span> <span class="o">*</span> <span class="o">-</span><span class="n">tau31</span><span class="p">)</span>
     <span class="n">l2_ddot</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">tau21</span> <span class="o">*</span> <span class="o">-</span><span class="n">tau32</span><span class="p">)</span>
     <span class="n">l3_ddot</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">tau31</span> <span class="o">*</span> <span class="n">tau32</span><span class="p">)</span>
@@ -456,8 +437,6 @@
     <span class="n">rho_hat_ddot</span> <span class="o">=</span> <span class="n">l1_ddot</span> <span class="o">*</span> <span class="n">L1</span> <span class="o">+</span> <span class="n">l2_ddot</span> <span class="o">*</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">l3_ddot</span> <span class="o">*</span> <span class="n">L3</span>
     
     <span class="c1"># Observer acceleration estimation (or use gravity if R is ECI)</span>
-    <span class="c1"># For ground stations, we can differentiate. </span>
-    <span class="c1"># To be consistent with LOS interpolation, we differentiate R.</span>
     <span class="n">R_ddot</span> <span class="o">=</span> <span class="n">l1_ddot</span> <span class="o">*</span> <span class="n">R1</span> <span class="o">+</span> <span class="n">l2_ddot</span> <span class="o">*</span> <span class="n">R2</span> <span class="o">+</span> <span class="n">l3_ddot</span> <span class="o">*</span> <span class="n">R3</span>
     
     <span class="k">return</span> <span class="n">laplace_iod</span><span class="p">(</span><span class="n">L2</span><span class="p">,</span> <span class="n">rho_hat_dot</span><span class="p">,</span> <span class="n">rho_hat_ddot</span><span class="p">,</span> <span class="n">R2</span><span class="p">,</span> <span class="n">R_dot</span><span class="p">,</span> <span class="n">R_ddot</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span></div>

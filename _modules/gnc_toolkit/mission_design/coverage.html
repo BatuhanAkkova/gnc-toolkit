@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.mission_design.coverage</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ground station access and lighting conditions analysis utilities.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.frame_conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">eci2ecef</span><span class="p">,</span> <span class="n">eci2llh</span><span class="p">,</span> <span class="n">llh2ecef</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.environment.solar</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sun</span>
 
@@ -93,7 +97,6 @@
     <span class="n">r_gs_ecef</span> <span class="o">=</span> <span class="n">llh2ecef</span><span class="p">(</span><span class="n">gs_lat_rad</span><span class="p">,</span> <span class="n">gs_lon_rad</span><span class="p">,</span> <span class="n">gs_alt_m</span><span class="p">)</span>
 
     <span class="c1"># Zenith vector at GS (Normal to ellipsoid)</span>
-    <span class="c1"># n = [cos_lat*cos_lon, cos_lat*sin_lon, sin_lat]</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
         <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">gs_lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">gs_lon_rad</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">gs_lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">gs_lon_rad</span><span class="p">),</span>
@@ -108,7 +111,6 @@
         <span class="n">r_eci</span> <span class="o">=</span> <span class="n">r_eci_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         
         <span class="c1"># Convert to ECEF</span>
-        <span class="c1"># eci2ecef expects reci, veci. We only need position here.</span>
         <span class="n">r_ecef</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">eci2ecef</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">jd_current</span><span class="p">)</span>
         
         <span class="c1"># Relative vector</span>
@@ -239,23 +241,15 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">u_h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="n">h_norm</span>
             <span class="c1"># Beta angle = asin(dot(h, u_sun))</span>
-            <span class="c1"># Wait, beta angle is the angle between Sun and Orbit Plane.</span>
-            <span class="c1"># Normal is orthogonal to the plane.</span>
-            <span class="c1"># Angle to plane = 90 - angle to normal.</span>
-            <span class="c1"># dot(u_h, u_sun) = cos(angle to normal).</span>
-            <span class="c1"># sin(angle to plane) = cos(angle to normal).</span>
-            <span class="c1"># So beta = asin(dot(u_h, u_sun)). Correct.</span>
             <span class="n">beta_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u_h</span><span class="p">,</span> <span class="n">u_sun</span><span class="p">))</span>
             <span class="n">beta_angles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">beta_rad</span><span class="p">))</span>
             
         <span class="c1"># Eclipse Check (Cylindrical model)</span>
-        <span class="c1"># Projection of r_eci onto Sun vector</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">u_sun</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">eclipse_state</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># Sunlight</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Perpendicular distance</span>
             <span class="n">r_perp_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span><span class="o">*</span><span class="n">s</span>
             <span class="k">if</span> <span class="n">r_perp_sq</span> <span class="o">&lt;</span> <span class="n">R_earth</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span>
                 <span class="n">eclipse_state</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="c1"># Eclipse</span>

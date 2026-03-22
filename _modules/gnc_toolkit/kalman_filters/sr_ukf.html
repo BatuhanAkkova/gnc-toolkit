@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.kalman_filters.sr_ukf</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Square-Root Unscented Kalman Filter (SR-UKF) algorithm.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">qr</span><span class="p">,</span> <span class="n">cholesky</span><span class="p">,</span> <span class="n">solve_triangular</span>
 
 <div class="viewcode-block" id="SRUKF">
@@ -139,12 +143,11 @@
         <span class="c1"># Compute S- using QR decomposition of the propagated sigma points and process noise</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Wc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigmas_f</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
         
-        <span class="c1"># QR decomposition: Q, R = qr(A), where A is (N + 2L) x L</span>
-        <span class="c1"># We need the R part of [X.T, Qs.T].T</span>
+        <span class="c1"># QR decomposition</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">St</span> <span class="o">=</span> <span class="n">qr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">Qs</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;economic&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">=</span> <span class="n">St</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_x</span><span class="p">,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_x</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
         
-        <span class="c1"># Cholesky rank-1 update for the first weight (might be negative)</span>
+        <span class="c1"># Cholesky rank-1 update for the first weight</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">sigmas_f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cholesky_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Wc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
@@ -187,15 +190,12 @@
             <span class="n">dz</span> <span class="o">=</span> <span class="n">sigmas_h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">zp</span>
             <span class="n">Pxz</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Wc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dz</span><span class="p">)</span>
             
-        <span class="c1"># Kalman gain K = (Pxz / Sy.T) / Sy</span>
-        <span class="c1"># In SRUKF: K = Pxz * inv(Sy.T) * inv(Sy)</span>
-        <span class="c1"># Using triangular solve for stability</span>
+        <span class="c1"># Kalman gain</span>
         <span class="n">K</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="n">Sy</span><span class="p">,</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="n">Sy</span><span class="p">,</span> <span class="n">Pxz</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="s1">&#39;T&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
         
         <span class="c1"># Correct mean and square-root covariance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">z</span> <span class="o">-</span> <span class="n">zp</span><span class="p">)</span>
         
-        <span class="c1"># U = K * Sy</span>
         <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">Sy</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_z</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cholesky_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span></div>
@@ -216,23 +216,16 @@
 <span class="sd">        v: Vector to update with</span>
 <span class="sd">        weight: Scalar weight (positive for update, negative for downdate)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Note: Scipy doesn&#39;t have a direct rank-1 update for Cholesky.        </span>
-        <span class="c1"># S_new * S_new.T = S*S.T + sigma * v * v.T</span>
-        <span class="c1"># For positive weights:</span>
         <span class="k">if</span> <span class="n">weight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">v_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span>
             <span class="c1"># Use QR to get updated S</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">St</span> <span class="o">=</span> <span class="n">qr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">S</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">v_scaled</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;economic&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">St</span><span class="p">[:</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Downdate is trickier. For now, let&#39;s use the reconstruction for downdate if needed,</span>
-            <span class="c1"># or avoid it if possible. In SRUKF update, we use downdates.</span>
-            <span class="c1"># Real implementation would use Givens rotations.</span>
             <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">S</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
-                <span class="c1"># Add jitter for stability</span>
                 <span class="k">return</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">P</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="nd">@property</span>

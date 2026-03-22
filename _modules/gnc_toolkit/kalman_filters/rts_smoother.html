@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.kalman_filters.rts_smoother</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Rauch-Tung-Striebel (RTS) Smoother for linear systems.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="rts_smoother">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.rts_smoother.rts_smoother">[docs]</a>
@@ -102,18 +106,17 @@
 
     <span class="c1"># Backward pass</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># Forward prediction from k to k+1</span>
-        <span class="c1"># P_{k+1|k} = F_k * P_{k|k} * F_k&#39; + Q_k</span>
+        <span class="c1"># Forward prediction</span>
         <span class="n">P_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Fs</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">Ps</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">Fs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">Qs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
-        <span class="c1"># Smoother gain: C_k = P_{k|k} * F_k&#39; * P_{k+1|k}^-1</span>
+        <span class="c1"># Smoother gain</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ps</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">Fs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">P_pred</span><span class="p">))</span>
 
-        <span class="c1"># Smoothed state: x_{k|N} = x_{k|k} + C_k * (x_{k+1|N} - x_{k+1|k})</span>
+        <span class="c1"># Smoothed state</span>
         <span class="n">X_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Fs</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">Xs</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
         <span class="n">X_smooth</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">X_smooth</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">X_pred</span><span class="p">)</span>
 
-        <span class="c1"># Smoothed covariance: P_{k|N} = P_{k|k} + C_k * (P_{k+1|N} - P_{k+1|k}) * C_k&#39;</span>
+        <span class="c1"># Smoothed covariance</span>
         <span class="n">P_smooth</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ps</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">P_smooth</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">P_pred</span><span class="p">),</span> <span class="n">C</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">X_smooth</span><span class="p">,</span> <span class="n">P_smooth</span></div>

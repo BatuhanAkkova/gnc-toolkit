@@ -116,6 +116,7 @@
 </section>
 <section id="module-gnc_toolkit.propagators.base">
 <span id="gnc-toolkit-propagators-base-module"></span><h2>gnc_toolkit.propagators.base module<a class="headerlink" href="#module-gnc_toolkit.propagators.base" title="Link to this heading"></a></h2>
+<p>Abstract base class for orbit propagators.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.base.Propagator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.base.</span></span><span class="sig-name descname"><span class="pre">Propagator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/base.html#Propagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.base.Propagator" title="Link to this definition"></a></dt>
@@ -148,6 +149,7 @@
 </section>
 <section id="module-gnc_toolkit.propagators.cowell">
 <span id="gnc-toolkit-propagators-cowell-module"></span><h2>gnc_toolkit.propagators.cowell module<a class="headerlink" href="#module-gnc_toolkit.propagators.cowell" title="Link to this heading"></a></h2>
+<p>Numerical Cowell Propagator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.cowell.CowellPropagator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.cowell.</span></span><span class="sig-name descname"><span class="pre">CowellPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><span class="pre">Integrator</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/cowell.html#CowellPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.cowell.CowellPropagator" title="Link to this definition"></a></dt>
@@ -183,6 +185,7 @@ Signature: acc_pert = f(t, r, v)</p></li>
 </section>
 <section id="module-gnc_toolkit.propagators.encke">
 <span id="gnc-toolkit-propagators-encke-module"></span><h2>gnc_toolkit.propagators.encke module<a class="headerlink" href="#module-gnc_toolkit.propagators.encke" title="Link to this heading"></a></h2>
+<p>Encke’s Method Propagator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.encke.EnckePropagator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.encke.</span></span><span class="sig-name descname"><span class="pre">EnckePropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><span class="pre">Integrator</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/encke.html#EnckePropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.encke.EnckePropagator" title="Link to this definition"></a></dt>
@@ -212,6 +215,7 @@ Signature: acc_pert = f(t, r, v)</p></li>
 </section>
 <section id="module-gnc_toolkit.propagators.kepler">
 <span id="gnc-toolkit-propagators-kepler-module"></span><h2>gnc_toolkit.propagators.kepler module<a class="headerlink" href="#module-gnc_toolkit.propagators.kepler" title="Link to this heading"></a></h2>
+<p>Analytical Two-Body Propagator using Kepler’s Equation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.kepler.KeplerPropagator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.kepler.</span></span><span class="sig-name descname"><span class="pre">KeplerPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/kepler.html#KeplerPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.kepler.KeplerPropagator" title="Link to this definition"></a></dt>
@@ -228,6 +232,7 @@ Signature: acc_pert = f(t, r, v)</p></li>
 </section>
 <section id="module-gnc_toolkit.propagators.sgp4_propagator">
 <span id="gnc-toolkit-propagators-sgp4-propagator-module"></span><h2>gnc_toolkit.propagators.sgp4_propagator module<a class="headerlink" href="#module-gnc_toolkit.propagators.sgp4_propagator" title="Link to this heading"></a></h2>
+<p>SGP4/SDP4 Analytical Propagator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.sgp4_propagator.</span></span><span class="sig-name descname"><span class="pre">Sgp4Propagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/sgp4_propagator.html#Sgp4Propagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator" title="Link to this definition"></a></dt>

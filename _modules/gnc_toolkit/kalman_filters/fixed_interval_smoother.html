@@ -66,7 +66,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.kalman_filters.fixed_interval_smoother</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Fixed-Interval Smoother (Fraser-Potter / Two-Filter) for linear systems.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="fixed_interval_smoother">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother">[docs]</a>
@@ -112,9 +115,6 @@
         <span class="n">Q</span> <span class="o">=</span> <span class="n">Qs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
         
         <span class="c1"># Backward prediction (Information form)</span>
-        <span class="c1"># Y_k = F&#39; * Y_hat * (I + Q * Y_hat)^-1 * F</span>
-        <span class="c1"># y_k = F&#39; * (I + Y_hat * Q)^-1 * y_hat</span>
-        
         <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">+</span> <span class="n">Y_hat</span> <span class="o">@</span> <span class="n">Q</span><span class="p">)</span>
         <span class="n">Y_b</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Y_hat</span> <span class="o">@</span> <span class="n">tmp</span> <span class="o">@</span> <span class="n">F</span>

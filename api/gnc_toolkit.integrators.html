@@ -136,6 +136,7 @@
 </section>
 <section id="module-gnc_toolkit.integrators.ab_moulton">
 <span id="gnc-toolkit-integrators-ab-moulton-module"></span><h2>gnc_toolkit.integrators.ab_moulton module<a class="headerlink" href="#module-gnc_toolkit.integrators.ab_moulton" title="Link to this heading"></a></h2>
+<p>Adams-Bashforth-Moulton 8th order predictor-corrector integrator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.ab_moulton.</span></span><span class="sig-name descname"><span class="pre">AdamsBashforthMoultonIntegrator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/ab_moulton.html#AdamsBashforthMoultonIntegrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator" title="Link to this definition"></a></dt>
@@ -159,9 +160,11 @@ Treats the ODE system as a first-order system: dy/dt = f(t, y).</p>
 </section>
 <section id="module-gnc_toolkit.integrators.dop853_coeffs">
 <span id="gnc-toolkit-integrators-dop853-coeffs-module"></span><h2>gnc_toolkit.integrators.dop853_coeffs module<a class="headerlink" href="#module-gnc_toolkit.integrators.dop853_coeffs" title="Link to this heading"></a></h2>
+<p>Coefficients for Dormand-Prince 8(5,3) integrator (DOP853).</p>
 </section>
 <section id="module-gnc_toolkit.integrators.gauss_jackson">
 <span id="gnc-toolkit-integrators-gauss-jackson-module"></span><h2>gnc_toolkit.integrators.gauss_jackson module<a class="headerlink" href="#module-gnc_toolkit.integrators.gauss_jackson" title="Link to this heading"></a></h2>
+<p>Gauss-Jackson 8th order predictor-corrector integrator for second-order ODEs.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.gauss_jackson.</span></span><span class="sig-name descname"><span class="pre">GaussJacksonIntegrator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/gauss_jackson.html#GaussJacksonIntegrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator" title="Link to this definition"></a></dt>
@@ -186,6 +189,7 @@ Assumes state y = [r, v] where r, v are 3D vectors.</p>
 </section>
 <section id="module-gnc_toolkit.integrators.integrator">
 <span id="gnc-toolkit-integrators-integrator-module"></span><h2>gnc_toolkit.integrators.integrator module<a class="headerlink" href="#module-gnc_toolkit.integrators.integrator" title="Link to this heading"></a></h2>
+<p>Abstract base class for numerical integrators.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.integrator.Integrator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.integrator.</span></span><span class="sig-name descname"><span class="pre">Integrator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/integrator.html#Integrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.integrator.Integrator" title="Link to this definition"></a></dt>
@@ -245,6 +249,7 @@ dt_next: Suggested next time step (for variable step methods), or dt used</p>
 </section>
 <section id="module-gnc_toolkit.integrators.rk4">
 <span id="gnc-toolkit-integrators-rk4-module"></span><h2>gnc_toolkit.integrators.rk4 module<a class="headerlink" href="#module-gnc_toolkit.integrators.rk4" title="Link to this heading"></a></h2>
+<p>Fixed-step Runge-Kutta 4th order integrator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.rk4.RK4">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.rk4.</span></span><span class="sig-name descname"><span class="pre">RK4</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/rk4.html#RK4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.rk4.RK4" title="Link to this definition"></a></dt>
@@ -261,6 +266,7 @@ dt_next: Suggested next time step (for variable step methods), or dt used</p>
 </section>
 <section id="module-gnc_toolkit.integrators.rk45">
 <span id="gnc-toolkit-integrators-rk45-module"></span><h2>gnc_toolkit.integrators.rk45 module<a class="headerlink" href="#module-gnc_toolkit.integrators.rk45" title="Link to this heading"></a></h2>
+<p>Adaptive-step Runge-Kutta-Fehlberg 4(5) integrator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.rk45.RK45">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.rk45.</span></span><span class="sig-name descname"><span class="pre">RK45</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safety_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/rk45.html#RK45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.rk45.RK45" title="Link to this definition"></a></dt>
@@ -283,6 +289,7 @@ dt_next: Suggested next time step (for variable step methods), or dt used</p>
 </section>
 <section id="module-gnc_toolkit.integrators.rk853">
 <span id="gnc-toolkit-integrators-rk853-module"></span><h2>gnc_toolkit.integrators.rk853 module<a class="headerlink" href="#module-gnc_toolkit.integrators.rk853" title="Link to this heading"></a></h2>
+<p>Adaptive-step Dormand-Prince 8(5,3) integrator (DOP853).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.rk853.RK853">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.rk853.</span></span><span class="sig-name descname"><span class="pre">RK853</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safety_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/rk853.html#RK853"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.rk853.RK853" title="Link to this definition"></a></dt>
@@ -324,6 +331,7 @@ y_values: Array of state vectors</p>
 </section>
 <section id="module-gnc_toolkit.integrators.symplectic">
 <span id="gnc-toolkit-integrators-symplectic-module"></span><h2>gnc_toolkit.integrators.symplectic module<a class="headerlink" href="#module-gnc_toolkit.integrators.symplectic" title="Link to this heading"></a></h2>
+<p>Symplectic integrator (Yoshida 4th order) for conservative systems.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.integrators.symplectic.SymplecticIntegrator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.integrators.symplectic.</span></span><span class="sig-name descname"><span class="pre">SymplecticIntegrator</span></span><a class="reference internal" href="../_modules/gnc_toolkit/integrators/symplectic.html#SymplecticIntegrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator" title="Link to this definition"></a></dt>

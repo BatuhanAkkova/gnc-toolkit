@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.integrators.rk45</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Adaptive-step Runge-Kutta-Fehlberg 4(5) integrator.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
 
 <div class="viewcode-block" id="RK45">
@@ -93,7 +97,6 @@
             <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="o">/</span><span class="mi">27</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3544</span><span class="o">/</span><span class="mi">2565</span><span class="p">,</span> <span class="mi">1859</span><span class="o">/</span><span class="mi">4104</span><span class="p">,</span> <span class="o">-</span><span class="mi">11</span><span class="o">/</span><span class="mi">40</span><span class="p">]</span>
         <span class="p">]</span>
         <span class="c1"># 4th order solution (y)</span>
-        <span class="c1"># 4th order solution (y)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="o">/</span><span class="mi">216</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1408</span><span class="o">/</span><span class="mi">2565</span><span class="p">,</span> <span class="mi">2197</span><span class="o">/</span><span class="mi">4104</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="c1"># 5th order solution (z for error est)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">16</span><span class="o">/</span><span class="mi">135</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6656</span><span class="o">/</span><span class="mi">12825</span><span class="p">,</span> <span class="mi">28561</span><span class="o">/</span><span class="mi">56430</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span><span class="o">/</span><span class="mi">50</span><span class="p">,</span> <span class="mi">2</span><span class="o">/</span><span class="mi">55</span><span class="p">])</span>
@@ -119,7 +122,6 @@
             <span class="c1"># k2..k6</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
                 <span class="c1"># sum(a_ij * kj)</span>
-                <span class="c1"># y_arg = y + dt * sum(...)</span>
                 <span class="n">sum_ak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
                     <span class="n">sum_ak</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">k</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
@@ -132,7 +134,6 @@
             <span class="n">y_next</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b5</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
             
             <span class="c1"># Calculate error estimate</span>
-            <span class="c1"># error = dt * sum((b5 - b4) * k)</span>
             <span class="n">error_est</span> <span class="o">=</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
             <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atol</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtol</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_next</span><span class="p">))</span>
             <span class="n">error_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error_est</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span>

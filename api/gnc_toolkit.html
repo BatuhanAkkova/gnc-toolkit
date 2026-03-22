@@ -848,11 +848,12 @@
 </section>
 <section id="module-gnc_toolkit.edl">
 <span id="gnc-toolkit-edl-module"></span><h2>gnc_toolkit.edl module<a class="headerlink" href="#module-gnc_toolkit.edl" title="Link to this heading"></a></h2>
+<p>Entry, Descent, and Landing (EDL) dynamics and utilities.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.edl.aerocapture_guidance">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">aerocapture_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_apoapsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planet_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#aerocapture_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.aerocapture_guidance" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.edl.</span></span><span class="sig-name descname"><span class="pre">aerocapture_guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_apoapsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planet_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/edl.html#aerocapture_guidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.edl.aerocapture_guidance" title="Link to this definition"></a></dt>
 <dd><p>Predictive aerocapture guidance.
-Adjusts bank angle or drag to target a specific exit apoapsis.
+Adjusts bank angle (if cl &gt; 0) to target a specific exit apoapsis using numerical predictor-corrector.
 Returns: bank_angle (rad)</p>
 </dd></dl>
 
@@ -975,6 +976,7 @@ q = k * sqrt(rho/rn) * v^3</p>
 </section>
 <section id="module-gnc_toolkit">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit" title="Link to this heading"></a></h2>
+<p>GNC Toolkit package.</p>
 </section>
 </section>
 

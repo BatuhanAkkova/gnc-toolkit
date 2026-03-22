@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.guidance.attitude_guidance</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Attitude guidance laws for Nadir, Sun, and Target pointing, and trajectory planning.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">quat_normalize</span><span class="p">,</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_mult</span>
 
 <div class="viewcode-block" id="nadir_pointing_reference">
@@ -99,8 +103,6 @@
     <span class="n">x_axis</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x_axis</span><span class="p">)</span>
     
     <span class="c1"># DCM from ECI to Body (R_eb)</span>
-    <span class="c1"># R_eb transforms vector from ECI to Body frame.</span>
-    <span class="c1"># The rows are the unit vectors of the body axes expressed in ECI.</span>
     <span class="n">rmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">])</span>
     
     <span class="k">return</span> <span class="n">_rmat_to_quat</span><span class="p">(</span><span class="n">rmat</span><span class="p">)</span></div>
@@ -129,7 +131,6 @@
     <span class="k">if</span> <span class="n">dot</span> <span class="o">&gt;</span> <span class="mf">0.999999</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">dot</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.999999</span><span class="p">:</span>
-        <span class="c1"># 180 deg rotation about any orthogonal axis</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
     
     <span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">eci_x</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
@@ -155,7 +156,6 @@
     <span class="n">rel_pos</span> <span class="o">=</span> <span class="n">target_pos_eci</span> <span class="o">-</span> <span class="n">pos_eci</span>
     <span class="n">z_axis</span> <span class="o">=</span> <span class="n">rel_pos</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel_pos</span><span class="p">)</span>
     
-    <span class="c1"># Constrain Y-axis to be orthogonal to both Z and ECI Z (arbitrary for stability)</span>
     <span class="n">eci_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">eci_z</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">0.99</span><span class="p">:</span>
         <span class="n">eci_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
@@ -209,14 +209,11 @@
     
     <span class="n">dot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">)</span>
     
-    <span class="c1"># If dot is negative, SLERP will take the long way.</span>
-    <span class="c1"># Flip one quaternion to take the short path.</span>
     <span class="k">if</span> <span class="n">dot</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
         <span class="n">q1</span> <span class="o">=</span> <span class="o">-</span><span class="n">q1</span>
         <span class="n">dot</span> <span class="o">=</span> <span class="o">-</span><span class="n">dot</span>
         
     <span class="k">if</span> <span class="n">dot</span> <span class="o">&gt;</span> <span class="mf">0.9995</span><span class="p">:</span>
-        <span class="c1"># Linear interpolation for very small angles</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">q2</span> <span class="o">-</span> <span class="n">q1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
         

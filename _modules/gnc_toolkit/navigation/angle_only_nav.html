@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.navigation.angle_only_nav</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Navigation using Line-of-Sight (LOS) measurements (unit vectors).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.orbit_determination</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrbitDeterminationEKF</span>
 
 <div class="viewcode-block" id="AngleOnlyNavigation">
@@ -103,8 +107,6 @@
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
                 
             <span class="n">u</span> <span class="o">=</span> <span class="n">rel_r</span> <span class="o">/</span> <span class="n">rel_r_mag</span>
-            <span class="c1"># Jacobian of rel_r/|rel_r| w.r.t r:</span>
-            <span class="c1"># d(rel_r/|rel_r|)/dr = - (I - u*u&#39;) / |rel_r|</span>
             <span class="n">H_rel</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span> <span class="o">/</span> <span class="n">rel_r_mag</span>
             
             <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>

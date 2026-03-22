@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.optimal_control.geometric_control</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Geometric Controller on SO(3) for attitude tracking.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="vee_map">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.geometric_control.vee_map">[docs]</a>
@@ -138,27 +142,20 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">d_omega_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d_omega_d</span><span class="p">)</span>
 
-        <span class="c1"># 1. Attitude Error eR</span>
-        <span class="c1"># eR = 1/2 * vee_map(R_d.T * R - R.T * R_d)</span>
+        <span class="c1"># Attitude error: eR = 0.5 * vee(R_d.T @ R - R.T @ R_d)</span>
         <span class="n">error_matrix</span> <span class="o">=</span> <span class="n">R_d</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R</span> <span class="o">-</span> <span class="n">R</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_d</span>
         <span class="n">eR</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">vee_map</span><span class="p">(</span><span class="n">error_matrix</span><span class="p">)</span>
 
-        <span class="c1"># 2. Angular Velocity Error eW</span>
-        <span class="c1"># eW = omega - R.T * R_d * omega_d</span>
+        <span class="c1"># Angular velocity error: eW = omega - R.T @ R_d @ omega_d</span>
         <span class="n">R_rel</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_d</span>
         <span class="n">eW</span> <span class="o">=</span> <span class="n">omega</span> <span class="o">-</span> <span class="n">R_rel</span> <span class="o">@</span> <span class="n">omega_d</span>
 
-        <span class="c1"># 3. Feedforward terms</span>
-        <span class="c1"># omega x J*omega</span>
+        <span class="c1"># Feedforward: gyroscopic and inertia-weighted acceleration terms</span>
         <span class="n">gyroscopic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">@</span> <span class="n">omega</span><span class="p">)</span>
-        
-        <span class="c1"># J * ( hat(omega) * R.T * R_d * omega_d - R.T * R_d * d_omega_d )</span>
         <span class="n">omega_skew</span> <span class="o">=</span> <span class="n">hat_map</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
         <span class="n">acc_term</span> <span class="o">=</span> <span class="n">omega_skew</span> <span class="o">@</span> <span class="n">R_rel</span> <span class="o">@</span> <span class="n">omega_d</span> <span class="o">-</span> <span class="n">R_rel</span> <span class="o">@</span> <span class="n">d_omega_d</span>
         <span class="n">feedforward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">@</span> <span class="n">acc_term</span>
 
-        <span class="c1"># 4. Control Law</span>
-        <span class="c1"># M = -kR*eR - kW*eW + gyroscopic - feedforward</span>
         <span class="n">M</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">kR</span> <span class="o">*</span> <span class="n">eR</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kW</span> <span class="o">*</span> <span class="n">eW</span> <span class="o">+</span> <span class="n">gyroscopic</span> <span class="o">-</span> <span class="n">feedforward</span>
         
         <span class="k">return</span> <span class="n">M</span></div>

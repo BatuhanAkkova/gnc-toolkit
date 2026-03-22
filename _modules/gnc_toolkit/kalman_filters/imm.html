@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.kalman_filters.imm</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Interacting Multiple Model (IMM) Filter for switching-mode systems.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="IMM">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.imm.IMM">[docs]</a>
@@ -143,39 +147,17 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update step (Model-specific update and mode probability update).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Model-specific Update</span>
         <span class="n">likelihoods</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
-            <span class="c1"># We need to perform update and get likelihood</span>
-            <span class="c1"># For simplicity, let&#39;s assume update is done and it returns the likelihood</span>
-            <span class="c1"># or we calculate it here. </span>
-            <span class="c1"># In gnc-toolkit, Likelihood = exp(-0.5 * y&#39; * S^-1 * y) / sqrt(det(2*pi*S))</span>
-            
-            <span class="c1"># Peek into the filter to get innovation and covariance for likelihood</span>
-            <span class="c1"># This depends on the filter type (KF vs EKF vs UKF)</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;H&#39;</span><span class="p">):</span>
-                <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">H</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># Fallback or estimate H (for UKF/CKF)</span>
-                <span class="c1"># For UKF, we&#39;d need zp and S</span>
-                <span class="k">pass</span>
-                
-            <span class="c1"># Perform the actual update</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            
-            <span class="c1"># Since update doesn&#39;t return likelihood, calculate it based on filter internals</span>
-            <span class="c1"># (Assuming y and S are accessible or we reconstruct them)</span>
-            <span class="c1"># This is a bit brittle, but standard for IMM implementations in Python</span>
-            <span class="c1"># Let&#39;s use a helper for Gaussian likelihood</span>
             <span class="n">likelihoods</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_likelihood</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
             
-        <span class="c1"># 2. Model Probability Update</span>
-        <span class="c1"># mu_j = L_j * c_j / sum(L_k * c_k)</span>
+        <span class="c1"># Mode probability update: mu_j = L_j * c_j / sum(L_k * c_k)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Phi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">likelihoods</span> <span class="o">*</span> <span class="n">c</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">)</span>
         
-        <span class="c1"># 3. Combined State Estimate</span>
+        <span class="c1"># Combined state and covariance estimate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim_x</span><span class="p">))</span>
         
@@ -188,27 +170,20 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate Gaussian likelihood of measurement z for filter i.&quot;&quot;&quot;</span>
-        <span class="c1"># This implementation requires filters to have y (innovation) and S (covariance)</span>
-        <span class="c1"># or similar accessible after update.</span>
-        <span class="c1"># Since gnc_toolkit objects don&#39;t store y/S currently, we&#39;ll need to compute them</span>
-        <span class="c1"># mock-up for now (ideally filters should be updated to provide this)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate Gaussian likelihood L(z | filter_i).&quot;&quot;&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         
-        <span class="c1"># Simplified: if it&#39;s a KF/EKF</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">):</span>
             <span class="n">H</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">H</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
             <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">P</span><span class="p">),</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="n">R</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Fallback for UKF/CKF (this is complex without refactoring UKF)</span>
-            <span class="c1"># Default to 1.0 or implement properly</span>
+            <span class="c1"># UKF/CKF fallback: requires refactoring to expose y/S</span>
             <span class="k">return</span> <span class="mf">1.0</span>
             
         <span class="n">inv_S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
         <span class="n">det_S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        
         <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">inv_S</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
         <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">**</span><span class="n">dim</span> <span class="o">*</span> <span class="n">det_S</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">exponent</span><span class="p">)</span></div>
 

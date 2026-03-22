@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.navigation.terrain_nav</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Terrain-Relative Navigation (TRN) feature matching and localization update.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="FeatureMatchingTRN">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN">[docs]</a>
@@ -88,7 +92,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">obs_pos</span> <span class="ow">in</span> <span class="n">observed_features</span><span class="p">:</span>
-            <span class="c1"># Simple nearest neighbor search for demo</span>
+            <span class="c1"># Simple nearest neighbor search</span>
             <span class="n">best_match</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">min_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">map_pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">:</span>
@@ -96,7 +100,7 @@
                 <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">min_dist</span><span class="p">:</span>
                     <span class="n">min_dist</span> <span class="o">=</span> <span class="n">dist</span>
                     <span class="n">best_match</span> <span class="o">=</span> <span class="n">map_pos</span>
-            <span class="k">if</span> <span class="n">min_dist</span> <span class="o">&lt;</span> <span class="mf">10.0</span><span class="p">:</span> <span class="c1"># threshold</span>
+            <span class="k">if</span> <span class="n">min_dist</span> <span class="o">&lt;</span> <span class="mf">10.0</span><span class="p">:</span>
                 <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">best_match</span><span class="p">,</span> <span class="n">obs_pos</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">matches</span></div>
 </div>
@@ -121,22 +125,20 @@
         <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">P</span>
         
     <span class="c1"># Z = observed_pos, H = identity (mapping state position to observation)</span>
-    <span class="c1"># This assumes state is aligned with map frame</span>
     <span class="k">for</span> <span class="n">map_pos</span><span class="p">,</span> <span class="n">obs_pos</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">obs_pos</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">map_pos</span> <span class="c1"># In map-relative local frame, Z should match map_pos</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">map_pos</span>
         
         <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
         <span class="n">H</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         
-        <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">H</span> <span class="o">@</span> <span class="n">x</span> <span class="c1"># Innovation</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">H</span> <span class="o">@</span> <span class="n">x</span>
         <span class="n">S</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">P</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">R</span>
-        <span class="n">K</span> <span class="o">=</span> <span class="n">P</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="c1"># Simplified gain</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">P</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
         
-        <span class="c1"># x = x + K @ y</span>
-        <span class="c1"># P = (I - KH)P</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">K</span> <span class="o">@</span> <span class="n">y</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">-</span> <span class="n">K</span> <span class="o">@</span> <span class="n">H</span><span class="p">)</span> <span class="o">@</span> <span class="n">P</span>
     
-    <span class="c1"># Placeholder for full EKF update</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">P</span></div>
 
 </pre></div>

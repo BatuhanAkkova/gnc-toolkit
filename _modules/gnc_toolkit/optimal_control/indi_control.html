@@ -118,22 +118,17 @@
         <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
         <span class="n">x_dot0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_dot0</span><span class="p">)</span>
 
-        <span class="c1"># 1. Get g(x, x_dot)</span>
         <span class="n">g_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x_dot0</span><span class="p">)</span>
 
-        <span class="c1"># 2. Compute Increment delta_u</span>
-        <span class="c1"># delta_u = g^-1 * (v - x_ddot0)</span>
+        <span class="c1"># Incremental control: delta_u = g^-1 (v - x_ddot0)</span>
         <span class="n">acc_error</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="n">x_ddot0</span>
 
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">g_val</span><span class="p">)</span> <span class="ow">or</span> <span class="n">g_val</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">()</span> <span class="ow">or</span> <span class="n">g_val</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">delta_u</span> <span class="o">=</span> <span class="n">acc_error</span> <span class="o">/</span> <span class="n">g_val</span>
         <span class="k">else</span><span class="p">:</span>
-             <span class="c1"># pinv for robustness to non-square systems or singularity</span>
-            <span class="n">delta_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">g_val</span><span class="p">)</span> <span class="o">@</span> <span class="n">acc_error</span>
+            <span class="n">delta_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">g_val</span><span class="p">)</span> <span class="o">@</span> <span class="n">acc_error</span>  <span class="c1"># pinv for robustness</span>
 
-        <span class="c1"># 3. New Control</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span> <span class="o">+</span> <span class="n">delta_u</span>
-        <span class="k">return</span> <span class="n">u</span></div>
+        <span class="k">return</span> <span class="n">u0</span> <span class="o">+</span> <span class="n">delta_u</span></div>
 </div>
 
 

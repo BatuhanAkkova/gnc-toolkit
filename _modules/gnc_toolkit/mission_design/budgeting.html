@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.mission_design.budgeting</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Propellant budgeting and orbital lifetime prediction tools.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.disturbances.drag</span><span class="w"> </span><span class="kn">import</span> <span class="n">LumpedDrag</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.frame_conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">eci2geodetic</span>
@@ -256,38 +260,26 @@
 <span class="sd">              - &#39;final_altitude&#39; (float)</span>
 <span class="sd">              - &#39;trajectory&#39; (dict with &#39;t&#39;, &#39;r&#39;, &#39;v&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Initialize LumpedDrag</span>
-    <span class="c1"># Note: LumpedDrag expects r in meters and v in m/s, acceleration in m/s^2.</span>
-    <span class="n">drag_model</span> <span class="o">=</span> <span class="n">LumpedDrag</span><span class="p">(</span><span class="n">density_model</span><span class="p">,</span> <span class="n">co_rotate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">drag_model</span> <span class="o">=</span> <span class="n">LumpedDrag</span><span class="p">(</span><span class="n">density_model</span><span class="p">,</span> <span class="n">co_rotate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># LumpedDrag uses SI units (m, m/s)</span>
     
-    <span class="c1"># Constants</span>
-    <span class="n">RE_EARTH</span> <span class="o">=</span> <span class="mf">6378.137</span> <span class="c1"># km</span>
-    <span class="n">MU</span> <span class="o">=</span> <span class="mf">398600.4418</span> <span class="c1"># km^3/s^2</span>
+    <span class="n">RE_EARTH</span> <span class="o">=</span> <span class="mf">6378.137</span>  <span class="c1"># km</span>
+    <span class="n">MU</span> <span class="o">=</span> <span class="mf">398600.4418</span>     <span class="c1"># km^3/s^2</span>
     
     <span class="c1"># State: [r_km, v_km_s]</span>
     <span class="n">y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span><span class="p">])</span>
     
     <span class="k">def</span><span class="w"> </span><span class="nf">equations_of_motion</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="c1"># t is in seconds</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># km</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="c1"># km/s</span>
-        
+        <span class="n">r</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># km</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>  <span class="c1"># km/s</span>
         <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="n">MU</span> <span class="o">/</span> <span class="p">(</span><span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span>  <span class="c1"># two-body km/s^2</span>
         
-        <span class="c1"># Two-body gravity</span>
-        <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="n">MU</span> <span class="o">/</span> <span class="p">(</span><span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span> <span class="c1"># km/s^2</span>
-        
-        <span class="c1"># Drag calculation</span>
-        <span class="c1"># Convert to SI for LumpedDrag interaction</span>
         <span class="n">r_m</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">1000.0</span>
         <span class="n">v_m</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">1000.0</span>
         <span class="n">jd_curr</span> <span class="o">=</span> <span class="n">jd_epoch</span> <span class="o">+</span> <span class="n">t</span> <span class="o">/</span> <span class="mf">86400.0</span>
-        
         <span class="n">a_drag_m_s2</span> <span class="o">=</span> <span class="n">drag_model</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r_m</span><span class="p">,</span> <span class="n">v_m</span><span class="p">,</span> <span class="n">jd_curr</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">cd</span><span class="p">)</span>
-        <span class="n">a_drag_km_s2</span> <span class="o">=</span> <span class="n">a_drag_m_s2</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="c1"># Convert back to km/s^2</span>
-        
+        <span class="n">a_drag_km_s2</span> <span class="o">=</span> <span class="n">a_drag_m_s2</span> <span class="o">/</span> <span class="mf">1000.0</span>
         <span class="n">a_total</span> <span class="o">=</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag_km_s2</span>
-        
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">a_total</span><span class="p">])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">reentry_event</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>

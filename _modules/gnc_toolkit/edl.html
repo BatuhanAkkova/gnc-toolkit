@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.edl</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Entry, Descent, and Landing (EDL) dynamics and utilities.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.environment.density</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
 
 <div class="viewcode-block" id="ballistic_entry_dynamics">
@@ -97,8 +101,7 @@
         <span class="c1"># Default to simple exponential for Earth if not provided</span>
         <span class="n">rho_model</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">rho0</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
         
-    <span class="c1"># Density calculation (assuming jd=0 for simplicity if using simple model)</span>
-    <span class="n">rho</span> <span class="o">=</span> <span class="n">rho_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">rho_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># jd=0 placeholder for simple models</span>
     
     <span class="c1"># Aerodynamic Drag</span>
     <span class="n">dynamic_pressure</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">v_mag</span><span class="o">**</span><span class="mi">2</span>
@@ -199,15 +202,66 @@
 
 <div class="viewcode-block" id="aerocapture_guidance">
 <a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.aerocapture_guidance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">aerocapture_guidance</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">target_apoapsis</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">planet_params</span><span class="p">,</span> <span class="n">rho_model</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">aerocapture_guidance</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">target_apoapsis</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">planet_params</span><span class="p">,</span> <span class="n">rho_model</span><span class="p">,</span> <span class="n">cl</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Predictive aerocapture guidance.</span>
-<span class="sd">    Adjusts bank angle or drag to target a specific exit apoapsis.</span>
+<span class="sd">    Adjusts bank angle (if cl &gt; 0) to target a specific exit apoapsis using numerical predictor-corrector.</span>
 <span class="sd">    Returns: bank_angle (rad)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Simplified logic: predict exit state and adjust</span>
-    <span class="c1"># For a toolkit, we might use a numeric predictor-corrector</span>
-    <span class="k">return</span> <span class="mf">0.0</span> <span class="c1"># Placeholder for full NPC logic</span></div>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">planet_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="mf">3.986e14</span><span class="p">)</span>
+    <span class="n">r_planet</span> <span class="o">=</span> <span class="n">planet_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;r_planet&#39;</span><span class="p">,</span> <span class="mf">6371000.0</span><span class="p">)</span>
+    <span class="n">atm_interface</span> <span class="o">=</span> <span class="n">r_planet</span> <span class="o">+</span> <span class="mf">120000.0</span>  <span class="c1"># Assumed 120km interface</span>
+    
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_apoapsis_from_state</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">r_vec</span><span class="p">,</span> <span class="n">v_vec</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_vec</span><span class="p">)</span>
+        <span class="n">energy</span> <span class="o">=</span> <span class="n">v</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">mu</span> <span class="o">/</span> <span class="n">r</span>
+        <span class="k">if</span> <span class="n">energy</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># Escape trajectory</span>
+        <span class="n">h_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">v_vec</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h_vec</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">energy</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">mu</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span> <span class="o">-</span> <span class="n">r_planet</span>
+
+    <span class="k">if</span> <span class="n">cl</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>  <span class="c1"># Cannot modulate bank angle without lift</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_apoapsis</span><span class="p">(</span><span class="n">bank_angle</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">lifting_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">bank_angle</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">,</span> <span class="n">rho_model</span><span class="p">)</span>
+            
+        <span class="k">def</span><span class="w"> </span><span class="nf">exit_event</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="n">atm_interface</span>
+        <span class="n">exit_event</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">exit_event</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="c1"># Integrate forward to exit</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">dynamics</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">),</span> <span class="n">state</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">[</span><span class="n">exit_event</span><span class="p">],</span> <span class="n">max_step</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">get_apoapsis_from_state</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">bank_up</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">bank_down</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">best_bank</span> <span class="o">=</span> <span class="mf">0.0</span>
+    
+    <span class="c1"># Simple bisection search on bank angle</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">bank_mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">bank_up</span> <span class="o">+</span> <span class="n">bank_down</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">ap_mid</span> <span class="o">=</span> <span class="n">predict_apoapsis</span><span class="p">(</span><span class="n">bank_mid</span><span class="p">)</span>
+        <span class="n">best_bank</span> <span class="o">=</span> <span class="n">bank_mid</span>
+        
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">ap_mid</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ap_mid</span> <span class="o">&gt;</span> <span class="n">target_apoapsis</span><span class="p">:</span>
+            <span class="n">bank_up</span> <span class="o">=</span> <span class="n">bank_mid</span>  <span class="c1"># Need more pull-down (higher atmospheric time)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bank_down</span> <span class="o">=</span> <span class="n">bank_mid</span>
+            
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">ap_mid</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ap_mid</span> <span class="o">-</span> <span class="n">target_apoapsis</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1000.0</span><span class="p">:</span>
+            <span class="k">break</span>
+            
+    <span class="k">return</span> <span class="n">best_bank</span></div>
 
 
 <div class="viewcode-block" id="hazard_avoidance">

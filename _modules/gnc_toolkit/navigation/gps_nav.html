@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.navigation.gps_nav</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Navigation using GNSS (GPS) position and velocity measurements.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.orbit_determination</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrbitDeterminationEKF</span>
 
 <div class="viewcode-block" id="GPSNavigation">
@@ -100,9 +104,7 @@
             <span class="k">if</span> <span class="n">R_gps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># Default GPS R: 3x3 for pos, 3x3 for vel</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-                <span class="n">R</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span> <span class="c1"># Use initialized pos noise</span>
-                <span class="c1"># Assume velocity noise is roughly 1/100 of position noise std</span>
-                <span class="c1"># (since pos is typically meters and vel is cm/s)</span>
+                <span class="n">R</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span>
                 <span class="n">R</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="mf">0.01</span> 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">R_gps</span>

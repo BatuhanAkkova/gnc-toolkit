@@ -179,6 +179,7 @@
 </section>
 <section id="module-gnc_toolkit.kalman_filters.akf">
 <span id="gnc-toolkit-kalman-filters-akf-module"></span><h2>gnc_toolkit.kalman_filters.akf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.akf" title="Link to this heading"></a></h2>
+<p>Adaptive Kalman Filter (AKF) with online covariance estimation (Myers-Tapley).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.akf.AKF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.akf.</span></span><span class="sig-name descname"><span class="pre">AKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/akf.html#AKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.akf.AKF" title="Link to this definition"></a></dt>
@@ -204,6 +205,7 @@ Inherits from the standard Linear Kalman Filter (KF).</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.ckf">
 <span id="gnc-toolkit-kalman-filters-ckf-module"></span><h2>gnc_toolkit.kalman_filters.ckf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.ckf" title="Link to this heading"></a></h2>
+<p>Cubature Kalman Filter (CKF) using spherical-radial rule for non-linear estimation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ckf.CKF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ckf.</span></span><span class="sig-name descname"><span class="pre">CKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ckf.html#CKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ckf.CKF" title="Link to this definition"></a></dt>
@@ -234,6 +236,7 @@ R: Optional measurement noise covariance</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.ekf">
 <span id="gnc-toolkit-kalman-filters-ekf-module"></span><h2>gnc_toolkit.kalman_filters.ekf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.ekf" title="Link to this heading"></a></h2>
+<p>Extended Kalman Filter (EKF) for non-linear systems using Jacobians.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ekf.EKF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ekf.</span></span><span class="sig-name descname"><span class="pre">EKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF" title="Link to this definition"></a></dt>
@@ -266,6 +269,7 @@ R: Optional measurement noise covariance</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.enkf">
 <span id="gnc-toolkit-kalman-filters-enkf-module"></span><h2>gnc_toolkit.kalman_filters.enkf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.enkf" title="Link to this heading"></a></h2>
+<p>Ensemble Kalman Filter (EnKF) using Monte Carlo samples for covariance representation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.enkf.EnKF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.enkf.</span></span><span class="sig-name descname"><span class="pre">EnKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF" title="Link to this definition"></a></dt>
@@ -314,6 +318,7 @@ R: Optional measurement noise covariance</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.fixed_interval_smoother">
 <span id="gnc-toolkit-kalman-filters-fixed-interval-smoother-module"></span><h2>gnc_toolkit.kalman_filters.fixed_interval_smoother module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.fixed_interval_smoother" title="Link to this heading"></a></h2>
+<p>Fixed-Interval Smoother (Fraser-Potter / Two-Filter) for linear systems.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.fixed_interval_smoother.</span></span><span class="sig-name descname"><span class="pre">fixed_interval_smoother</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ps_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Zs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Hs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/fixed_interval_smoother.html#fixed_interval_smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother" title="Link to this definition"></a></dt>
@@ -344,6 +349,7 @@ P_smooth (np.ndarray): Smoothed covariances.</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.imm">
 <span id="gnc-toolkit-kalman-filters-imm-module"></span><h2>gnc_toolkit.kalman_filters.imm module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.imm" title="Link to this heading"></a></h2>
+<p>Interacting Multiple Model (IMM) Filter for switching-mode systems.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.imm.IMM">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.imm.</span></span><span class="sig-name descname"><span class="pre">IMM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/imm.html#IMM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM" title="Link to this definition"></a></dt>
@@ -368,6 +374,7 @@ Excellent for tracking maneuvering targets (e.g., constant velocity vs. constant
 </section>
 <section id="module-gnc_toolkit.kalman_filters.kf">
 <span id="gnc-toolkit-kalman-filters-kf-module"></span><h2>gnc_toolkit.kalman_filters.kf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.kf" title="Link to this heading"></a></h2>
+<p>Standard Linear Kalman Filter (KF) implementation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.kf.KF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.kf.</span></span><span class="sig-name descname"><span class="pre">KF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF" title="Link to this definition"></a></dt>
@@ -398,6 +405,7 @@ R: Measurement noise covariance</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.mekf">
 <span id="gnc-toolkit-kalman-filters-mekf-module"></span><h2>gnc_toolkit.kalman_filters.mekf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.mekf" title="Link to this heading"></a></h2>
+<p>Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.mekf.MEKF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.mekf.</span></span><span class="sig-name descname"><span class="pre">MEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF" title="Link to this definition"></a></dt>
@@ -429,6 +437,7 @@ R: Optional measurement noise covariance</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.pf">
 <span id="gnc-toolkit-kalman-filters-pf-module"></span><h2>gnc_toolkit.kalman_filters.pf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.pf" title="Link to this heading"></a></h2>
+<p>Particle Filter (Sequential Importance Resampling) for non-Gaussian/non-linear systems.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.pf.</span></span><span class="sig-name descname"><span class="pre">ParticleFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter" title="Link to this definition"></a></dt>
@@ -488,6 +497,7 @@ R: Optional measurement noise covariance</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.rts_smoother">
 <span id="gnc-toolkit-kalman-filters-rts-smoother-module"></span><h2>gnc_toolkit.kalman_filters.rts_smoother module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.rts_smoother" title="Link to this heading"></a></h2>
+<p>Rauch-Tung-Striebel (RTS) Smoother for linear systems.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.rts_smoother.rts_smoother">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.rts_smoother.</span></span><span class="sig-name descname"><span class="pre">rts_smoother</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/rts_smoother.html#rts_smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.rts_smoother.rts_smoother" title="Link to this definition"></a></dt>
@@ -520,6 +530,7 @@ P_smooth (np.ndarray): Smoothed covariances, (N, dim_x, dim_x).</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.sr_ukf">
 <span id="gnc-toolkit-kalman-filters-sr-ukf-module"></span><h2>gnc_toolkit.kalman_filters.sr_ukf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.sr_ukf" title="Link to this heading"></a></h2>
+<p>Square-Root Unscented Kalman Filter (SR-UKF) algorithm.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.sr_ukf.SRUKF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.sr_ukf.</span></span><span class="sig-name descname"><span class="pre">SRUKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/sr_ukf.html#SRUKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF" title="Link to this definition"></a></dt>
@@ -556,6 +567,7 @@ Rs: Optional square-root measurement noise covariance (S_R)</p>
 </section>
 <section id="module-gnc_toolkit.kalman_filters.ukf">
 <span id="gnc-toolkit-kalman-filters-ukf-module"></span><h2>gnc_toolkit.kalman_filters.ukf module<a class="headerlink" href="#module-gnc_toolkit.kalman_filters.ukf" title="Link to this heading"></a></h2>
+<p>Unscented Kalman Filter (UKF) with support for states on manifolds.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ukf.</span></span><span class="sig-name descname"><span class="pre">UKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtract_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF" title="Link to this definition"></a></dt>

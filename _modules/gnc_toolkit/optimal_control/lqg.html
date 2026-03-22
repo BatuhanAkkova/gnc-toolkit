@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.optimal_control.lqg</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Linear Quadratic Gaussian (LQG) Controller.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.lqr</span><span class="w"> </span><span class="kn">import</span> <span class="n">LQR</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.lqe</span><span class="w"> </span><span class="kn">import</span> <span class="n">LQE</span>
 
@@ -132,7 +136,6 @@
 <span class="sd">            dt (float): Time step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Euler integration for estimation update</span>
-        <span class="c1"># In a real system, a more robust integrator would be used</span>
         <span class="n">innovation</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_hat</span><span class="p">)</span>
         <span class="n">x_hat_dot</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_hat</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">@</span> <span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">@</span> <span class="n">innovation</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_hat</span> <span class="o">+</span> <span class="n">x_hat_dot</span> <span class="o">*</span> <span class="n">dt</span>
@@ -157,9 +160,7 @@
 <span class="sd">            np.ndarray: Control input u</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># If we don&#39;t have u_last, we use the last computed control (u)</span>
-            <span class="c1"># but for the very first step, we might need a default.</span>
-            <span class="c1"># However, compute_control is usually called with y, dt.</span>
+            <span class="c1"># If u_last is omitted, use current estimate-based control</span>
             <span class="n">u_to_est</span> <span class="o">=</span> <span class="n">u_last</span> <span class="k">if</span> <span class="n">u_last</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_hat</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">u_to_est</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
             

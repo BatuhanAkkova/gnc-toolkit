@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.navigation.orbit_determination</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Extended Kalman Filter for Orbit Determination (OD-EKF).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.ekf</span><span class="w"> </span><span class="kn">import</span> <span class="n">EKF</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.disturbances.gravity</span><span class="w"> </span><span class="kn">import</span> <span class="n">J2Gravity</span><span class="p">,</span> <span class="n">TwoBodyGravity</span>
 
@@ -127,23 +131,19 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_jacobian_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Jacobian of state transition function.</span>
-<span class="sd">        F = I + Phi * dt (Simplified for small dt)</span>
+<span class="sd">        F = I + Phi * dt</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
         
-        <span class="c1"># Gravity gradient (Two-body)</span>
-        <span class="c1"># G = mu/r^3 * (3 * r*r&#39;/r^2 - I)</span>
+        <span class="c1"># Two-body gravity gradient</span>
         <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-        
-        <span class="c1"># In a more complex case, add J2 partials here.</span>
-        <span class="c1"># For now, we use the Two-body Jacobian as an approximation for the EKF.</span>
         
         <span class="n">Phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
         <span class="n">Phi</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">Phi</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span>
         
-        <span class="c1"># State Transition Matrix Approximation: F = exp(Phi*dt) approx I + Phi*dt</span>
+        <span class="c1"># First-order approximation</span>
         <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">Phi</span> <span class="o">*</span> <span class="n">dt</span>
         <span class="k">return</span> <span class="n">F</span>
 

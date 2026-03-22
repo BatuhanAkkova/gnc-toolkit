@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.guidance.porkchop</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Porkchop plot grid generation for interplanetary transfers.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..guidance.rendezvous</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_lambert</span>
 
 <div class="viewcode-block" id="generate_porkchop_grid">
@@ -122,7 +126,6 @@
                 <span class="n">tof_grid</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span>
                 
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="c1"># Some transfers might fail (e.g. 180 degrees)</span>
                 <span class="k">continue</span>
 
     <span class="k">return</span> <span class="p">{</span>

@@ -164,6 +164,7 @@
 </section>
 <section id="module-gnc_toolkit.fdir.failure_accommodation">
 <span id="gnc-toolkit-fdir-failure-accommodation-module"></span><h2>gnc_toolkit.fdir.failure_accommodation module<a class="headerlink" href="#module-gnc_toolkit.fdir.failure_accommodation" title="Link to this heading"></a></h2>
+<p>Actuator accommodation and control allocation weight adjustment.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.failure_accommodation.</span></span><span class="sig-name descname"><span class="pre">ActuatorAccommodation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/failure_accommodation.html#ActuatorAccommodation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation" title="Link to this definition"></a></dt>
@@ -236,6 +237,7 @@ If h_i = 0, actuator i is failed and we set its weight to infinity
 </section>
 <section id="module-gnc_toolkit.fdir.parity_space">
 <span id="gnc-toolkit-fdir-parity-space-module"></span><h2>gnc_toolkit.fdir.parity_space module<a class="headerlink" href="#module-gnc_toolkit.fdir.parity_space" title="Link to this heading"></a></h2>
+<p>Parity Space methods for Fault Detection and Isolation (FDI).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.fdir.parity_space.ParitySpaceDetector">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.parity_space.</span></span><span class="sig-name descname"><span class="pre">ParitySpaceDetector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/parity_space.html#ParitySpaceDetector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector" title="Link to this definition"></a></dt>
@@ -311,6 +313,7 @@ that best aligns with the parity vector.</p>
 </section>
 <section id="module-gnc_toolkit.fdir.residual_generation">
 <span id="gnc-toolkit-fdir-residual-generation-module"></span><h2>gnc_toolkit.fdir.residual_generation module<a class="headerlink" href="#module-gnc_toolkit.fdir.residual_generation" title="Link to this heading"></a></h2>
+<p>Residual generation for fault detection using observers.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.residual_generation.</span></span><span class="sig-name descname"><span class="pre">AnalyticalRedundancy</span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/residual_generation.html#AnalyticalRedundancy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy" title="Link to this definition"></a></dt>
@@ -395,6 +398,7 @@ y_hat_k     = C x_hat_k + D u_k</p>
 </section>
 <section id="module-gnc_toolkit.fdir.safe_mode">
 <span id="gnc-toolkit-fdir-safe-mode-module"></span><h2>gnc_toolkit.fdir.safe_mode module<a class="headerlink" href="#module-gnc_toolkit.fdir.safe_mode" title="Link to this heading"></a></h2>
+<p>Safe mode and fault detection logic for system mode transitions.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.fdir.safe_mode.SafeModeCondition">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.fdir.safe_mode.</span></span><span class="sig-name descname"><span class="pre">SafeModeCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_time_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition" title="Link to this definition"></a></dt>
@@ -721,7 +725,7 @@ that best aligns with the parity vector.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.conditions">
-<span class="sig-name descname"><span class="pre">conditions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeCondition" title="gnc_toolkit.fdir.SafeModeCondition"><span class="pre">SafeModeCondition</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.conditions" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">conditions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition" title="gnc_toolkit.fdir.safe_mode.SafeModeCondition"><span class="pre">SafeModeCondition</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.conditions" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

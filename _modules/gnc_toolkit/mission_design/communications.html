@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.mission_design.communications</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Link budget calculations and RF analysis tools.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Speed of light in m/s</span>
 <span class="n">C</span> <span class="o">=</span> <span class="mf">299792458.0</span>
@@ -103,18 +107,11 @@
     <span class="k">if</span> <span class="n">frequency_hz</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Frequency must be strictly positive.&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Convert Pt to dBW</span>
     <span class="n">p_tx_dbw</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">p_tx_w</span><span class="p">)</span>
     
-    <span class="c1"># Free space path loss (Lfs)</span>
-    <span class="c1"># Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</span>
-    <span class="c1"># 20 * log10(4*pi/c) approx -147.554</span>
+    <span class="c1"># Lfs = 20*log10(d) + 20*log10(f) + 20*log10(4*pi/c),  20*log10(4*pi/c) ≈ -147.554</span>
     <span class="n">l_fs_db</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">distance_m</span><span class="p">)</span> <span class="o">+</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">frequency_hz</span><span class="p">)</span> <span class="o">-</span> <span class="mf">147.554</span>
-    
-    <span class="c1"># Total received power in dBW</span>
     <span class="n">p_rx_dbw</span> <span class="o">=</span> <span class="n">p_tx_dbw</span> <span class="o">+</span> <span class="n">g_tx_db</span> <span class="o">+</span> <span class="n">g_rx_db</span> <span class="o">-</span> <span class="n">l_fs_db</span> <span class="o">-</span> <span class="n">l_atm_db</span> <span class="o">-</span> <span class="n">losses_misc_db</span>
-    
-    <span class="c1"># Convert back to Watts</span>
     <span class="n">p_rx_w</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">p_rx_dbw</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="p">{</span>
@@ -156,22 +153,17 @@
     <span class="k">if</span> <span class="n">r_rx</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span> <span class="ow">or</span> <span class="n">v_rx</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span> <span class="ow">or</span> <span class="n">r_tx</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span> <span class="ow">or</span> <span class="n">v_tx</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Positions and velocities must be vectors of length 3.&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Relative vectors</span>
     <span class="n">r_rel</span> <span class="o">=</span> <span class="n">r_rx</span> <span class="o">-</span> <span class="n">r_tx</span>
     <span class="n">v_rel_vec</span> <span class="o">=</span> <span class="n">v_rx</span> <span class="o">-</span> <span class="n">v_tx</span>
-    
     <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_rel</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">distance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s1">&#39;f_rx_hz&#39;</span><span class="p">:</span> <span class="n">f_tx_hz</span><span class="p">,</span>
             <span class="s1">&#39;doppler_shift_hz&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
         <span class="p">}</span>
-        
-    <span class="c1"># Range rate (relative velocity projection onto relative position)</span>
-    <span class="n">v_rel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_rel</span><span class="p">,</span> <span class="n">v_rel_vec</span><span class="p">)</span> <span class="o">/</span> <span class="n">distance</span>
     
-    <span class="c1"># Doppler shift</span>
-    <span class="n">doppler_shift_hz</span> <span class="o">=</span> <span class="o">-</span> <span class="n">f_tx_hz</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_rel</span> <span class="o">/</span> <span class="n">C</span><span class="p">)</span>
+    <span class="n">v_rel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_rel</span><span class="p">,</span> <span class="n">v_rel_vec</span><span class="p">)</span> <span class="o">/</span> <span class="n">distance</span>  <span class="c1"># range rate</span>
+    <span class="n">doppler_shift_hz</span> <span class="o">=</span> <span class="o">-</span><span class="n">f_tx_hz</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_rel</span> <span class="o">/</span> <span class="n">C</span><span class="p">)</span>
     <span class="n">f_rx_hz</span> <span class="o">=</span> <span class="n">f_tx_hz</span> <span class="o">+</span> <span class="n">doppler_shift_hz</span>
     
     <span class="k">return</span> <span class="p">{</span>
@@ -197,23 +189,19 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        float: Atmospheric attenuation [dB].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Define simple frequency response model for zenith attenuation</span>
-    <span class="c1"># (Reasonable ballpark figures)</span>
+    <span class="c1"># Zenith attenuation by frequency band (ballpark values)</span>
     <span class="k">if</span> <span class="n">frequency_hz</span> <span class="o">&lt;</span> <span class="mf">3e9</span><span class="p">:</span>    <span class="c1"># S-band</span>
         <span class="n">a_zenith</span> <span class="o">=</span> <span class="mf">0.03</span>
     <span class="k">elif</span> <span class="n">frequency_hz</span> <span class="o">&lt;</span> <span class="mf">10e9</span><span class="p">:</span>  <span class="c1"># C/X-band</span>
         <span class="n">a_zenith</span> <span class="o">=</span> <span class="mf">0.05</span>
     <span class="k">elif</span> <span class="n">frequency_hz</span> <span class="o">&lt;</span> <span class="mf">18e9</span><span class="p">:</span>  <span class="c1"># Ku-band</span>
         <span class="n">a_zenith</span> <span class="o">=</span> <span class="mf">0.15</span>
-    <span class="k">else</span><span class="p">:</span>                    <span class="c1"># Ka-band and above</span>
+    <span class="k">else</span><span class="p">:</span>                      <span class="c1"># Ka-band and above</span>
         <span class="n">a_zenith</span> <span class="o">=</span> <span class="mf">0.35</span>
         
-    <span class="c1"># Ensure elevation is above a minimum threshold to avoid divide-by-zero or extreme values</span>
-    <span class="c1"># Cosecant model is generally valid for elevation &gt; 5 degrees.</span>
+    <span class="c1"># Cosecant model valid for elevation &gt; 5 deg; clamp to avoid division singularity</span>
     <span class="n">elevation_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">elevation_deg</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span>
-    
     <span class="n">l_atm_db</span> <span class="o">=</span> <span class="n">a_zenith</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">elevation_rad</span><span class="p">)</span>
-    
     <span class="k">return</span> <span class="n">l_atm_db</span></div>
 
 </pre></div>

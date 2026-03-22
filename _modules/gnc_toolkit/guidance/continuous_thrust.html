@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.guidance.continuous_thrust</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Continuous thrust guidance laws including Q-law and ZEM/ZEV feedback.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.state_to_elements</span><span class="w"> </span><span class="kn">import</span> <span class="n">eci2kepler</span>
 
 <div class="viewcode-block" id="q_law_guidance">
@@ -87,17 +91,15 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        np.ndarray: Optimal thrust acceleration vector in ECI (m/s^2).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Current elements</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">arglat</span><span class="p">,</span> <span class="n">truelon</span><span class="p">,</span> <span class="n">lonper</span> <span class="o">=</span> <span class="n">eci2kepler</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
     
     <span class="n">oe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">])</span>
     <span class="n">oe_target</span> <span class="o">=</span> <span class="n">target_oe</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
     
     <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="o">/</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="c1"># Heuristic scaling</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="o">/</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
         
     <span class="c1"># Gauss Variational Equations (GVE) in RTN frame</span>
-    <span class="c1"># B matrix: dot(oe) = B * f_rtn</span>
     <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
     <span class="n">h_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h_vec</span><span class="p">)</span>
@@ -236,14 +238,11 @@
     <span class="k">if</span> <span class="n">gravity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">gravity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         
-    <span class="c1"># General polynomial guidance: </span>
-    <span class="c1"># a_cmd = a_target + (12/t_go^2)*(r_target - (r + v*t_go)) + (6/t_go)*(v_target - v)</span>
-    
+    <span class="c1"># General polynomial guidance</span>
     <span class="n">delta_r</span> <span class="o">=</span> <span class="n">r_target</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">t_go</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">t_go</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">delta_v</span> <span class="o">=</span> <span class="n">v_target</span> <span class="o">-</span> <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">t_go</span><span class="p">)</span>
     
-    <span class="c1"># Note: different coefficient combinations exist.</span>
-    <span class="c1"># Standard Apollo lunar landing coefficients:</span>
+    <span class="c1"># Standard Apollo lunar landing coefficients</span>
     <span class="n">a_cmd</span> <span class="o">=</span> <span class="n">a_target</span> <span class="o">+</span> <span class="p">(</span><span class="mf">12.0</span> <span class="o">/</span> <span class="n">t_go</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_r</span> <span class="o">+</span> <span class="p">(</span><span class="mf">6.0</span> <span class="o">/</span> <span class="n">t_go</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_v</span>
     
     <span class="k">return</span> <span class="n">a_cmd</span></div>
@@ -263,7 +262,6 @@
 <span class="sd">        tuple: (time_array, acceleration_profile)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="c1"># y = [r, v, lambda_r, lambda_v]</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
         <span class="n">lr</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
@@ -272,11 +270,10 @@
         <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># Dynamics</span>
         <span class="n">dr</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="n">dv</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lv</span> <span class="c1"># u = -lv for min energy</span>
+        <span class="n">dv</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lv</span>
         
         <span class="c1"># Costate dynamics: dot(lambda) = -dH/dx</span>
         <span class="c1"># Gravity gradient: dg/dr = -(mu/r^3)I + 3(mu/r^5)r*r^T</span>
-        <span class="c1"># For simplicity, using a point mass gradient</span>
         <span class="n">r_mag_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">r_mag</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">unit_r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="n">r_mag_mat</span>
         
@@ -286,8 +283,6 @@
             <span class="n">ri</span> <span class="o">=</span> <span class="n">r</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
             <span class="n">rm</span> <span class="o">=</span> <span class="n">r_mag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">lvi</span> <span class="o">=</span> <span class="n">lv</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
-            <span class="c1"># dot(lr) = -(dg/dr)^T * lv</span>
-            <span class="c1"># Simplified gravity gradient</span>
             <span class="n">grad_g</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">rm</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">ri</span><span class="p">,</span> <span class="n">ri</span><span class="p">)</span> <span class="o">/</span> <span class="n">rm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">dlr</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">grad_g</span> <span class="o">@</span> <span class="n">lvi</span>
             

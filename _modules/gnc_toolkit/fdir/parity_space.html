@@ -66,7 +66,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gnc_toolkit.fdir.parity_space</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Parity Space methods for Fault Detection and Isolation (FDI).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
 
 <div class="viewcode-block" id="ParitySpaceDetector">
@@ -105,8 +109,6 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parity space requires redundant measurements (p &gt; n)&quot;</span><span class="p">)</span>
             
         <span class="c1"># Compute P matrix using SVD</span>
-        <span class="c1"># M = U * S * V^T</span>
-        <span class="c1"># P is the last (p-n) rows of U^T</span>
         <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span><span class="p">:]</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># Shape: (p-n) x p</span>
         
@@ -170,7 +172,6 @@
             <span class="n">P_col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">P_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">P_col_norm</span> <span class="o">=</span> <span class="n">P_col</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">P_col</span><span class="p">)</span>
-                <span class="c1"># Absolute dot product since fault can be positive or negative</span>
                 <span class="n">alignments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">p_norm</span><span class="p">,</span> <span class="n">P_col_norm</span><span class="p">)))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">alignments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>

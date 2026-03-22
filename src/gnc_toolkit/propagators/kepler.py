@@ -1,3 +1,7 @@
+"""
+Analytical Two-Body Propagator using Kepler's Equation.
+"""
+
 import numpy as np
 from .base import Propagator
 

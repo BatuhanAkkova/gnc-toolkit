@@ -1,3 +1,7 @@
+"""
+Fast Optimal Attitude Matrix (FOAM) algorithm for attitude determination.
+"""
+
 import numpy as np
 
 def foam(body_vectors, ref_vectors, weights=None, tol=1e-12, max_iter=20):

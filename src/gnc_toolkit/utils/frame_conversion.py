@@ -1,3 +1,7 @@
+"""
+Frame conversion utilities (ECI, ECEF, LVLH, LLH).
+"""
+
 import numpy as np
 from typing import Tuple
 from .time_utils import calc_gmst
@@ -33,9 +37,9 @@ def eci2lvlh_dcm(reci, veci):
 def eci2llh(r_eci, jdut1):
     """Converts ECI to LLH."""
     # WGS84 Ellipsoid Parameters
-    a = 6378137.0          # Semi-major axis [m]
+    a = 6378137.0 # Semi-major axis [m]
     f = 1.0 / 298.257223563 # Flattening
-    e2 = f * (2.0 - f)    # Square of eccentricity
+    e2 = f * (2.0 - f) # Square of eccentricity
 
     recef, _ = eci2ecef(r_eci, np.zeros(3), jdut1, dut1=0)
     x_ecef, y_ecef, z_ecef = recef
@@ -104,7 +108,7 @@ def eci2eme2000(reci, veci) -> tuple[np.ndarray, np.ndarray]:
     Here we treat ECI as Earth-Centered Inertial at epoch of date, 
     and EME2000 as fixed at J2000.
     """
-    # For now, identity as a default mapping.
+    # Treated as identity (no frame rotation between ECI/EME2000 at J2000 epoch)
     return reci, veci
 
 def eme20002eci(reci, veci) -> tuple[np.ndarray, np.ndarray]:
@@ -164,9 +168,9 @@ def llh2ecef(lat_rad, lon_rad, alt_m) -> np.ndarray:
     Returns:
         np.ndarray: Position in ECEF [m].
     """
-    a = 6378137.0          # Semi-major axis [m]
+    a = 6378137.0 # Semi-major axis [m]
     f = 1.0 / 298.257223563 # Flattening
-    e2 = f * (2.0 - f)    # Square of eccentricity
+    e2 = f * (2.0 - f) # Square of eccentricity
 
     N = a / np.sqrt(1.0 - e2 * np.sin(lat_rad)**2)
     

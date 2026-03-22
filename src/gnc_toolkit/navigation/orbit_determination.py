@@ -1,3 +1,7 @@
+"""
+Extended Kalman Filter for Orbit Determination (OD-EKF).
+"""
+
 import numpy as np
 from gnc_toolkit.kalman_filters.ekf import EKF
 from gnc_toolkit.disturbances.gravity import J2Gravity, TwoBodyGravity
@@ -57,23 +61,19 @@ class OrbitDeterminationEKF:
     def _jacobian_f(self, x, dt, u=None, **kwargs):
         """
         Jacobian of state transition function.
-        F = I + Phi * dt (Simplified for small dt)
+        F = I + Phi * dt
         """
         r = x[:3]
         r_mag = np.linalg.norm(r)
         
-        # Gravity gradient (Two-body)
-        # G = mu/r^3 * (3 * r*r'/r^2 - I)
+        # Two-body gravity gradient
         G = (self.mu / r_mag**3) * (3.0 * np.outer(r, r) / r_mag**2 - np.eye(3))
-        
-        # In a more complex case, add J2 partials here.
-        # For now, we use the Two-body Jacobian as an approximation for the EKF.
         
         Phi = np.zeros((6, 6))
         Phi[:3, 3:] = np.eye(3)
         Phi[3:, :3] = G
         
-        # State Transition Matrix Approximation: F = exp(Phi*dt) approx I + Phi*dt
+        # First-order approximation
         F = np.eye(6) + Phi * dt
         return F
 

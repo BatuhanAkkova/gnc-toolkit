@@ -1,3 +1,7 @@
+"""
+Navigation using Line-of-Sight (LOS) measurements (unit vectors).
+"""
+
 import numpy as np
 from .orbit_determination import OrbitDeterminationEKF
 
@@ -31,8 +35,6 @@ class AngleOnlyNavigation(OrbitDeterminationEKF):
                 return np.zeros((3, 6))
                 
             u = rel_r / rel_r_mag
-            # Jacobian of rel_r/|rel_r| w.r.t r:
-            # d(rel_r/|rel_r|)/dr = - (I - u*u') / |rel_r|
             H_rel = (np.eye(3) - np.outer(u, u)) / rel_r_mag
             
             H = np.zeros((3, 6))

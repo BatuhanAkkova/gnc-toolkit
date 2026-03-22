@@ -1,3 +1,7 @@
+"""
+Terrain-Relative Navigation (TRN) feature matching and localization update.
+"""
+
 import numpy as np
 
 class FeatureMatchingTRN:
@@ -16,7 +20,7 @@ class FeatureMatchingTRN:
         """
         matches = []
         for obs_pos in observed_features:
-            # Simple nearest neighbor search for demo
+            # Simple nearest neighbor search
             best_match = None
             min_dist = float('inf')
             for map_pos in self.map:
@@ -24,7 +28,7 @@ class FeatureMatchingTRN:
                 if dist < min_dist:
                     min_dist = dist
                     best_match = map_pos
-            if min_dist < 10.0: # threshold
+            if min_dist < 10.0:
                 matches.append((best_match, obs_pos))
         return matches
 
@@ -45,20 +49,18 @@ def map_relative_localization_update(x, P, matches, R):
         return x, P
         
     # Z = observed_pos, H = identity (mapping state position to observation)
-    # This assumes state is aligned with map frame
     for map_pos, obs_pos in matches:
         z = obs_pos
-        h = map_pos # In map-relative local frame, Z should match map_pos
+        h = map_pos
         
         H = np.zeros((3, len(x)))
         H[:, :3] = np.eye(3)
         
-        y = z - H @ x # Innovation
+        y = z - H @ x
         S = H @ P @ H.T + R
-        K = P @ H.T @ np.linalg.norm(S) # Simplified gain
+        K = P @ H.T @ np.linalg.inv(S)
         
-        # x = x + K @ y
-        # P = (I - KH)P
+        x = x + K @ y
+        P = (np.eye(len(x)) - K @ H) @ P
     
-    # Placeholder for full EKF update
     return x, P

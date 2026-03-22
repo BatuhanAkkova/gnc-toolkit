@@ -1,3 +1,7 @@
+"""
+Porkchop plot grid generation for interplanetary transfers.
+"""
+
 import numpy as np
 from ..guidance.rendezvous import solve_lambert
 
@@ -52,7 +56,6 @@ def generate_porkchop_grid(departure_dates, arrival_dates, r_dep_func, v_dep_fun
                 tof_grid[j, i] = dt
                 
             except Exception:
-                # Some transfers might fail (e.g. 180 degrees)
                 continue
 
     return {

@@ -1,3 +1,7 @@
+"""
+Rauch-Tung-Striebel (RTS) Smoother for linear systems.
+"""
+
 import numpy as np
 
 def rts_smoother(Xs, Ps, Fs, Qs):
@@ -32,18 +36,17 @@ def rts_smoother(Xs, Ps, Fs, Qs):
 
     # Backward pass
     for k in range(num_steps - 2, -1, -1):
-        # Forward prediction from k to k+1
-        # P_{k+1|k} = F_k * P_{k|k} * F_k' + Q_k
+        # Forward prediction
         P_pred = np.dot(np.dot(Fs[k], Ps[k]), Fs[k].T) + Qs[k]
 
-        # Smoother gain: C_k = P_{k|k} * F_k' * P_{k+1|k}^-1
+        # Smoother gain
         C = np.dot(np.dot(Ps[k], Fs[k].T), np.linalg.inv(P_pred))
 
-        # Smoothed state: x_{k|N} = x_{k|k} + C_k * (x_{k+1|N} - x_{k+1|k})
+        # Smoothed state
         X_pred = np.dot(Fs[k], Xs[k])
         X_smooth[k] = Xs[k] + np.dot(C, X_smooth[k+1] - X_pred)
 
-        # Smoothed covariance: P_{k|N} = P_{k|k} + C_k * (P_{k+1|N} - P_{k+1|k}) * C_k'
+        # Smoothed covariance
         P_smooth[k] = Ps[k] + np.dot(np.dot(C, P_smooth[k+1] - P_pred), C.T)
 
     return X_smooth, P_smooth

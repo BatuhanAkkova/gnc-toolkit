@@ -1,3 +1,7 @@
+"""
+Orbital maneuver calculations (Hohmann, Bi-elliptic, Phasing, Plane Change).
+"""
+
 import numpy as np
 
 def hohmann_transfer(r1: float, r2: float, mu: float = 398600.4418) -> tuple[float, float, float]:
@@ -94,30 +98,13 @@ def phasing_maneuver(a: float, T_phase: float, mu: float = 398600.4418) -> tuple
             - total_dv (float): Total Delta-V (entry + exit) (km/s).
             - t_wait (float): Duration of the phasing orbit (s).
     """
-    # Current period
     T_curr = 2 * np.pi * np.sqrt(a**3 / mu)
-    
-    # Target period for the phasing orbit
-    # If intended to move "forward" (catch up), need a shorter period (faster).
-    # If intended to move "backward" (wait), need a longer period (slower).
-    T_phasing = T_curr + T_phase
-    
-    # Semi-major axis of phasing orbit
+    T_phasing = T_curr + T_phase  # phasing orbit period
     a_phasing = (mu * (T_phasing / (2 * np.pi))**2)**(1/3)
-    
-    # Velocity in current circular orbit
     v_c = np.sqrt(mu / a)
-    
-    # Velocity at periapsis (or apoapsis) of phasing orbit at the connection point
-    # Energy conservation: v^2/2 - mu/r = -mu/2a
-    # burn at radius 'a'.
     v_phasing = np.sqrt(mu * (2/a - 1/a_phasing))
-    
     dv_burn = abs(v_phasing - v_c)
-    
-    # perform this burn to enter phasing orbit, and same burn to exit
-    total_dv = 2 * dv_burn
-    
+    total_dv = 2 * dv_burn  # two burns: entry and exit
     return total_dv, T_phasing
 
 def plane_change(v: float, delta_i: float) -> float:
@@ -201,16 +188,13 @@ def optimal_combined_maneuver(r1: float, r2: float, delta_i: float, mu: float = 
             - di1 (float): Inclination change at first burn (radians).
             - di2 (float): Inclination change at second burn (radians).
     """
-    # Velocity parameters
     a_trans = (r1 + r2) / 2.0
     v_c1 = np.sqrt(mu / r1)
     v_c2 = np.sqrt(mu / r2)
     v_trans_p = np.sqrt(mu * (2/r1 - 1/a_trans))
     v_trans_a = np.sqrt(mu * (2/r2 - 1/a_trans))
     
-    # We want to minimize:
-    # f(di1) = sqrt(v_c1^2 + v_trans_p^2 - 2*v_c1*v_trans_p*cos(di1)) + 
-    #          sqrt(v_trans_a^2 + v_c2^2 - 2*v_trans_a*v_c2*cos(delta_i - di1))
+    # Minimize: f(di1) = ||dv1(di1)|| + ||dv2(delta_i - di1)||
     
     from scipy.optimize import minimize_scalar
     

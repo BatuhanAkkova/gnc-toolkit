@@ -1,3 +1,7 @@
+"""
+Numerical Cowell Propagator.
+"""
+
 import numpy as np
 from .base import Propagator
 from ..integrators.rk4 import RK4

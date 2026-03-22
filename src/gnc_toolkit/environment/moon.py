@@ -1,3 +1,7 @@
+"""
+Simplified Lunar Ephemeris Model for position calculation.
+"""
+
 import numpy as np
 
 class Moon:

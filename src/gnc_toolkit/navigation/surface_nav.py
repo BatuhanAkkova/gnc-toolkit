@@ -1,3 +1,7 @@
+"""
+Lander/Rover surface navigation EKF using landmark tracking.
+"""
+
 import numpy as np
 from gnc_toolkit.kalman_filters.ekf import EKF
 

@@ -1,3 +1,7 @@
+"""
+Time system conversions (UTC, TAI, GPS, TT, TDB) and Julian date utilities.
+"""
+
 import numpy as np
 from datetime import datetime, timedelta
 from typing import Tuple

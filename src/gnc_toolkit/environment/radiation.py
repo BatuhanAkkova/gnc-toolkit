@@ -1,3 +1,7 @@
+"""
+Radiation environment models for TID and SEU rates estimation.
+"""
+
 import numpy as np
 
 class RadiationModel:
@@ -12,14 +16,13 @@ class RadiationModel:
         Estimate Total Ionising Dose (TID) in kRad(Si).
         Rough parametric model for LEO.
         """
-        # Extremely simplified parametric model for 0.1" Al shielding
-        # Dose increases with altitude (trapped belts) and duration
+        # Simplified parametric model for 0.1" Al shielding
         base_rate = 1.0e-4 # kRad/day base for low LEO
         
-        # Altitude factor (roughly exponential increase towards van allen belts)
+        # Altitude factor
         alt_factor = np.exp((altitude_km - 400) / 500)
         
-        # Inclination factor (polar orbits see more GEO/Solar particles)
+        # Inclination factor
         inc_factor = 1.0 + 0.5 * np.sin(np.radians(inclination_deg))
         
         tid = base_rate * alt_factor * inc_factor * duration_days

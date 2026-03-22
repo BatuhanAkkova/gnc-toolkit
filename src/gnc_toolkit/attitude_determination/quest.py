@@ -1,3 +1,7 @@
+"""
+QUEST algorithm for optimal attitude determination (Wahba's problem).
+"""
+
 import numpy as np
 from gnc_toolkit.utils.quat_utils import quat_normalize, quat_conj
 

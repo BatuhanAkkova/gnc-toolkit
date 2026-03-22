@@ -1,3 +1,7 @@
+"""
+Adaptive-step Dormand-Prince 8(5,3) integrator (DOP853).
+"""
+
 import numpy as np
 from .integrator import Integrator
 from . import dop853_coeffs as coeffs
@@ -22,7 +26,6 @@ class RK853(Integrator):
         self.E3 = coeffs.E3
         self.E5 = coeffs.E5
         
-        # Scipy uses K (stages + 1)
         self.error_exponent = -1 / (7 + 1) # error estimator order is 7
 
     def step(self, f, t, y, dt, **kwargs):
@@ -33,7 +36,6 @@ class RK853(Integrator):
         n = len(y)
         
         # K table: stages + 1 rows, n columns
-        # Allocated once to avoid reallocation during step rejection
         K = np.zeros((self.n_stages + 1, n))
 
         while True:
@@ -49,11 +51,11 @@ class RK853(Integrator):
             # Compute y_new (8th order)
             y_next = y + dt_current * np.dot(coeffs.B, K[:self.n_stages])
             
-            # Error estimation - Scipy uses E5 and E3
+            # Error estimation
             err5 = np.dot(K[:self.n_stages+1].T, coeffs.E5) # shape (n,)
             err3 = np.dot(K[:self.n_stages+1].T, coeffs.E3) # shape (n,)
             
-            # Scipy's advanced error estimation from Hairer
+            # Advanced error estimation from Hairer
             denom = np.hypot(np.abs(err5), 0.1 * np.abs(err3))
             correction_factor = np.ones_like(err5)
             mask = denom > 0

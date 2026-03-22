@@ -1,3 +1,7 @@
+"""
+Ensemble Kalman Filter (EnKF) using Monte Carlo samples for covariance representation.
+"""
+
 import numpy as np
 
 class EnKF:

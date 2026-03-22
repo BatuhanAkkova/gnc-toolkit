@@ -1,3 +1,7 @@
+"""
+Passivity-Based Controller for Euler-Lagrange mechanical systems.
+"""
+
 import numpy as np
 
 class PassivityBasedController:

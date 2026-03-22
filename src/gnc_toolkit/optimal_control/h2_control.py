@@ -1,3 +1,7 @@
+"""
+H2 Optimal Controller (LQG equivalent).
+"""
+
 import numpy as np
 from .lqg import LQG
 

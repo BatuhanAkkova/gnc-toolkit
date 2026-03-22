@@ -1,3 +1,7 @@
+"""
+Cubature Kalman Filter (CKF) using spherical-radial rule for non-linear estimation.
+"""
+
 import numpy as np
 from scipy.linalg import cholesky
 

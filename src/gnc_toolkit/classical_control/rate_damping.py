@@ -1,3 +1,7 @@
+"""
+Proportional rate damping controller for torque-based detumbling.
+"""
+
 import numpy as np
 from typing import Optional
 

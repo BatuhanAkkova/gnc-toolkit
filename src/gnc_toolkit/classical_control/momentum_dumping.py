@@ -1,3 +1,7 @@
+"""
+Reaction wheel momentum desaturation using magnetic torque (Cross-Product Law).
+"""
+
 import numpy as np
 from typing import Union, Optional
 

@@ -1,3 +1,7 @@
+"""
+Rigid body Attitude dynamics based on Euler's equations of motion.
+"""
+
 import numpy as np
 
 def euler_equations(J: np.ndarray, omega: np.ndarray, torque: np.ndarray) -> np.ndarray:

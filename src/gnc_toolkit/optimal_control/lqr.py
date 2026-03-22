@@ -1,3 +1,7 @@
+"""
+Linear Quadratic Regulator (LQR) Controller.
+"""
+
 import numpy as np
 from scipy.linalg import solve_continuous_are
 

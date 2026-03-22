@@ -1,3 +1,7 @@
+"""
+Recursive QUEST (REQUEST) algorithm for recursive attitude estimation.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.quat_utils import quat_normalize
 

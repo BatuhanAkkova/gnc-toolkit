@@ -1,3 +1,7 @@
+"""
+Attitude guidance laws for Nadir, Sun, and Target pointing, and trajectory planning.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.quat_utils import quat_normalize, axis_angle_to_quat, quat_mult
 
@@ -29,8 +33,6 @@ def nadir_pointing_reference(pos_eci: np.ndarray, vel_eci: np.ndarray) -> np.nda
     x_axis /= np.linalg.norm(x_axis)
     
     # DCM from ECI to Body (R_eb)
-    # R_eb transforms vector from ECI to Body frame.
-    # The rows are the unit vectors of the body axes expressed in ECI.
     rmat = np.array([x_axis, y_axis, z_axis])
     
     return _rmat_to_quat(rmat)
@@ -56,7 +58,6 @@ def sun_pointing_reference(sun_vec_eci: np.ndarray) -> np.ndarray:
     if dot > 0.999999:
         return np.array([0.0, 0.0, 0.0, 1.0])
     if dot < -0.999999:
-        # 180 deg rotation about any orthogonal axis
         return np.array([0.0, 1.0, 0.0, 0.0])
     
     axis = np.cross(eci_x, s)
@@ -79,7 +80,6 @@ def target_tracking_reference(pos_eci: np.ndarray, target_pos_eci: np.ndarray) -
     rel_pos = target_pos_eci - pos_eci
     z_axis = rel_pos / np.linalg.norm(rel_pos)
     
-    # Constrain Y-axis to be orthogonal to both Z and ECI Z (arbitrary for stability)
     eci_z = np.array([0.0, 0.0, 1.0])
     if abs(np.dot(z_axis, eci_z)) > 0.99:
         eci_z = np.array([1.0, 0.0, 0.0])
@@ -127,14 +127,11 @@ def attitude_blending(q1: np.ndarray, q2: np.ndarray, alpha: float) -> np.ndarra
     
     dot = np.dot(q1, q2)
     
-    # If dot is negative, SLERP will take the long way.
-    # Flip one quaternion to take the short path.
     if dot < 0.0:
         q1 = -q1
         dot = -dot
         
     if dot > 0.9995:
-        # Linear interpolation for very small angles
         res = q1 + alpha * (q2 - q1)
         return quat_normalize(res)
         

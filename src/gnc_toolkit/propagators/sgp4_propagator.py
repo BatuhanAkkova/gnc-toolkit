@@ -1,3 +1,7 @@
+"""
+SGP4/SDP4 Analytical Propagator.
+"""
+
 import numpy as np
 from .base import Propagator
 from sgp4.api import Satrec, jday

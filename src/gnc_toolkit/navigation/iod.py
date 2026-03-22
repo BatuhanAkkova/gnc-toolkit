@@ -1,3 +1,7 @@
+"""
+Initial Orbit Determination (IOD) methods (Gibbs, Gauss, Laplace).
+"""
+
 import numpy as np
 
 def gibbs_iod(r1, r2, r3, mu=398600.4415e9):
@@ -20,7 +24,6 @@ def gibbs_iod(r1, r2, r3, mu=398600.4415e9):
     h_hat = np.cross(r1, r2)
     h_hat /= np.linalg.norm(h_hat)
     if abs(np.dot(r3, h_hat)) > 1e-4 * r3_mag:
-        # Not perfectly coplanar, but we proceed
         pass
 
     # Gibbs vectors
@@ -31,8 +34,6 @@ def gibbs_iod(r1, r2, r3, mu=398600.4415e9):
     if L < 1e-12:
         return np.zeros(3)
         
-    v2 = np.sqrt(mu / (np.linalg.norm(N) * L)) * (np.cross(D, r2) / r2_mag + L * np.array([0,0,0])) # Placeholder for logic
-    # Re-evaluating v2 formula: v2 = sqrt(mu/(N_mag*D_mag)) * [ (D x r2)/r2_mag + N ]
     v2 = np.sqrt(mu / (np.linalg.norm(N) * L)) * (np.cross(D, r2) / r2_mag + N)
     
     return v2
@@ -63,7 +64,6 @@ def herrick_gibbs_iod(r1, r2, r3, dt21, dt32, mu=398600.4415e9):
 def gauss_iod(rho_hat1, rho_hat2, rho_hat3, t1, t2, t3, R1, R2, R3, mu=398600.4415e9):
     """
     Gauss method for Initial Orbit Determination (3 line-of-sight vectors).
-    Follows a specific 13-step algorithm.
     
     Args:
         rho_hat1, rho_hat2, rho_hat3 (np.ndarray): LOS unit vectors
@@ -74,23 +74,22 @@ def gauss_iod(rho_hat1, rho_hat2, rho_hat3, t1, t2, t3, R1, R2, R3, mu=398600.44
     Returns:
         np.ndarray: [rx, ry, rz, vx, vy, vz] State at t2 [m, m/s]
     """
-    # 1. Calculate the time intervals
+    # Calculate the time intervals
     tau1 = t1 - t2
     tau3 = t3 - t2
     tau = tau3 - tau1
     
-    # 2. Calculate the cross products
-    # p1 = rho_hat2 x rho_hat3, p2 = rho_hat1 x rho_hat3, p3 = rho_hat1 x rho_hat2
+    # Calculate the cross products
     p1 = np.cross(rho_hat2, rho_hat3)
     p2 = np.cross(rho_hat1, rho_hat3)
     p3 = np.cross(rho_hat1, rho_hat2)
     
-    # 3. Calculate D0 = rho_hat1 dot (rho_hat2 x rho_hat3)
+    # Calculate D0
     D0 = np.dot(rho_hat1, p1)
     if abs(D0) < 1e-18:
         raise ValueError("LOS vectors are nearly coplanar (D0 is too small).")
         
-    # 4. Calculate six scalar quantities
+    # Calculate six scalar quantities
     D11 = np.dot(R1, p1)
     D21 = np.dot(R2, p1)
     D31 = np.dot(R3, p1)
@@ -103,19 +102,19 @@ def gauss_iod(rho_hat1, rho_hat2, rho_hat3, t1, t2, t3, R1, R2, R3, mu=398600.44
     D23 = np.dot(R2, p3)
     D33 = np.dot(R3, p3)
     
-    # 5. Calculate A and B (Signs from user prompt/curtis compatibility)
+    # Calculate A and B
     A = (1.0 / D0) * (-(tau3 / tau) * D12 + D22 + (tau1 / tau) * D32)
     B = (1.0 / (6.0 * D0)) * ((tau3**2 - tau**2) * (tau3 / tau) * D12 + (tau**2 - tau1**2) * (tau1 / tau) * D32)
     
-    # 6. Calculate E and R2^2
+    # Calculate E and R2^2
     E = np.dot(R2, rho_hat2)
     
-    # 7. Calculate a, b and c
+    # Calculate a, b and c
     a_coeff = -(A**2 + 2.0 * A * E + np.dot(R2, R2))
     b_coeff = -2.0 * mu * B * (A + E)
     c_coeff = -mu**2 * B**2
     
-    # 8. Find roots: x^8 + ax^6 + bx^3 + c = 0
+    # Find roots: x^8 + ax^6 + bx^3 + c = 0
     poly_coeffs = [1.0, 0.0, a_coeff, 0.0, 0.0, b_coeff, 0.0, 0.0, c_coeff]
     roots = np.roots(poly_coeffs)
     real_positive_roots = roots[np.isreal(roots) & (roots.real > 0)].real
@@ -123,8 +122,7 @@ def gauss_iod(rho_hat1, rho_hat2, rho_hat3, t1, t2, t3, R1, R2, R3, mu=398600.44
         raise ValueError("No physical (positive real) root found for Gauss radius r2.")
     r2 = np.max(real_positive_roots)
     
-    # 9. Calculate initial rho1, rho2, rho3
-    # Use series-based coefficients for initial guess (consistent with r2)
+    # Calculate initial rho1, rho2, rho3
     u = mu / r2**3
     f1 = 1.0 - 0.5 * u * tau1**2
     f3 = 1.0 - 0.5 * u * tau3**2
@@ -138,19 +136,19 @@ def gauss_iod(rho_hat1, rho_hat2, rho_hat3, t1, t2, t3, R1, R2, R3, mu=398600.44
     rhs = R2 - c1 * R1 - c3 * R3
     rho1, rho2, rho3 = np.linalg.solve(mat, rhs)
     
-    # 10. Initial position vectors
+    # Initial position vectors
     r1_vec = R1 + rho1 * rho_hat1
     r2_vec = R2 + rho2 * rho_hat2
     r3_vec = R3 + rho3 * rho_hat3
     
-    # 11. Initial velocity vector
+    # Initial velocity vector
     v2_vec = (1.0 / denom) * (-f3 * r1_vec + f1 * r3_vec)
     
-    # 12. Iterative Refinement (Curtis Algorithm 5.4 with Tight Damping)
+    # Iterative Refinement
     rho1_old, rho2_old, rho3_old = rho1, rho2, rho3
     n, nmax, tol = 0, 1000, 1e-8
     diff1 = diff2 = diff3 = 1.0
-    alpha_relax = 0.1 # Very cautious updates to ensure stability
+    alpha_relax = 0.1
 
     r2_vec_best = r2_vec.copy()
     v2_vec_best = v2_vec.copy()
@@ -238,17 +236,14 @@ def _get_fg(x, tau, r0, alpha, mu):
 
 def _kepler_U(tau, r0, vr0, alpha, mu, tol=1e-8, max_iter=100):
     """Solve universal Kepler's equation for x using Newton-Raphson."""
-    # Robust initial guess (Curtis Algorithm 3.3)
     x = np.sqrt(mu) * np.abs(alpha) * tau if abs(alpha) > 1e-9 else np.sqrt(mu) * tau / r0
     
     for _ in range(max_iter):
         psi = x**2 * alpha
         c2, c3 = _stumpff(psi)
         
-        # f(x) = (r0*vr0/sqrt(mu))*x^2*c2 + (1-alpha*r0)*x^3*c3 + r0*x - sqrt(mu)*tau
         r_dot_v_sqrt_mu = r0 * vr0 / np.sqrt(mu)
         val = r_dot_v_sqrt_mu * x**2 * c2 + (1.0 - alpha * r0) * x**3 * c3 + r0 * x - np.sqrt(mu) * tau
-        # f'(x) = r0*vr0/sqrt(mu)*x*(1-psi*c3) + (1-alpha*r0)*x^2*c2 + r0
         deriv = r_dot_v_sqrt_mu * x * (1.0 - psi * c3) + (1.0 - alpha * r0) * x**2 * c2 + r0
         
         if abs(deriv) < 1e-12: # Avoid ZeroDivision
@@ -276,7 +271,7 @@ def laplace_iod(rho_hat, rho_hat_dot, rho_hat_ddot, R, R_dot, R_ddot, mu=398600.
     Returns:
         np.ndarray: [rx, ry, rz, vx, vy, vz] State vector in ECI [m, m/s]
     """
-    # Determinants for Laplace method (Standard textbook definition)
+    # Determinants for Laplace method
     D = np.linalg.det(np.array([rho_hat, rho_hat_dot, rho_hat_ddot]))
     
     if abs(D) < 1e-18:
@@ -292,27 +287,23 @@ def laplace_iod(rho_hat, rho_hat_dot, rho_hat_ddot, R, R_dot, R_ddot, mu=398600.
     cos_phi = np.dot(rho_hat, R) / R_mag
     
     # Solve 8th order polynomial for r (radius of satellite)
-    # r^8 - (A^2 + 2*R*A*cos_phi + R^2)*r^6 - (2*A*B + 2*R*B*cos_phi)*r^3 - B^2 = 0
-    
     poly = [
-        1.0,                               # r^8
-        0.0,                               # r^7
+        1.0, # r^8
+        0.0, # r^7
         -(A**2 + 2.0 * R_mag * A * cos_phi + R_mag**2), # r^6
-        0.0,                               # r^5
-        0.0,                               # r^4
-        -(2.0 * A * B + 2.0 * R_mag * B * cos_phi),    # r^3
-        0.0,                               # r^2
-        0.0,                               # r^1
-        -B**2                              # r^0
+        0.0, # r^5
+        0.0, # r^4
+        -(2.0 * A * B + 2.0 * R_mag * B * cos_phi), # r^3
+        0.0, # r^2
+        0.0, # r^1
+        -B**2 # r^0
     ]
     
     roots = np.roots(poly)
-    # We need the positive real root
     real_positive_roots = roots[np.isreal(roots) & (roots.real > 0)].real
     if len(real_positive_roots) == 0:
         raise ValueError("No physical (positive real) root found for Laplace IOD.")
         
-    # Usually choose root closest to earth-radius for LEO, but pick the first positive one
     r_mag = real_positive_roots[0]
     
     rho = A + B / r_mag**3
@@ -320,8 +311,7 @@ def laplace_iod(rho_hat, rho_hat_dot, rho_hat_ddot, R, R_dot, R_ddot, mu=398600.
     # Position
     r_vec = rho * rho_hat + R
     
-    # Velocity
-    # rho_dot = -(D3 + (mu/r^3)*D4) / (2*D)  -- Note the 2 in the divisor!
+    # Velocity approximation using Laplace derivatives
     D3 = np.linalg.det(np.array([rho_hat, R_ddot, rho_hat_ddot]))
     D4 = np.linalg.det(np.array([rho_hat, R, rho_hat_ddot]))
     rho_dot = -(D3 + (mu / r_mag**3) * D4) / (2.0 * D)
@@ -350,11 +340,6 @@ def laplace_iod_from_observations(rho_hats, Rs, times, mu=398600.4415e9):
     tau31 = t3 - t1
     
     # Lagrange interpolation coefficients for derivatives at t2
-    # L(t) = L1*l1(t) + L2*l2(t) + L3*l3(t)
-    # l1'(t2) = (t2-t3) / ((t1-t2)(t1-t3))
-    # l2'(t2) = (2*t2 - t1 - t3) / ((t2-t1)(t2-t3))
-    # l3'(t2) = (t2-t1) / ((t3-t1)(t3-t2))
-    
     l1_dot = -tau32 / (-tau21 * -tau31)
     l2_dot = (tau21 - tau32) / (tau21 * -tau32)
     l3_dot = tau21 / (tau31 * tau32)
@@ -363,10 +348,6 @@ def laplace_iod_from_observations(rho_hats, Rs, times, mu=398600.4415e9):
     R_dot = l1_dot * R1 + l2_dot * R2 + l3_dot * R3
     
     # Second derivatives at t2
-    # l1''(t2) = 2 / ((t1-t2)(t1-t3))
-    # l2''(t2) = 2 / ((t2-t1)(t2-t3))
-    # l3''(t2) = 2 / ((t3-t1)(t3-t2))
-    
     l1_ddot = 2.0 / (-tau21 * -tau31)
     l2_ddot = 2.0 / (tau21 * -tau32)
     l3_ddot = 2.0 / (tau31 * tau32)
@@ -374,8 +355,6 @@ def laplace_iod_from_observations(rho_hats, Rs, times, mu=398600.4415e9):
     rho_hat_ddot = l1_ddot * L1 + l2_ddot * L2 + l3_ddot * L3
     
     # Observer acceleration estimation (or use gravity if R is ECI)
-    # For ground stations, we can differentiate. 
-    # To be consistent with LOS interpolation, we differentiate R.
     R_ddot = l1_ddot * R1 + l2_ddot * R2 + l3_ddot * R3
     
     return laplace_iod(L2, rho_hat_dot, rho_hat_ddot, R2, R_dot, R_ddot, mu)

@@ -1,3 +1,7 @@
+"""
+Solar Sail force model based on Solar Radiation Pressure (SRP).
+"""
+
 import numpy as np
 from gnc_toolkit.actuators.actuator import Actuator
 
@@ -42,14 +46,7 @@ class SolarSail(Actuator):
         # P = P0 / d^2
         P = self.P0 / (distance_au**2)
         
-        # Standard SRP model for flat plate:
-        # F = P * A * cos(theta) * [ (1 - rho_s)*u_sun + 2*(rho_s*cos(theta) + 1/3*rho_d)*n ]
-        # Simplified version:
-        # F = P * A * cos_theta * ( (1 - self.rho)*u_sun + 2*self.rho*cos_theta*n )
-        
-        # Using more detailed coefficients:
-        # rho_s = rho * s_coeff
-        # rho_d = rho * (1 - s_coeff)
+        # Flat-plate SRP: F = P*A*cos(theta)*[(1-rho_s)*u_sun + 2*(rho_s*cos(theta) + rho_d/3)*n]
         rho_s = self.rho * self.s_coeff
         rho_d = self.rho * (1 - self.s_coeff)
         

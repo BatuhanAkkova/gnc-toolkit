@@ -1,3 +1,7 @@
+"""
+Flexible body dynamics propagation and coupling models.
+"""
+
 import numpy as np
 
 def flexible_body_dynamics(eta, eta_dot, omega_dot, natural_freqs, damping_ratios, modal_influence):

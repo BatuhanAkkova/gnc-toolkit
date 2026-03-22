@@ -1,3 +1,7 @@
+"""
+Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.
+"""
+
 import numpy as np
 import casadi as ca
 

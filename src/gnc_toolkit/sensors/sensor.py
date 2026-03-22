@@ -1,3 +1,7 @@
+"""
+Abstract base class for all sensors.
+"""
+
 from abc import ABC, abstractmethod
 import numpy as np
 
@@ -74,8 +78,6 @@ class Sensor(ABC):
             return self.stuck_value if self.stuck_value is not None else value
         
         if self.fault_state == "spike":
-            # Temporary spike (returns to normal after one call is handled by user logic usually, 
-            # here we just apply a large error once)
             spike = np.random.normal(0, 100 * np.std(value) if np.std(value) > 0 else 10.0, size=np.shape(value))
             return value + spike
             

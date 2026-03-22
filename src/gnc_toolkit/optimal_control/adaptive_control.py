@@ -1,3 +1,7 @@
+"""
+Model Reference Adaptive Control (MRAC) for state-space systems.
+"""
+
 import numpy as np
 from scipy.linalg import solve_continuous_lyapunov
 
@@ -73,25 +77,14 @@ class ModelReferenceAdaptiveControl:
         if kr is None:
             kr = np.eye(self.nu)                # Assume B = B_m
             
-        # phi(x)
-        phi_x = self.phi(x).reshape(-1, 1) # [k x 1]
-        
-        # Control Law
-        # u = kx * x + kr * r - theta_hat^T * phi_x
-        # theta_hat.T * phi_x -> [nu x 1]
+        phi_x = self.phi(x).reshape(-1, 1)  # [k x 1]
         adaptive_term = (self.theta_hat.T @ phi_x).flatten()
-        
         u = kx @ x + kr @ r - adaptive_term
         
-        # 1. Update Law update (for the NEXT step simulation)
-        # d_theta_hat = Gamma * phi(x) * e^T * P * B
+        # Parameter derivative for Euler update: d_theta = Gamma * phi(x) * e.T * P * B
         e = x - x_m
-        # e^T * P * B -> [1 x m]
-        error_term = e.reshape(1, -1) @ self.P @ self.B
-        # d_theta = Gamma * phi_x * error_term -> [k x m]
-        d_theta = self.Gamma @ phi_x @ error_term
-        
-        # Keep derivative in a temporary variable
+        error_term = e.reshape(1, -1) @ self.P @ self.B  # [1 x m]
+        d_theta = self.Gamma @ phi_x @ error_term         # [k x m]
         self.d_theta_hat = d_theta
         
         return u

@@ -1,3 +1,7 @@
+"""
+Magnetorquer actuator model.
+"""
+
 import numpy as np
 from gnc_toolkit.actuators.actuator import Actuator
 

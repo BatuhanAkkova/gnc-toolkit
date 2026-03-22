@@ -1,3 +1,7 @@
+"""
+Gravitational acceleration models (Two-Body, J2, Harmonics) and Gradient Torques.
+"""
+
 import numpy as np
 import os
 import csv
@@ -68,7 +72,7 @@ class HarmonicsGravity:
         self.S = np.zeros((n_max + 1, m_max + 1))
         
         if file_path is None:
-            # Assuming src/disturbances/gravity.py -> ../egm2008.csv
+            # Default path: package_root/egm2008.csv
             base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             file_path = os.path.join(base_dir, 'egm2008.csv')
             
@@ -182,9 +186,6 @@ class HarmonicsGravity:
                     else:
                         dp_dphi = 0.0
                 else:
-                    # Recursive deriv                    
-                    #factor_nm = np.sqrt((2*n+1)/(2*n-1) * (n-m)/(n+m)) if (n+m) > 0 else 0
-                    
                     anm = np.sqrt((2*n + 1) / (n - m)) * np.sqrt((2*n - 1) / (n + m))
                     
                     term1 = n * sin_lat * P[n, m]

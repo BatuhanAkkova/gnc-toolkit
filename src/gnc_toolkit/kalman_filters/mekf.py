@@ -1,3 +1,7 @@
+"""
+Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.quat_utils import quat_mult, quat_normalize, quat_conj, quat_rot, skew_symmetric
 
@@ -75,14 +79,14 @@ class MEKF:
         """
         if R is None: R = self.R
         
-        # Predicted measurement in body frame: z_pred = R(q)^T * z_ref
+        # Predicted measurement in body frame
         q_inv = quat_conj(self.q)
         z_pred = quat_rot(q_inv, z_ref)
         
-        # Innovation: y = z_meas - z_pred
+        # Innovation
         y = z - z_pred
         
-        # Sensitivity matrix H = [ [z_pred]x  0 ]
+        # Sensitivity matrix
         H = np.zeros((3, 6))
         H[:, 0:3] = skew_symmetric(z_pred)
         

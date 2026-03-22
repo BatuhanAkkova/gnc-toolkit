@@ -1,3 +1,7 @@
+"""
+Equinoctial orbital element operations and conversions.
+"""
+
 import numpy as np
 from .state_to_elements import anomalies, kepler2eci, eci2kepler
 
@@ -52,8 +56,6 @@ def equinoctial2kepler(a, h, k, p, q, l_mean):
     Y = a * ((1.0 - k**2 * beta) * sinF + h * k * beta * cosF - h)
     
     nu_eq = np.arctan2(Y, X)
-    # This nu_eq is the angle in the orbital plane from the equinoctial x-axis.
-    # To get Keplerian nu (from perigee):
     nu = nu_eq - (raan + argp)
     
     raan = np.mod(raan, 2 * np.pi)
@@ -61,9 +63,6 @@ def equinoctial2kepler(a, h, k, p, q, l_mean):
     nu = np.mod(nu, 2 * np.pi)
     
     # M from F
-    M = F - k*np.sin(F) + h*np.cos(F) # This is not quite right for M, wait.
-    # From Vallado: lambda = F + h*cos(F) - k*sin(F). 
-    # M = lambda - raan - argp
     M = l_mean - raan - argp
     M = np.mod(M, 2 * np.pi)
     

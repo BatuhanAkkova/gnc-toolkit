@@ -1,3 +1,7 @@
+"""
+Fuel slosh dynamics using equivalent pendulum models.
+"""
+
 import numpy as np
 
 def fuel_slosh_dynamics(theta, theta_dot, omega, omega_dot, L, r_base, g_equiv):

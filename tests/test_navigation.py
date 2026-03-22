@@ -7,6 +7,10 @@ from gnc_toolkit.navigation import (
     RelativeNavigationEKF,
     SurfaceNavigationEKF
 )
+from gnc_toolkit.navigation.terrain_nav import (
+    FeatureMatchingTRN,
+    map_relative_localization_update
+)
 
 def test_orbit_determination_ekf():
     # Initial state (LEO around Earth) [m, m/s]
@@ -103,6 +107,24 @@ def test_surface_navigation():
     
     assert nav.state.shape == (6,)
 
+def test_terrain_relative_navigation():
+    map_db = [np.array([10.0, 0.0, 0.0]), np.array([20.0, 5.0, 0.0])]
+    trn = FeatureMatchingTRN(map_db)
+    
+    obs = [np.array([10.1, 0.2, 0.0])]
+    matches = trn.match_features(obs)
+    assert len(matches) == 1
+    
+    x = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    P = np.eye(6) * 10.0
+    R = np.eye(3) * 0.1
+    
+    x_new, P_new = map_relative_localization_update(x, P, matches, R)
+    assert x_new.shape == (6,)
+    assert P_new.shape == (6, 6)
+    assert not np.array_equal(x, x_new)  # Should update state
+    assert np.all(np.diag(P_new)[:3] < np.diag(P)[:3])  # Should decrease position uncertainty
+
 if __name__ == "__main__":
     import sys
     print("Manual Test Run")
@@ -117,6 +139,8 @@ if __name__ == "__main__":
         test_relative_navigation()
         print("Running test_surface_navigation...")
         test_surface_navigation()
+        print("Running test_terrain_relative_navigation...")
+        test_terrain_relative_navigation()
         print("All tests passed!")
     except Exception as e:
         print(f"Test failed: {e}")

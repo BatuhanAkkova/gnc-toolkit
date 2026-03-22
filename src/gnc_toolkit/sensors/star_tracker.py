@@ -1,3 +1,7 @@
+"""
+Star Tracker sensor model.
+"""
+
 import numpy as np
 from gnc_toolkit.sensors.sensor import Sensor
 from gnc_toolkit.utils.quat_utils import quat_mult

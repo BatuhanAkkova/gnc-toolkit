@@ -1,3 +1,7 @@
+"""
+Propellant budgeting and orbital lifetime prediction tools.
+"""
+
 import numpy as np
 from scipy.integrate import solve_ivp
 from gnc_toolkit.disturbances.drag import LumpedDrag
@@ -162,38 +166,26 @@ def predict_lifetime(r_eci: np.ndarray, v_eci: np.ndarray, mass: float, area: fl
               - 'final_altitude' (float)
               - 'trajectory' (dict with 't', 'r', 'v')
     """
-    # Initialize LumpedDrag
-    # Note: LumpedDrag expects r in meters and v in m/s, acceleration in m/s^2.
-    drag_model = LumpedDrag(density_model, co_rotate=True)
+    drag_model = LumpedDrag(density_model, co_rotate=True)  # LumpedDrag uses SI units (m, m/s)
     
-    # Constants
-    RE_EARTH = 6378.137 # km
-    MU = 398600.4418 # km^3/s^2
+    RE_EARTH = 6378.137  # km
+    MU = 398600.4418     # km^3/s^2
     
     # State: [r_km, v_km_s]
     y0 = np.concatenate([r_eci, v_eci])
     
     def equations_of_motion(t, y):
-        # t is in seconds
-        r = y[:3] # km
-        v = y[3:] # km/s
-        
+        r = y[:3]  # km
+        v = y[3:]  # km/s
         r_mag = np.linalg.norm(r)
+        a_grav = -MU / (r_mag**3) * r  # two-body km/s^2
         
-        # Two-body gravity
-        a_grav = -MU / (r_mag**3) * r # km/s^2
-        
-        # Drag calculation
-        # Convert to SI for LumpedDrag interaction
         r_m = r * 1000.0
         v_m = v * 1000.0
         jd_curr = jd_epoch + t / 86400.0
-        
         a_drag_m_s2 = drag_model.get_acceleration(r_m, v_m, jd_curr, mass, area, cd)
-        a_drag_km_s2 = a_drag_m_s2 / 1000.0 # Convert back to km/s^2
-        
+        a_drag_km_s2 = a_drag_m_s2 / 1000.0
         a_total = a_grav + a_drag_km_s2
-        
         return np.concatenate([v, a_total])
 
     def reentry_event(t, y):

@@ -1,3 +1,7 @@
+"""
+Quaternion kinematics and math utilities.
+"""
+
 import numpy as np
 
 def quat_normalize(q):
@@ -36,11 +40,9 @@ def quat_mult(q1, q2):
 
 def quat_rot(q, v):
     """Rotate a vector v by quaternion q using q * [v, 0] * q_inv."""
-    # Ensure v is a 3-element vector
     v = np.asarray(v)
     v_quat = np.array([v[0], v[1], v[2], 0.0])
     
-    # q_rot = q * v_quat * q_conj
     res = quat_mult(quat_mult(q, v_quat), quat_conj(q))
     return res[0:3]
 

@@ -1,3 +1,7 @@
+"""
+Launch window and injection state computation utilities.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.frame_conversion import llh2ecef, ecef2eci
 
@@ -24,12 +28,6 @@ def calculate_launch_windows(jd_start, jd_end, inc_deg, raan_deg, lat_deg, lon_d
     # Orbit plane normal in ECI
     inc_rad = np.radians(inc_deg)
     raan_rad = np.radians(raan_deg)
-    # N = [sin(inc) * sin(raan), -sin(inc) * cos(raan), cos(inc)]
-    # Ascending node is along [cos(raan), sin(raan), 0].
-    # Component along X is cos(raan).
-    # Component along Y is sin(raan).
-    # Normal vector is cross product of vector to ascending node and direction in plane.
-    # Standard: N = [sin(inc)*sin(raan), -sin(inc)*cos(raan), cos(inc)]
     N_orbit = np.array([
         np.sin(inc_rad) * np.sin(raan_rad),
         -np.sin(inc_rad) * np.cos(raan_rad),
@@ -57,11 +55,10 @@ def calculate_launch_windows(jd_start, jd_end, inc_deg, raan_deg, lat_deg, lon_d
     windows = []
     for i in range(len(dot_products) - 1):
         if np.sign(dot_products[i]) != np.sign(dot_products[i+1]):
-            # Crosses plane!
-            jd_cross = jd_array[i] # Approximate
+            # Crosses plane
+            jd_cross = jd_array[i]
             
             # Determine Ascending or Descending
-            # If rate of dot product is positive or negative
             rate = dot_products[i+1] - dot_products[i]
             
             # Azimuth calculation
@@ -77,8 +74,6 @@ def calculate_launch_windows(jd_start, jd_end, inc_deg, raan_deg, lat_deg, lon_d
                     azimuth_deg = np.nan # No launching directly
             
             is_ascending = rate > 0
-            # Standard definition: Ascending pass means crossing going North, or similar.
-            # Here we just flag it. If rate is positive, it is moving into the positive hemisphere of the normal.
             
             windows.append({
                 'jd': jd_cross,
@@ -116,25 +111,17 @@ def compute_injection_state(lat_deg, lon_deg, alt_m, azimuth_deg, flight_path_an
     az_rad = np.radians(azimuth_deg)
     fpa_rad = np.radians(flight_path_angle_deg)
     
-    # 1. Position in ECEF
+    # Position in ECEF
     r_ecef = llh2ecef(lat_rad, lon_rad, alt_m)
     
-    # 2. Velocity in Topocentric ENU
-    # Speed components
-    # V_North = Speed * cos(FPA) * cos(Az)
-    # V_East = Speed * cos(FPA) * sin(Az)
-    # V_Up = Speed * sin(FPA)
+    # Velocity in Topocentric ENU
     v_east = speed_mps * np.cos(fpa_rad) * np.sin(az_rad)
     v_north = speed_mps * np.cos(fpa_rad) * np.cos(az_rad)
     v_up = speed_mps * np.sin(fpa_rad)
     
     v_enu = np.array([v_east, v_north, v_up])
     
-    # 3. Rotation ENU to ECEF
-    # ENU coords: E, N, U
-    # E = [-sin_lon, cos_lon, 0]
-    # N = [-sin_lat*cos_lon, -sin_lat*sin_lon, cos_lat]
-    # U = [cos_lat*cos_lon, cos_lat*sin_lon, sin_lat]
+    # Rotation ENU to ECEF
     cos_lat, sin_lat = np.cos(lat_rad), np.sin(lat_rad)
     cos_lon, sin_lon = np.cos(lon_rad), np.sin(lon_rad)
     
@@ -147,13 +134,12 @@ def compute_injection_state(lat_deg, lon_deg, alt_m, azimuth_deg, flight_path_an
     v_ecef_rel = R_enu2ecef @ v_enu
     
     # Add Coriolis (Earth rotation) to get inertial velocity represented in ECEF
-    # V_inertial = V_rel + omega x r
     omega_earth = 7.292115e-5 # rad/s
     omega_vec = np.array([0, 0, omega_earth])
     
     v_ecef_inertial = v_ecef_rel + np.cross(omega_vec, r_ecef)
     
-    # 4. Convert to ECI
+    # Convert to ECI
     r_eci, v_eci = ecef2eci(r_ecef, v_ecef_inertial, jd)
     
     return r_eci, v_eci

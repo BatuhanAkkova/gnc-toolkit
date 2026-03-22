@@ -1,3 +1,7 @@
+"""
+Extended Kalman Filter (EKF) for non-linear systems using Jacobians.
+"""
+
 import numpy as np
 
 class EKF:

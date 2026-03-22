@@ -1,3 +1,7 @@
+"""
+EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.
+"""
+
 import numpy as np
 from gnc_toolkit.kalman_filters.ekf import EKF
 
@@ -28,7 +32,6 @@ class RelativeNavigationEKF:
         def fx(x, dt, u):
             # State vector: [x, y, z, vx, vy, vz]
             # Use discrete-time CW propagation
-            # (Simplified: linear system x_next = F * x)
             F = self._get_cw_transition_matrix(n, dt)
             return F @ x
             

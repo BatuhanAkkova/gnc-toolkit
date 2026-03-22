@@ -1,3 +1,7 @@
+"""
+Space weather index management (F10.7, Ap, Kp) for disturbance models.
+"""
+
 import numpy as np
 import datetime
 
@@ -23,7 +27,7 @@ class SpaceWeather:
     def _ap_to_kp(self, ap):
         """Approximate conversion from Ap to Kp index."""
         if ap <= 0: return 0.0
-        return 0.5 * np.log2(ap / 2.0 + 1.0) * 3.0 # Very rough approximation
+        return 0.5 * np.log2(ap / 2.0 + 1.0) * 3.0
 
     def get_indices(self, date=None):
         """

@@ -1,3 +1,7 @@
+"""
+Euler angle kinematics and Direction Cosine Matrix (DCM) utilities.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.state_conversion import rot_x, rot_y, rot_z
 
@@ -5,6 +9,8 @@ def euler_to_dcm(angles, sequence):
     """
     Convert Euler angles [theta1, theta2, theta3] to 3x3 Direction Cosine Matrix (Body to ECI).
     
+    Standard convention for Body-to-ECI is R = R3*R2*R1 where R1 is the first rotation.
+
     Args:
         angles (list/np.ndarray): Three Euler angles in radians.
         sequence (str): Sequence of rotations (e.g. '321', '313').
@@ -21,8 +27,6 @@ def euler_to_dcm(angles, sequence):
     R2 = rot_fns[sequence[1]](angles[1])
     R3 = rot_fns[sequence[2]](angles[2])
     
-    # Standard convention for Body-to-ECI is R = R3*R2*R1
-    # where R1 is the first rotation applied to the reference frame.
     return R3 @ R2 @ R1
 
 def dcm_to_euler(dcm, sequence):
@@ -40,10 +44,9 @@ def dcm_to_euler(dcm, sequence):
     if sequence[0] == sequence[2]:
         i = int(sequence[0]) - 1
         j = int(sequence[1]) - 1
-        k = 3 - i - j # The third axis
+        k = 3 - i - j
         
         # Determine sign parity
-        # (j-i)(k-j)(i-k) is 1 for even permutations, -1 for odd
         parity = 1 if (j - i) % 3 == 1 else -1
         
         theta2 = np.arccos(np.clip(dcm[i, i], -1, 1))
@@ -52,7 +55,6 @@ def dcm_to_euler(dcm, sequence):
             # Singularity (theta2 = 0 or PI)
             theta1 = 0.0
             theta3 = np.arctan2(parity * dcm[j, k], dcm[j, j])
-            # Warning: Singularity detected
         else:
             theta1 = np.arctan2(dcm[j, i], -parity * dcm[k, i])
             theta3 = np.arctan2(dcm[i, j], parity * dcm[i, k])
@@ -66,7 +68,6 @@ def dcm_to_euler(dcm, sequence):
         k = int(sequence[2]) - 1
         
         # Determine sign parity
-        # (j-i)(k-j)(i-k) is 1 for even permutations, -1 for odd
         parity = 1 if (j - i) % 3 == 1 else -1
         
         theta2 = np.arcsin(np.clip(-parity * dcm[i, k], -1, 1))
@@ -75,7 +76,6 @@ def dcm_to_euler(dcm, sequence):
             # Singularity (theta2 = PI/2)
             theta1 = 0.0
             theta3 = np.arctan2(parity * dcm[j, i], dcm[j, j])
-            # Warning: Singularity detected
         else:
             theta1 = np.arctan2(parity * dcm[j, k], dcm[k, k])
             theta3 = np.arctan2(parity * dcm[i, j], dcm[i, i])

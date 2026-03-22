@@ -1,3 +1,7 @@
+"""
+Backstepping Controller for generic 2nd order nonlinear systems.
+"""
+
 import numpy as np
 
 class BacksteppingController:

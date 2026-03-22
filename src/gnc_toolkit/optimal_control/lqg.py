@@ -1,3 +1,7 @@
+"""
+Linear Quadratic Gaussian (LQG) Controller.
+"""
+
 import numpy as np
 from .lqr import LQR
 from .lqe import LQE
@@ -60,7 +64,6 @@ class LQG:
             dt (float): Time step
         """
         # Euler integration for estimation update
-        # In a real system, a more robust integrator would be used
         innovation = y - (self.C @ self.x_hat)
         x_hat_dot = (self.A @ self.x_hat) + (self.B @ u) + (self.L @ innovation)
         self.x_hat = self.x_hat + x_hat_dot * dt
@@ -82,9 +85,7 @@ class LQG:
             np.ndarray: Control input u
         """
         if y is not None and dt is not None:
-            # If we don't have u_last, we use the last computed control (u)
-            # but for the very first step, we might need a default.
-            # However, compute_control is usually called with y, dt.
+            # If u_last is omitted, use current estimate-based control
             u_to_est = u_last if u_last is not None else -self.K @ self.x_hat
             self.update_estimation(y, u_to_est, dt)
             

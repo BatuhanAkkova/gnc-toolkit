@@ -1,3 +1,7 @@
+"""
+Control Moment Gyro (CMG) actuator model.
+"""
+
 import numpy as np
 from gnc_toolkit.actuators.actuator import Actuator
 
@@ -42,7 +46,6 @@ class ControlMomentGyro(Actuator):
         """
         theta = angle if angle is not None else self.gimbal_angle
         # Rotation about gimbal axis
-        # Rodrigues' rotation formula or just sin/cos since it's 2D in the plane
         s = self.s_axis * np.cos(theta) + self.t_axis * np.sin(theta)
         t = np.cross(self.g_axis, s)
         return s, t
@@ -64,7 +67,6 @@ class ControlMomentGyro(Actuator):
         # Current axes
         s, t = self.get_axes()
         
-        # Torque = omega_g x h = (g_rate * g_axis) x (h_mag * s)
         # Torque = g_rate * h_mag * (g x s) = g_rate * h_mag * t
         torque_vec = g_rate * self.h_mag * t
         

@@ -1,3 +1,7 @@
+"""
+Navigation using GNSS (GPS) position and velocity measurements.
+"""
+
 import numpy as np
 from .orbit_determination import OrbitDeterminationEKF
 
@@ -28,9 +32,7 @@ class GPSNavigation(OrbitDeterminationEKF):
             if R_gps is None:
                 # Default GPS R: 3x3 for pos, 3x3 for vel
                 R = np.eye(6)
-                R[:3, :3] = self.ekf.R # Use initialized pos noise
-                # Assume velocity noise is roughly 1/100 of position noise std
-                # (since pos is typically meters and vel is cm/s)
+                R[:3, :3] = self.ekf.R
                 R[3:, 3:] = self.ekf.R * 0.01 
             else:
                 R = R_gps

@@ -1,3 +1,7 @@
+"""
+Cayley-Klein parameters for attitude representation and composition.
+"""
+
 import numpy as np
 
 def quat_to_cayley_klein(q):

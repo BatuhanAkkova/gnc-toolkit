@@ -1,3 +1,7 @@
+"""
+Encke's Method Propagator.
+"""
+
 import numpy as np
 from .base import Propagator
 from .kepler import KeplerPropagator

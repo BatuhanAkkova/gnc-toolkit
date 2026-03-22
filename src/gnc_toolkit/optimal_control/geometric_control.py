@@ -1,3 +1,7 @@
+"""
+Geometric Controller on SO(3) for attitude tracking.
+"""
+
 import numpy as np
 
 def vee_map(R):
@@ -60,27 +64,20 @@ class GeometricController:
         else:
             d_omega_d = np.array(d_omega_d)
 
-        # 1. Attitude Error eR
-        # eR = 1/2 * vee_map(R_d.T * R - R.T * R_d)
+        # Attitude error: eR = 0.5 * vee(R_d.T @ R - R.T @ R_d)
         error_matrix = R_d.T @ R - R.T @ R_d
         eR = 0.5 * vee_map(error_matrix)
 
-        # 2. Angular Velocity Error eW
-        # eW = omega - R.T * R_d * omega_d
+        # Angular velocity error: eW = omega - R.T @ R_d @ omega_d
         R_rel = R.T @ R_d
         eW = omega - R_rel @ omega_d
 
-        # 3. Feedforward terms
-        # omega x J*omega
+        # Feedforward: gyroscopic and inertia-weighted acceleration terms
         gyroscopic = np.cross(omega, self.J @ omega)
-        
-        # J * ( hat(omega) * R.T * R_d * omega_d - R.T * R_d * d_omega_d )
         omega_skew = hat_map(omega)
         acc_term = omega_skew @ R_rel @ omega_d - R_rel @ d_omega_d
         feedforward = self.J @ acc_term
 
-        # 4. Control Law
-        # M = -kR*eR - kW*eW + gyroscopic - feedforward
         M = -self.kR * eR - self.kW * eW + gyroscopic - feedforward
         
         return M

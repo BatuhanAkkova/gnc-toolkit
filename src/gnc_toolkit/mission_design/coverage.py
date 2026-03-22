@@ -1,3 +1,7 @@
+"""
+Ground station access and lighting conditions analysis utilities.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.frame_conversion import eci2ecef, eci2llh, llh2ecef
 from gnc_toolkit.environment.solar import Sun
@@ -23,7 +27,6 @@ def calculate_access_windows(t_array, r_eci_array, gs_lat_deg, gs_lon_deg, gs_al
     r_gs_ecef = llh2ecef(gs_lat_rad, gs_lon_rad, gs_alt_m)
 
     # Zenith vector at GS (Normal to ellipsoid)
-    # n = [cos_lat*cos_lon, cos_lat*sin_lon, sin_lat]
     U = np.array([
         np.cos(gs_lat_rad) * np.cos(gs_lon_rad),
         np.cos(gs_lat_rad) * np.sin(gs_lon_rad),
@@ -38,7 +41,6 @@ def calculate_access_windows(t_array, r_eci_array, gs_lat_deg, gs_lon_deg, gs_al
         r_eci = r_eci_array[i]
         
         # Convert to ECEF
-        # eci2ecef expects reci, veci. We only need position here.
         r_ecef, _ = eci2ecef(r_eci, np.zeros(3), jd_current)
         
         # Relative vector
@@ -163,23 +165,15 @@ def calculate_lighting_conditions(t_array, r_eci_array, v_eci_array, jdut1=24515
         else:
             u_h = h / h_norm
             # Beta angle = asin(dot(h, u_sun))
-            # Wait, beta angle is the angle between Sun and Orbit Plane.
-            # Normal is orthogonal to the plane.
-            # Angle to plane = 90 - angle to normal.
-            # dot(u_h, u_sun) = cos(angle to normal).
-            # sin(angle to plane) = cos(angle to normal).
-            # So beta = asin(dot(u_h, u_sun)). Correct.
             beta_rad = np.arcsin(np.dot(u_h, u_sun))
             beta_angles.append(np.degrees(beta_rad))
             
         # Eclipse Check (Cylindrical model)
-        # Projection of r_eci onto Sun vector
         s = np.dot(r_eci, u_sun)
         
         if s > 0:
             eclipse_state.append(1.0) # Sunlight
         else:
-            # Perpendicular distance
             r_perp_sq = np.dot(r_eci, r_eci) - s*s
             if r_perp_sq < R_earth**2:
                 eclipse_state.append(0.0) # Eclipse

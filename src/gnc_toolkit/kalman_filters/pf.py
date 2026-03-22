@@ -1,3 +1,7 @@
+"""
+Particle Filter (Sequential Importance Resampling) for non-Gaussian/non-linear systems.
+"""
+
 import numpy as np
 
 class ParticleFilter:

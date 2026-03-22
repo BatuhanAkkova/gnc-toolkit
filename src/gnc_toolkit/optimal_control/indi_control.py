@@ -46,22 +46,17 @@ class INDIController:
         x0 = np.array(x0)
         x_dot0 = np.array(x_dot0)
 
-        # 1. Get g(x, x_dot)
         g_val = self.g(x0, x_dot0)
 
-        # 2. Compute Increment delta_u
-        # delta_u = g^-1 * (v - x_ddot0)
+        # Incremental control: delta_u = g^-1 (v - x_ddot0)
         acc_error = v - x_ddot0
 
         if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1,1):
             delta_u = acc_error / g_val
         else:
-             # pinv for robustness to non-square systems or singularity
-            delta_u = np.linalg.pinv(g_val) @ acc_error
+            delta_u = np.linalg.pinv(g_val) @ acc_error  # pinv for robustness
 
-        # 3. New Control
-        u = u0 + delta_u
-        return u
+        return u0 + delta_u
 
 class INDIOuterLoopPD:
     """

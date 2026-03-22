@@ -1,3 +1,7 @@
+"""
+Classical Rodrigues Parameters (CRP) kinematics and composition.
+"""
+
 import numpy as np
 
 def quat_to_crp(q):
@@ -29,8 +33,6 @@ def crp_to_dcm(q_crp):
     norm_sq = np.sum(q_crp**2)
     q1, q2, q3 = q_crp
     
-    # R = I + [2*(S^2 - S)] / (1 + |q_crp|^2)
-    # where S is skew-symmetric matrix.
     S = np.array([
         [0, -q3, q2],
         [q3, 0, -q1],

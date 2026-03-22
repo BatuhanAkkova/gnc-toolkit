@@ -1,3 +1,7 @@
+"""
+Abstract base class for orbit propagators.
+"""
+
 from abc import ABC, abstractmethod
 import numpy as np
 

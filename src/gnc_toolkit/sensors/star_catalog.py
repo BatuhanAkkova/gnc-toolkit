@@ -1,3 +1,7 @@
+"""
+Utility for managing and searching star catalogs.
+"""
+
 import numpy as np
 
 class StarCatalog:

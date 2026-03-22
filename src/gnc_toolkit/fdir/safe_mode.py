@@ -1,6 +1,10 @@
+"""
+Safe mode and fault detection logic for system mode transitions.
+"""
+
 import time
 from enum import Enum
-from typing import Dict, Any, Callable
+from typing import Dict, Any, Callable, List
 
 class SystemMode(Enum):
     NOMINAL = "NOMINAL"
@@ -67,11 +71,9 @@ class SafeModeLogic:
         Returns:
             Current SystemMode
         """
-        # If already in SAFE mode, check if we can recover (not handled automatically here, requires command)
         if self.mode == SystemMode.SAFE:
             return self.mode
             
-        # Check all conditions
         for name, cond in self.conditions.items():
             if cond.update():
                 self.mode = SystemMode.SAFE

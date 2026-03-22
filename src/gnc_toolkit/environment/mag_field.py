@@ -1,3 +1,7 @@
+"""
+Earth magnetic field models (IGRF, WMM, Tilted Dipole).
+"""
+
 import ppigrf
 import numpy as np
 
@@ -10,13 +14,10 @@ def igrf_field(lat, lon, alt, time):
 def wmm_field(lat, lon, alt, date):
     """
     Get the World Magnetic Model (WMM) field.
-    Note: For high precision, use a dedicated WMM library. 
-    This is a placeholder for WMM logic, currently defaulting to IGRF 
-    as they are closely related for many GNC purposes if updated coefficients are used.
+
+    Proxied via IGRF (closely related for GNC purposes). For high precision
+    load WMM2020.COF via a dedicated WMM library.
     """
-    # In a real implementation, we would load WMM2020.COF here.
-    # For now, we will use IGRF as a proxy if ppigrf is available, 
-    # as WMM is often distributed as a specific subset of IGRF-like harmonics.
     return igrf_field(lat, lon, alt, date)
 
 def tilted_dipole_field(r_ecef):

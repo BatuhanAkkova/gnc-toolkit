@@ -1,3 +1,7 @@
+"""
+Linear Quadratic Estimator (LQE) / Kalman Filter.
+"""
+
 import numpy as np
 from scipy.linalg import solve_continuous_are
 

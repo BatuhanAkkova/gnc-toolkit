@@ -1,3 +1,7 @@
+"""
+Square-Root Unscented Kalman Filter (SR-UKF) algorithm.
+"""
+
 import numpy as np
 from scipy.linalg import qr, cholesky, solve_triangular
 
@@ -67,12 +71,11 @@ class SRUKF:
         # Compute S- using QR decomposition of the propagated sigma points and process noise
         X = np.sqrt(self.Wc[1]) * (sigmas_f[1:] - self.x)
         
-        # QR decomposition: Q, R = qr(A), where A is (N + 2L) x L
-        # We need the R part of [X.T, Qs.T].T
+        # QR decomposition
         _, St = qr(np.vstack((X, Qs)), mode='economic')
         self.S = St[:self.dim_x, :self.dim_x].T
         
-        # Cholesky rank-1 update for the first weight (might be negative)
+        # Cholesky rank-1 update for the first weight
         dx = sigmas_f[0] - self.x
         self.S = self._cholesky_update(self.S, dx, self.Wc[0])
 
@@ -112,15 +115,12 @@ class SRUKF:
             dz = sigmas_h[i] - zp
             Pxz += self.Wc[i] * np.outer(dx, dz)
             
-        # Kalman gain K = (Pxz / Sy.T) / Sy
-        # In SRUKF: K = Pxz * inv(Sy.T) * inv(Sy)
-        # Using triangular solve for stability
+        # Kalman gain
         K = solve_triangular(Sy, solve_triangular(Sy, Pxz.T, lower=True), lower=True, trans='T').T
         
         # Correct mean and square-root covariance
         self.x += np.dot(K, z - zp)
         
-        # U = K * Sy
         U = np.dot(K, Sy)
         for i in range(self.dim_z):
             self.S = self._cholesky_update(self.S, U[:, i], -1.0)
@@ -140,23 +140,16 @@ class SRUKF:
         v: Vector to update with
         weight: Scalar weight (positive for update, negative for downdate)
         """
-        # Note: Scipy doesn't have a direct rank-1 update for Cholesky.        
-        # S_new * S_new.T = S*S.T + sigma * v * v.T
-        # For positive weights:
         if weight > 0:
             v_scaled = np.sqrt(weight) * v
             # Use QR to get updated S
             _, St = qr(np.vstack((S.T, v_scaled)), mode='economic')
             return St[:S.shape[0], :S.shape[1]].T
         else:
-            # Downdate is trickier. For now, let's use the reconstruction for downdate if needed,
-            # or avoid it if possible. In SRUKF update, we use downdates.
-            # Real implementation would use Givens rotations.
             P = np.dot(S, S.T) + weight * np.outer(v, v)
             try:
                 return cholesky(P, lower=True)
             except np.linalg.LinAlgError:
-                # Add jitter for stability
                 return cholesky(P + np.eye(S.shape[0]) * 1e-12, lower=True)
 
     @property

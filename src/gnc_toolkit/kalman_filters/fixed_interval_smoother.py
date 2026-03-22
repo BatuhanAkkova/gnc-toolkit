@@ -1,3 +1,6 @@
+"""
+Fixed-Interval Smoother (Fraser-Potter / Two-Filter) for linear systems.
+"""
 import numpy as np
 
 def fixed_interval_smoother(Xs_f, Ps_f, Fs, Qs, Zs, Hs, Rs):
@@ -42,9 +45,6 @@ def fixed_interval_smoother(Xs_f, Ps_f, Fs, Qs, Zs, Hs, Rs):
         Q = Qs[k]
         
         # Backward prediction (Information form)
-        # Y_k = F' * Y_hat * (I + Q * Y_hat)^-1 * F
-        # y_k = F' * (I + Y_hat * Q)^-1 * y_hat
-        
         I = np.eye(dim_x)
         tmp = np.linalg.inv(I + Y_hat @ Q)
         Y_b[k] = F.T @ Y_hat @ tmp @ F

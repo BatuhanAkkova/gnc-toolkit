@@ -1,3 +1,7 @@
+"""
+Variable Speed Control Moment Gyro (VSCMG) actuator model.
+"""
+
 import numpy as np
 from gnc_toolkit.actuators.cmg import ControlMomentGyro
 
@@ -16,7 +20,6 @@ class VariableSpeedCMG(ControlMomentGyro):
             spin_axis_init (np.array): Initial spin axis (3,).
             max_wheel_torque (float): Max torque for wheel acceleration.
         """
-        # Initialize parent with dummy momentum (will update dynamically)
         super().__init__(wheel_momentum=0.0, gimbal_axis=gimbal_axis, 
                          spin_axis_init=spin_axis_init, name=name, 
                          max_gimbal_rate=max_gimbal_rate)

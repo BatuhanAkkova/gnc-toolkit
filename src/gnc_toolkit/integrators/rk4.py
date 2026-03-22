@@ -1,3 +1,7 @@
+"""
+Fixed-step Runge-Kutta 4th order integrator.
+"""
+
 import numpy as np
 from .integrator import Integrator
 

@@ -1,3 +1,7 @@
+"""
+Control allocation algorithms mapping generalized forces to actuator commands.
+"""
+
 import numpy as np
 from abc import ABC, abstractmethod
 

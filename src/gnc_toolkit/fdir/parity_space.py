@@ -1,3 +1,7 @@
+"""
+Parity Space methods for Fault Detection and Isolation (FDI).
+"""
+
 import numpy as np
 from typing import Tuple, List
 
@@ -35,8 +39,6 @@ class ParitySpaceDetector:
             raise ValueError("Parity space requires redundant measurements (p > n)")
             
         # Compute P matrix using SVD
-        # M = U * S * V^T
-        # P is the last (p-n) rows of U^T
         U, S, Vh = np.linalg.svd(M)
         self.P = U[:, self.n_dim:].T  # Shape: (p-n) x p
         
@@ -92,7 +94,6 @@ class ParitySpaceDetector:
             P_col = self.P[:, i]
             if np.linalg.norm(P_col) > 0:
                 P_col_norm = P_col / np.linalg.norm(P_col)
-                # Absolute dot product since fault can be positive or negative
                 alignments.append(np.abs(np.dot(p_norm, P_col_norm)))
             else:
                 alignments.append(0.0)

@@ -1,3 +1,7 @@
+"""
+Modified Equinoctial Elements (MEE) kinematics and conversions.
+"""
+
 import numpy as np
 
 def kepler2mee(a, ecc, incl, raan, argp, nu, mu=398600.4415e9):

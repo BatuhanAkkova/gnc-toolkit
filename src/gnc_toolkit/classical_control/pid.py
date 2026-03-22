@@ -1,3 +1,7 @@
+"""
+Generic PID controller implementation with anti-windup logic.
+"""
+
 import numpy as np
 from typing import Optional, Union
 

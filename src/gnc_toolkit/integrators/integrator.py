@@ -1,3 +1,7 @@
+"""
+Abstract base class for numerical integrators.
+"""
+
 from abc import ABC, abstractmethod
 import numpy as np
 

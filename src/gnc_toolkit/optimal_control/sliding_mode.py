@@ -1,3 +1,7 @@
+"""
+Sliding Mode Controller (SMC) implementation.
+"""
+
 import numpy as np
 
 class SlidingModeController:

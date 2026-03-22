@@ -1,3 +1,7 @@
+"""
+Modified Rodrigues Parameters (MRP) kinematics and math utilities.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.quat_utils import quat_normalize
 
@@ -8,15 +12,6 @@ def quat_to_mrp(q):
     sigma = q_vec / (1 + q_w)
     """
     x, y, z, w = q
-    # Handle the 180-degree singularity (q_w = -1) by using the shadow set
-    if w <= 0:
-        # Use shadow set: sigma = -q_vec / (1 - q_w)
-        # Or more simply, negate the quaternion (q and -q are same rotation)
-        # if w < -0.999: # very close to -1
-        #     q = -q
-        #     x, y, z, w = q
-        pass
-        
     return np.array([x, y, z]) / (1 + w)
 
 def mrp_to_quat(sigma):
@@ -40,11 +35,6 @@ def mrp_to_dcm(sigma):
     s_y = sigma[1]
     s_z = sigma[2]
     
-    # Pre-calculate common terms
-    A = 8 * np.outer(sigma, sigma) - 4 * (1 - sigma_sq) * np.zeros((3, 3))
-    # Standard formula: R = I + [8*S^2 - 4*(1-s^2)*S] / (1+s^2)^2
-    # where S is skew-symmetric matrix of sigma.
-    
     S = np.array([
         [0, -s_z, s_y],
         [s_z, 0, -s_x],
@@ -63,7 +53,7 @@ def get_shadow_mrp(sigma):
     """
     sigma_sq = np.sum(sigma**2)
     if sigma_sq < 1e-12:
-        return np.zeros(3) # Not well defined at origin but limit is infinity
+        return np.zeros(3)
     return -sigma / sigma_sq
 
 def check_mrp_switching(sigma, threshold=1.0):

@@ -1,3 +1,7 @@
+"""
+Inertial Measurement Unit (IMU) with Accelerometer and Gyroscope.
+"""
+
 import numpy as np
 from gnc_toolkit.sensors.sensor import Sensor
 from gnc_toolkit.sensors.gyroscope import Gyroscope

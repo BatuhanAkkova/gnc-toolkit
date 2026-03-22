@@ -1,3 +1,7 @@
+"""
+Symplectic integrator (Yoshida 4th order) for conservative systems.
+"""
+
 import numpy as np
 from .integrator import Integrator
 
@@ -10,8 +14,6 @@ class SymplecticIntegrator(Integrator):
     """
     def __init__(self):
         # Yoshida 4th Order Coefficients
-        # w1 = 1 / (2 - 2^(1/3))
-        # w0 = -2^(1/3) * w1
         two_to_third = 2**(1/3)
         denom = 2 - two_to_third
         self.w1 = 1 / denom
@@ -25,7 +27,7 @@ class SymplecticIntegrator(Integrator):
         self.d1 = self.w1
         self.d3 = self.w1
         self.d2 = self.w0
-        self.d4 = 0.0 # Just for list padding
+        self.d4 = 0.0
 
     def integrate(self, f, t_span, y0, dt=10.0, **kwargs):
         """
@@ -63,14 +65,13 @@ class SymplecticIntegrator(Integrator):
                 # Update Position
                 r = r + c[i] * h * v
                 # Evaluate Acceleration with new position
-                dy_sub = f(curr_t, np.concatenate([r, v])) # t might not matter if time-invariant
+                dy_sub = f(curr_t, np.concatenate([r, v]))
                 a = dy_sub[3:]
                 # Update Velocity
                 v = v + d[i] * h * a
 
             # Fourth position update
             r = r + c[3] * h * v
-            # Final velocity substep d4 is 0. No update to v.
 
             curr_y = np.concatenate([r, v])
             curr_t = curr_t + h

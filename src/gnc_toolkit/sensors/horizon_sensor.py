@@ -1,3 +1,7 @@
+"""
+Earth / Horizon sensor model.
+"""
+
 import numpy as np
 from gnc_toolkit.sensors.sensor import Sensor
 
@@ -24,18 +28,13 @@ class HorizonSensor(Sensor):
         Returns:
             np.ndarray: Measured nadir unit vector in body frame.
         """
-        # Simplified model: Add noise/bias directly to the vector components
-        # or treat as small rotations.
         n = true_nadir_vec / np.linalg.norm(true_nadir_vec)
         
-        # Add noise to lateral components (assuming boresight is roughly Z)
-        # For a general nadir vector, we can use a random rotation.
         noise_vec = np.random.normal(0, self.noise_std, 3)
         meas_n = n + noise_vec
         
-        # Add bias (simple offset)
         if np.linalg.norm(self.bias) > 0:
-            # This is a very rough bias model for a vector
+            # Bias applied as component offsets (roll/pitch approximation)
             meas_n[0] += self.bias[0]
             meas_n[1] += self.bias[1]
             

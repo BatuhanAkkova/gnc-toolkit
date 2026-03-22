@@ -1,3 +1,7 @@
+"""
+Linear and Nonlinear Model Predictive Control (MPC) solvers.
+"""
+
 import numpy as np
 from scipy.optimize import minimize, Bounds
 
@@ -66,79 +70,52 @@ class LinearMPC:
             cost += x.T @ self.P @ x
             return cost
 
-        # Constraints
+        # Input bounds
         bounds = []
         if self.u_min is not None or self.u_max is not None:
-             # Create bounds list for each variable
-             # Handle array bounds
-             umin = np.array(self.u_min) if self.u_min is not None else np.full(self.nu, -np.inf)
-             umax = np.array(self.u_max) if self.u_max is not None else np.full(self.nu, np.inf)
-             
-             # If scalar, broadcast to (nu,)
-             if umin.ndim == 0: umin = np.full(self.nu, umin)
-             if umax.ndim == 0: umax = np.full(self.nu, umax)
-             
-             # Reshape/Flatten to ensure 1D array of length nu
-             umin = umin.flatten()
-             umax = umax.flatten()
-             
-             if len(umin) != self.nu or len(umax) != self.nu:
-                 raise ValueError(f"u_min/u_max dimension mismatch. Expected {self.nu}, got {len(umin)}/{len(umax)}")
-             
-             for _ in range(self.N):
-                 for i in range(self.nu):
-                     bounds.append((umin[i], umax[i]))
+            umin = np.array(self.u_min) if self.u_min is not None else np.full(self.nu, -np.inf)
+            umax = np.array(self.u_max) if self.u_max is not None else np.full(self.nu, np.inf)
+            if umin.ndim == 0: umin = np.full(self.nu, umin)
+            if umax.ndim == 0: umax = np.full(self.nu, umax)
+            umin = umin.flatten()
+            umax = umax.flatten()
+            if len(umin) != self.nu or len(umax) != self.nu:
+                raise ValueError(f"u_min/u_max dimension mismatch. Expected {self.nu}, got {len(umin)}/{len(umax)}")
+            for _ in range(self.N):
+                for i in range(self.nu):
+                    bounds.append((umin[i], umax[i]))
         else:
             bounds = None
 
-        # State constraints
+        # State constraints (inequality: x_k - x_min >= 0 and x_max - x_k >= 0)
         constraints = []
-        # Handle state constraints
-        # We need to express: x_min <= x_k <= x_max
-        # As c(x) >= 0 form:
-        # x_k - x_min >= 0
-        # x_max - x_k >= 0
-        
         xmin = np.array(self.x_min) if self.x_min is not None else np.full(self.nx, -np.inf)
         xmax = np.array(self.x_max) if self.x_max is not None else np.full(self.nx, np.inf)
         
         if self.x_min is not None or self.x_max is not None:
-            # Check dimensions if needed (assuming scalar broadcast later)
-            # Logic below handles full arrays or scalars
-            
             if xmin.ndim == 0: xmin = np.full(self.nx, xmin)
             if xmax.ndim == 0: xmax = np.full(self.nx, xmax)
             xmin = xmin.flatten()
             xmax = xmax.flatten()
-            
-            # Check dimensions
             if len(xmin) != self.nx or len(xmax) != self.nx:
-                 raise ValueError(f"x_min/x_max dimension mismatch. Expected {self.nx}, got {len(xmin)}/{len(xmax)}")
+                raise ValueError(f"x_min/x_max dimension mismatch. Expected {self.nx}, got {len(xmin)}/{len(xmax)}")
 
-            # Define the constraint function
-            # This function receives the entire flattened U vector
-            # And returns an array of values that must be >= 0
             def state_constraint_fun(U_flat):
                 U = U_flat.reshape((self.N, self.nu))
                 x = x0.copy()
                 cons_values = []
-                
                 for k in range(self.N):
                     u = U[k]
                     x = self.A @ x + self.B @ u
-                    # Add constraints for this step
                     if self.x_min is not None:
                         cons_values.extend(x - xmin)
                     if self.x_max is not None:
                         cons_values.extend(xmax - x)
-                        
                 return np.array(cons_values)
             
             constraints.append({'type': 'ineq', 'fun': state_constraint_fun})
 
-        # Initial guess: zeros
         U0 = np.zeros(self.N * self.nu)
-        
         res = minimize(objective, U0, method='SLSQP', bounds=bounds, constraints=constraints)
         
         if not res.success:
@@ -247,7 +224,6 @@ class NonlinearMPC:
                 
                 for k in range(self.N):
                     u = U[k]
-                    # Advance dynamics
                     x = np.array(self.f(x, u)).flatten()
                     
                     if self.x_min is not None:
@@ -259,7 +235,6 @@ class NonlinearMPC:
             
             constraints.append({'type': 'ineq', 'fun': state_constraint_fun})
 
-        # Initial guess (small non-zero to help gradient estimation sometimes, or just zeros)
         U0 = np.zeros(self.N * self.nu)
         
         res = minimize(objective, U0, method='SLSQP', bounds=bounds, constraints=constraints)

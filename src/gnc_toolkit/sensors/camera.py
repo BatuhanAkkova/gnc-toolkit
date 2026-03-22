@@ -1,3 +1,7 @@
+"""
+Simple pinhole camera model.
+"""
+
 import numpy as np
 from gnc_toolkit.sensors.sensor import Sensor
 

@@ -1,3 +1,7 @@
+"""
+Link budget calculations and RF analysis tools.
+"""
+
 import numpy as np
 
 # Speed of light in m/s
@@ -33,18 +37,11 @@ def calculate_friis_link_budget(p_tx_w, g_tx_db, g_rx_db, frequency_hz, distance
     if frequency_hz <= 0:
         raise ValueError("Frequency must be strictly positive.")
 
-    # Convert Pt to dBW
     p_tx_dbw = 10 * np.log10(p_tx_w)
     
-    # Free space path loss (Lfs)
-    # Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)
-    # 20 * log10(4*pi/c) approx -147.554
+    # Lfs = 20*log10(d) + 20*log10(f) + 20*log10(4*pi/c),  20*log10(4*pi/c) ≈ -147.554
     l_fs_db = 20 * np.log10(distance_m) + 20 * np.log10(frequency_hz) - 147.554
-    
-    # Total received power in dBW
     p_rx_dbw = p_tx_dbw + g_tx_db + g_rx_db - l_fs_db - l_atm_db - losses_misc_db
-    
-    # Convert back to Watts
     p_rx_w = 10**(p_rx_dbw / 10.0)
     
     return {
@@ -83,22 +80,17 @@ def calculate_doppler_shift(f_tx_hz, r_ecef_rx, v_ecef_rx, r_ecef_tx, v_ecef_tx)
     if r_rx.shape != (3,) or v_rx.shape != (3,) or r_tx.shape != (3,) or v_tx.shape != (3,):
         raise ValueError("Positions and velocities must be vectors of length 3.")
 
-    # Relative vectors
     r_rel = r_rx - r_tx
     v_rel_vec = v_rx - v_tx
-    
     distance = np.linalg.norm(r_rel)
     if distance == 0:
         return {
             'f_rx_hz': f_tx_hz,
             'doppler_shift_hz': 0.0
         }
-        
-    # Range rate (relative velocity projection onto relative position)
-    v_rel = np.dot(r_rel, v_rel_vec) / distance
     
-    # Doppler shift
-    doppler_shift_hz = - f_tx_hz * (v_rel / C)
+    v_rel = np.dot(r_rel, v_rel_vec) / distance  # range rate
+    doppler_shift_hz = -f_tx_hz * (v_rel / C)
     f_rx_hz = f_tx_hz + doppler_shift_hz
     
     return {
@@ -121,21 +113,17 @@ def calculate_atmospheric_attenuation(elevation_deg, frequency_hz):
     Returns:
         float: Atmospheric attenuation [dB].
     """
-    # Define simple frequency response model for zenith attenuation
-    # (Reasonable ballpark figures)
+    # Zenith attenuation by frequency band (ballpark values)
     if frequency_hz < 3e9:    # S-band
         a_zenith = 0.03
     elif frequency_hz < 10e9:  # C/X-band
         a_zenith = 0.05
     elif frequency_hz < 18e9:  # Ku-band
         a_zenith = 0.15
-    else:                    # Ka-band and above
+    else:                      # Ka-band and above
         a_zenith = 0.35
         
-    # Ensure elevation is above a minimum threshold to avoid divide-by-zero or extreme values
-    # Cosecant model is generally valid for elevation > 5 degrees.
+    # Cosecant model valid for elevation > 5 deg; clamp to avoid division singularity
     elevation_rad = np.radians(max(elevation_deg, 5.0))
-    
     l_atm_db = a_zenith / np.sin(elevation_rad)
-    
     return l_atm_db

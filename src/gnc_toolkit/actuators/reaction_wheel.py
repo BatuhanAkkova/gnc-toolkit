@@ -1,3 +1,7 @@
+"""
+Reaction Wheel (RW) actuator model with friction and momentum limits.
+"""
+
 import numpy as np
 from gnc_toolkit.actuators.actuator import Actuator
 
@@ -43,7 +47,6 @@ class ReactionWheel(Actuator):
         torque = self.apply_saturation(torque)
         
         # Apply friction effects
-        # Friction opposes motion or resists starting from rest
         friction_torque = 0.0
         if abs(current_speed) < 1e-4:  # "Zero" speed
             # Static friction resists the command

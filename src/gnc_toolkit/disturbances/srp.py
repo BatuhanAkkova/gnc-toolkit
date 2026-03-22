@@ -1,3 +1,7 @@
+"""
+Solar Radiation Pressure (SRP) acceleration models.
+"""
+
 import numpy as np
 from gnc_toolkit.environment.solar import Sun
 
@@ -28,8 +32,7 @@ class Canonball:
         dist_sun = np.linalg.norm(sat_to_sun)
         u_sun = sat_to_sun / dist_sun
         
-        # Shadow function (Binary for now: 1=Sun, 0=Eclipse)
-        # Simple cylindrical shadow model
+        # Shadow function
         nu = self.check_eclipse(r_eci, r_sun)
         
         # SRP pressure at distance (Inverse Square Law)

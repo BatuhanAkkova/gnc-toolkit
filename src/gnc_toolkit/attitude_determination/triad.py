@@ -1,3 +1,7 @@
+"""
+TRIAD algorithm for attitude determination from two vectors.
+"""
+
 import numpy as np
 
 def triad(v_body1, v_body2, v_ref1, v_ref2):

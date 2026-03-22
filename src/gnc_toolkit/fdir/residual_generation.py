@@ -1,3 +1,7 @@
+"""
+Residual generation for fault detection using observers.
+"""
+
 import numpy as np
 from typing import Callable, Optional
 

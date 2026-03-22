@@ -1,3 +1,7 @@
+"""
+Thruster models including Chemical, Electric, and Multi-thruster clusters.
+"""
+
 import numpy as np
 from gnc_toolkit.actuators.actuator import Actuator
 
@@ -69,11 +73,9 @@ class ChemicalThruster(Thruster):
         Considers PWM constraints.
         If the commanded thrust implies an on-time < min_on_time, it is zeroed.
         """
-        # Allow proportional command (representing average thrust via PWM).
         thrust = super().command(thrust_cmd, dt=dt, **kwargs)
         
         if dt is not None and self.min_on_time > 0 and abs(thrust) > 1e-9:
-            # required_on_time = (thrust / self.max_thrust) * dt
             required_on_time = (abs(thrust) / self.max_thrust) * dt
             
             if required_on_time < self.min_on_time:
@@ -103,6 +105,7 @@ class ElectricThruster(Thruster):
         if self.power_efficiency <= 0: return float('inf')
         
         ve = self.isp * self.g0
+        return thrust * ve / (2 * self.power_efficiency)
 
 class ThrusterCluster:
     """
@@ -121,7 +124,6 @@ class ThrusterCluster:
         self.pos = np.array(positions)
         self.dir = np.array(directions)
         
-        # Build Actuator Matrix A (6 x N for force + torque)
         # Force_i = T_i * dir_i
         # Torque_i = pos_i x (T_i * dir_i)
         self.A = np.zeros((6, self.N))
@@ -144,16 +146,11 @@ class ThrusterCluster:
         Returns:
             np.array: Delivered thrusts for each thruster.
         """
-        # Allocate desired thrust levels
         thrust_cmds = self.allocator.allocate(force_torque_cmd)
         
-        # Apply individual thruster constraints (positive thrust only usually)
-        # Note: Linear allocation might produce negative thrust. 
-        # For unilateral thrusters, this requires more complex optimization (e.g. QP).
-        # Simple clip for now (will result in command error if impossible).
+        # Apply individual thruster constraints
         delivered_thrusts = []
         for i, cmd in enumerate(thrust_cmds):
-            # Most thrusters are unilateral (cannot pull)
             cmd_clamped = max(0.0, cmd)
             delivered = self.thrusters[i].command(cmd_clamped, dt=dt)
             delivered_thrusts.append(delivered)

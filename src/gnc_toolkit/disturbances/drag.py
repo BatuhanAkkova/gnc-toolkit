@@ -1,3 +1,7 @@
+"""
+Lumped atmospheric drag model for spacecraft acceleration.
+"""
+
 import numpy as np
 
 class LumpedDrag:
@@ -31,7 +35,6 @@ class LumpedDrag:
         
         # Velocity relative to rotating atmosphere
         if self.co_rotate:
-            # w_earth = 7.2921159e-5 rad/s
             w_earth = np.array([0, 0, 7.2921159e-5])
             v_rel = v_eci - np.cross(w_earth, r_eci)
         else:

@@ -1,3 +1,7 @@
+"""
+State and attitude representation conversion utilities.
+"""
+
 import numpy as np
 
 def quat_to_dcm(q):
@@ -18,7 +22,6 @@ def quat_to_euler(q, sequence):
 
 def dcm_to_quat(dcm):
     """Convert Direction Cosine Matrix (Body to ECI) to quaternion [x, y, z, w]."""
-    # Shepperd's algorithm or simple trace check
     tr = np.trace(dcm)
     if tr > 0:
         S = np.sqrt(tr + 1.0) * 2 

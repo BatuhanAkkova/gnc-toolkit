@@ -1,3 +1,7 @@
+"""
+Adams-Bashforth-Moulton 8th order predictor-corrector integrator.
+"""
+
 import numpy as np
 from .integrator import Integrator
 from .rk4 import RK4
@@ -32,7 +36,7 @@ class AdamsBashforthMoultonIntegrator(Integrator):
         t_values = [t0]
         y_values = [y]
 
-        # 1. Initialize with RK4 to fill 8 initial points of derivatives
+        # Initialize with RK4 to fill 8 initial points of derivatives
         rk4 = RK4()
         
         history_dy = [] # History of state derivatives: dy/dt = f(t, y)
@@ -58,7 +62,7 @@ class AdamsBashforthMoultonIntegrator(Integrator):
                 y_values.append(curr_y)
                 break
 
-            # A. Predictor Step: y^{p}_{n+1} = y_n + h * sum(p_j * dy_{n-j})
+            # Predictor Step: y^{p}_{n+1} = y_n + h * sum(p_j * dy_{n-j})
             sum_p = np.zeros_like(curr_y)
             for j in range(8):
                 sum_p += self.p_coeffs[j] * history_dy[-(j+1)]
@@ -67,8 +71,7 @@ class AdamsBashforthMoultonIntegrator(Integrator):
             next_t = curr_t + h
             dy_p = f(next_t, y_p) # Evaluate predicted derivative
             
-            # B. Corrector Step: y_{n+1} = y_n + h * sum(c_j * dy_{n+1-j})
-            # Include predicted derivative in history stream for corrector coefficients multiplication
+            # Corrector Step: y_{n+1} = y_n + h * sum(c_j * dy_{n+1-j})
             temp_history_dy = history_dy + [dy_p]
             sum_c = np.zeros_like(curr_y)
             for j in range(8):
@@ -77,7 +80,7 @@ class AdamsBashforthMoultonIntegrator(Integrator):
             y_c = curr_y + h * sum_c
             dy_c = f(next_t, y_c) # Evaluate corrected derivative
             
-            # C. Update step
+            # Update step
             curr_y = y_c
             curr_t = next_t
             

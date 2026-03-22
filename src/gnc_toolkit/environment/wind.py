@@ -1,3 +1,7 @@
+"""
+Atmospheric wind and earth co-rotation modeling.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci
 
@@ -23,8 +27,6 @@ class AtmosphereCoRotation:
         Returns:
             np.ndarray: Wind velocity vector in ECI [m/s]
         """
-        # In ECI, the rotation axis is basically [0, 0, 1] if we ignore precession/nutation
-        # For higher fidelity, one would rotate the ECEF rotation vector to ECI.
         v_wind = np.cross(self.omega_earth, r_eci)
         return v_wind
 

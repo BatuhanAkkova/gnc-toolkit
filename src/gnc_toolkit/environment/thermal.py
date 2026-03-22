@@ -1,3 +1,7 @@
+"""
+Spacecraft thermal environment flux models (Solar, Albedo, Earth IR).
+"""
+
 import numpy as np
 
 class ThermalEnvironment:

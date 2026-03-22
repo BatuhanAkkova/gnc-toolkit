@@ -1,3 +1,7 @@
+"""
+Feedback Linearization Controller for nonlinear systems.
+"""
+
 import numpy as np
 
 class FeedbackLinearization:

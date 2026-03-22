@@ -1,3 +1,7 @@
+"""
+Continuous thrust guidance laws including Q-law and ZEM/ZEV feedback.
+"""
+
 import numpy as np
 from gnc_toolkit.utils.state_to_elements import eci2kepler
 
@@ -17,17 +21,15 @@ def q_law_guidance(r: np.ndarray, v: np.ndarray, target_oe: np.ndarray, mu: floa
     Returns:
         np.ndarray: Optimal thrust acceleration vector in ECI (m/s^2).
     """
-    # Current elements
     a, e, i, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(r, v)
     
     oe = np.array([a, e, i, raan, argp])
     oe_target = target_oe[:5]
     
     if weights is None:
-        weights = np.array([1.0/a**2, 1.0, 1.0, 1.0, 1.0]) # Heuristic scaling
+        weights = np.array([1.0/a**2, 1.0, 1.0, 1.0, 1.0])
         
     # Gauss Variational Equations (GVE) in RTN frame
-    # B matrix: dot(oe) = B * f_rtn
     r_mag = np.linalg.norm(r)
     h_vec = np.cross(r, v)
     h = np.linalg.norm(h_vec)
@@ -157,14 +159,11 @@ def apollo_dps_guidance(t_go: float, r: np.ndarray, v: np.ndarray, r_target: np.
     if gravity is None:
         gravity = np.zeros(3)
         
-    # General polynomial guidance: 
-    # a_cmd = a_target + (12/t_go^2)*(r_target - (r + v*t_go)) + (6/t_go)*(v_target - v)
-    
+    # General polynomial guidance
     delta_r = r_target - (r + v * t_go + 0.5 * gravity * t_go**2)
     delta_v = v_target - (v + gravity * t_go)
     
-    # Note: different coefficient combinations exist.
-    # Standard Apollo lunar landing coefficients:
+    # Standard Apollo lunar landing coefficients
     a_cmd = a_target + (12.0 / t_go**2) * delta_r + (6.0 / t_go) * delta_v
     
     return a_cmd
@@ -181,7 +180,6 @@ def indirect_optimal_guidance(r0, v0, rf, vf, tf, mu):
         tuple: (time_array, acceleration_profile)
     """
     def fun(t, y):
-        # y = [r, v, lambda_r, lambda_v]
         r = y[:3]
         v = y[3:6]
         lr = y[6:9]
@@ -190,11 +188,10 @@ def indirect_optimal_guidance(r0, v0, rf, vf, tf, mu):
         r_mag = np.linalg.norm(r, axis=0)
         # Dynamics
         dr = v
-        dv = -(mu / r_mag**3) * r - lv # u = -lv for min energy
+        dv = -(mu / r_mag**3) * r - lv
         
         # Costate dynamics: dot(lambda) = -dH/dx
         # Gravity gradient: dg/dr = -(mu/r^3)I + 3(mu/r^5)r*r^T
-        # For simplicity, using a point mass gradient
         r_mag_mat = np.tile(r_mag, (3, 1))
         unit_r = r / r_mag_mat
         
@@ -204,8 +201,6 @@ def indirect_optimal_guidance(r0, v0, rf, vf, tf, mu):
             ri = r[:, i]
             rm = r_mag[i]
             lvi = lv[:, i]
-            # dot(lr) = -(dg/dr)^T * lv
-            # Simplified gravity gradient
             grad_g = -(mu / rm**3) * (np.eye(3) - 3 * np.outer(ri, ri) / rm**2)
             dlr[:, i] = -grad_g @ lvi
             

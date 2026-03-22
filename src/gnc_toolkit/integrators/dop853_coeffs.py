@@ -1,3 +1,7 @@
+"""
+Coefficients for Dormand-Prince 8(5,3) integrator (DOP853).
+"""
+
 import numpy as np
 
 N_STAGES = 12

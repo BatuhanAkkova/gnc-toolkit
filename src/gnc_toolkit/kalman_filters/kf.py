@@ -1,3 +1,7 @@
+"""
+Standard Linear Kalman Filter (KF) implementation.
+"""
+
 import numpy as np
 
 class KF:

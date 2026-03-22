@@ -1,3 +1,7 @@
+"""
+Gauss-Jackson 8th order predictor-corrector integrator for second-order ODEs.
+"""
+
 import numpy as np
 from .integrator import Integrator
 from .rk4 import RK4
@@ -61,7 +65,7 @@ class GaussJacksonIntegrator(Integrator):
         t_values = [t0]
         y_values = [y]
 
-        # 1. Initialize with single-step method (RK4)
+        # Initialize with single-step method (RK4)
         rk4 = RK4()
         
         history_r = [y[:3]]
@@ -84,10 +88,10 @@ class GaussJacksonIntegrator(Integrator):
             dy = f(curr_t, curr_y)
             history_a.append(dy[3:])
 
-        # 2. Compute Back Differences at step 7
+        # Compute Back Differences at step 7
         diffs = self._calc_differences(history_a)
         
-        # 3. Initialize Sum Variables S1, S2 at step 7
+        # Initialize Sum Variables S1, S2 at step 7
         sum_c_vel = np.zeros(3)
         sum_c_pos = np.zeros(3)
         for j in range(8):
@@ -102,7 +106,7 @@ class GaussJacksonIntegrator(Integrator):
 
         print(f"DEBUG INIT: S1={S1}, S2={S2}")
 
-        # 4. Propagation Loop from step 8 onwards
+        # Propagation Loop from step 8 onwards
         step_count = 8
         while curr_t < tf:
             if curr_t + h > tf:

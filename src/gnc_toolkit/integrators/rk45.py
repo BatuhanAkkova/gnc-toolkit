@@ -1,3 +1,7 @@
+"""
+Adaptive-step Runge-Kutta-Fehlberg 4(5) integrator.
+"""
+
 import numpy as np
 from .integrator import Integrator
 
@@ -23,7 +27,6 @@ class RK45(Integrator):
             [-8/27, 2, -3544/2565, 1859/4104, -11/40]
         ]
         # 4th order solution (y)
-        # 4th order solution (y)
         self.b4 = np.array([25/216, 0, 1408/2565, 2197/4104, -1/5, 0])
         # 5th order solution (z for error est)
         self.b5 = np.array([16/135, 0, 6656/12825, 28561/56430, -9/50, 2/55])
@@ -47,7 +50,6 @@ class RK45(Integrator):
             # k2..k6
             for i in range(1, 6):
                 # sum(a_ij * kj)
-                # y_arg = y + dt * sum(...)
                 sum_ak = np.zeros_like(y)
                 for j in range(i):
                     sum_ak += self.a[i][j] * k[j]
@@ -60,7 +62,6 @@ class RK45(Integrator):
             y_next = y + dt_current * np.dot(self.b5, k)
             
             # Calculate error estimate
-            # error = dt * sum((b5 - b4) * k)
             error_est = dt_current * np.dot(self.E, k)
             scale = self.atol + self.rtol * np.maximum(np.abs(y), np.abs(y_next))
             error_ratio = np.max(np.abs(error_est) / scale)

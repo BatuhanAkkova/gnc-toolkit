@@ -1,3 +1,7 @@
+"""
+Actuator accommodation and control allocation weight adjustment.
+"""
+
 import numpy as np
 from typing import List, Optional
 
@@ -66,12 +70,10 @@ class ActuatorAccommodation:
         weights = self.W_diag.copy() if W_diag is None else W_diag.copy()
         
         # Apply health status
-        # If health is 0, we effectively want weight to be infinity
-        
         effective_weights = weights.copy()
         for i in range(self.m):
             if self.health[i] <= 1e-6:
-                effective_weights[i] = 1e12  # Very high cost to use this actuator
+                effective_weights[i] = 1e12  # High cost to use this actuator
             else:
                 effective_weights[i] = weights[i] / self.health[i]
                 

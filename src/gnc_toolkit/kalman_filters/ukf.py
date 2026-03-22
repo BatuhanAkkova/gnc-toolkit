@@ -1,3 +1,7 @@
+"""
+Unscented Kalman Filter (UKF) with support for states on manifolds.
+"""
+
 import numpy as np
 from scipy.linalg import cholesky, sqrtm
 

@@ -1,3 +1,7 @@
+"""
+Conversions between ECI position/velocity and Keplerian orbital elements.
+"""
+
 import numpy as np
 
 def eci2kepler(reci, veci):

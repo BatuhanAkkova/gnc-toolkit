@@ -1,3 +1,7 @@
+"""
+Atmospheric density models (Exponential, Harris-Priester, NRLMSISE-00, JB2008).
+"""
+
 import numpy as np
 from gnc_toolkit.utils.frame_conversion import eci2geodetic, eci2llh
 from gnc_toolkit.utils.time_utils import calc_jd
@@ -165,9 +169,8 @@ class JB2008:
 
     def get_density(self, r_eci, jd):
         """
-        Calculates density using a simplified JB2008 approach.
-        In a full implementation, this would involve extensive look-up tables and 
-        corrections for solar activity, semi-annual variations, and geomagnetic storms.
+        Simplified JB2008: exponential base density scaled by F10.7 solar flux.
+        Full JB2008 requires look-up tables for solar/geomagnetic corrections.
         """
         # Get altitude and solar position
         lon, lat, h = eci2geodetic(r_eci, jd)
@@ -202,12 +205,9 @@ class CIRA72:
         _, _, h = eci2geodetic(r_eci, jd)
         h_km = h / 1000.0
         
-        # Polynomial fit for density (log10(rho) vs altitude) 
-        # based on mean solar conditions for 100-800 km range.
         if h_km < 100:
             return 1.225 * np.exp(-h_km / 8.5)
         
-        # Coefficients for log10(rho) [kg/m^3]
-        # This is a representative curve for mean conditions.
+        # Polynomial fit for log10(rho) vs altitude, mean solar conditions, 100-800 km
         log_rho = -9.0 - 0.015 * (h_km - 100.0) + 1.2e-5 * (h_km - 100.0)**2
         return 10**log_rho

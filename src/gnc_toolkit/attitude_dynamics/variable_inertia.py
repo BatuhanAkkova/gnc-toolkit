@@ -1,3 +1,7 @@
+"""
+Attitude dynamics with time-varying inertia tensors.
+"""
+
 import numpy as np
 
 def variable_inertia_euler_equations(J, J_dot, omega, torque):

@@ -1,3 +1,7 @@
+"""
+Entry, Descent, and Landing (EDL) dynamics and utilities.
+"""
+
 import numpy as np
 from gnc_toolkit.environment.density import Exponential
 
@@ -27,8 +31,7 @@ def ballistic_entry_dynamics(t: float, state: np.ndarray, cd: float, area: float
         # Default to simple exponential for Earth if not provided
         rho_model = Exponential(rho0=1.225, h0=0.0, H=8.5)
         
-    # Density calculation (assuming jd=0 for simplicity if using simple model)
-    rho = rho_model.get_density(r_vec, 0.0)
+    rho = rho_model.get_density(r_vec, 0.0)  # jd=0 placeholder for simple models
     
     # Aerodynamic Drag
     dynamic_pressure = 0.5 * rho * v_mag**2
@@ -117,15 +120,66 @@ def calculate_g_load(acc_vec: np.ndarray) -> float:
     g0 = 9.80665
     return np.linalg.norm(acc_vec) / g0
 
-def aerocapture_guidance(state, target_apoapsis, cd, area, mass, planet_params, rho_model):
+def aerocapture_guidance(state, target_apoapsis, cd, area, mass, planet_params, rho_model, cl=0.0):
     """
     Predictive aerocapture guidance.
-    Adjusts bank angle or drag to target a specific exit apoapsis.
+    Adjusts bank angle (if cl > 0) to target a specific exit apoapsis using numerical predictor-corrector.
     Returns: bank_angle (rad)
     """
-    # Simplified logic: predict exit state and adjust
-    # For a toolkit, we might use a numeric predictor-corrector
-    return 0.0 # Placeholder for full NPC logic
+    mu = planet_params.get('mu', 3.986e14)
+    r_planet = planet_params.get('r_planet', 6371000.0)
+    atm_interface = r_planet + 120000.0  # Assumed 120km interface
+    
+    from scipy.integrate import solve_ivp
+    
+    def get_apoapsis_from_state(s):
+        r_vec, v_vec = s[:3], s[3:]
+        r = np.linalg.norm(r_vec)
+        v = np.linalg.norm(v_vec)
+        energy = v**2 / 2 - mu / r
+        if energy >= 0:
+            return np.inf  # Escape trajectory
+        h_vec = np.cross(r_vec, v_vec)
+        h = np.linalg.norm(h_vec)
+        a = -mu / (2 * energy)
+        e = np.sqrt(max(0.0, 1 - h**2 / (a * mu)))
+        return a * (1 + e) - r_planet
+
+    if cl <= 0.0:
+        return 0.0  # Cannot modulate bank angle without lift
+        
+    def predict_apoapsis(bank_angle):
+        def dynamics(t, s):
+            return lifting_entry_dynamics(t, s, cl, cd, bank_angle, area, mass, mu, r_planet, rho_model)
+            
+        def exit_event(t, s):
+            return np.linalg.norm(s[:3]) - atm_interface
+        exit_event.terminal = True
+        exit_event.direction = 1
+        
+        # Integrate forward to exit
+        sol = solve_ivp(dynamics, (0, 2000.0), state, events=[exit_event], max_step=10.0, rtol=1e-3, atol=1e-3)
+        return get_apoapsis_from_state(sol.y[:, -1])
+
+    bank_up = 0.0
+    bank_down = np.pi
+    best_bank = 0.0
+    
+    # Simple bisection search on bank angle
+    for _ in range(10):
+        bank_mid = (bank_up + bank_down) / 2
+        ap_mid = predict_apoapsis(bank_mid)
+        best_bank = bank_mid
+        
+        if np.isinf(ap_mid) or ap_mid > target_apoapsis:
+            bank_up = bank_mid  # Need more pull-down (higher atmospheric time)
+        else:
+            bank_down = bank_mid
+            
+        if not np.isinf(ap_mid) and abs(ap_mid - target_apoapsis) < 1000.0:
+            break
+            
+    return best_bank
 
 def hazard_avoidance(r, v, hazards, safety_margin=50.0):
     """

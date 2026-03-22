@@ -2,14 +2,6 @@
 
 > **Mission**: Become the definitive open-source Guidance, Navigation & Control toolkit for spacecraft engineers, scientists, and researchers — covering the full mission lifecycle from concept to operations.
 
-### 7.4 Formation Flying Control
-| Feature | Status | Notes |
-|---|---|---|
-| Virtual structure formation control | ⬜ | |
-| Leader-follower formation control | ⬜ | |
-| Fuel-balanced formation keeping | ⬜ | |
-| Distributed consensus algorithms | ⬜ | |
-
 ### 9.1 Coverage & Access
 | Feature | Status | Notes |
 |---|---|---|

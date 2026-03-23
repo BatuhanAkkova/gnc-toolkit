@@ -2,52 +2,6 @@
 
 > **Mission**: Become the definitive open-source Guidance, Navigation & Control toolkit for spacecraft engineers, scientists, and researchers — covering the full mission lifecycle from concept to operations.
 
-### 9.1 Coverage & Access
-| Feature | Status | Notes |
-|---|---|---|
-| Ground station access windows | ✅ | `coverage.py` |
-| Constellation coverage analysis | ⬜ | Coverage gap and revisit time |
-| Ground track visualization | ✅ | `coverage.py` |
-| Lighting conditions analysis | ✅ | `coverage.py` |
-
-### 9.2 Launch & Deployment
-| Feature | Status | Notes |
-|---|---|---|
-| Launch window calculator | ✅ | `launch.py` |
-| Trajectory-to-orbit injection | ✅ | `launch.py` |
-| Constellation deployment sequencing | ⬜ | |
-
-### 9.5 Space Situational Awareness
-| Feature | Status | Notes |
-|---|---|---|
-| Conjunction analysis (Pc computation) | ⬜ | Probability of collision |
-| TLE catalog interface | ⬜ | |
-| Object tracking (orbit correlation) | ⬜ | |
-| Debris avoidance maneuver planning | ⬜ | |
-
-### 10.2 Simulation Architecture
-| Feature | Status | Notes |
-|---|---|---|
-| End-to-end mission simulator class | ⬜ | Unified sim loop: propagate → sense → estimate → control |
-| Discrete-event simulation support | ⬜ | Maneuver scheduling, mode transitions |
-| Monte Carlo simulation harness | ⬜ | Uncertainty quantification, WC analysis |
-| Scenario configuration (YAML/JSON) | ⬜ | Reproducible mission setups |
-| Simulation replay & logging | ⬜ | HDF5 / NetCDF output |
-| Real-time simulation (wall-clock sync) | ⬜ | HIL / SIL testing |
-| Multi-body / constellation simulation | ⬜ | Simulate N spacecraft simultaneously |
-
-### 10.3 Visualization
-| Feature | Status | Notes |
-|---|---|---|
-| 2D plots (existing examples) | ✅ | matplotlib plots in `assets/` |
-| 3D orbit visualization | ⬜ | Plotly / Matplotlib 3D |
-| Attitude sphere / Bloch sphere | ⬜ | |
-| Ground track map | ⬜ | Cartopy or Basemap overlay |
-| Coverage heat map | ⬜ | |
-| Interactive dashboard | ⬜ | Panel or Plotly Dash |
-
----
-
 ## 11. Infrastructure & Developer Experience
 
 ### 11.1 Testing

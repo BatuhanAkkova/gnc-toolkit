@@ -2,17 +2,6 @@
 
 > **Mission**: Become the definitive open-source Guidance, Navigation & Control toolkit for spacecraft engineers, scientists, and researchers — covering the full mission lifecycle from concept to operations.
 
-## 11. Infrastructure & Developer Experience
-
-### 11.1 Testing
-| Feature | Status | Notes |
-|---|---|---|
-| Unit tests (pytest) | 🔄 | `tests/` directory exists; coverage needs expansion |
-| Integration tests | ⬜ | End-to-end scenario validation |
-| Regression tests vs. reference data | ⬜ | e.g., GMAT, STK, Orekit comparisons |
-| Continuous integration (GitHub Actions) | 🔄 | `.github/` exists; needs full test pipeline |
-| Code coverage reporting | ⬜ | Codecov / coveralls integration |
-
 ### 11.2 Documentation
 | Feature | Status | Notes |
 |---|---|---|

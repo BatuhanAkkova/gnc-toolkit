@@ -16,6 +16,9 @@ Subpackages
    gnc_toolkit.navigation
    gnc_toolkit.optimal_control
    gnc_toolkit.propagators
+   gnc_toolkit.simulation
+   gnc_toolkit.ssa
+   gnc_toolkit.visualization
 
 Submodules
 ----------

@@ -61,6 +61,13 @@
 <li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.zem_zev_guidance"><code class="docutils literal notranslate"><span class="pre">zem_zev_guidance()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-gnc_toolkit.guidance.formation_flying">gnc_toolkit.guidance.formation_flying module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.distributed_consensus_control"><code class="docutils literal notranslate"><span class="pre">distributed_consensus_control()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.fuel_balanced_formation_keeping"><code class="docutils literal notranslate"><span class="pre">fuel_balanced_formation_keeping()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.leader_follower_control"><code class="docutils literal notranslate"><span class="pre">leader_follower_control()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.virtual_structure_control"><code class="docutils literal notranslate"><span class="pre">virtual_structure_control()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-gnc_toolkit.guidance.maneuvers">gnc_toolkit.guidance.maneuvers module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.bi_elliptic_transfer"><code class="docutils literal notranslate"><span class="pre">bi_elliptic_transfer()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.combined_plane_change"><code class="docutils literal notranslate"><span class="pre">combined_plane_change()</span></code></a></li>
@@ -331,6 +338,101 @@ Used for terminal intercept or landing.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Commanded acceleration vector (m/s^2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.guidance.formation_flying">
+<span id="gnc-toolkit-guidance-formation-flying-module"></span><h2>gnc_toolkit.guidance.formation_flying module<a class="headerlink" href="#module-gnc_toolkit.guidance.formation_flying" title="Link to this heading"></a></h2>
+<p>Formation Flying Control routines (Virtual Structure, Leader-Follower,
+Fuel-Balanced, and Distributed Consensus).</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.formation_flying.distributed_consensus_control">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.formation_flying.</span></span><span class="sig-name descname"><span class="pre">distributed_consensus_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laplacian_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gains</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/formation_flying.html#distributed_consensus_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.formation_flying.distributed_consensus_control" title="Link to this definition"></a></dt>
+<dd><p>Computes consensus control for a distributed multi-agent system based on
+the network Laplacian matrix.</p>
+<p>u_i = -K * SUM(a_ij * (x_i - x_j))
+In matrix form: U = -K * (L &#64; X)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>states</strong> (<em>np.ndarray</em>) – N x M array of states for N agents.</p></li>
+<li><p><strong>laplacian_matrix</strong> (<em>np.ndarray</em>) – N x N graph Laplacian matrix.</p></li>
+<li><p><strong>gains</strong> (<em>np.ndarray</em>) – Gains to apply to the consensus error.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>N x M array of control inputs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.formation_flying.fuel_balanced_formation_keeping">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.formation_flying.</span></span><span class="sig-name descname"><span class="pre">fuel_balanced_formation_keeping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_levels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/formation_flying.html#fuel_balanced_formation_keeping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.formation_flying.fuel_balanced_formation_keeping" title="Link to this definition"></a></dt>
+<dd><p>Distributes control effort among the formation to balance fuel consumption.
+Spacecraft with more fuel provide more control effort.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>states</strong> (<em>np.ndarray</em>) – (N x M) array of states for N spacecraft.</p></li>
+<li><p><strong>fuel_levels</strong> (<em>np.ndarray</em>) – (N,) array of current fuel mass/levels.</p></li>
+<li><p><strong>weights</strong> (<em>np.ndarray</em>) – (N, M) base control actions or distribution weights.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fuel-balanced control actions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.formation_flying.leader_follower_control">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.formation_flying.</span></span><span class="sig-name descname"><span class="pre">leader_follower_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">leader_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">follower_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_relative_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gains</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/formation_flying.html#leader_follower_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.formation_flying.leader_follower_control" title="Link to this definition"></a></dt>
+<dd><p>Computes the control command for a follower spacecraft to maintain a desired
+relative state with respect to a leader spacecraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>leader_state</strong> (<em>np.ndarray</em>) – State of the leader spacecraft.</p></li>
+<li><p><strong>follower_state</strong> (<em>np.ndarray</em>) – State of the follower spacecraft.</p></li>
+<li><p><strong>desired_relative_state</strong> (<em>np.ndarray</em>) – Target offset from the leader (follower - leader).</p></li>
+<li><p><strong>gains</strong> (<em>np.ndarray</em>) – Control gains.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control command for the follower.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.guidance.formation_flying.virtual_structure_control">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.guidance.formation_flying.</span></span><span class="sig-name descname"><span class="pre">virtual_structure_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_actual</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_desired</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gains</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/guidance/formation_flying.html#virtual_structure_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.guidance.formation_flying.virtual_structure_control" title="Link to this definition"></a></dt>
+<dd><p>Computes control inputs to track a virtual structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_actual</strong> (<em>np.ndarray</em>) – Current state of the spacecraft (N x state_dim).</p></li>
+<li><p><strong>state_desired</strong> (<em>np.ndarray</em>) – Desired state derived from the virtual structure (N x state_dim).</p></li>
+<li><p><strong>gains</strong> (<em>np.ndarray</em>) – Proportional/Derivative feedback gains.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Computed control actions for each spacecraft (N x control_dim).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>

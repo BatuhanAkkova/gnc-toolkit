@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.visualization package &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">gnc_toolkit.visualization package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.visualization.attitude">gnc_toolkit.visualization.attitude module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.attitude.plot_attitude_sphere"><code class="docutils literal notranslate"><span class="pre">plot_attitude_sphere()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.visualization.coverage">gnc_toolkit.visualization.coverage module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.coverage.plot_coverage_heatmap"><code class="docutils literal notranslate"><span class="pre">plot_coverage_heatmap()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.visualization.dashboard">gnc_toolkit.visualization.dashboard module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.dashboard.create_dashboard_app"><code class="docutils literal notranslate"><span class="pre">create_dashboard_app()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.visualization.ground_track">gnc_toolkit.visualization.ground_track module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.ground_track.plot_ground_track"><code class="docutils literal notranslate"><span class="pre">plot_ground_track()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.visualization.orbit">gnc_toolkit.visualization.orbit module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.orbit.plot_orbit_3d"><code class="docutils literal notranslate"><span class="pre">plot_orbit_3d()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.visualization">Module contents</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.create_dashboard_app"><code class="docutils literal notranslate"><span class="pre">create_dashboard_app()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.plot_attitude_sphere"><code class="docutils literal notranslate"><span class="pre">plot_attitude_sphere()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.plot_coverage_heatmap"><code class="docutils literal notranslate"><span class="pre">plot_coverage_heatmap()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.plot_ground_track"><code class="docutils literal notranslate"><span class="pre">plot_ground_track()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.visualization.plot_orbit_3d"><code class="docutils literal notranslate"><span class="pre">plot_orbit_3d()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.visualization package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.visualization.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-visualization-package">
+<h1>gnc_toolkit.visualization package<a class="headerlink" href="#gnc-toolkit-visualization-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.visualization.attitude">
+<span id="gnc-toolkit-visualization-attitude-module"></span><h2>gnc_toolkit.visualization.attitude module<a class="headerlink" href="#module-gnc_toolkit.visualization.attitude" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.attitude.plot_attitude_sphere">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.attitude.</span></span><span class="sig-name descname"><span class="pre">plot_attitude_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Attitude</span> <span class="pre">Sphere</span> <span class="pre">Visualization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/attitude.html#plot_attitude_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.attitude.plot_attitude_sphere" title="Link to this definition"></a></dt>
+<dd><p>Plots vectors on a unit sphere to visualize pointing direction or attitude evolution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vectors</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Shape (N, 3) representing unit vectors in inertial/reference frame.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.visualization.coverage">
+<span id="gnc-toolkit-visualization-coverage-module"></span><h2>gnc_toolkit.visualization.coverage module<a class="headerlink" href="#module-gnc_toolkit.visualization.coverage" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.coverage.plot_coverage_heatmap">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.coverage.</span></span><span class="sig-name descname"><span class="pre">plot_coverage_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Coverage</span> <span class="pre">Heat</span> <span class="pre">Map'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/coverage.html#plot_coverage_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.coverage.plot_coverage_heatmap" title="Link to this definition"></a></dt>
+<dd><p>Plots a density/heatmap on an Earth map to analyze access/coverage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>latitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Flattened list of latitudes [deg].</p></li>
+<li><p><strong>longitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Flattened list of longitudes [deg].</p></li>
+<li><p><strong>values</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Corresponding continuous coverage values (e.g., access time, frequency).</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.visualization.dashboard">
+<span id="gnc-toolkit-visualization-dashboard-module"></span><h2>gnc_toolkit.visualization.dashboard module<a class="headerlink" href="#module-gnc_toolkit.visualization.dashboard" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.dashboard.create_dashboard_app">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.dashboard.</span></span><span class="sig-name descname"><span class="pre">create_dashboard_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GNC</span> <span class="pre">Toolkit</span> <span class="pre">Mission</span> <span class="pre">Dashboard'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/dashboard.html#create_dashboard_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.dashboard.create_dashboard_app" title="Link to this definition"></a></dt>
+<dd><p>Creates a Dash application to display multiple figures together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figures</strong> (<em>dict</em>) – Dictionary mapping { “Figure Title”: plotly.graph_objects.Figure }</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the dashboard webpage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Dash application object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dash.Dash</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.visualization.ground_track">
+<span id="gnc-toolkit-visualization-ground-track-module"></span><h2>gnc_toolkit.visualization.ground_track module<a class="headerlink" href="#module-gnc_toolkit.visualization.ground_track" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.ground_track.plot_ground_track">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.ground_track.</span></span><span class="sig-name descname"><span class="pre">plot_ground_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Satellite</span> <span class="pre">Ground</span> <span class="pre">Track'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/ground_track.html#plot_ground_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.ground_track.plot_ground_track" title="Link to this definition"></a></dt>
+<dd><p>Plots sub-satellite points on an Earth map to visualize the ground track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>latitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Geodetic/Geocentric Latitudes in [deg] (from -90 to 90).</p></li>
+<li><p><strong>longitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Geodetic/Geocentric Longitudes in [deg] (from -180 to 180).</p></li>
+<li><p><strong>times</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – Timestamps or seconds for the trajectory.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.visualization.orbit">
+<span id="gnc-toolkit-visualization-orbit-module"></span><h2>gnc_toolkit.visualization.orbit module<a class="headerlink" href="#module-gnc_toolkit.visualization.orbit" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.orbit.plot_orbit_3d">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.orbit.</span></span><span class="sig-name descname"><span class="pre">plot_orbit_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_earth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'3D</span> <span class="pre">Orbit</span> <span class="pre">Visualization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/orbit.html#plot_orbit_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.orbit.plot_orbit_3d" title="Link to this definition"></a></dt>
+<dd><p>Plots a 3D orbit trajectory around a spherical Earth mesh using plotly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Shape (N, 3) or List of 3-element lists/arrays representing position vectors in ECI [m].</p></li>
+<li><p><strong>r_earth</strong> (<em>bool</em>) – Whether to plot a spherical Earth model. Default is True.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.visualization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.visualization" title="Link to this heading"></a></h2>
+<p>Visualization module for GNC Toolkit.
+Provides interactive 3D and 2D plotting capabilities for orbits, attitude, mapped data, and dashboards.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.create_dashboard_app">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.</span></span><span class="sig-name descname"><span class="pre">create_dashboard_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GNC</span> <span class="pre">Toolkit</span> <span class="pre">Mission</span> <span class="pre">Dashboard'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/dashboard.html#create_dashboard_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.create_dashboard_app" title="Link to this definition"></a></dt>
+<dd><p>Creates a Dash application to display multiple figures together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figures</strong> (<em>dict</em>) – Dictionary mapping { “Figure Title”: plotly.graph_objects.Figure }</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the dashboard webpage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Dash application object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dash.Dash</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.plot_attitude_sphere">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.</span></span><span class="sig-name descname"><span class="pre">plot_attitude_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Attitude</span> <span class="pre">Sphere</span> <span class="pre">Visualization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/attitude.html#plot_attitude_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.plot_attitude_sphere" title="Link to this definition"></a></dt>
+<dd><p>Plots vectors on a unit sphere to visualize pointing direction or attitude evolution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vectors</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Shape (N, 3) representing unit vectors in inertial/reference frame.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.plot_coverage_heatmap">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.</span></span><span class="sig-name descname"><span class="pre">plot_coverage_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Coverage</span> <span class="pre">Heat</span> <span class="pre">Map'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/coverage.html#plot_coverage_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.plot_coverage_heatmap" title="Link to this definition"></a></dt>
+<dd><p>Plots a density/heatmap on an Earth map to analyze access/coverage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>latitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Flattened list of latitudes [deg].</p></li>
+<li><p><strong>longitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Flattened list of longitudes [deg].</p></li>
+<li><p><strong>values</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Corresponding continuous coverage values (e.g., access time, frequency).</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.plot_ground_track">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.</span></span><span class="sig-name descname"><span class="pre">plot_ground_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Satellite</span> <span class="pre">Ground</span> <span class="pre">Track'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/ground_track.html#plot_ground_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.plot_ground_track" title="Link to this definition"></a></dt>
+<dd><p>Plots sub-satellite points on an Earth map to visualize the ground track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>latitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Geodetic/Geocentric Latitudes in [deg] (from -90 to 90).</p></li>
+<li><p><strong>longitudes</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Geodetic/Geocentric Longitudes in [deg] (from -180 to 180).</p></li>
+<li><p><strong>times</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – Timestamps or seconds for the trajectory.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.visualization.plot_orbit_3d">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.visualization.</span></span><span class="sig-name descname"><span class="pre">plot_orbit_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_earth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'3D</span> <span class="pre">Orbit</span> <span class="pre">Visualization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/visualization/orbit.html#plot_orbit_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.visualization.plot_orbit_3d" title="Link to this definition"></a></dt>
+<dd><p>Plots a 3D orbit trajectory around a spherical Earth mesh using plotly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em>) – Shape (N, 3) or List of 3-element lists/arrays representing position vectors in ECI [m].</p></li>
+<li><p><strong>r_earth</strong> (<em>bool</em>) – Whether to plot a spherical Earth model. Default is True.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plotly figure object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

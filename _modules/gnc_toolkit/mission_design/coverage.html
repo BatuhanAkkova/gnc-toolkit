@@ -261,6 +261,119 @@
         <span class="s1">&#39;eclipse_state&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">eclipse_state</span><span class="p">)</span>
     <span class="p">}</span></div>
 
+
+<div class="viewcode-block" id="calculate_constellation_coverage">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.coverage.calculate_constellation_coverage">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_constellation_coverage</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">r_eci_array_list</span><span class="p">,</span> <span class="n">target_points_llh</span><span class="p">,</span> <span class="n">min_elevation_deg</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">jdut1</span><span class="o">=</span><span class="mf">2451545.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluates coverage statistics (gap, revisit time) for a constellation over a list of ground targets.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        t_array (np.ndarray): Time array [s] from starting epoch.</span>
+<span class="sd">        r_eci_array_list (list of np.ndarray): List of position histories in ECI [m], each shape (N, 3).</span>
+<span class="sd">        target_points_llh (np.ndarray): Target locations as (M, 2) or (M, 3) matrix [Lat(deg), Lon(deg), Alt(m)].</span>
+<span class="sd">                                        Altitude defaults to 0 if only 2 columns provided.</span>
+<span class="sd">        min_elevation_deg (float): Minimum elevation for visibility [deg]. Defaults to 5.0.</span>
+<span class="sd">        jdut1 (float): Julian Date UT1 at t=0. Defaults to 2451545.0.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list of dict: For each target point, statistics including &#39;max_revisit_time_gap&#39;, </span>
+<span class="sd">                      &#39;mean_revisit_time&#39;, and &#39;total_coverage_time&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R_earth</span> <span class="o">=</span> <span class="mf">6378137.0</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_points_llh</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)</span>
+    <span class="n">num_sats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_eci_array_list</span><span class="p">)</span>
+    
+    <span class="c1"># Store results per point</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+        <span class="n">lat_deg</span> <span class="o">=</span> <span class="n">target_points_llh</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">lon_deg</span> <span class="o">=</span> <span class="n">target_points_llh</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">alt_m</span> <span class="o">=</span> <span class="n">target_points_llh</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">target_points_llh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="mf">0.0</span>
+        
+        <span class="n">gs_lat_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat_deg</span><span class="p">)</span>
+        <span class="n">gs_lon_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lon_deg</span><span class="p">)</span>
+        <span class="n">r_gs_ecef</span> <span class="o">=</span> <span class="n">llh2ecef</span><span class="p">(</span><span class="n">gs_lat_rad</span><span class="p">,</span> <span class="n">gs_lon_rad</span><span class="p">,</span> <span class="n">alt_m</span><span class="p">)</span>
+        
+        <span class="c1"># Zenith vector at target</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">gs_lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">gs_lon_rad</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">gs_lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">gs_lon_rad</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">gs_lat_rad</span><span class="p">)</span>
+        <span class="p">])</span>
+        
+        <span class="c1"># visibility combined across the constellation</span>
+        <span class="c1"># visibility[i] = True if ANY satellite is visible at time t_array[i]</span>
+        <span class="n">point_visibility</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_sats</span><span class="p">):</span>
+            <span class="n">r_eci_array</span> <span class="o">=</span> <span class="n">r_eci_array_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_array</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">point_visibility</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="k">continue</span> <span class="c1"># Already covered by someone else</span>
+                    
+                <span class="n">jd_current</span> <span class="o">=</span> <span class="n">jdut1</span> <span class="o">+</span> <span class="n">t</span> <span class="o">/</span> <span class="mf">86400.0</span>
+                <span class="n">r_eci</span> <span class="o">=</span> <span class="n">r_eci_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                
+                <span class="c1"># Convert this satellite to ECEF</span>
+                <span class="n">r_ecef</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">eci2ecef</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">jd_current</span><span class="p">)</span>
+                
+                <span class="n">rho_ecef</span> <span class="o">=</span> <span class="n">r_ecef</span> <span class="o">-</span> <span class="n">r_gs_ecef</span>
+                <span class="n">rho_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rho_ecef</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">rho_norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">point_visibility</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">continue</span>
+                    
+                <span class="n">elevation_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rho_ecef</span><span class="p">,</span> <span class="n">U</span><span class="p">)</span> <span class="o">/</span> <span class="n">rho_norm</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">elevation_rad</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_elevation_deg</span><span class="p">:</span>
+                    <span class="n">point_visibility</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Now compute statistics: coverage gaps and revisit times</span>
+        <span class="c1"># find contiguous False regions (gaps)</span>
+        <span class="n">gaps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">covered_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+        
+        <span class="n">in_gap</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">point_visibility</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">gap_start_t</span> <span class="o">=</span> <span class="n">t_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">in_gap</span> <span class="k">else</span> <span class="kc">None</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+            <span class="n">was_visible</span> <span class="o">=</span> <span class="n">point_visibility</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">is_visible</span> <span class="o">=</span> <span class="n">point_visibility</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">is_visible</span><span class="p">:</span>
+                <span class="n">covered_time</span> <span class="o">+=</span> <span class="p">(</span><span class="n">t_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_array</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">was_visible</span> <span class="ow">and</span> <span class="n">is_visible</span><span class="p">:</span>
+                <span class="c1"># End of a gap</span>
+                <span class="n">gap_duration</span> <span class="o">=</span> <span class="n">t_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">gap_start_t</span>
+                <span class="n">gaps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gap_duration</span><span class="p">)</span>
+                <span class="n">in_gap</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="n">was_visible</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_visible</span><span class="p">:</span>
+                <span class="c1"># Start of a gap</span>
+                <span class="n">in_gap</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">gap_start_t</span> <span class="o">=</span> <span class="n">t_array</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># previous time was the last moment it was visible</span>
+                
+        <span class="k">if</span> <span class="n">in_gap</span><span class="p">:</span>
+            <span class="c1"># gap persists to the end of the simulation</span>
+            <span class="n">gaps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">gap_start_t</span><span class="p">)</span>
+            
+        <span class="n">gaps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span>
+        <span class="n">max_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">mean_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;max_revisit_time_gap&#39;</span><span class="p">:</span> <span class="n">max_gap</span><span class="p">,</span>
+            <span class="s1">&#39;mean_revisit_time&#39;</span><span class="p">:</span> <span class="n">mean_gap</span><span class="p">,</span>
+            <span class="s1">&#39;total_coverage_time&#39;</span><span class="p">:</span> <span class="n">covered_time</span>
+        <span class="p">})</span>
+        
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
 </pre></div>
 
            </div>

@@ -1,0 +1,854 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.simulation package &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">gnc_toolkit.simulation package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation.events">gnc_toolkit.simulation.events module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.events.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.events.Event.execute"><code class="docutils literal notranslate"><span class="pre">Event.execute()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.events.EventQueue"><code class="docutils literal notranslate"><span class="pre">EventQueue</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.events.EventQueue.has_events"><code class="docutils literal notranslate"><span class="pre">EventQueue.has_events()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.events.EventQueue.next_event_time"><code class="docutils literal notranslate"><span class="pre">EventQueue.next_event_time()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.events.EventQueue.process_until"><code class="docutils literal notranslate"><span class="pre">EventQueue.process_until()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.events.EventQueue.schedule"><code class="docutils literal notranslate"><span class="pre">EventQueue.schedule()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation.logging">gnc_toolkit.simulation.logging module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger"><code class="docutils literal notranslate"><span class="pre">SimulationLogger</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger.log"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.log()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger.save_csv"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.save_csv()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger.save_hdf5"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.save_hdf5()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger.save_json"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.save_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation.monte_carlo">gnc_toolkit.simulation.monte_carlo module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.monte_carlo.MonteCarloSim"><code class="docutils literal notranslate"><span class="pre">MonteCarloSim</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.monte_carlo.MonteCarloSim.run_parallel"><code class="docutils literal notranslate"><span class="pre">MonteCarloSim.run_parallel()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.monte_carlo.MonteCarloSim.run_sequential"><code class="docutils literal notranslate"><span class="pre">MonteCarloSim.run_sequential()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation.multibody">gnc_toolkit.simulation.multibody module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.multibody.ConstellationSimulator"><code class="docutils literal notranslate"><span class="pre">ConstellationSimulator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.multibody.ConstellationSimulator.initialize"><code class="docutils literal notranslate"><span class="pre">ConstellationSimulator.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.multibody.ConstellationSimulator.run"><code class="docutils literal notranslate"><span class="pre">ConstellationSimulator.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation.realtime">gnc_toolkit.simulation.realtime module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.realtime.RealTimeSimulator"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.realtime.RealTimeSimulator.initialize"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulator.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.realtime.RealTimeSimulator.run"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulator.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation.scenario">gnc_toolkit.simulation.scenario module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.scenario.ScenarioConfig"><code class="docutils literal notranslate"><span class="pre">ScenarioConfig</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.scenario.ScenarioConfig.get"><code class="docutils literal notranslate"><span class="pre">ScenarioConfig.get()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.scenario.ScenarioConfig.load"><code class="docutils literal notranslate"><span class="pre">ScenarioConfig.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation.simulator">gnc_toolkit.simulation.simulator module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.simulator.MissionSimulator"><code class="docutils literal notranslate"><span class="pre">MissionSimulator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.simulator.MissionSimulator.initialize"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.simulator.MissionSimulator.run"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.run()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.simulator.MissionSimulator.schedule_event"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.schedule_event()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.simulator.MissionSimulator.step"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-gnc_toolkit.simulation">Module contents</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.ConstellationSimulator"><code class="docutils literal notranslate"><span class="pre">ConstellationSimulator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.ConstellationSimulator.initialize"><code class="docutils literal notranslate"><span class="pre">ConstellationSimulator.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.ConstellationSimulator.run"><code class="docutils literal notranslate"><span class="pre">ConstellationSimulator.run()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.Event.execute"><code class="docutils literal notranslate"><span class="pre">Event.execute()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.EventQueue"><code class="docutils literal notranslate"><span class="pre">EventQueue</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.EventQueue.has_events"><code class="docutils literal notranslate"><span class="pre">EventQueue.has_events()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.EventQueue.next_event_time"><code class="docutils literal notranslate"><span class="pre">EventQueue.next_event_time()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.EventQueue.process_until"><code class="docutils literal notranslate"><span class="pre">EventQueue.process_until()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.EventQueue.schedule"><code class="docutils literal notranslate"><span class="pre">EventQueue.schedule()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MissionSimulator"><code class="docutils literal notranslate"><span class="pre">MissionSimulator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MissionSimulator.initialize"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MissionSimulator.run"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.run()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MissionSimulator.schedule_event"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.schedule_event()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MissionSimulator.step"><code class="docutils literal notranslate"><span class="pre">MissionSimulator.step()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MonteCarloSim"><code class="docutils literal notranslate"><span class="pre">MonteCarloSim</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MonteCarloSim.run_parallel"><code class="docutils literal notranslate"><span class="pre">MonteCarloSim.run_parallel()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.MonteCarloSim.run_sequential"><code class="docutils literal notranslate"><span class="pre">MonteCarloSim.run_sequential()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.RealTimeSimulator"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulator</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.RealTimeSimulator.initialize"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulator.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.RealTimeSimulator.run"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulator.run()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.ScenarioConfig"><code class="docutils literal notranslate"><span class="pre">ScenarioConfig</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.ScenarioConfig.get"><code class="docutils literal notranslate"><span class="pre">ScenarioConfig.get()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.ScenarioConfig.load"><code class="docutils literal notranslate"><span class="pre">ScenarioConfig.load()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.SimulationLogger"><code class="docutils literal notranslate"><span class="pre">SimulationLogger</span></code></a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.SimulationLogger.log"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.log()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.SimulationLogger.save_csv"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.save_csv()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.SimulationLogger.save_hdf5"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.save_hdf5()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.simulation.SimulationLogger.save_json"><code class="docutils literal notranslate"><span class="pre">SimulationLogger.save_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.simulation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.simulation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-simulation-package">
+<h1>gnc_toolkit.simulation package<a class="headerlink" href="#gnc-toolkit-simulation-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.simulation.events">
+<span id="gnc-toolkit-simulation-events-module"></span><h2>gnc_toolkit.simulation.events module<a class="headerlink" href="#module-gnc_toolkit.simulation.events" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.events.Event">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.events.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#Event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.events.Event" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A single discrete event to be processed at a specific time.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.events.Event.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#Event.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.events.Event.execute" title="Link to this definition"></a></dt>
+<dd><p>Executes the event callback.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.events.EventQueue">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.events.</span></span><span class="sig-name descname"><span class="pre">EventQueue</span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.events.EventQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Priority queue managing discrete events in the simulation.
+Handles maneuver scheduling and mode transitions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.events.EventQueue.has_events">
+<span class="sig-name descname"><span class="pre">has_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.has_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.events.EventQueue.has_events" title="Link to this definition"></a></dt>
+<dd><p>Returns True if there are pending events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.events.EventQueue.next_event_time">
+<span class="sig-name descname"><span class="pre">next_event_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.next_event_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.events.EventQueue.next_event_time" title="Link to this definition"></a></dt>
+<dd><p>Returns the time of the next pending event, or infinity if empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.events.EventQueue.process_until">
+<span class="sig-name descname"><span class="pre">process_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.process_until"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.events.EventQueue.process_until" title="Link to this definition"></a></dt>
+<dd><p>Process all events scheduled up to the provided current_time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_time</strong> (<em>float</em>) – The current simulation time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.events.EventQueue.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.events.EventQueue.schedule" title="Link to this definition"></a></dt>
+<dd><p>Schedule a new event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time at which to run the callback.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – The function to execute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.simulation.logging">
+<span id="gnc-toolkit-simulation-logging-module"></span><h2>gnc_toolkit.simulation.logging module<a class="headerlink" href="#module-gnc_toolkit.simulation.logging" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.logging.SimulationLogger">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.logging.</span></span><span class="sig-name descname"><span class="pre">SimulationLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.logging.SimulationLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulation replay and logging interface.
+Records state history and outputs to common formats like JSON, CSV.
+(HDF5 support optionally using h5py if installed).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.logging.SimulationLogger.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.logging.SimulationLogger.log" title="Link to this definition"></a></dt>
+<dd><p>Record a simulation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Simulation time.</p></li>
+<li><p><strong>state</strong> (<em>Any</em>) – True state of the system (e.g. state vector).</p></li>
+<li><p><strong>measurements</strong> (<em>Any</em><em>, </em><em>optional</em>) – Sensor measurements at this time step.</p></li>
+<li><p><strong>estimates</strong> (<em>Any</em><em>, </em><em>optional</em>) – Filter estimates at this time step.</p></li>
+<li><p><strong>commands</strong> (<em>Any</em><em>, </em><em>optional</em>) – Control commands sent to actuators.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.logging.SimulationLogger.save_csv">
+<span class="sig-name descname"><span class="pre">save_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.logging.SimulationLogger.save_csv" title="Link to this definition"></a></dt>
+<dd><p>Saves the log’s top-level keys to a CSV file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.logging.SimulationLogger.save_hdf5">
+<span class="sig-name descname"><span class="pre">save_hdf5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.save_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.logging.SimulationLogger.save_hdf5" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to an HDF5 file (requires h5py).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.logging.SimulationLogger.save_json">
+<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.logging.SimulationLogger.save_json" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to a JSON file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.simulation.monte_carlo">
+<span id="gnc-toolkit-simulation-monte-carlo-module"></span><h2>gnc_toolkit.simulation.monte_carlo module<a class="headerlink" href="#module-gnc_toolkit.simulation.monte_carlo" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.monte_carlo.MonteCarloSim">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.monte_carlo.</span></span><span class="sig-name descname"><span class="pre">MonteCarloSim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/monte_carlo.html#MonteCarloSim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.monte_carlo.MonteCarloSim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Monte Carlo simulation harness for uncertainty quantification and WC analysis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.monte_carlo.MonteCarloSim.run_parallel">
+<span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/monte_carlo.html#MonteCarloSim.run_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.monte_carlo.MonteCarloSim.run_parallel" title="Link to this definition"></a></dt>
+<dd><p>Executes simulations in parallel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_runs</strong> (<em>int</em>) – Number of iterations.</p></li>
+<li><p><strong>processes</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of parallel workers. Defaults to CPU count.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.monte_carlo.MonteCarloSim.run_sequential">
+<span class="sig-name descname"><span class="pre">run_sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/monte_carlo.html#MonteCarloSim.run_sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.monte_carlo.MonteCarloSim.run_sequential" title="Link to this definition"></a></dt>
+<dd><p>Executes simulations sequentially.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_runs</strong> (<em>int</em>) – Number of iterations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.simulation.multibody">
+<span id="gnc-toolkit-simulation-multibody-module"></span><h2>gnc_toolkit.simulation.multibody module<a class="headerlink" href="#module-gnc_toolkit.simulation.multibody" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.multibody.ConstellationSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.multibody.</span></span><span class="sig-name descname"><span class="pre">ConstellationSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_satellites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger" title="gnc_toolkit.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/multibody.html#ConstellationSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.multibody.ConstellationSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Multi-body / constellation simulator class.
+Simulates N independent or coupled spacecraft simultaneously.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.multibody.ConstellationSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/multibody.html#ConstellationSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.multibody.ConstellationSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize constellation simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start time.</p></li>
+<li><p><strong>initial_states</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – List of initial states for each spacecraft.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.multibody.ConstellationSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/multibody.html#ConstellationSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.multibody.ConstellationSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the full constellation simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Stop time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.simulation.realtime">
+<span id="gnc-toolkit-simulation-realtime-module"></span><h2>gnc_toolkit.simulation.realtime module<a class="headerlink" href="#module-gnc_toolkit.simulation.realtime" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.realtime.RealTimeSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.realtime.</span></span><span class="sig-name descname"><span class="pre">RealTimeSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/realtime.html#RealTimeSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.realtime.RealTimeSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.simulation.simulator.MissionSimulator" title="gnc_toolkit.simulation.simulator.MissionSimulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">MissionSimulator</span></code></a></p>
+<p>Real-time simulation synchronizing simulation time to wall-clock time.
+Supports Hardware-In-the-Loop (HIL) or Software-In-the-Loop (SIL) testing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.realtime.RealTimeSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/realtime.html#RealTimeSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.realtime.RealTimeSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Sets the initial condition for the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start simulation time.</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth system state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.realtime.RealTimeSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/realtime.html#RealTimeSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.realtime.RealTimeSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the simulation loop until the end time, matching wall-clock pace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation end time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Simulation time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.simulation.scenario">
+<span id="gnc-toolkit-simulation-scenario-module"></span><h2>gnc_toolkit.simulation.scenario module<a class="headerlink" href="#module-gnc_toolkit.simulation.scenario" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.scenario.ScenarioConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.scenario.</span></span><span class="sig-name descname"><span class="pre">ScenarioConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/scenario.html#ScenarioConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.scenario.ScenarioConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Scenario configuration module.
+Responsible for parsing reproducible mission setups from JSON (or YAML if available).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.scenario.ScenarioConfig.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/scenario.html#ScenarioConfig.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.scenario.ScenarioConfig.get" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a configuration value by key. Supports dot notation for nested keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Configuration key (e.g., ‘satellite.mass’).</p></li>
+<li><p><strong>default</strong> (<em>Any</em>) – Default value if key is not found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The configuration value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.scenario.ScenarioConfig.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/scenario.html#ScenarioConfig.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.scenario.ScenarioConfig.load" title="Link to this definition"></a></dt>
+<dd><p>Loads the configuration file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.simulation.simulator">
+<span id="gnc-toolkit-simulation-simulator-module"></span><h2>gnc_toolkit.simulation.simulator module<a class="headerlink" href="#module-gnc_toolkit.simulation.simulator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.simulator.MissionSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.simulator.</span></span><span class="sig-name descname"><span class="pre">MissionSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger" title="gnc_toolkit.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.simulator.MissionSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>End-to-end mission simulator class.
+Executes a unified simulation loop: propagate -&gt; sense -&gt; estimate -&gt; control.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.simulator.MissionSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.simulator.MissionSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Sets the initial condition for the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start simulation time.</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth system state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.simulator.MissionSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.simulator.MissionSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the simulation loop until the end time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation end time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Simulation time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.simulator.MissionSimulator.schedule_event">
+<span class="sig-name descname"><span class="pre">schedule_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.schedule_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.simulator.MissionSimulator.schedule_event" title="Link to this definition"></a></dt>
+<dd><p>Schedules a discrete event in the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Event execution time.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – Function to call.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.simulator.MissionSimulator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.simulator.MissionSimulator.step" title="Link to this definition"></a></dt>
+<dd><p>Executes a single simulation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Time step duration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.simulation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.simulation" title="Link to this heading"></a></h2>
+<p>Simulation module for the gnc_toolkit.</p>
+<p>This module provides the architecture for end-to-end mission simulation,
+including scenario configuration, discrete-event scheduling, simulation
+logging, Monte Carlo harness, and real-time/multi-body support.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.ConstellationSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">ConstellationSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_satellites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger" title="gnc_toolkit.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/multibody.html#ConstellationSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.ConstellationSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Multi-body / constellation simulator class.
+Simulates N independent or coupled spacecraft simultaneously.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.ConstellationSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/multibody.html#ConstellationSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.ConstellationSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize constellation simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start time.</p></li>
+<li><p><strong>initial_states</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – List of initial states for each spacecraft.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.ConstellationSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/multibody.html#ConstellationSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.ConstellationSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the full constellation simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Stop time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.Event">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#Event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.Event" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A single discrete event to be processed at a specific time.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.Event.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#Event.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.Event.execute" title="Link to this definition"></a></dt>
+<dd><p>Executes the event callback.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.EventQueue">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">EventQueue</span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.EventQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Priority queue managing discrete events in the simulation.
+Handles maneuver scheduling and mode transitions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.EventQueue.has_events">
+<span class="sig-name descname"><span class="pre">has_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.has_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.EventQueue.has_events" title="Link to this definition"></a></dt>
+<dd><p>Returns True if there are pending events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.EventQueue.next_event_time">
+<span class="sig-name descname"><span class="pre">next_event_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.next_event_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.EventQueue.next_event_time" title="Link to this definition"></a></dt>
+<dd><p>Returns the time of the next pending event, or infinity if empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.EventQueue.process_until">
+<span class="sig-name descname"><span class="pre">process_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.process_until"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.EventQueue.process_until" title="Link to this definition"></a></dt>
+<dd><p>Process all events scheduled up to the provided current_time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_time</strong> (<em>float</em>) – The current simulation time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.EventQueue.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/events.html#EventQueue.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.EventQueue.schedule" title="Link to this definition"></a></dt>
+<dd><p>Schedule a new event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time at which to run the callback.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – The function to execute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MissionSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">MissionSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gnc_toolkit.simulation.logging.SimulationLogger" title="gnc_toolkit.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MissionSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>End-to-end mission simulator class.
+Executes a unified simulation loop: propagate -&gt; sense -&gt; estimate -&gt; control.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MissionSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MissionSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Sets the initial condition for the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start simulation time.</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth system state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MissionSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MissionSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the simulation loop until the end time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation end time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Simulation time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MissionSimulator.schedule_event">
+<span class="sig-name descname"><span class="pre">schedule_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.schedule_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MissionSimulator.schedule_event" title="Link to this definition"></a></dt>
+<dd><p>Schedules a discrete event in the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Event execution time.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – Function to call.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MissionSimulator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/simulator.html#MissionSimulator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MissionSimulator.step" title="Link to this definition"></a></dt>
+<dd><p>Executes a single simulation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Time step duration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MonteCarloSim">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">MonteCarloSim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/monte_carlo.html#MonteCarloSim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MonteCarloSim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Monte Carlo simulation harness for uncertainty quantification and WC analysis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MonteCarloSim.run_parallel">
+<span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/monte_carlo.html#MonteCarloSim.run_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MonteCarloSim.run_parallel" title="Link to this definition"></a></dt>
+<dd><p>Executes simulations in parallel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_runs</strong> (<em>int</em>) – Number of iterations.</p></li>
+<li><p><strong>processes</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of parallel workers. Defaults to CPU count.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.MonteCarloSim.run_sequential">
+<span class="sig-name descname"><span class="pre">run_sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/monte_carlo.html#MonteCarloSim.run_sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.MonteCarloSim.run_sequential" title="Link to this definition"></a></dt>
+<dd><p>Executes simulations sequentially.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_runs</strong> (<em>int</em>) – Number of iterations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.RealTimeSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">RealTimeSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/realtime.html#RealTimeSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.RealTimeSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.simulation.simulator.MissionSimulator" title="gnc_toolkit.simulation.simulator.MissionSimulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">MissionSimulator</span></code></a></p>
+<p>Real-time simulation synchronizing simulation time to wall-clock time.
+Supports Hardware-In-the-Loop (HIL) or Software-In-the-Loop (SIL) testing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.RealTimeSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/realtime.html#RealTimeSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.RealTimeSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Sets the initial condition for the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start simulation time.</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth system state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.RealTimeSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/realtime.html#RealTimeSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.RealTimeSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the simulation loop until the end time, matching wall-clock pace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation end time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Simulation time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.ScenarioConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">ScenarioConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/scenario.html#ScenarioConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.ScenarioConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Scenario configuration module.
+Responsible for parsing reproducible mission setups from JSON (or YAML if available).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.ScenarioConfig.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/scenario.html#ScenarioConfig.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.ScenarioConfig.get" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a configuration value by key. Supports dot notation for nested keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Configuration key (e.g., ‘satellite.mass’).</p></li>
+<li><p><strong>default</strong> (<em>Any</em>) – Default value if key is not found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The configuration value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.ScenarioConfig.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/scenario.html#ScenarioConfig.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.ScenarioConfig.load" title="Link to this definition"></a></dt>
+<dd><p>Loads the configuration file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.SimulationLogger">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.simulation.</span></span><span class="sig-name descname"><span class="pre">SimulationLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.SimulationLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulation replay and logging interface.
+Records state history and outputs to common formats like JSON, CSV.
+(HDF5 support optionally using h5py if installed).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.SimulationLogger.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.SimulationLogger.log" title="Link to this definition"></a></dt>
+<dd><p>Record a simulation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Simulation time.</p></li>
+<li><p><strong>state</strong> (<em>Any</em>) – True state of the system (e.g. state vector).</p></li>
+<li><p><strong>measurements</strong> (<em>Any</em><em>, </em><em>optional</em>) – Sensor measurements at this time step.</p></li>
+<li><p><strong>estimates</strong> (<em>Any</em><em>, </em><em>optional</em>) – Filter estimates at this time step.</p></li>
+<li><p><strong>commands</strong> (<em>Any</em><em>, </em><em>optional</em>) – Control commands sent to actuators.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.SimulationLogger.save_csv">
+<span class="sig-name descname"><span class="pre">save_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.SimulationLogger.save_csv" title="Link to this definition"></a></dt>
+<dd><p>Saves the log’s top-level keys to a CSV file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.SimulationLogger.save_hdf5">
+<span class="sig-name descname"><span class="pre">save_hdf5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.save_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.SimulationLogger.save_hdf5" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to an HDF5 file (requires h5py).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.simulation.SimulationLogger.save_json">
+<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/simulation/logging.html#SimulationLogger.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.simulation.SimulationLogger.save_json" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to a JSON file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

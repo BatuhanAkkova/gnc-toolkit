@@ -66,11 +66,13 @@
 </li>
 <li><a class="reference internal" href="#module-gnc_toolkit.mission_design.coverage">gnc_toolkit.mission_design.coverage module</a><ul>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_constellation_coverage"><code class="docutils literal notranslate"><span class="pre">calculate_constellation_coverage()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_lighting_conditions"><code class="docutils literal notranslate"><span class="pre">calculate_lighting_conditions()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-gnc_toolkit.mission_design.launch">gnc_toolkit.mission_design.launch module</a><ul>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.calculate_deployment_sequence"><code class="docutils literal notranslate"><span class="pre">calculate_deployment_sequence()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.calculate_launch_windows"><code class="docutils literal notranslate"><span class="pre">calculate_launch_windows()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.compute_injection_state"><code class="docutils literal notranslate"><span class="pre">compute_injection_state()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper"><code class="docutils literal notranslate"><span class="pre">eci2_ecef_or_inverse_wrapper()</span></code></a></li>
@@ -86,7 +88,9 @@
 </li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_atmospheric_attenuation"><code class="docutils literal notranslate"><span class="pre">calculate_atmospheric_attenuation()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_constellation_coverage"><code class="docutils literal notranslate"><span class="pre">calculate_constellation_coverage()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_delta_v()</span></code></a></li>
+<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_deployment_sequence"><code class="docutils literal notranslate"><span class="pre">calculate_deployment_sequence()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_doppler_shift"><code class="docutils literal notranslate"><span class="pre">calculate_doppler_shift()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_friis_link_budget"><code class="docutils literal notranslate"><span class="pre">calculate_friis_link_budget()</span></code></a></li>
 <li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
@@ -413,6 +417,34 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.coverage.calculate_constellation_coverage">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.coverage.</span></span><span class="sig-name descname"><span class="pre">calculate_constellation_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_points_llh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_elevation_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_constellation_coverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.coverage.calculate_constellation_coverage" title="Link to this definition"></a></dt>
+<dd><p>Evaluates coverage statistics (gap, revisit time) for a constellation over a list of ground targets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array_list</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – List of position histories in ECI [m], each shape (N, 3).</p></li>
+<li><p><strong>target_points_llh</strong> (<em>np.ndarray</em>) – Target locations as (M, 2) or (M, 3) matrix [Lat(deg), Lon(deg), Alt(m)].
+Altitude defaults to 0 if only 2 columns provided.</p></li>
+<li><p><strong>min_elevation_deg</strong> (<em>float</em>) – Minimum elevation for visibility [deg]. Defaults to 5.0.</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0. Defaults to 2451545.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>For each target point, statistics including ‘max_revisit_time_gap’,</dt><dd><p>’mean_revisit_time’, and ‘total_coverage_time’.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.mission_design.coverage.calculate_ground_track">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.coverage.</span></span><span class="sig-name descname"><span class="pre">calculate_ground_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_ground_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.coverage.calculate_ground_track" title="Link to this definition"></a></dt>
 <dd><p>Calculates ground track coordinates (Lat, Lon, Alt) over time.</p>
@@ -459,6 +491,30 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 <section id="module-gnc_toolkit.mission_design.launch">
 <span id="gnc-toolkit-mission-design-launch-module"></span><h2>gnc_toolkit.mission_design.launch module<a class="headerlink" href="#module-gnc_toolkit.mission_design.launch" title="Link to this heading"></a></h2>
 <p>Launch window and injection state computation utilities.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.launch.calculate_deployment_sequence">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.launch.</span></span><span class="sig-name descname"><span class="pre">calculate_deployment_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sats_per_plane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phasing_parameter_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_raan_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_ta_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#calculate_deployment_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.launch.calculate_deployment_sequence" title="Link to this definition"></a></dt>
+<dd><p>Computes target RAAN and True Anomaly for each satellite in a Walker-Delta Constellation (T/P/F).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>planes</strong> (<em>int</em>) – Number of orbital planes (P).</p></li>
+<li><p><strong>sats_per_plane</strong> (<em>int</em>) – Number of satellites per plane (S).</p></li>
+<li><p><strong>phasing_parameter_f</strong> (<em>int</em>) – Phasing parameter (F) between adjacent planes (0 &lt;= F &lt;= P-1).</p></li>
+<li><p><strong>inc_deg</strong> (<em>float</em>) – Inclination of all planes [deg] (not actively changing sequence logic, kept for reference).</p></li>
+<li><p><strong>base_raan_deg</strong> (<em>float</em>) – RAAN of Plane 0 [deg].</p></li>
+<li><p><strong>base_ta_deg</strong> (<em>float</em>) – True anomaly of Satellite 0 in Plane 0 [deg].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Each satellite’s parameters including ‘plane_id’, ‘sat_id’, ‘global_id’, ‘raan_deg’, ‘ta_deg’</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.mission_design.launch.calculate_launch_windows">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.launch.</span></span><span class="sig-name descname"><span class="pre">calculate_launch_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raan_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#calculate_launch_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.launch.calculate_launch_windows" title="Link to this definition"></a></dt>
@@ -617,6 +673,34 @@ where A_zenith is a base attenuation dependent on frequency band.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_constellation_coverage">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_constellation_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci_array_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_points_llh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_elevation_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jdut1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2451545.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/coverage.html#calculate_constellation_coverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_constellation_coverage" title="Link to this definition"></a></dt>
+<dd><p>Evaluates coverage statistics (gap, revisit time) for a constellation over a list of ground targets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_array</strong> (<em>np.ndarray</em>) – Time array [s] from starting epoch.</p></li>
+<li><p><strong>r_eci_array_list</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – List of position histories in ECI [m], each shape (N, 3).</p></li>
+<li><p><strong>target_points_llh</strong> (<em>np.ndarray</em>) – Target locations as (M, 2) or (M, 3) matrix [Lat(deg), Lon(deg), Alt(m)].
+Altitude defaults to 0 if only 2 columns provided.</p></li>
+<li><p><strong>min_elevation_deg</strong> (<em>float</em>) – Minimum elevation for visibility [deg]. Defaults to 5.0.</p></li>
+<li><p><strong>jdut1</strong> (<em>float</em>) – Julian Date UT1 at t=0. Defaults to 2451545.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>For each target point, statistics including ‘max_revisit_time_gap’,</dt><dd><p>’mean_revisit_time’, and ‘total_coverage_time’.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_delta_v">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_delta_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propellant_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/budgeting.html#calculate_delta_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_delta_v" title="Link to this definition"></a></dt>
 <dd><p>Calculates the Delta-V available from a given propellant mass.</p>
@@ -633,6 +717,30 @@ where A_zenith is a base attenuation dependent on frequency band.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.mission_design.calculate_deployment_sequence">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.mission_design.</span></span><span class="sig-name descname"><span class="pre">calculate_deployment_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sats_per_plane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phasing_parameter_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_raan_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_ta_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/mission_design/launch.html#calculate_deployment_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.mission_design.calculate_deployment_sequence" title="Link to this definition"></a></dt>
+<dd><p>Computes target RAAN and True Anomaly for each satellite in a Walker-Delta Constellation (T/P/F).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>planes</strong> (<em>int</em>) – Number of orbital planes (P).</p></li>
+<li><p><strong>sats_per_plane</strong> (<em>int</em>) – Number of satellites per plane (S).</p></li>
+<li><p><strong>phasing_parameter_f</strong> (<em>int</em>) – Phasing parameter (F) between adjacent planes (0 &lt;= F &lt;= P-1).</p></li>
+<li><p><strong>inc_deg</strong> (<em>float</em>) – Inclination of all planes [deg] (not actively changing sequence logic, kept for reference).</p></li>
+<li><p><strong>base_raan_deg</strong> (<em>float</em>) – RAAN of Plane 0 [deg].</p></li>
+<li><p><strong>base_ta_deg</strong> (<em>float</em>) – True anomaly of Satellite 0 in Plane 0 [deg].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Each satellite’s parameters including ‘plane_id’, ‘sat_id’, ‘global_id’, ‘raan_deg’, ‘ta_deg’</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dict</p>
 </dd>
 </dl>
 </dd></dl>

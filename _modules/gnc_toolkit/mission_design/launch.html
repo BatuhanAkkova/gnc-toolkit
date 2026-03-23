@@ -220,6 +220,51 @@
     
     <span class="k">return</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span></div>
 
+
+<div class="viewcode-block" id="calculate_deployment_sequence">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.launch.calculate_deployment_sequence">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_deployment_sequence</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">sats_per_plane</span><span class="p">,</span> <span class="n">phasing_parameter_f</span><span class="p">,</span> <span class="n">inc_deg</span><span class="p">,</span> <span class="n">base_raan_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">base_ta_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes target RAAN and True Anomaly for each satellite in a Walker-Delta Constellation (T/P/F).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        planes (int): Number of orbital planes (P).</span>
+<span class="sd">        sats_per_plane (int): Number of satellites per plane (S).</span>
+<span class="sd">        phasing_parameter_f (int): Phasing parameter (F) between adjacent planes (0 &lt;= F &lt;= P-1).</span>
+<span class="sd">        inc_deg (float): Inclination of all planes [deg] (not actively changing sequence logic, kept for reference).</span>
+<span class="sd">        base_raan_deg (float): RAAN of Plane 0 [deg].</span>
+<span class="sd">        base_ta_deg (float): True anomaly of Satellite 0 in Plane 0 [deg].</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list of dict: Each satellite&#39;s parameters including &#39;plane_id&#39;, &#39;sat_id&#39;, &#39;global_id&#39;, &#39;raan_deg&#39;, &#39;ta_deg&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total_sats</span> <span class="o">=</span> <span class="n">planes</span> <span class="o">*</span> <span class="n">sats_per_plane</span>
+    
+    <span class="n">delta_raan</span> <span class="o">=</span> <span class="mf">360.0</span> <span class="o">/</span> <span class="n">planes</span>
+    <span class="n">delta_ta_in_plane</span> <span class="o">=</span> <span class="mf">360.0</span> <span class="o">/</span> <span class="n">sats_per_plane</span>
+    <span class="n">delta_ta_between_planes</span> <span class="o">=</span> <span class="mf">360.0</span> <span class="o">*</span> <span class="n">phasing_parameter_f</span> <span class="o">/</span> <span class="n">total_sats</span>
+    
+    <span class="n">sequence</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="n">global_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">planes</span><span class="p">):</span>
+        <span class="n">raan</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_raan_deg</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="n">delta_raan</span><span class="p">)</span> <span class="o">%</span> <span class="mf">360.0</span>
+        
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sats_per_plane</span><span class="p">):</span>
+            <span class="n">ta</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_ta_deg</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="n">delta_ta_in_plane</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="n">delta_ta_between_planes</span><span class="p">)</span> <span class="o">%</span> <span class="mf">360.0</span>
+            
+            <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;global_id&#39;</span><span class="p">:</span> <span class="n">global_id</span><span class="p">,</span>
+                <span class="s1">&#39;plane_id&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
+                <span class="s1">&#39;sat_id&#39;</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span>
+                <span class="s1">&#39;raan_deg&#39;</span><span class="p">:</span> <span class="n">raan</span><span class="p">,</span>
+                <span class="s1">&#39;ta_deg&#39;</span><span class="p">:</span> <span class="n">ta</span>
+            <span class="p">})</span>
+            <span class="n">global_id</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+    <span class="k">return</span> <span class="n">sequence</span></div>
+
+
 </pre></div>
 
            </div>

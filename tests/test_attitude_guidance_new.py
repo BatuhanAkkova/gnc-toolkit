@@ -7,7 +7,7 @@ from gnc_toolkit.guidance import (
     attitude_blending,
     eigenaxis_slew_path_planning
 )
-from gnc_toolkit.utils.quat_utils import quat_norm, quat_rot
+from gnc_toolkit.utils.quat_utils import quat_norm, quat_rot, quat_conj
 
 def test_nadir_pointing():
     pos = np.array([7000e3, 0.0, 0.0]) # 7000 km on X
@@ -23,10 +23,10 @@ def test_nadir_pointing():
     # orb_normal = pos x vel = [0, 0, 7000e3 * 7500] (Positive Z)
     # So Body Y should align with -Z_eci
     
-    body_z = quat_rot(q, [0, 0, 1.0])
+    body_z = quat_rot(quat_conj(q), [0, 0, 1.0])
     assert body_z[0] == pytest.approx(-1.0) # Aligned with -X_eci
     
-    body_y = quat_rot(q, [0, 1.0, 0.0])
+    body_y = quat_rot(quat_conj(q), [0, 1.0, 0.0])
     assert body_y[2] == pytest.approx(-1.0) # Aligned with -Z_eci
 
 def test_sun_pointing():
@@ -56,6 +56,6 @@ def test_target_tracking():
     q = target_tracking_reference(pos, target)
     
     # Body Z should point towards target
-    body_z = quat_rot(q, [0, 0, 1.0])
+    body_z = quat_rot(quat_conj(q), [0, 0, 1.0])
     expected_z = target / np.linalg.norm(target)
     np.testing.assert_allclose(body_z, expected_z, atol=1e-7)

@@ -30,11 +30,12 @@ def main():
     r2_true, v2_true = kepler2eci(a, ecc, incl, raan, argp, nu2)
     r3_true, v3_true = kepler2eci(a, ecc, incl, raan, argp, nu3)
 
-    # 3. Simulate observer at Geocenter (for simplicity)
-    # In a real scenario, R1, R2, R3 would be the observer's ECI position vectors
-    R1 = np.zeros(3)
-    R2 = np.zeros(3)
-    R3 = np.zeros(3)
+    # 3. Simulate observer sitting at Equator (R1=R2=R3 for simplicity)
+    # In a real scenario, this would include diurnal or orbital propagation
+    Re = 6378e3
+    R1 = np.array([Re, 0.0, 0.0])
+    R2 = np.array([Re, 0.0, 0.0])
+    R3 = np.array([Re, 0.0, 0.0])
 
     # 4. Calculate unit Line-of-Sight (LOS) vectors (rho_hat)
     rho1_vec = r1_true - R1

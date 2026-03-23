@@ -143,3 +143,45 @@ def compute_injection_state(lat_deg, lon_deg, alt_m, azimuth_deg, flight_path_an
     r_eci, v_eci = ecef2eci(r_ecef, v_ecef_inertial, jd)
     
     return r_eci, v_eci
+
+def calculate_deployment_sequence(planes, sats_per_plane, phasing_parameter_f, inc_deg, base_raan_deg=0.0, base_ta_deg=0.0):
+    """
+    Computes target RAAN and True Anomaly for each satellite in a Walker-Delta Constellation (T/P/F).
+    
+    Args:
+        planes (int): Number of orbital planes (P).
+        sats_per_plane (int): Number of satellites per plane (S).
+        phasing_parameter_f (int): Phasing parameter (F) between adjacent planes (0 <= F <= P-1).
+        inc_deg (float): Inclination of all planes [deg] (not actively changing sequence logic, kept for reference).
+        base_raan_deg (float): RAAN of Plane 0 [deg].
+        base_ta_deg (float): True anomaly of Satellite 0 in Plane 0 [deg].
+        
+    Returns:
+        list of dict: Each satellite's parameters including 'plane_id', 'sat_id', 'global_id', 'raan_deg', 'ta_deg'
+    """
+    total_sats = planes * sats_per_plane
+    
+    delta_raan = 360.0 / planes
+    delta_ta_in_plane = 360.0 / sats_per_plane
+    delta_ta_between_planes = 360.0 * phasing_parameter_f / total_sats
+    
+    sequence = []
+    
+    global_id = 0
+    for p in range(planes):
+        raan = (base_raan_deg + p * delta_raan) % 360.0
+        
+        for s in range(sats_per_plane):
+            ta = (base_ta_deg + s * delta_ta_in_plane + p * delta_ta_between_planes) % 360.0
+            
+            sequence.append({
+                'global_id': global_id,
+                'plane_id': p,
+                'sat_id': s,
+                'raan_deg': raan,
+                'ta_deg': ta
+            })
+            global_id += 1
+            
+    return sequence
+

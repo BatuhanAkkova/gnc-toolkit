@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 07: Initial Orbit Determination and Lambert’s Problem &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 07: Initial Orbit Determination and Lambert’s Problem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/07_iod_determination.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-07-initial-orbit-determination-and-lambert-s-problem">
+<h1>Tutorial 07: Initial Orbit Determination and Lambert’s Problem<a class="headerlink" href="#tutorial-07-initial-orbit-determination-and-lambert-s-problem" title="Link to this heading"></a></h1>
+<p>This tutorial demonstrates how to determine a spacecraft’s orbit from observations and how to solve for trajectories between two points in space.</p>
+<section id="initial-orbit-determination-iod">
+<h2>1. Initial Orbit Determination (IOD)<a class="headerlink" href="#initial-orbit-determination-iod" title="Link to this heading"></a></h2>
+<p>IOD is the process of estimating an initial state vector (position and velocity) from a set of observations, usually angles-only (Line-of-Sight) or range-and-angles.</p>
+<section id="gauss-s-method">
+<h3>Gauss’s Method<a class="headerlink" href="#gauss-s-method" title="Link to this heading"></a></h3>
+<p>Gauss’s method uses <strong>three line-of-sight (LOS) vectors</strong> from a single observation site to determine the orbit. It solves eighth-order polynomial for the radius of the middle observation and then uses universal variables to refine the estimate iterative.</p>
+</section>
+</section>
+<section id="theory-prerequisites">
+<h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
+<p>Given three unit vectors $\hat{\rho}_1, \hat{\rho}_2, \hat{\rho}_3$ and observer positions $R_1, R_2, R_3$, the satellite position is:
+$$
+r_i = R_i + \rho_i \hat{\rho}_i
+$$
+Gauss solves for the scalar ranges $\rho_i$ by enforcing the coplanarity condition and Keplerian dynamics.</p>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.navigation.iod</span><span class="w"> </span><span class="kn">import</span> <span class="n">gauss_iod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.guidance.rendezvous</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_lambert</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.state_to_elements</span><span class="w"> </span><span class="kn">import</span> <span class="n">kepler2eci</span>
+
+<span class="c1"># Helpers for generating synthetic data</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_kepler</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">M</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">E</span> <span class="o">-</span> <span class="n">e</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">-</span> <span class="n">M</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">e</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">E</span> <span class="o">-</span> <span class="n">f</span> <span class="o">/</span> <span class="n">df</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">E</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">eccentric_to_true</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">e</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
+</pre></div>
+</div>
+</div>
+</div>
+<section id="simulating-observations">
+<h3>1.1 Simulating Observations<a class="headerlink" href="#simulating-observations" title="Link to this heading"></a></h3>
+<p>We will generate synthetic line-of-sight data from a ground station observing a satellite in an elliptical orbit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Target Orbit Parameters</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mf">10000e3</span>       <span class="c1"># Semi-major axis [m]</span>
+<span class="n">ecc</span> <span class="o">=</span> <span class="mf">0.05</span>        <span class="c1"># Eccentricity</span>
+<span class="n">incl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">35.0</span><span class="p">)</span>
+<span class="n">raan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+<span class="n">argp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="mf">398600.4415e9</span> <span class="c1"># m^3/s^2</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">a</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Observation Times</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="mf">1800.0</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">300.0</span>
+<span class="n">times</span> <span class="o">=</span> <span class="p">[</span><span class="n">t2</span> <span class="o">-</span> <span class="n">dt</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t2</span> <span class="o">+</span> <span class="n">dt</span><span class="p">]</span>
+
+<span class="c1"># Observer Position (Ground Station)</span>
+<span class="n">R_earth</span> <span class="o">=</span> <span class="mf">6378137.0</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
+<span class="c1"># Simple fixed observer in ECI for demonstration</span>
+<span class="n">R_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">R_earth</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">R_earth</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat</span><span class="p">)])</span>
+
+<span class="n">rho_hats</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Rs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">true_states</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">times</span><span class="p">:</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">solve_kepler</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">t</span><span class="p">,</span> <span class="n">ecc</span><span class="p">)</span>
+    <span class="n">nu</span> <span class="o">=</span> <span class="n">eccentric_to_true</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">ecc</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">kepler2eci</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+    <span class="n">true_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">]))</span>
+    
+    <span class="n">rho_vec</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">R_obs</span>
+    <span class="n">rho_hats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rho_vec</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rho_vec</span><span class="p">))</span>
+    <span class="n">Rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">R_obs</span><span class="p">)</span>
+
+<span class="n">true_state_t2</span> <span class="o">=</span> <span class="n">true_states</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True Position at t2:</span><span class="se">\n</span><span class="si">{</span><span class="n">true_state_t2</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True Velocity at t2:</span><span class="se">\n</span><span class="si">{</span><span class="n">true_state_t2</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2"> m/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True Position at t2:
+[ 7229038.65030162  5016957.07127293 -4338519.24238726] m
+True Velocity at t2:
+[-4078.30278898  4314.77193985 -2479.45660733] m/s
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-gauss-iod">
+<h3>1.2 Running Gauss IOD<a class="headerlink" href="#running-gauss-iod" title="Link to this heading"></a></h3>
+<p>We pass the line-of-sight vectors and timestamps to the solver.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">est_state</span> <span class="o">=</span> <span class="n">gauss_iod</span><span class="p">(</span>
+    <span class="n">rho_hats</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rho_hats</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rho_hats</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> 
+    <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">times</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> 
+    <span class="n">Rs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Rs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Rs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">mu</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- IOD Results ---&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimated Position:</span><span class="se">\n</span><span class="si">{</span><span class="n">est_state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimated Velocity:</span><span class="se">\n</span><span class="si">{</span><span class="n">est_state</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2"> m/s&quot;</span><span class="p">)</span>
+
+<span class="n">pos_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">est_state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_state_t2</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">vel_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">est_state</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_state_t2</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Position Error: </span><span class="si">{</span><span class="n">pos_error</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Velocity Error: </span><span class="si">{</span><span class="n">vel_error</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> m/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- IOD Results ---
+Estimated Position:
+[ 7229038.65030161  5016957.07127288 -4338519.2423872 ] m
+Estimated Velocity:
+[-4078.08509341  4314.70835693 -2479.43923202] m/s
+
+Position Error: 0.00 m
+Velocity Error: 0.2275 m/s
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="lambert-s-problem">
+<h2>2. Lambert’s Problem<a class="headerlink" href="#lambert-s-problem" title="Link to this heading"></a></h2>
+<p>Lambert’s problem is the boundary value problem formulation of orbital mechanics:
+Given two position vectors $r_1, r_2$ and a transfer time $\Delta t$, find the velocities $v_1, v_2$ at both positions.</p>
+<section id="application-rendezvous">
+<h3>Application: Rendezvous<a class="headerlink" href="#application-rendezvous" title="Link to this heading"></a></h3>
+<p>It is the workhorse for calculating intercept trajectories and maneuver $\Delta V$.</p>
+</section>
+<section id="solving-lambert-transfer">
+<h3>2.1 Solving Lambert Transfer<a class="headerlink" href="#solving-lambert-transfer" title="Link to this heading"></a></h3>
+<p>We will compute a transfer from position A to position B in a specified time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s use position vectors from our previous orbit</span>
+<span class="c1"># Transfer from r1 (t1) to r3 (t3)</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">true_states</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="c1"># Convert to km for solve_lambert</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">true_states</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span> 
+<span class="n">dt_flight</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>   <span class="c1"># 600 seconds</span>
+
+<span class="n">mu_km</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">/</span> <span class="mf">1e9</span> <span class="c1"># km^3/s^2</span>
+
+<span class="n">v1_req</span><span class="p">,</span> <span class="n">v2_req</span> <span class="o">=</span> <span class="n">solve_lambert</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">dt_flight</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu_km</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Lambert Solver Results ---&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required Velocity at r1: </span><span class="si">{</span><span class="n">v1_req</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required Velocity at r2: </span><span class="si">{</span><span class="n">v2_req</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+
+<span class="n">true_v1</span> <span class="o">=</span> <span class="n">true_states</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">True Velocity at r1: </span><span class="si">{</span><span class="n">true_v1</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Velocity Match Error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1_req</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">true_v1</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Lambert Solver Results ---
+Required Velocity at r1: [-3.07789022  4.87135114 -2.98489675] km/s
+Required Velocity at r2: [-4.89970477  3.61190438 -1.89490628] km/s
+
+True Velocity at r1: [-3.07789023  4.87135115 -2.98489675] km/s
+Velocity Match Error: 0.000000 km/s
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h3>2.2 Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<p>Let’s plot the trajectory of the orbit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.propagators.kepler</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeplerPropagator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+<span class="c1"># Propagate Trajectory Arc</span>
+<span class="n">prop</span> <span class="o">=</span> <span class="n">KeplerPropagator</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">mu_km</span><span class="p">)</span>
+<span class="n">num_points</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">t_span</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dt_flight</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)</span>
+<span class="n">arc_positions</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">t_span</span><span class="p">:</span>
+    <span class="n">r_prop</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">v1_req</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">arc_positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_prop</span><span class="p">)</span>
+
+<span class="n">arc_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">)</span>
+
+<span class="c1"># Plot Arc</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Lambert Transfer Arc&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot Endpoints</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">r1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">r2</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">r1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">r2</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">r1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">r2</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Endpoints&quot;</span><span class="p">)</span>
+
+<span class="c1"># Quiver for velocity vector at r1</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">r1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">r1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">r1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">v1_req</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v1_req</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v1_req</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;V1 Req&quot;</span><span class="p">)</span>
+
+<span class="c1"># Draw simple sphere for Earth</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">6378</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">6378</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="mi">6378</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">u</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cyan&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Adjust View</span>
+<span class="n">min_x</span><span class="p">,</span> <span class="n">max_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">min_y</span><span class="p">,</span> <span class="n">max_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">min_z</span><span class="p">,</span> <span class="n">max_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">arc_positions</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="n">margin</span> <span class="o">=</span> <span class="mf">50.0</span> <span class="c1"># km</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">min_x</span> <span class="o">-</span> <span class="n">margin</span><span class="p">,</span> <span class="n">max_x</span> <span class="o">+</span> <span class="n">margin</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">min_y</span> <span class="o">-</span> <span class="n">margin</span><span class="p">,</span> <span class="n">max_y</span> <span class="o">+</span> <span class="n">margin</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="n">min_z</span> <span class="o">-</span> <span class="n">margin</span><span class="p">,</span> <span class="n">max_z</span> <span class="o">+</span> <span class="n">margin</span><span class="p">])</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_box_aspect</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># Equal aspect ratio</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X [km]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y [km]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Z [km]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Lambert Transfer Trajectory arc and endpoints&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0a483d3c8eb79d53ffb673bcf8562c32691dc8c0fe77e7b75e5eb4f5b6e5adbb.png" src="../_images/0a483d3c8eb79d53ffb673bcf8562c32691dc8c0fe77e7b75e5eb4f5b6e5adbb.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

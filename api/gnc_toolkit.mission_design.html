@@ -9,6 +9,7 @@
   <title>gnc_toolkit.mission_design package &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,7 +19,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit.navigation package" href="gnc_toolkit.navigation.html" />
+    <link rel="prev" title="gnc_toolkit.kalman_filters package" href="gnc_toolkit.kalman_filters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,72 +43,42 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">gnc_toolkit.mission_design package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.budgeting">gnc_toolkit.mission_design.budgeting module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.add_maneuver"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.add_maneuver()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_budget_history"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_budget_history()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_dv"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_dv()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_propellant"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_propellant()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gnc_toolkit</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gnc_toolkit.html">gnc_toolkit package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gnc_toolkit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.actuators.html">gnc_toolkit.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_determination.html">gnc_toolkit.attitude_determination package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_dynamics.html">gnc_toolkit.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.classical_control.html">gnc_toolkit.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.disturbances.html">gnc_toolkit.disturbances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.environment.html">gnc_toolkit.environment package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.fdir.html">gnc_toolkit.fdir package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html">gnc_toolkit.guidance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.kalman_filters.html">gnc_toolkit.kalman_filters package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gnc_toolkit.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html">gnc_toolkit.navigation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.optimal_control.html">gnc_toolkit.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html">gnc_toolkit.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.sensors.html">gnc_toolkit.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.simulation.html">gnc_toolkit.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.ssa.html">gnc_toolkit.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.utils.html">gnc_toolkit.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.visualization.html">gnc_toolkit.visualization package</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.calculate_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_delta_v()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.calculate_propellant_mass"><code class="docutils literal notranslate"><span class="pre">calculate_propellant_mass()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.calculate_staged_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_staged_delta_v()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.budgeting.predict_lifetime"><code class="docutils literal notranslate"><span class="pre">predict_lifetime()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.communications">gnc_toolkit.mission_design.communications module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.communications.calculate_atmospheric_attenuation"><code class="docutils literal notranslate"><span class="pre">calculate_atmospheric_attenuation()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.communications.calculate_doppler_shift"><code class="docutils literal notranslate"><span class="pre">calculate_doppler_shift()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.communications.calculate_friis_link_budget"><code class="docutils literal notranslate"><span class="pre">calculate_friis_link_budget()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.coverage">gnc_toolkit.mission_design.coverage module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_constellation_coverage"><code class="docutils literal notranslate"><span class="pre">calculate_constellation_coverage()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.coverage.calculate_lighting_conditions"><code class="docutils literal notranslate"><span class="pre">calculate_lighting_conditions()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.mission_design.launch">gnc_toolkit.mission_design.launch module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.calculate_deployment_sequence"><code class="docutils literal notranslate"><span class="pre">calculate_deployment_sequence()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.calculate_launch_windows"><code class="docutils literal notranslate"><span class="pre">calculate_launch_windows()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.compute_injection_state"><code class="docutils literal notranslate"><span class="pre">compute_injection_state()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper"><code class="docutils literal notranslate"><span class="pre">eci2_ecef_or_inverse_wrapper()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.mission_design">Module contents</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.add_maneuver"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.add_maneuver()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.get_budget_history"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_budget_history()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.get_total_dv"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_dv()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.ManeuverSequence.get_total_propellant"><code class="docutils literal notranslate"><span class="pre">ManeuverSequence.get_total_propellant()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_access_windows"><code class="docutils literal notranslate"><span class="pre">calculate_access_windows()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_atmospheric_attenuation"><code class="docutils literal notranslate"><span class="pre">calculate_atmospheric_attenuation()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_constellation_coverage"><code class="docutils literal notranslate"><span class="pre">calculate_constellation_coverage()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_delta_v()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_deployment_sequence"><code class="docutils literal notranslate"><span class="pre">calculate_deployment_sequence()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_doppler_shift"><code class="docutils literal notranslate"><span class="pre">calculate_doppler_shift()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_friis_link_budget"><code class="docutils literal notranslate"><span class="pre">calculate_friis_link_budget()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_ground_track"><code class="docutils literal notranslate"><span class="pre">calculate_ground_track()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_launch_windows"><code class="docutils literal notranslate"><span class="pre">calculate_launch_windows()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_lighting_conditions"><code class="docutils literal notranslate"><span class="pre">calculate_lighting_conditions()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_propellant_mass"><code class="docutils literal notranslate"><span class="pre">calculate_propellant_mass()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.calculate_staged_delta_v"><code class="docutils literal notranslate"><span class="pre">calculate_staged_delta_v()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.compute_injection_state"><code class="docutils literal notranslate"><span class="pre">compute_injection_state()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.mission_design.predict_lifetime"><code class="docutils literal notranslate"><span class="pre">predict_lifetime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -120,6 +93,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">gnc_toolkit</a></li>
+          <li class="breadcrumb-item"><a href="gnc_toolkit.html">gnc_toolkit package</a></li>
       <li class="breadcrumb-item active">gnc_toolkit.mission_design package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/gnc_toolkit.mission_design.rst.txt" rel="nofollow"> View page source</a>
@@ -164,10 +139,10 @@
 <dd><p>Returns the history of the maneuver budget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of dictionaries with installment details.</p>
+<dd class="field-odd"><p><strong>list[dict]</strong></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[dict]</p>
+<dd class="field-even"><p>List of dictionaries with installment details.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -199,10 +174,10 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Delta-V available (km/s).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Delta-V available (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -220,10 +195,10 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propellant mass required (kg).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Propellant mass required (kg).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -242,10 +217,10 @@ Each dict must contain:
 - ‘m0_payload’ (float, optional): Payload mass above this stage (kg). If omitted, it’s calculated from subsequent stages.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Total Delta-V (km/s).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Total Delta-V (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -270,19 +245,17 @@ Saves and returns the time of reentry (altitude &lt; 100km).</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Breakdown of prediction results:</dt><dd><ul class="simple">
-<li><p>’reentry_detected’ (bool)</p></li>
+<dd class="field-even"><p><p><strong>dict</strong> –</p>
+<ul class="simple">
+<li><p>‘reentry_detected’ (bool)</p></li>
 <li><p>’lifetime_days’ (float)</p></li>
 <li><p>’final_altitude’ (float)</p></li>
 <li><p>’trajectory’ (dict with ‘t’, ‘r’, ‘v’)</p></li>
 </ul>
-</dd>
-</dl>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Breakdown of prediction results:</p>
 </dd>
 </dl>
 </dd></dl>
@@ -308,10 +281,10 @@ where A_zenith is a base attenuation dependent on frequency band.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Atmospheric attenuation [dB].</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Atmospheric attenuation [dB].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -338,15 +311,11 @@ v_rel_vec = v_rx - v_tx</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Containing:</dt><dd><p>’f_rx_hz’ (float): Received frequency [Hz].
+<dd class="field-even"><p><strong>dict</strong> – ‘f_rx_hz’ (float): Received frequency [Hz].
 ‘doppler_shift_hz’ (float): Doppler shift [Hz].</p>
 </dd>
-</dl>
-</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing:</p>
 </dd>
 </dl>
 </dd></dl>
@@ -373,16 +342,12 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Containing:</dt><dd><p>’p_rx_dbw’ (float): Received power [dBW].
+<dd class="field-even"><p><strong>dict</strong> – ‘p_rx_dbw’ (float): Received power [dBW].
 ‘p_rx_w’ (float): Received power [W].
 ‘l_fs_db’ (float): Free space path loss [dB].</p>
 </dd>
-</dl>
-</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing:</p>
 </dd>
 </dl>
 </dd></dl>
@@ -408,10 +373,10 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Containing ‘visible_intervals’ (list of dicts), ‘elevation_history’ (degrees).</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing ‘visible_intervals’ (list of dicts), ‘elevation_history’ (degrees).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -432,14 +397,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>For each target point, statistics including ‘max_revisit_time_gap’,</dt><dd><p>’mean_revisit_time’, and ‘total_coverage_time’.</p>
-</dd>
-</dl>
-</p>
+<dd class="field-even"><p><strong>list of dict</strong> – ‘mean_revisit_time’, and ‘total_coverage_time’.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of dict</p>
+<dd class="field-odd"><p>For each target point, statistics including ‘max_revisit_time_gap’,</p>
 </dd>
 </dl>
 </dd></dl>
@@ -457,10 +418,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Containing ‘lat_deg’, ‘lon_deg’, ‘alt_m’ arrays.</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing ‘lat_deg’, ‘lon_deg’, ‘alt_m’ arrays.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -479,10 +440,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Containing ‘beta_angle_deg’, ‘eclipse_state’ (1 for Sun, 0 for shade).</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing ‘beta_angle_deg’, ‘eclipse_state’ (1 for Sun, 0 for shade).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -507,10 +468,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Each satellite’s parameters including ‘plane_id’, ‘sat_id’, ‘global_id’, ‘raan_deg’, ‘ta_deg’</p>
+<dd class="field-even"><p><strong>list of dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of dict</p>
+<dd class="field-odd"><p>Each satellite’s parameters including ‘plane_id’, ‘sat_id’, ‘global_id’, ‘raan_deg’, ‘ta_deg’</p>
 </dd>
 </dl>
 </dd></dl>
@@ -532,10 +493,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of dicts with ‘jd’, ‘type’ (Ascending/Descending), and ‘azimuth_deg’.</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>list of dicts with ‘jd’, ‘type’ (Ascending/Descending), and ‘azimuth_deg’.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -557,10 +518,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(r_eci [m], v_eci [m/s])</p>
+<dd class="field-even"><p><strong>tuple</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p>(r_eci [m], v_eci [m/s])</p>
 </dd>
 </dl>
 </dd></dl>
@@ -600,10 +561,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 <dd><p>Returns the history of the maneuver budget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of dictionaries with installment details.</p>
+<dd class="field-odd"><p><strong>list[dict]</strong></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[dict]</p>
+<dd class="field-even"><p>List of dictionaries with installment details.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -639,10 +600,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Containing ‘visible_intervals’ (list of dicts), ‘elevation_history’ (degrees).</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing ‘visible_intervals’ (list of dicts), ‘elevation_history’ (degrees).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -664,10 +625,10 @@ where A_zenith is a base attenuation dependent on frequency band.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Atmospheric attenuation [dB].</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Atmospheric attenuation [dB].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -688,14 +649,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>For each target point, statistics including ‘max_revisit_time_gap’,</dt><dd><p>’mean_revisit_time’, and ‘total_coverage_time’.</p>
-</dd>
-</dl>
-</p>
+<dd class="field-even"><p><strong>list of dict</strong> – ‘mean_revisit_time’, and ‘total_coverage_time’.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of dict</p>
+<dd class="field-odd"><p>For each target point, statistics including ‘max_revisit_time_gap’,</p>
 </dd>
 </dl>
 </dd></dl>
@@ -713,10 +670,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Delta-V available (km/s).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Delta-V available (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -737,10 +694,10 @@ Altitude defaults to 0 if only 2 columns provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Each satellite’s parameters including ‘plane_id’, ‘sat_id’, ‘global_id’, ‘raan_deg’, ‘ta_deg’</p>
+<dd class="field-even"><p><strong>list of dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of dict</p>
+<dd class="field-odd"><p>Each satellite’s parameters including ‘plane_id’, ‘sat_id’, ‘global_id’, ‘raan_deg’, ‘ta_deg’</p>
 </dd>
 </dl>
 </dd></dl>
@@ -767,15 +724,11 @@ v_rel_vec = v_rx - v_tx</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Containing:</dt><dd><p>’f_rx_hz’ (float): Received frequency [Hz].
+<dd class="field-even"><p><strong>dict</strong> – ‘f_rx_hz’ (float): Received frequency [Hz].
 ‘doppler_shift_hz’ (float): Doppler shift [Hz].</p>
 </dd>
-</dl>
-</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing:</p>
 </dd>
 </dl>
 </dd></dl>
@@ -802,16 +755,12 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Containing:</dt><dd><p>’p_rx_dbw’ (float): Received power [dBW].
+<dd class="field-even"><p><strong>dict</strong> – ‘p_rx_dbw’ (float): Received power [dBW].
 ‘p_rx_w’ (float): Received power [W].
 ‘l_fs_db’ (float): Free space path loss [dB].</p>
 </dd>
-</dl>
-</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing:</p>
 </dd>
 </dl>
 </dd></dl>
@@ -829,10 +778,10 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Containing ‘lat_deg’, ‘lon_deg’, ‘alt_m’ arrays.</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing ‘lat_deg’, ‘lon_deg’, ‘alt_m’ arrays.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -854,10 +803,10 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of dicts with ‘jd’, ‘type’ (Ascending/Descending), and ‘azimuth_deg’.</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>list of dicts with ‘jd’, ‘type’ (Ascending/Descending), and ‘azimuth_deg’.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -876,10 +825,10 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Containing ‘beta_angle_deg’, ‘eclipse_state’ (1 for Sun, 0 for shade).</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing ‘beta_angle_deg’, ‘eclipse_state’ (1 for Sun, 0 for shade).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -897,10 +846,10 @@ Lfs = 20 * log10(d) + 20 * log10(f) + 20 * log10(4*pi/c)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propellant mass required (kg).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Propellant mass required (kg).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -919,10 +868,10 @@ Each dict must contain:
 - ‘m0_payload’ (float, optional): Payload mass above this stage (kg). If omitted, it’s calculated from subsequent stages.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Total Delta-V (km/s).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Total Delta-V (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -944,10 +893,10 @@ Each dict must contain:
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(r_eci [m], v_eci [m/s])</p>
+<dd class="field-even"><p><strong>tuple</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p>(r_eci [m], v_eci [m/s])</p>
 </dd>
 </dl>
 </dd></dl>
@@ -972,19 +921,17 @@ Saves and returns the time of reentry (altitude &lt; 100km).</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Breakdown of prediction results:</dt><dd><ul class="simple">
-<li><p>’reentry_detected’ (bool)</p></li>
+<dd class="field-even"><p><p><strong>dict</strong> –</p>
+<ul class="simple">
+<li><p>‘reentry_detected’ (bool)</p></li>
 <li><p>’lifetime_days’ (float)</p></li>
 <li><p>’final_altitude’ (float)</p></li>
 <li><p>’trajectory’ (dict with ‘t’, ‘r’, ‘v’)</p></li>
 </ul>
-</dd>
-</dl>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Breakdown of prediction results:</p>
 </dd>
 </dl>
 </dd></dl>
@@ -995,7 +942,10 @@ Saves and returns the time of reentry (altitude &lt; 100km).</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gnc_toolkit.kalman_filters.html" class="btn btn-neutral float-left" title="gnc_toolkit.kalman_filters package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gnc_toolkit.navigation.html" class="btn btn-neutral float-right" title="gnc_toolkit.navigation package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

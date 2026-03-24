@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 02: Coordinate Systems &amp; Frame Transformations &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 02: Coordinate Systems &amp; Frame Transformations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/02_frames.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-02-coordinate-systems-frame-transformations">
+<h1>Tutorial 02: Coordinate Systems &amp; Frame Transformations<a class="headerlink" href="#tutorial-02-coordinate-systems-frame-transformations" title="Link to this heading"></a></h1>
+<p>This tutorial covers conversions between common spacecraft coordinate frames using the <code class="docutils literal notranslate"><span class="pre">gnc_toolkit.utils.frame_conversion</span></code> module.</p>
+<hr class="docutils" />
+<section id="theory-prerequisites">
+<h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
+<section id="earth-centered-inertial-eci-vs-earth-centered-fixed-ecef">
+<h3>1. Earth-Centered Inertial (ECI) vs Earth-Centered Fixed (ECEF)<a class="headerlink" href="#earth-centered-inertial-eci-vs-earth-centered-fixed-ecef" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>ECI ($I$)</strong>: Inertial frame originating at Earth’s center. X-axis points to Vernal Equinox ($\Upsilon$).</p></li>
+<li><p><strong>ECEF ($E$)</strong>: Rotates with the Earth. X-axis points to Prime Meridian.</p></li>
+</ul>
+<p>The transformation from ECI to ECEF is a rotation about the Z-axis by the <strong>Greenwich Mean Sidereal Time (GMST)</strong>:
+$$
+R^{I \to E} = R_z(\theta_{GMST})
+$$
+$$
+r_{ECEF} = R^{I \to E} r_{ECI}
+$$</p>
+</section>
+<section id="local-vertical-local-horizontal-lvlh">
+<h3>2. Local-Vertical Local-Horizontal (LVLH)<a class="headerlink" href="#local-vertical-local-horizontal-lvlh" title="Link to this heading"></a></h3>
+<p>The LVLH frame is a satellite-centered frame useful for attitude determination and relative navigation.</p>
+<ul class="simple">
+<li><p><strong>$\hat{z}_{LVLH}$ (Nadir)</strong>: $-\frac{r}{|r|}$ (Points towards Earth center)</p></li>
+<li><p><strong>$\hat{y}_{LVLH}$ (Orbit Normal)</strong>: $-\frac{h}{|h|}$ where $h = r \times v$ is angular momentum</p></li>
+<li><p><strong>$\hat{x}_{LVLH}$</strong>: $\hat{y}<em>{LVLH} \times \hat{z}</em>{LVLH}$ (Completes right-handed system)</p></li>
+</ul>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.frame_conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">eci2ecef</span><span class="p">,</span> <span class="n">ecef2eci</span><span class="p">,</span> <span class="n">eci2lvlh_dcm</span><span class="p">,</span> <span class="n">eci2llh</span><span class="p">,</span> <span class="n">llh2ecef</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_gmst</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="eci-to-ecef-conversion">
+<h2>1. ECI to ECEF Conversion<a class="headerlink" href="#eci-to-ecef-conversion" title="Link to this heading"></a></h2>
+<p>Let’s define a spacecraft position and velocity in ECI (J2000) for a LEO satellite at <code class="docutils literal notranslate"><span class="pre">JD</span> <span class="pre">=</span> <span class="pre">2451545.0</span></code> (J2000 epoch).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define ECI state (J2000)</span>
+<span class="n">r_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">6771000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="c1"># [m]</span>
+<span class="n">v_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7670.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>   <span class="c1"># [m/s]</span>
+<span class="n">jd</span> <span class="o">=</span> <span class="mf">2451545.0</span> <span class="c1"># J2000 epoch</span>
+
+<span class="c1"># Convert to ECEF</span>
+<span class="n">r_ecef</span><span class="p">,</span> <span class="n">v_ecef</span> <span class="o">=</span> <span class="n">eci2ecef</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ECI Position: </span><span class="si">{</span><span class="n">r_eci</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ECEF Position: </span><span class="si">{</span><span class="n">r_ecef</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verify round-trip conversion</span>
+<span class="n">r_eci_rt</span><span class="p">,</span> <span class="n">v_eci_rt</span> <span class="o">=</span> <span class="n">ecef2eci</span><span class="p">(</span><span class="n">r_ecef</span><span class="p">,</span> <span class="n">v_ecef</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Round-trip Position Error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_eci</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_eci_rt</span><span class="p">)</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ECI Position: [6771000.       0.       0.] m
+ECEF Position: [ 1229340.41068344 -6658465.52552919        0.        ] m
+
+Round-trip Position Error: 3.755864e-11 m
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="eci-to-lvlh-transformation-dcm">
+<h2>2. ECI to LVLH Transformation (DCM)<a class="headerlink" href="#eci-to-lvlh-transformation-dcm" title="Link to this heading"></a></h2>
+<p>The Rotation matrix or Direction Cosine Matrix (DCM) maps ECI vectors into the Local-Vertical Local-Horizontal frame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate ECI to LVLH DCM</span>
+<span class="n">DCM_eci2lvlh</span> <span class="o">=</span> <span class="n">eci2lvlh_dcm</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DCM (ECI -&gt; LVLH):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">DCM_eci2lvlh</span><span class="p">)</span>
+
+<span class="c1"># Verify Orthogonality (DCM * DCM^T = I)</span>
+<span class="n">identity_check</span> <span class="o">=</span> <span class="n">DCM_eci2lvlh</span> <span class="o">@</span> <span class="n">DCM_eci2lvlh</span><span class="o">.</span><span class="n">T</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Orthogonality Check Error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">identity_check</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DCM (ECI -&gt; LVLH):
+[[ 0.  1.  0.]
+ [-0. -0. -1.]
+ [-1. -0. -0.]]
+
+Orthogonality Check Error: 0.000000e+00
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="geodetic-coordinates-llh">
+<h2>3. Geodetic Coordinates (LLH)<a class="headerlink" href="#geodetic-coordinates-llh" title="Link to this heading"></a></h2>
+<p>Convert ECI position to Latitude, Longitude, and Altitude (above WGS84 ellipsoid).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert to LLH (Latitude, Longitude, Altitude)</span>
+<span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="n">eci2llh</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latitude:  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> deg&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Longitude: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> deg&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Altitude:  </span><span class="si">{</span><span class="n">alt</span><span class="o">/</span><span class="mf">1000.0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verify using llh2ecef</span>
+<span class="n">r_ecef_check</span> <span class="o">=</span> <span class="n">llh2ecef</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ECEF Position from LLH: </span><span class="si">{</span><span class="n">r_ecef_check</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Difference from original ECEF: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_ecef</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_ecef_check</span><span class="p">)</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Latitude:  0.0000 deg
+Longitude: -79.5394 deg
+Altitude:  392.86 km
+
+ECEF Position from LLH: [ 1229340.41068344 -6658465.52552919        0.        ] m
+Difference from original ECEF: 0.000000e+00 m
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -8,6 +8,7 @@
   <title>Index &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -77,6 +82,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -89,6 +95,7 @@
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  | <a href="#X"><strong>X</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
  
@@ -96,6 +103,10 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.imu.Accelerometer">Accelerometer (class in gnc_toolkit.sensors.imu)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.actuator.Actuator">Actuator (class in gnc_toolkit.actuators.actuator)</a>
+</li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.ActuatorAccommodation">ActuatorAccommodation (class in gnc_toolkit.fdir)</a>
 
       <ul>
@@ -110,6 +121,8 @@
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.SafeModeLogic.add_condition">(gnc_toolkit.fdir.SafeModeLogic method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.add_gaussian_noise">add_gaussian_noise() (gnc_toolkit.sensors.sensor.Sensor method)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.budgeting.ManeuverSequence.add_maneuver">add_maneuver() (gnc_toolkit.mission_design.budgeting.ManeuverSequence method)</a>
 
       <ul>
@@ -122,18 +135,26 @@
         <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.TLECatalog.add_tle">(gnc_toolkit.ssa.TLECatalog method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.html#gnc_toolkit.edl.aerocapture_guidance">aerocapture_guidance() (in module gnc_toolkit.edl)</a>
 </li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.akf.AKF">AKF (class in gnc_toolkit.kalman_filters.akf)</a>
 </li>
-      <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.ActuatorAccommodation.allocate">allocate() (gnc_toolkit.fdir.ActuatorAccommodation method)</a>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.ControlAllocator.allocate">allocate() (gnc_toolkit.actuators.allocation.ControlAllocator method)</a>
 
       <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.PseudoInverseAllocator.allocate">(gnc_toolkit.actuators.allocation.PseudoInverseAllocator method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.SingularRobustAllocator.allocate">(gnc_toolkit.actuators.allocation.SingularRobustAllocator method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.ActuatorAccommodation.allocate">(gnc_toolkit.fdir.ActuatorAccommodation method)</a>
+</li>
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.allocate">(gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.altimeter.Altimeter">Altimeter (class in gnc_toolkit.sensors.altimeter)</a>
+</li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.AnalyticalRedundancy">AnalyticalRedundancy (class in gnc_toolkit.fdir)</a>
 
       <ul>
@@ -146,9 +167,27 @@
         <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation">(class in gnc_toolkit.navigation.angle_only_nav)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_to_elements.anomalies">anomalies() (in module gnc_toolkit.utils.state_to_elements)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.apollo_dps_guidance">apollo_dps_guidance() (in module gnc_toolkit.guidance.continuous_thrust)</a>
 </li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.apply_calibration">apply_calibration() (gnc_toolkit.sensors.sensor.Sensor method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.actuator.Actuator.apply_deadband">apply_deadband() (gnc_toolkit.actuators.actuator.Actuator method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.apply_faults">apply_faults() (gnc_toolkit.sensors.sensor.Sensor method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.apply_fogm_noise">apply_fogm_noise() (gnc_toolkit.sensors.sensor.Sensor method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.NullMotionManager.apply_null_command">apply_null_command() (gnc_toolkit.actuators.allocation.NullMotionManager method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.actuator.Actuator.apply_saturation">apply_saturation() (gnc_toolkit.actuators.actuator.Actuator method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.wind.AtmosphereCoRotation">AtmosphereCoRotation (class in gnc_toolkit.environment.wind)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.attitude_blending">attitude_blending() (in module gnc_toolkit.guidance.attitude_guidance)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.axis_angle_to_quat">axis_angle_to_quat() (in module gnc_toolkit.utils.quat_utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -178,6 +217,16 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.calc_doy">calc_doy() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.calc_gmst">calc_gmst() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.calc_jd">calc_jd() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.calc_last">calc_last() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.calc_lst">calc_lst() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.calculate_access_windows">calculate_access_windows() (in module gnc_toolkit.mission_design)</a>
 
       <ul>
@@ -222,6 +271,8 @@
         <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.communications.calculate_doppler_shift">(in module gnc_toolkit.mission_design.communications)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.solar_sail.SolarSail.calculate_force">calculate_force() (gnc_toolkit.actuators.solar_sail.SolarSail method)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.calculate_friis_link_budget">calculate_friis_link_budget() (in module gnc_toolkit.mission_design)</a>
 
       <ul>
@@ -248,6 +299,8 @@
         <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.coverage.calculate_lighting_conditions">(in module gnc_toolkit.mission_design.coverage)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.moon.Moon.calculate_moon_eci">calculate_moon_eci() (gnc_toolkit.environment.moon.Moon method)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.calculate_propellant_mass">calculate_propellant_mass() (in module gnc_toolkit.mission_design)</a>
 
       <ul>
@@ -260,22 +313,64 @@
         <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.budgeting.calculate_staged_delta_v">(in module gnc_toolkit.mission_design.budgeting)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.solar.Sun.calculate_sun_eci">calculate_sun_eci() (gnc_toolkit.environment.solar.Sun method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.camera.Camera">Camera (class in gnc_toolkit.sensors.camera)</a>
+</li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball">Canonball (class in gnc_toolkit.disturbances.srp)</a>
+</li>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.CasadiNMPC">CasadiNMPC (class in gnc_toolkit.optimal_control)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC">(class in gnc_toolkit.optimal_control.mpc_casadi)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.cayley_klein_utils.cayley_klein_mult">cayley_klein_mult() (in module gnc_toolkit.utils.cayley_klein_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.cayley_klein_utils.cayley_klein_to_quat">cayley_klein_to_quat() (in module gnc_toolkit.utils.cayley_klein_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball.check_eclipse">check_eclipse() (gnc_toolkit.disturbances.srp.Canonball method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.check_mrp_switching">check_mrp_switching() (in module gnc_toolkit.utils.mrp_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.AnalyticalRedundancy.check_threshold">check_threshold() (gnc_toolkit.fdir.AnalyticalRedundancy static method)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.check_threshold">(gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy static method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.ChemicalThruster">ChemicalThruster (class in gnc_toolkit.actuators.thruster)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.CIRA72">CIRA72 (class in gnc_toolkit.environment.density)</a>
+</li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.ckf.CKF">CKF (class in gnc_toolkit.kalman_filters.ckf)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sun_sensor_array.CoarseSunSensorArray">CoarseSunSensorArray (class in gnc_toolkit.sensors.sun_sensor_array)</a>
 </li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.combined_plane_change">combined_plane_change() (in module gnc_toolkit.guidance.maneuvers)</a>
 </li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.actuator.Actuator.command">command() (gnc_toolkit.actuators.actuator.Actuator method)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.cmg.ControlMomentGyro.command">(gnc_toolkit.actuators.cmg.ControlMomentGyro method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.magnetorquer.Magnetorquer.command">(gnc_toolkit.actuators.magnetorquer.Magnetorquer method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.reaction_wheel.ReactionWheel.command">(gnc_toolkit.actuators.reaction_wheel.ReactionWheel method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.solar_sail.SolarSail.command">(gnc_toolkit.actuators.solar_sail.SolarSail method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.ChemicalThruster.command">(gnc_toolkit.actuators.thruster.ChemicalThruster method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.Thruster.command">(gnc_toolkit.actuators.thruster.Thruster method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.ThrusterCluster.command">(gnc_toolkit.actuators.thruster.ThrusterCluster method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.vscmg.VariableSpeedCMG.command">(gnc_toolkit.actuators.vscmg.VariableSpeedCMG method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.compute_control">compute_control() (gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl method)</a>
 
       <ul>
@@ -318,8 +413,6 @@
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.SlidingModeController.compute_control">(gnc_toolkit.optimal_control.SlidingModeController method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.h_infinity.HInfinityController.compute_gain">compute_gain() (gnc_toolkit.optimal_control.h_infinity.HInfinityController method)</a>
 
       <ul>
@@ -374,12 +467,20 @@
         <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.multibody.ConstellationSimulator">(class in gnc_toolkit.simulation.multibody)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.ControlAllocator">ControlAllocator (class in gnc_toolkit.actuators.allocation)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.cmg.ControlMomentGyro">ControlMomentGyro (class in gnc_toolkit.actuators.cmg)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.convert_time">convert_time() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.correlate_tracks">correlate_tracks() (in module gnc_toolkit.ssa)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tracking.correlate_tracks">(in module gnc_toolkit.ssa.tracking)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.flexible_body.coupled_flexible_rigid_dynamics">coupled_flexible_rigid_dynamics() (in module gnc_toolkit.attitude_dynamics.flexible_body)</a>
+</li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.covariance">covariance (gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF property)</a>
 
       <ul>
@@ -396,6 +497,12 @@
       </ul></li>
       <li><a href="api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.momentum_dumping.CrossProductLaw">CrossProductLaw (class in gnc_toolkit.classical_control.momentum_dumping)</a>
 </li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.crp_utils.crp_addition">crp_addition() (in module gnc_toolkit.utils.crp_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.crp_utils.crp_to_dcm">crp_to_dcm() (in module gnc_toolkit.utils.crp_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.crp_utils.crp_to_quat">crp_to_quat() (in module gnc_toolkit.utils.crp_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.cw_equations">cw_equations() (in module gnc_toolkit.guidance.rendezvous)</a>
 </li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.cw_targeting">cw_targeting() (in module gnc_toolkit.guidance.rendezvous)</a>
@@ -406,6 +513,20 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.davenport_q.davenport_q">davenport_q() (in module gnc_toolkit.attitude_determination.davenport_q)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.day_to_mdtime">day_to_mdtime() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.euler_utils.dcm_to_euler">dcm_to_euler() (in module gnc_toolkit.utils.euler_utils)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.dcm_to_euler">(in module gnc_toolkit.utils.state_conversion)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.dcm_to_quat">dcm_to_quat() (in module gnc_toolkit.utils.state_conversion)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.delta_v_budget">delta_v_budget() (in module gnc_toolkit.guidance.maneuvers)</a>
 </li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.detect_fault">detect_fault() (gnc_toolkit.fdir.parity_space.ParitySpaceDetector method)</a>
@@ -414,8 +535,6 @@
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.ParitySpaceDetector.detect_fault">(gnc_toolkit.fdir.ParitySpaceDetector method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.direct_collocation_guidance">direct_collocation_guidance() (in module gnc_toolkit.guidance.continuous_thrust)</a>
 </li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.formation_flying.distributed_consensus_control">distributed_consensus_control() (in module gnc_toolkit.guidance.formation_flying)</a>
@@ -426,18 +545,60 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.ecef2eci">ecef2eci() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper">eci2_ecef_or_inverse_wrapper() (in module gnc_toolkit.mission_design.launch)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.eci2ecef">eci2ecef() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.eci2eme2000">eci2eme2000() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.eci2geodetic">eci2geodetic() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.eci2icrf">eci2icrf() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_to_elements.eci2kepler">eci2kepler() (in module gnc_toolkit.utils.state_to_elements)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.eci2llh">eci2llh() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.eci2lvlh_dcm">eci2lvlh_dcm() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mee_utils.eci2mee">eci2mee() (in module gnc_toolkit.utils.mee_utils)</a>
 </li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.eigenaxis_slew_path_planning">eigenaxis_slew_path_planning() (in module gnc_toolkit.guidance.attitude_guidance)</a>
 </li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.ekf.EKF">EKF (class in gnc_toolkit.kalman_filters.ekf)</a>
 </li>
-      <li><a href="api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.encke.EnckePropagator">EnckePropagator (class in gnc_toolkit.propagators.encke)</a>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.ElectricThruster">ElectricThruster (class in gnc_toolkit.actuators.thruster)</a>
 </li>
-      <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF">EnKF (class in gnc_toolkit.kalman_filters.enkf)</a>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.elements2perifocal_dcm">elements2perifocal_dcm() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.eme20002eci">eme20002eci() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.encke.EnckePropagator">EnckePropagator (class in gnc_toolkit.propagators.encke)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF">EnKF (class in gnc_toolkit.kalman_filters.enkf)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.equinoctial2eci">equinoctial2eci() (in module gnc_toolkit.utils.equinoctial_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.equinoctial2kepler">equinoctial2kepler() (in module gnc_toolkit.utils.equinoctial_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.radiation.RadiationModel.estimate_seu_rate">estimate_seu_rate() (gnc_toolkit.environment.radiation.RadiationModel method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.radiation.RadiationModel.estimate_tid">estimate_tid() (gnc_toolkit.environment.radiation.RadiationModel method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.rigid_body.euler_equations">euler_equations() (in module gnc_toolkit.attitude_dynamics.rigid_body)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.euler_utils.euler_to_dcm">euler_to_dcm() (in module gnc_toolkit.utils.euler_utils)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.euler_to_dcm">(in module gnc_toolkit.utils.state_conversion)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.euler_to_quat">euler_to_quat() (in module gnc_toolkit.utils.state_conversion)</a>
+</li>
       <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.Event">Event (class in gnc_toolkit.simulation)</a>
 
       <ul>
@@ -456,6 +617,8 @@
         <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.events.Event.execute">(gnc_toolkit.simulation.events.Event method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.Exponential">Exponential (class in gnc_toolkit.environment.density)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -480,9 +643,13 @@
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR">(class in gnc_toolkit.optimal_control.finite_horizon_lqr)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother">fixed_interval_smoother() (in module gnc_toolkit.kalman_filters.fixed_interval_smoother)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother">fixed_interval_smoother() (in module gnc_toolkit.kalman_filters.fixed_interval_smoother)</a>
+      <li><a href="api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.flexible_body.flexible_body_dynamics">flexible_body_dynamics() (in module gnc_toolkit.attitude_dynamics.flexible_body)</a>
+</li>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.foam.foam">foam() (in module gnc_toolkit.attitude_determination.foam)</a>
 </li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeLogic.force_mode">force_mode() (gnc_toolkit.fdir.safe_mode.SafeModeLogic method)</a>
 
@@ -491,6 +658,10 @@
 </li>
       </ul></li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.formation_flying.fuel_balanced_formation_keeping">fuel_balanced_formation_keeping() (in module gnc_toolkit.guidance.formation_flying)</a>
+</li>
+      <li><a href="api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics">fuel_slosh_dynamics() (in module gnc_toolkit.attitude_dynamics.fuel_slosh)</a>
+</li>
+      <li><a href="api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_torque">fuel_slosh_torque() (in module gnc_toolkit.attitude_dynamics.fuel_slosh)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -522,6 +693,28 @@
         <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.ScenarioConfig.get">(gnc_toolkit.simulation.ScenarioConfig method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.drag.LumpedDrag.get_acceleration">get_acceleration() (gnc_toolkit.disturbances.drag.LumpedDrag method)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.HarmonicsGravity.get_acceleration">(gnc_toolkit.disturbances.gravity.HarmonicsGravity method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.J2Gravity.get_acceleration">(gnc_toolkit.disturbances.gravity.J2Gravity method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.OceanTidesGravity.get_acceleration">(gnc_toolkit.disturbances.gravity.OceanTidesGravity method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.RelativisticCorrection.get_acceleration">(gnc_toolkit.disturbances.gravity.RelativisticCorrection method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.ThirdBodyGravity.get_acceleration">(gnc_toolkit.disturbances.gravity.ThirdBodyGravity method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.TwoBodyGravity.get_acceleration">(gnc_toolkit.disturbances.gravity.TwoBodyGravity method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball.get_acceleration">(gnc_toolkit.disturbances.srp.Canonball method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment.get_albedo_flux">get_albedo_flux() (gnc_toolkit.environment.thermal.ThermalEnvironment method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_axes">get_axes() (gnc_toolkit.actuators.cmg.ControlMomentGyro method)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_budget_history">get_budget_history() (gnc_toolkit.mission_design.budgeting.ManeuverSequence method)</a>
 
       <ul>
@@ -540,24 +733,62 @@
         <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.TLECatalog.get_by_norad_id">(gnc_toolkit.ssa.TLECatalog method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.CIRA72.get_density">get_density() (gnc_toolkit.environment.density.CIRA72 method)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.Exponential.get_density">(gnc_toolkit.environment.density.Exponential method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.HarrisPriester.get_density">(gnc_toolkit.environment.density.HarrisPriester method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.JB2008.get_density">(gnc_toolkit.environment.density.JB2008 method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.NRLMSISE00.get_density">(gnc_toolkit.environment.density.NRLMSISE00 method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment.get_earth_ir_flux">get_earth_ir_flux() (gnc_toolkit.environment.thermal.ThermalEnvironment method)</a>
+</li>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR.get_gain">get_gain() (gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR method)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.FiniteHorizonLQR.get_gain">(gnc_toolkit.optimal_control.FiniteHorizonLQR method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.space_weather.SpaceWeather.get_indices">get_indices() (gnc_toolkit.environment.space_weather.SpaceWeather method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mean_elements.get_j2_secular_rates">get_j2_secular_rates() (in module gnc_toolkit.utils.mean_elements)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.vscmg.VariableSpeedCMG.get_jacobian">get_jacobian() (gnc_toolkit.actuators.vscmg.VariableSpeedCMG method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.Thruster.get_mass_flow">get_mass_flow() (gnc_toolkit.actuators.thruster.Thruster method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.NullMotionManager.get_null_projection">get_null_projection() (gnc_toolkit.actuators.allocation.NullMotionManager method)</a>
+</li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.get_parity_vector">get_parity_vector() (gnc_toolkit.fdir.parity_space.ParitySpaceDetector method)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.ParitySpaceDetector.get_parity_vector">(gnc_toolkit.fdir.ParitySpaceDetector method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.ElectricThruster.get_power_consumption">get_power_consumption() (gnc_toolkit.actuators.thruster.ElectricThruster method)</a>
+</li>
       <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLEEntity.get_propagator">get_propagator() (gnc_toolkit.ssa.tle_interface.TLEEntity method)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.TLEEntity.get_propagator">(gnc_toolkit.ssa.TLEEntity method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.request.RequestFilter.get_quaternion">get_quaternion() (gnc_toolkit.attitude_determination.request.RequestFilter method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_relative_velocity">get_relative_velocity() (gnc_toolkit.environment.wind.AtmosphereCoRotation method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.get_shadow_mrp">get_shadow_mrp() (in module gnc_toolkit.utils.mrp_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment.get_solar_flux">get_solar_flux() (gnc_toolkit.environment.thermal.ThermalEnvironment method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.star_catalog.StarCatalog.get_stars_in_fov">get_stars_in_fov() (gnc_toolkit.sensors.star_catalog.StarCatalog method)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_torque_jacobian">get_torque_jacobian() (gnc_toolkit.actuators.cmg.ControlMomentGyro method)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.budgeting.ManeuverSequence.get_total_dv">get_total_dv() (gnc_toolkit.mission_design.budgeting.ManeuverSequence method)</a>
 
       <ul>
@@ -570,6 +801,8 @@
         <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.ManeuverSequence.get_total_propellant">(gnc_toolkit.mission_design.ManeuverSequence method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_wind_velocity">get_wind_velocity() (gnc_toolkit.environment.wind.AtmosphereCoRotation method)</a>
+</li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.gibbs_iod">gibbs_iod() (in module gnc_toolkit.navigation)</a>
 
       <ul>
@@ -581,6 +814,146 @@
 
       <ul>
         <li><a href="api/gnc_toolkit.html#module-gnc_toolkit">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.actuator
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.actuator">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.allocation
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.allocation">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.cmg
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.cmg">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.magnetorquer
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.magnetorquer">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.reaction_wheel
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.reaction_wheel">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.solar_sail
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.solar_sail">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.thruster
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.thruster">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.actuators.vscmg
+
+      <ul>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.vscmg">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_determination
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_determination.davenport_q
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.davenport_q">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_determination.foam
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.foam">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_determination.quest
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.quest">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_determination.request
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.request">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_determination.triad
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.triad">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_dynamics
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_dynamics.flexible_body
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.flexible_body">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_dynamics.fuel_slosh
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.fuel_slosh">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_dynamics.rigid_body
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.rigid_body">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.attitude_dynamics.variable_inertia
+
+      <ul>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.variable_inertia">module</a>
 </li>
       </ul></li>
       <li>
@@ -619,10 +992,101 @@
 </li>
       </ul></li>
       <li>
+    gnc_toolkit.disturbances
+
+      <ul>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.disturbances.drag
+
+      <ul>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances.drag">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.disturbances.gravity
+
+      <ul>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances.gravity">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.disturbances.srp
+
+      <ul>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances.srp">module</a>
+</li>
+      </ul></li>
+      <li>
     gnc_toolkit.edl
 
       <ul>
         <li><a href="api/gnc_toolkit.html#module-gnc_toolkit.edl">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.density
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.density">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.mag_field
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.mag_field">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.moon
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.moon">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.radiation
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.radiation">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.solar
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.solar">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.space_weather
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.space_weather">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.thermal
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.thermal">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.environment.wind
+
+      <ul>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.wind">module</a>
 </li>
       </ul></li>
       <li>
@@ -807,6 +1271,8 @@
         <li><a href="api/gnc_toolkit.kalman_filters.html#module-gnc_toolkit.kalman_filters.enkf">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gnc_toolkit.kalman_filters.fixed_interval_smoother
 
@@ -877,8 +1343,6 @@
         <li><a href="api/gnc_toolkit.mission_design.html#module-gnc_toolkit.mission_design.budgeting">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gnc_toolkit.mission_design.communications
 
@@ -1118,6 +1582,104 @@
 </li>
       </ul></li>
       <li>
+    gnc_toolkit.sensors
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.altimeter
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.altimeter">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.camera
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.camera">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.gnss_receiver
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.gnss_receiver">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.gyroscope
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.gyroscope">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.horizon_sensor
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.horizon_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.imu
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.imu">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.lidar
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.lidar">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.magnetometer
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.magnetometer">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.sensor
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.star_catalog
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.star_catalog">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.star_tracker
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.star_tracker">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.sun_sensor
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.sun_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.sensors.sun_sensor_array
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.sun_sensor_array">module</a>
+</li>
+      </ul></li>
+      <li>
     gnc_toolkit.simulation
 
       <ul>
@@ -1209,6 +1771,97 @@
 </li>
       </ul></li>
       <li>
+    gnc_toolkit.utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.cayley_klein_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.cayley_klein_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.crp_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.crp_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.equinoctial_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.equinoctial_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.euler_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.euler_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.frame_conversion
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.frame_conversion">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.mean_elements
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.mean_elements">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.mee_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.mee_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.mrp_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.mrp_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.quat_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.quat_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.state_conversion
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.state_conversion">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.state_to_elements
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.state_to_elements">module</a>
+</li>
+      </ul></li>
+      <li>
+    gnc_toolkit.utils.time_utils
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.time_utils">module</a>
+</li>
+      </ul></li>
+      <li>
     gnc_toolkit.visualization
 
       <ul>
@@ -1250,12 +1903,18 @@
         <li><a href="api/gnc_toolkit.visualization.html#module-gnc_toolkit.visualization.orbit">module</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.gnss_receiver.GNSSReceiver">GNSSReceiver (class in gnc_toolkit.sensors.gnss_receiver)</a>
+</li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.GPSNavigation">GPSNavigation (class in gnc_toolkit.navigation)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.gps_nav.GPSNavigation">(class in gnc_toolkit.navigation.gps_nav)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.GradientTorque">GradientTorque (class in gnc_toolkit.disturbances.gravity)</a>
+</li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.GradientTorque.gravity_gradient_torque">gravity_gradient_torque() (gnc_toolkit.disturbances.gravity.GradientTorque method)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.gravity_turn_guidance">gravity_turn_guidance() (in module gnc_toolkit.guidance.continuous_thrust)</a>
 </li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.AnalyticalRedundancy.gyro_vs_quaternion_residual">gyro_vs_quaternion_residual() (gnc_toolkit.fdir.AnalyticalRedundancy static method)</a>
@@ -1264,6 +1923,8 @@
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.gyro_vs_quaternion_residual">(gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy static method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.gyroscope.Gyroscope">Gyroscope (class in gnc_toolkit.sensors.gyroscope)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1276,6 +1937,10 @@
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.h2_control.H2Controller">(class in gnc_toolkit.optimal_control.h2_control)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.HarmonicsGravity">HarmonicsGravity (class in gnc_toolkit.disturbances.gravity)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.HarrisPriester">HarrisPriester (class in gnc_toolkit.environment.density)</a>
+</li>
       <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.EventQueue.has_events">has_events() (gnc_toolkit.simulation.EventQueue method)</a>
 
       <ul>
@@ -1284,10 +1949,10 @@
       </ul></li>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.geometric_control.hat_map">hat_map() (in module gnc_toolkit.optimal_control.geometric_control)</a>
 </li>
-      <li><a href="api/gnc_toolkit.html#gnc_toolkit.edl.hazard_avoidance">hazard_avoidance() (in module gnc_toolkit.edl)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.html#gnc_toolkit.edl.hazard_avoidance">hazard_avoidance() (in module gnc_toolkit.edl)</a>
+</li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.herrick_gibbs_iod">herrick_gibbs_iod() (in module gnc_toolkit.navigation)</a>
 
       <ul>
@@ -1304,13 +1969,21 @@
 </li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.hohmann_transfer">hohmann_transfer() (in module gnc_toolkit.guidance.maneuvers)</a>
 </li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.horizon_sensor.HorizonSensor">HorizonSensor (class in gnc_toolkit.sensors.horizon_sensor)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.icrf2eci">icrf2eci() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.mag_field.igrf_field">igrf_field() (in module gnc_toolkit.environment.mag_field)</a>
+</li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.imm.IMM">IMM (class in gnc_toolkit.kalman_filters.imm)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.imu.IMU">IMU (class in gnc_toolkit.sensors.imu)</a>
 </li>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.INDIController">INDIController (class in gnc_toolkit.optimal_control)</a>
 
@@ -1362,6 +2035,8 @@
       </ul></li>
       <li><a href="api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator">Integrator (class in gnc_toolkit.integrators.integrator)</a>
 </li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.is_leap_year">is_leap_year() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.is_within_corridor">is_within_corridor() (in module gnc_toolkit.guidance.rendezvous)</a>
 </li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.isolate_fault">isolate_fault() (gnc_toolkit.fdir.parity_space.ParitySpaceDetector method)</a>
@@ -1373,13 +2048,33 @@
   </ul></td>
 </tr></table>
 
-<h2 id="K">K</h2>
+<h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.kepler.KeplerPropagator">KeplerPropagator (class in gnc_toolkit.propagators.kepler)</a>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.J2Gravity">J2Gravity (class in gnc_toolkit.disturbances.gravity)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.JB2008">JB2008 (class in gnc_toolkit.environment.density)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.time_utils.jd_to_datetime">jd_to_datetime() (in module gnc_toolkit.utils.time_utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_to_elements.kepler2eci">kepler2eci() (in module gnc_toolkit.utils.state_to_elements)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.kepler2equinoctial">kepler2equinoctial() (in module gnc_toolkit.utils.equinoctial_utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mee_utils.kepler2mee">kepler2mee() (in module gnc_toolkit.utils.mee_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.kepler.KeplerPropagator">KeplerPropagator (class in gnc_toolkit.propagators.kepler)</a>
+</li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.kf.KF">KF (class in gnc_toolkit.kalman_filters.kf)</a>
 </li>
   </ul></td>
@@ -1402,6 +2097,8 @@
       </ul></li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.formation_flying.leader_follower_control">leader_follower_control() (in module gnc_toolkit.guidance.formation_flying)</a>
 </li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.lidar.Lidar">Lidar (class in gnc_toolkit.sensors.lidar)</a>
+</li>
       <li><a href="api/gnc_toolkit.html#gnc_toolkit.edl.lifting_entry_dynamics">lifting_entry_dynamics() (in module gnc_toolkit.edl)</a>
 </li>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.LinearMPC">LinearMPC (class in gnc_toolkit.optimal_control)</a>
@@ -1416,6 +2113,8 @@
         <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.TLECatalog.list_satellites">(gnc_toolkit.ssa.TLECatalog method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.llh2ecef">llh2ecef() (in module gnc_toolkit.utils.frame_conversion)</a>
+</li>
       <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.scenario.ScenarioConfig.load">load() (gnc_toolkit.simulation.scenario.ScenarioConfig method)</a>
 
       <ul>
@@ -1424,6 +2123,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.star_catalog.StarCatalog.load_catalog">load_catalog() (gnc_toolkit.sensors.star_catalog.StarCatalog method)</a>
+</li>
       <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog.load_from_txt">load_from_txt() (gnc_toolkit.ssa.tle_interface.TLECatalog method)</a>
 
       <ul>
@@ -1454,12 +2155,18 @@
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.lqr.LQR">(class in gnc_toolkit.optimal_control.lqr)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.drag.LumpedDrag">LumpedDrag (class in gnc_toolkit.disturbances.drag)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.magnetometer.Magnetometer">Magnetometer (class in gnc_toolkit.sensors.magnetometer)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.magnetorquer.Magnetorquer">Magnetorquer (class in gnc_toolkit.actuators.magnetorquer)</a>
+</li>
       <li><a href="api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.ManeuverSequence">ManeuverSequence (class in gnc_toolkit.mission_design)</a>
 
       <ul>
@@ -1472,12 +2179,44 @@
         <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.map_relative_localization_update">(in module gnc_toolkit.navigation.terrain_nav)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.variable_inertia.mass_depletion_J_dot">mass_depletion_J_dot() (in module gnc_toolkit.attitude_dynamics.variable_inertia)</a>
+</li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.FeatureMatchingTRN.match_features">match_features() (gnc_toolkit.navigation.FeatureMatchingTRN method)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features">(gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.altimeter.Altimeter.measure">measure() (gnc_toolkit.sensors.altimeter.Altimeter method)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.camera.Camera.measure">(gnc_toolkit.sensors.camera.Camera method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.gnss_receiver.GNSSReceiver.measure">(gnc_toolkit.sensors.gnss_receiver.GNSSReceiver method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.gyroscope.Gyroscope.measure">(gnc_toolkit.sensors.gyroscope.Gyroscope method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.horizon_sensor.HorizonSensor.measure">(gnc_toolkit.sensors.horizon_sensor.HorizonSensor method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.imu.Accelerometer.measure">(gnc_toolkit.sensors.imu.Accelerometer method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.imu.IMU.measure">(gnc_toolkit.sensors.imu.IMU method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.lidar.Lidar.measure">(gnc_toolkit.sensors.lidar.Lidar method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.magnetometer.Magnetometer.measure">(gnc_toolkit.sensors.magnetometer.Magnetometer method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.measure">(gnc_toolkit.sensors.sensor.Sensor method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.star_tracker.StarTracker.measure">(gnc_toolkit.sensors.star_tracker.StarTracker method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sun_sensor.SunSensor.measure">(gnc_toolkit.sensors.sun_sensor.SunSensor method)</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sun_sensor_array.CoarseSunSensorArray.measure">(gnc_toolkit.sensors.sun_sensor_array.CoarseSunSensorArray method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mee_utils.mee2eci">mee2eci() (in module gnc_toolkit.utils.mee_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.mekf.MEKF">MEKF (class in gnc_toolkit.kalman_filters.mekf)</a>
 </li>
       <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.MissionSimulator">MissionSimulator (class in gnc_toolkit.simulation)</a>
@@ -1498,6 +2237,46 @@
       <ul>
         <li><a href="api/gnc_toolkit.html#module-gnc_toolkit">gnc_toolkit</a>
 </li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators">gnc_toolkit.actuators</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.actuator">gnc_toolkit.actuators.actuator</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.allocation">gnc_toolkit.actuators.allocation</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.cmg">gnc_toolkit.actuators.cmg</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.magnetorquer">gnc_toolkit.actuators.magnetorquer</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.reaction_wheel">gnc_toolkit.actuators.reaction_wheel</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.solar_sail">gnc_toolkit.actuators.solar_sail</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.thruster">gnc_toolkit.actuators.thruster</a>
+</li>
+        <li><a href="api/gnc_toolkit.actuators.html#module-gnc_toolkit.actuators.vscmg">gnc_toolkit.actuators.vscmg</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination">gnc_toolkit.attitude_determination</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.davenport_q">gnc_toolkit.attitude_determination.davenport_q</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.foam">gnc_toolkit.attitude_determination.foam</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.quest">gnc_toolkit.attitude_determination.quest</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.request">gnc_toolkit.attitude_determination.request</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_determination.html#module-gnc_toolkit.attitude_determination.triad">gnc_toolkit.attitude_determination.triad</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics">gnc_toolkit.attitude_dynamics</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.flexible_body">gnc_toolkit.attitude_dynamics.flexible_body</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.fuel_slosh">gnc_toolkit.attitude_dynamics.fuel_slosh</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.rigid_body">gnc_toolkit.attitude_dynamics.rigid_body</a>
+</li>
+        <li><a href="api/gnc_toolkit.attitude_dynamics.html#module-gnc_toolkit.attitude_dynamics.variable_inertia">gnc_toolkit.attitude_dynamics.variable_inertia</a>
+</li>
         <li><a href="api/gnc_toolkit.classical_control.html#module-gnc_toolkit.classical_control">gnc_toolkit.classical_control</a>
 </li>
         <li><a href="api/gnc_toolkit.classical_control.html#module-gnc_toolkit.classical_control.bdot">gnc_toolkit.classical_control.bdot</a>
@@ -1508,7 +2287,33 @@
 </li>
         <li><a href="api/gnc_toolkit.classical_control.html#module-gnc_toolkit.classical_control.rate_damping">gnc_toolkit.classical_control.rate_damping</a>
 </li>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances">gnc_toolkit.disturbances</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances.drag">gnc_toolkit.disturbances.drag</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances.gravity">gnc_toolkit.disturbances.gravity</a>
+</li>
+        <li><a href="api/gnc_toolkit.disturbances.html#module-gnc_toolkit.disturbances.srp">gnc_toolkit.disturbances.srp</a>
+</li>
         <li><a href="api/gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment">gnc_toolkit.environment</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.density">gnc_toolkit.environment.density</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.mag_field">gnc_toolkit.environment.mag_field</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.moon">gnc_toolkit.environment.moon</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.radiation">gnc_toolkit.environment.radiation</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.solar">gnc_toolkit.environment.solar</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.space_weather">gnc_toolkit.environment.space_weather</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.thermal">gnc_toolkit.environment.thermal</a>
+</li>
+        <li><a href="api/gnc_toolkit.environment.html#module-gnc_toolkit.environment.wind">gnc_toolkit.environment.wind</a>
 </li>
         <li><a href="api/gnc_toolkit.fdir.html#module-gnc_toolkit.fdir">gnc_toolkit.fdir</a>
 </li>
@@ -1650,6 +2455,34 @@
 </li>
         <li><a href="api/gnc_toolkit.propagators.html#module-gnc_toolkit.propagators.sgp4_propagator">gnc_toolkit.propagators.sgp4_propagator</a>
 </li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors">gnc_toolkit.sensors</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.altimeter">gnc_toolkit.sensors.altimeter</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.camera">gnc_toolkit.sensors.camera</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.gnss_receiver">gnc_toolkit.sensors.gnss_receiver</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.gyroscope">gnc_toolkit.sensors.gyroscope</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.horizon_sensor">gnc_toolkit.sensors.horizon_sensor</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.imu">gnc_toolkit.sensors.imu</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.lidar">gnc_toolkit.sensors.lidar</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.magnetometer">gnc_toolkit.sensors.magnetometer</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.sensor">gnc_toolkit.sensors.sensor</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.star_catalog">gnc_toolkit.sensors.star_catalog</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.star_tracker">gnc_toolkit.sensors.star_tracker</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.sun_sensor">gnc_toolkit.sensors.sun_sensor</a>
+</li>
+        <li><a href="api/gnc_toolkit.sensors.html#module-gnc_toolkit.sensors.sun_sensor_array">gnc_toolkit.sensors.sun_sensor_array</a>
+</li>
         <li><a href="api/gnc_toolkit.simulation.html#module-gnc_toolkit.simulation">gnc_toolkit.simulation</a>
 </li>
         <li><a href="api/gnc_toolkit.simulation.html#module-gnc_toolkit.simulation.events">gnc_toolkit.simulation.events</a>
@@ -1676,6 +2509,32 @@
 </li>
         <li><a href="api/gnc_toolkit.ssa.html#module-gnc_toolkit.ssa.tracking">gnc_toolkit.ssa.tracking</a>
 </li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils">gnc_toolkit.utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.cayley_klein_utils">gnc_toolkit.utils.cayley_klein_utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.crp_utils">gnc_toolkit.utils.crp_utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.equinoctial_utils">gnc_toolkit.utils.equinoctial_utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.euler_utils">gnc_toolkit.utils.euler_utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.frame_conversion">gnc_toolkit.utils.frame_conversion</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.mean_elements">gnc_toolkit.utils.mean_elements</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.mee_utils">gnc_toolkit.utils.mee_utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.mrp_utils">gnc_toolkit.utils.mrp_utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.quat_utils">gnc_toolkit.utils.quat_utils</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.state_conversion">gnc_toolkit.utils.state_conversion</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.state_to_elements">gnc_toolkit.utils.state_to_elements</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#module-gnc_toolkit.utils.time_utils">gnc_toolkit.utils.time_utils</a>
+</li>
         <li><a href="api/gnc_toolkit.visualization.html#module-gnc_toolkit.visualization">gnc_toolkit.visualization</a>
 </li>
         <li><a href="api/gnc_toolkit.visualization.html#module-gnc_toolkit.visualization.attitude">gnc_toolkit.visualization.attitude</a>
@@ -1697,6 +2556,12 @@
         <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.monte_carlo.MonteCarloSim">(class in gnc_toolkit.simulation.monte_carlo)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.moon.Moon">Moon (class in gnc_toolkit.environment.moon)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.mrp_to_dcm">mrp_to_dcm() (in module gnc_toolkit.utils.mrp_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.mrp_to_quat">mrp_to_quat() (in module gnc_toolkit.utils.mrp_utils)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1723,6 +2588,10 @@
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.mpc.NonlinearMPC">(class in gnc_toolkit.optimal_control.mpc)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.NRLMSISE00">NRLMSISE00 (class in gnc_toolkit.environment.density)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.NullMotionManager">NullMotionManager (class in gnc_toolkit.actuators.allocation)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1735,6 +2604,8 @@
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator">(class in gnc_toolkit.fdir.residual_generation)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.OceanTidesGravity">OceanTidesGravity (class in gnc_toolkit.disturbances.gravity)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.optimal_combined_maneuver">optimal_combined_maneuver() (in module gnc_toolkit.guidance.maneuvers)</a>
 </li>
   </ul></td>
@@ -1747,6 +2618,8 @@
         <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF">(class in gnc_toolkit.navigation.orbit_determination)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mean_elements.osculating2mean">osculating2mean() (in module gnc_toolkit.utils.mean_elements)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1877,6 +2750,8 @@
 </li>
       <li><a href="api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.base.Propagator">Propagator (class in gnc_toolkit.propagators.base)</a>
 </li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.PseudoInverseAllocator">PseudoInverseAllocator (class in gnc_toolkit.actuators.allocation)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1884,6 +2759,34 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.q_law_guidance">q_law_guidance() (in module gnc_toolkit.guidance.continuous_thrust)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.quat_conj">quat_conj() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.quat_inv">quat_inv() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.quat_mult">quat_mult() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.quat_norm">quat_norm() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.quat_normalize">quat_normalize() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.quat_rot">quat_rot() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.cayley_klein_utils.quat_to_cayley_klein">quat_to_cayley_klein() (in module gnc_toolkit.utils.cayley_klein_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.crp_utils.quat_to_crp">quat_to_crp() (in module gnc_toolkit.utils.crp_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.quat_to_dcm">quat_to_dcm() (in module gnc_toolkit.utils.state_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.quat_to_euler">quat_to_euler() (in module gnc_toolkit.utils.state_conversion)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.quat_to_mrp">quat_to_mrp() (in module gnc_toolkit.utils.mrp_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.quat_to_rmat">quat_to_rmat() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.quest.quest">quest() (in module gnc_toolkit.attitude_determination.quest)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1893,7 +2796,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.maneuvers.raan_change">raan_change() (in module gnc_toolkit.guidance.maneuvers)</a>
 </li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.radiation.RadiationModel">RadiationModel (class in gnc_toolkit.environment.radiation)</a>
+</li>
       <li><a href="api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.rate_damping.RateDampingControl">RateDampingControl (class in gnc_toolkit.classical_control.rate_damping)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.reaction_wheel.ReactionWheel">ReactionWheel (class in gnc_toolkit.actuators.reaction_wheel)</a>
 </li>
       <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.RealTimeSimulator">RealTimeSimulator (class in gnc_toolkit.simulation)</a>
 
@@ -1909,6 +2816,12 @@
         <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF">(class in gnc_toolkit.navigation.relative_nav)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.RelativisticCorrection">RelativisticCorrection (class in gnc_toolkit.disturbances.gravity)</a>
+</li>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.request.request">request() (in module gnc_toolkit.attitude_determination.request)</a>
+</li>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.request.RequestFilter">RequestFilter (class in gnc_toolkit.attitude_determination.request)</a>
+</li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.pf.ParticleFilter.resample">resample() (gnc_toolkit.kalman_filters.pf.ParticleFilter method)</a>
 </li>
       <li><a href="api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.pid.PID.reset">reset() (gnc_toolkit.classical_control.pid.PID method)</a>
@@ -1917,10 +2830,30 @@
 </li>
       <li><a href="api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk45.RK45">RK45 (class in gnc_toolkit.integrators.rk45)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk853.RK853">RK853 (class in gnc_toolkit.integrators.rk853)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.rot_x">rot_x() (in module gnc_toolkit.utils.state_conversion)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_to_elements.rot_x">(in module gnc_toolkit.utils.state_to_elements)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.frame_conversion.rot_y">rot_y() (in module gnc_toolkit.utils.frame_conversion)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.rot_y">(in module gnc_toolkit.utils.state_conversion)</a>
+</li>
+        <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_to_elements.rot_y">(in module gnc_toolkit.utils.state_to_elements)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_conversion.rot_z">rot_z() (in module gnc_toolkit.utils.state_conversion)</a>
+
+      <ul>
+        <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.state_to_elements.rot_z">(in module gnc_toolkit.utils.state_to_elements)</a>
+</li>
+      </ul></li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.rts_smoother.rts_smoother">rts_smoother() (in module gnc_toolkit.kalman_filters.rts_smoother)</a>
 </li>
       <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.ConstellationSimulator.run">run() (gnc_toolkit.simulation.ConstellationSimulator method)</a>
@@ -2005,12 +2938,16 @@
         <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.simulator.MissionSimulator.schedule_event">(gnc_toolkit.simulation.simulator.MissionSimulator method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor">Sensor (class in gnc_toolkit.sensors.sensor)</a>
+</li>
       <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.ActuatorAccommodation.set_health">set_health() (gnc_toolkit.fdir.ActuatorAccommodation method)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.set_health">(gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.space_weather.SpaceWeather.set_solar_flux">set_solar_flux() (gnc_toolkit.environment.space_weather.SpaceWeather method)</a>
+</li>
       <li><a href="api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator">Sgp4Propagator (class in gnc_toolkit.propagators.sgp4_propagator)</a>
 </li>
       <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.SimulationLogger">SimulationLogger (class in gnc_toolkit.simulation)</a>
@@ -2019,12 +2956,18 @@
         <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.logging.SimulationLogger">(class in gnc_toolkit.simulation.logging)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.allocation.SingularRobustAllocator">SingularRobustAllocator (class in gnc_toolkit.actuators.allocation)</a>
+</li>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.quat_utils.skew_symmetric">skew_symmetric() (in module gnc_toolkit.utils.quat_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.SlidingModeController">SlidingModeController (class in gnc_toolkit.optimal_control)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController">(class in gnc_toolkit.optimal_control.sliding_mode)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.solar_sail.SolarSail">SolarSail (class in gnc_toolkit.actuators.solar_sail)</a>
+</li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD.solve">solve() (gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD method)</a>
 
       <ul>
@@ -2063,11 +3006,19 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.solve_kepler_equinoctial">solve_kepler_equinoctial() (in module gnc_toolkit.utils.equinoctial_utils)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.solve_lambert">solve_lambert() (in module gnc_toolkit.guidance.rendezvous)</a>
 </li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.solve_lambert_multi_rev">solve_lambert_multi_rev() (in module gnc_toolkit.guidance.rendezvous)</a>
 </li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.space_weather.SpaceWeather">SpaceWeather (class in gnc_toolkit.environment.space_weather)</a>
+</li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.sr_ukf.SRUKF">SRUKF (class in gnc_toolkit.kalman_filters.sr_ukf)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.star_catalog.StarCatalog">StarCatalog (class in gnc_toolkit.sensors.star_catalog)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.star_tracker.StarTracker">StarTracker (class in gnc_toolkit.sensors.star_tracker)</a>
 </li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.state">state (gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF property)</a>
 
@@ -2107,7 +3058,11 @@
         <li><a href="api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.simulator.MissionSimulator.step">(gnc_toolkit.simulation.simulator.MissionSimulator method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.solar.Sun">Sun (class in gnc_toolkit.environment.solar)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.sun_pointing_reference">sun_pointing_reference() (in module gnc_toolkit.guidance.attitude_guidance)</a>
+</li>
+      <li><a href="api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sun_sensor.SunSensor">SunSensor (class in gnc_toolkit.sensors.sun_sensor)</a>
 </li>
       <li><a href="api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.SurfaceNavigationEKF">SurfaceNavigationEKF (class in gnc_toolkit.navigation)</a>
 
@@ -2129,21 +3084,35 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.target_tracking_reference">target_tracking_reference() (in module gnc_toolkit.guidance.attitude_guidance)</a>
 </li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment">ThermalEnvironment (class in gnc_toolkit.environment.thermal)</a>
+</li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.ThirdBodyGravity">ThirdBodyGravity (class in gnc_toolkit.disturbances.gravity)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.Thruster">Thruster (class in gnc_toolkit.actuators.thruster)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.thruster.ThrusterCluster">ThrusterCluster (class in gnc_toolkit.actuators.thruster)</a>
+</li>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.mag_field.tilted_dipole_field">tilted_dipole_field() (in module gnc_toolkit.environment.mag_field)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.TLECatalog">TLECatalog (class in gnc_toolkit.ssa)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog">(class in gnc_toolkit.ssa.tle_interface)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.TLEEntity">TLEEntity (class in gnc_toolkit.ssa)</a>
 
       <ul>
         <li><a href="api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLEEntity">(class in gnc_toolkit.ssa.tle_interface)</a>
 </li>
       </ul></li>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.triad.triad">triad() (in module gnc_toolkit.attitude_determination.triad)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.rendezvous.tschauner_hempel_propagation">tschauner_hempel_propagation() (in module gnc_toolkit.guidance.rendezvous)</a>
+</li>
+      <li><a href="api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.gravity.TwoBodyGravity">TwoBodyGravity (class in gnc_toolkit.disturbances.gravity)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2155,9 +3124,11 @@
 </li>
       <li><a href="api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.ukf.UKF_Attitude">UKF_Attitude (class in gnc_toolkit.kalman_filters.ukf)</a>
 </li>
-      <li><a href="api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.pid.PID.update">update() (gnc_toolkit.classical_control.pid.PID method)</a>
+      <li><a href="api/gnc_toolkit.attitude_determination.html#gnc_toolkit.attitude_determination.request.RequestFilter.update">update() (gnc_toolkit.attitude_determination.request.RequestFilter method)</a>
 
       <ul>
+        <li><a href="api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.pid.PID.update">(gnc_toolkit.classical_control.pid.PID method)</a>
+</li>
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeCondition.update">(gnc_toolkit.fdir.safe_mode.SafeModeCondition method)</a>
 </li>
         <li><a href="api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.safe_mode.SafeModeLogic.update">(gnc_toolkit.fdir.safe_mode.SafeModeLogic method)</a>
@@ -2239,11 +3210,23 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.geometric_control.vee_map">vee_map() (in module gnc_toolkit.optimal_control.geometric_control)</a>
+      <li><a href="api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.variable_inertia.variable_inertia_euler_equations">variable_inertia_euler_equations() (in module gnc_toolkit.attitude_dynamics.variable_inertia)</a>
+</li>
+      <li><a href="api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.vscmg.VariableSpeedCMG">VariableSpeedCMG (class in gnc_toolkit.actuators.vscmg)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.geometric_control.vee_map">vee_map() (in module gnc_toolkit.optimal_control.geometric_control)</a>
+</li>
       <li><a href="api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.formation_flying.virtual_structure_control">virtual_structure_control() (in module gnc_toolkit.guidance.formation_flying)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gnc_toolkit.environment.html#gnc_toolkit.environment.mag_field.wmm_field">wmm_field() (in module gnc_toolkit.environment.mag_field)</a>
 </li>
   </ul></td>
 </tr></table>

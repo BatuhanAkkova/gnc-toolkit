@@ -1,0 +1,200 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Tutorial 02: Coordinate Systems & Frame Transformations\n",
+    "\n",
+    "This tutorial covers conversions between common spacecraft coordinate frames using the `gnc_toolkit.utils.frame_conversion` module.\n",
+    "\n",
+    "--- \n",
+    "## Theory Prerequisites\n",
+    "\n",
+    "### 1. Earth-Centered Inertial (ECI) vs Earth-Centered Fixed (ECEF)\n",
+    "- **ECI ($I$)**: Inertial frame originating at Earth's center. X-axis points to Vernal Equinox ($\\Upsilon$).\n",
+    "- **ECEF ($E$)**: Rotates with the Earth. X-axis points to Prime Meridian.\n",
+    "\n",
+    "The transformation from ECI to ECEF is a rotation about the Z-axis by the **Greenwich Mean Sidereal Time (GMST)**:\n",
+    "$$\n",
+    "R^{I \\to E} = R_z(\\theta_{GMST})\n",
+    "$$\n",
+    "$$\n",
+    "r_{ECEF} = R^{I \\to E} r_{ECI}\n",
+    "$$\n",
+    "\n",
+    "### 2. Local-Vertical Local-Horizontal (LVLH)\n",
+    "The LVLH frame is a satellite-centered frame useful for attitude determination and relative navigation.\n",
+    "- **$\\hat{z}_{LVLH}$ (Nadir)**: $-\\frac{r}{|r|}$ (Points towards Earth center)\n",
+    "- **$\\hat{y}_{LVLH}$ (Orbit Normal)**: $-\\frac{h}{|h|}$ where $h = r \\times v$ is angular momentum\n",
+    "- **$\\hat{x}_{LVLH}$**: $\\hat{y}_{LVLH} \\times \\hat{z}_{LVLH}$ (Completes right-handed system)\n",
+    "\n",
+    "---"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Imports successful.\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, llh2ecef\n",
+    "from gnc_toolkit.utils.time_utils import calc_gmst\n",
+    "\n",
+    "print(\"Imports successful.\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 1. ECI to ECEF Conversion\n",
+    "\n",
+    "Let's define a spacecraft position and velocity in ECI (J2000) for a LEO satellite at `JD = 2451545.0` (J2000 epoch)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ECI Position: [6771000.       0.       0.] m\n",
+      "ECEF Position: [ 1229340.41068344 -6658465.52552919        0.        ] m\n",
+      "\n",
+      "Round-trip Position Error: 3.755864e-11 m\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Define ECI state (J2000)\n",
+    "r_eci = np.array([6771000.0, 0.0, 0.0]) # [m]\n",
+    "v_eci = np.array([0.0, 7670.0, 0.0])   # [m/s]\n",
+    "jd = 2451545.0 # J2000 epoch\n",
+    "\n",
+    "# Convert to ECEF\n",
+    "r_ecef, v_ecef = eci2ecef(r_eci, v_eci, jd)\n",
+    "\n",
+    "print(f\"ECI Position: {r_eci} m\")\n",
+    "print(f\"ECEF Position: {r_ecef} m\")\n",
+    "\n",
+    "# Verify round-trip conversion\n",
+    "r_eci_rt, v_eci_rt = ecef2eci(r_ecef, v_ecef, jd)\n",
+    "print(f\"\\nRound-trip Position Error: {np.linalg.norm(r_eci - r_eci_rt):.6e} m\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. ECI to LVLH Transformation (DCM)\n",
+    "\n",
+    "The Rotation matrix or Direction Cosine Matrix (DCM) maps ECI vectors into the Local-Vertical Local-Horizontal frame."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "DCM (ECI -> LVLH):\n",
+      "[[ 0.  1.  0.]\n",
+      " [-0. -0. -1.]\n",
+      " [-1. -0. -0.]]\n",
+      "\n",
+      "Orthogonality Check Error: 0.000000e+00\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Calculate ECI to LVLH DCM\n",
+    "DCM_eci2lvlh = eci2lvlh_dcm(r_eci, v_eci)\n",
+    "\n",
+    "print(\"DCM (ECI -> LVLH):\")\n",
+    "print(DCM_eci2lvlh)\n",
+    "\n",
+    "# Verify Orthogonality (DCM * DCM^T = I)\n",
+    "identity_check = DCM_eci2lvlh @ DCM_eci2lvlh.T\n",
+    "print(f\"\\nOrthogonality Check Error: {np.linalg.norm(identity_check - np.eye(3)):.6e}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3. Geodetic Coordinates (LLH)\n",
+    "\n",
+    "Convert ECI position to Latitude, Longitude, and Altitude (above WGS84 ellipsoid)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Latitude:  0.0000 deg\n",
+      "Longitude: -79.5394 deg\n",
+      "Altitude:  392.86 km\n",
+      "\n",
+      "ECEF Position from LLH: [ 1229340.41068344 -6658465.52552919        0.        ] m\n",
+      "Difference from original ECEF: 0.000000e+00 m\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Convert to LLH (Latitude, Longitude, Altitude)\n",
+    "lat, lon, alt = eci2llh(r_eci, jd)\n",
+    "\n",
+    "print(f\"Latitude:  {np.degrees(lat):.4f} deg\")\n",
+    "print(f\"Longitude: {np.degrees(lon):.4f} deg\")\n",
+    "print(f\"Altitude:  {alt/1000.0:.2f} km\")\n",
+    "\n",
+    "# Verify using llh2ecef\n",
+    "r_ecef_check = llh2ecef(lat, lon, alt)\n",
+    "print(f\"\\nECEF Position from LLH: {r_ecef_check} m\")\n",
+    "print(f\"Difference from original ECEF: {np.linalg.norm(r_ecef - r_ecef_check):.6e} m\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.11"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

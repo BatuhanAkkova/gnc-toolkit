@@ -1,0 +1,183 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.attitude_dynamics.fuel_slosh &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.attitude_dynamics.fuel_slosh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.attitude_dynamics.fuel_slosh</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Fuel slosh dynamics using equivalent pendulum models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="fuel_slosh_dynamics">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuel_slosh_dynamics</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_dot</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">omega_dot</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">r_base</span><span class="p">,</span> <span class="n">g_equiv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the second derivative of the slosh pendulum angle.</span>
+
+<span class="sd">    Model: Pendulum of length L, base at r_base from spacecraft CM.</span>
+<span class="sd">    g_equiv: Equivalent acceleration (e.g., from thrust).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        theta (float): Pendulum angle [rad].</span>
+<span class="sd">        theta_dot (float): Pendulum angular velocity [rad/s].</span>
+<span class="sd">        omega (np.ndarray): Spacecraft angular velocity (3,).</span>
+<span class="sd">        omega_dot (np.ndarray): Spacecraft angular acceleration (3,).</span>
+<span class="sd">        L (float): Pendulum length [m].</span>
+<span class="sd">        r_base (np.ndarray): Location of pendulum base from CM (3,).</span>
+<span class="sd">        g_equiv (np.ndarray): Equivalent gravity/acceleration vector (3,).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        float: Pendulum angular acceleration theta_ddot [rad/s^2].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Simple pendulum in a non-inertial frame</span>
+    <span class="c1"># Accel at base: a_base = g_equiv - omega_dot x r_base - omega x (omega x r_base)</span>
+    <span class="n">a_base</span> <span class="o">=</span> <span class="n">g_equiv</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega_dot</span><span class="p">,</span> <span class="n">r_base</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">r_base</span><span class="p">))</span>
+
+    <span class="c1"># Projection of a_base onto the pendulum&#39;s transverse direction</span>
+    <span class="c1"># Assume pendulum swings in the x-z plane of its local frame</span>
+    <span class="c1"># Local unit vectors:</span>
+    <span class="c1"># e_r (radial) = [sin(theta), 0, -cos(theta)]</span>
+    <span class="c1"># e_theta (transverse) = [cos(theta), 0, sin(theta)]</span>
+    <span class="n">e_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)])</span>
+
+    <span class="c1"># theta_ddot = (a_base . e_theta) / L</span>
+    <span class="n">theta_ddot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a_base</span><span class="p">,</span> <span class="n">e_theta</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span>
+
+    <span class="k">return</span> <span class="n">theta_ddot</span></div>
+
+
+
+<div class="viewcode-block" id="fuel_slosh_torque">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_torque">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuel_slosh_torque</span><span class="p">(</span><span class="n">m_p</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">theta_dot</span><span class="p">,</span> <span class="n">theta_ddot</span><span class="p">,</span> <span class="n">r_base</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the reaction torque from fuel slosh on the spacecraft body.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        m_p (float): Pendulum mass [kg].</span>
+<span class="sd">        L (float): Pendulum length [m].</span>
+<span class="sd">        theta (float): Pendulum angle [rad].</span>
+<span class="sd">        theta_dot (float): Pendulum angular velocity [rad/s].</span>
+<span class="sd">        theta_ddot (float): Pendulum angular acceleration [rad/s^2].</span>
+<span class="sd">        r_base (np.ndarray): Base location (3,).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        np.ndarray: Slosh reaction torque (3,).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Relative acceleration of bob:</span>
+    <span class="c1"># a_rel = L * theta_ddot * e_theta - L * theta_dot^2 * e_r</span>
+    <span class="n">e_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)])</span>
+    <span class="n">e_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)])</span>
+    <span class="n">a_rel</span> <span class="o">=</span> <span class="n">L</span> <span class="o">*</span> <span class="n">theta_ddot</span> <span class="o">*</span> <span class="n">e_theta</span> <span class="o">-</span> <span class="n">L</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta_dot</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_r</span>
+
+    <span class="c1"># Reaction force on body: -m_p * a_rel</span>
+    <span class="n">force_slosh</span> <span class="o">=</span> <span class="o">-</span><span class="n">m_p</span> <span class="o">*</span> <span class="n">a_rel</span>
+
+    <span class="c1"># Torque on body: r_bob x force_slosh</span>
+    <span class="n">r_bob</span> <span class="o">=</span> <span class="n">r_base</span> <span class="o">+</span> <span class="n">L</span> <span class="o">*</span> <span class="n">e_r</span>
+    <span class="n">torque_slosh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r_bob</span><span class="p">,</span> <span class="n">force_slosh</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">torque_slosh</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

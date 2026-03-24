@@ -1,0 +1,77 @@
+gnc\_toolkit.actuators package
+==============================
+
+Submodules
+----------
+
+gnc\_toolkit.actuators.actuator module
+--------------------------------------
+
+.. automodule:: gnc_toolkit.actuators.actuator
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.actuators.allocation module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.actuators.allocation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.actuators.cmg module
+---------------------------------
+
+.. automodule:: gnc_toolkit.actuators.cmg
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.actuators.magnetorquer module
+------------------------------------------
+
+.. automodule:: gnc_toolkit.actuators.magnetorquer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.actuators.reaction\_wheel module
+---------------------------------------------
+
+.. automodule:: gnc_toolkit.actuators.reaction_wheel
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.actuators.solar\_sail module
+-----------------------------------------
+
+.. automodule:: gnc_toolkit.actuators.solar_sail
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.actuators.thruster module
+--------------------------------------
+
+.. automodule:: gnc_toolkit.actuators.thruster
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.actuators.vscmg module
+-----------------------------------
+
+.. automodule:: gnc_toolkit.actuators.vscmg
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.actuators
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -9,6 +9,7 @@
   <title>gnc_toolkit.fdir package &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,7 +19,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit.guidance package" href="gnc_toolkit.guidance.html" />
+    <link rel="prev" title="gnc_toolkit.environment package" href="gnc_toolkit.environment.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,99 +43,42 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">gnc_toolkit.fdir package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-gnc_toolkit.fdir.failure_accommodation">gnc_toolkit.fdir.failure_accommodation module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.allocate"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.allocate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.set_health"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.set_health()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.failure_accommodation.ActuatorAccommodation.update_allocation_matrix"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.update_allocation_matrix()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gnc_toolkit</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gnc_toolkit.html">gnc_toolkit package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gnc_toolkit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.actuators.html">gnc_toolkit.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_determination.html">gnc_toolkit.attitude_determination package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_dynamics.html">gnc_toolkit.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.classical_control.html">gnc_toolkit.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.disturbances.html">gnc_toolkit.disturbances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.environment.html">gnc_toolkit.environment package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gnc_toolkit.fdir package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html">gnc_toolkit.guidance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.kalman_filters.html">gnc_toolkit.kalman_filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.mission_design.html">gnc_toolkit.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html">gnc_toolkit.navigation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.optimal_control.html">gnc_toolkit.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html">gnc_toolkit.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.sensors.html">gnc_toolkit.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.simulation.html">gnc_toolkit.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.ssa.html">gnc_toolkit.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.utils.html">gnc_toolkit.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.visualization.html">gnc_toolkit.visualization package</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.fdir.parity_space">gnc_toolkit.fdir.parity_space module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.detect_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.detect_fault()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.get_parity_vector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.get_parity_vector()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.isolate_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.isolate_fault()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.fdir.residual_generation">gnc_toolkit.fdir.residual_generation module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.check_threshold"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.check_threshold()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.AnalyticalRedundancy.gyro_vs_quaternion_residual"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.gyro_vs_quaternion_residual()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.residual_generation.ObserverResidualGenerator.step"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator.step()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.fdir.safe_mode">gnc_toolkit.fdir.safe_mode module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition.update"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition.update()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.add_condition"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.add_condition()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.force_mode"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.force_mode()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.update"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.update()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode"><code class="docutils literal notranslate"><span class="pre">SystemMode</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode.NOMINAL"><code class="docutils literal notranslate"><span class="pre">SystemMode.NOMINAL</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode.RECOVERY"><code class="docutils literal notranslate"><span class="pre">SystemMode.RECOVERY</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode.SAFE"><code class="docutils literal notranslate"><span class="pre">SystemMode.SAFE</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.fdir">Module contents</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation.allocate"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.allocate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation.set_health"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.set_health()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ActuatorAccommodation.update_allocation_matrix"><code class="docutils literal notranslate"><span class="pre">ActuatorAccommodation.update_allocation_matrix()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.AnalyticalRedundancy"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.AnalyticalRedundancy.check_threshold"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.check_threshold()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.AnalyticalRedundancy.gyro_vs_quaternion_residual"><code class="docutils literal notranslate"><span class="pre">AnalyticalRedundancy.gyro_vs_quaternion_residual()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ObserverResidualGenerator"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ObserverResidualGenerator.step"><code class="docutils literal notranslate"><span class="pre">ObserverResidualGenerator.step()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector.detect_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.detect_fault()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector.get_parity_vector"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.get_parity_vector()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.ParitySpaceDetector.isolate_fault"><code class="docutils literal notranslate"><span class="pre">ParitySpaceDetector.isolate_fault()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeCondition"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeCondition.update"><code class="docutils literal notranslate"><span class="pre">SafeModeCondition.update()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.add_condition"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.add_condition()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.conditions"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.conditions</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.force_mode"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.force_mode()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.history"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.history</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.fdir.SafeModeLogic.update"><code class="docutils literal notranslate"><span class="pre">SafeModeLogic.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -147,6 +93,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">gnc_toolkit</a></li>
+          <li class="breadcrumb-item"><a href="gnc_toolkit.html">gnc_toolkit package</a></li>
       <li class="breadcrumb-item active">gnc_toolkit.fdir package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/gnc_toolkit.fdir.rst.txt" rel="nofollow"> View page source</a>
@@ -196,10 +144,10 @@ If h_i = 0, actuator i is failed and we set its weight to infinity
 <dd class="field-odd"><p><strong>tau</strong> – Desired control effort (k x 1)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Actuator commands (m x 1)</p>
+<dd class="field-even"><p><strong>u</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>u</p>
+<dd class="field-odd"><p>Actuator commands (m x 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -224,10 +172,10 @@ If h_i = 0, actuator i is failed and we set its weight to infinity
 <dd><p>Compute the pseudo-inverse allocation matrix based on current weights and health.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Pseudo-inverse matrix (m x k)</p>
+<dd class="field-odd"><p><strong>B_pinv</strong></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>B_pinv</p>
+<dd class="field-even"><p>Pseudo-inverse matrix (m x k)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -270,7 +218,7 @@ P * P^T = I</p>
 <li><p><strong>threshold</strong> – Magnitude threshold for the parity vector norm</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if fault detected, False otherwise</p>
 </dd>
 </dl>
@@ -285,10 +233,10 @@ P * P^T = I</p>
 <dd class="field-odd"><p><strong>y</strong> – Measurement vector (p x 1)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Parity vector (p-n x 1)</p>
+<dd class="field-even"><p><strong>p_vec</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>p_vec</p>
+<dd class="field-odd"><p>Parity vector (p-n x 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -302,7 +250,7 @@ that best aligns with the parity vector.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y</strong> – Measurement vector</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Isolated sensor index (0 to p-1)</p>
 </dd>
 </dl>
@@ -332,7 +280,7 @@ or comparing two redundant sensor outputs.</p>
 <li><p><strong>threshold</strong> – Scalar threshold</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if fault detected, False otherwise</p>
 </dd>
 </dl>
@@ -350,7 +298,7 @@ or comparing two redundant sensor outputs.</p>
 <li><p><strong>q_dot_calculated</strong> – Calculated quaternion rate</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Residual vector</p>
 </dd>
 </dl>
@@ -385,10 +333,10 @@ y_hat_k     = C x_hat_k + D u_k</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Residual vector (p x 1)</p>
+<dd class="field-even"><p><strong>r</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>r</p>
+<dd class="field-odd"><p>Residual vector (p x 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -409,7 +357,7 @@ y_hat_k     = C x_hat_k + D u_k</p>
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeCondition.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition.update" title="Link to this definition"></a></dt>
 <dd><p>Update the condition state and check if it should trigger.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if safety condition triggered, False otherwise</p>
 </dd>
 </dl>
@@ -439,7 +387,7 @@ y_hat_k     = C x_hat_k + D u_k</p>
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.safe_mode.SafeModeLogic.update" title="Link to this definition"></a></dt>
 <dd><p>Update mode logic based on conditions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Current SystemMode</p>
 </dd>
 </dl>
@@ -503,10 +451,10 @@ If h_i = 0, actuator i is failed and we set its weight to infinity
 <dd class="field-odd"><p><strong>tau</strong> – Desired control effort (k x 1)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Actuator commands (m x 1)</p>
+<dd class="field-even"><p><strong>u</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>u</p>
+<dd class="field-odd"><p>Actuator commands (m x 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -531,10 +479,10 @@ If h_i = 0, actuator i is failed and we set its weight to infinity
 <dd><p>Compute the pseudo-inverse allocation matrix based on current weights and health.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Pseudo-inverse matrix (m x k)</p>
+<dd class="field-odd"><p><strong>B_pinv</strong></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>B_pinv</p>
+<dd class="field-even"><p>Pseudo-inverse matrix (m x k)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -559,7 +507,7 @@ or comparing two redundant sensor outputs.</p>
 <li><p><strong>threshold</strong> – Scalar threshold</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if fault detected, False otherwise</p>
 </dd>
 </dl>
@@ -577,7 +525,7 @@ or comparing two redundant sensor outputs.</p>
 <li><p><strong>q_dot_calculated</strong> – Calculated quaternion rate</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Residual vector</p>
 </dd>
 </dl>
@@ -612,10 +560,10 @@ y_hat_k     = C x_hat_k + D u_k</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Residual vector (p x 1)</p>
+<dd class="field-even"><p><strong>r</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>r</p>
+<dd class="field-odd"><p>Residual vector (p x 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -654,7 +602,7 @@ P * P^T = I</p>
 <li><p><strong>threshold</strong> – Magnitude threshold for the parity vector norm</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if fault detected, False otherwise</p>
 </dd>
 </dl>
@@ -669,10 +617,10 @@ P * P^T = I</p>
 <dd class="field-odd"><p><strong>y</strong> – Measurement vector (p x 1)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Parity vector (p-n x 1)</p>
+<dd class="field-even"><p><strong>p_vec</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>p_vec</p>
+<dd class="field-odd"><p>Parity vector (p-n x 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -686,7 +634,7 @@ that best aligns with the parity vector.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y</strong> – Measurement vector</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Isolated sensor index (0 to p-1)</p>
 </dd>
 </dl>
@@ -704,7 +652,7 @@ that best aligns with the parity vector.</p>
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeCondition.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeCondition.update" title="Link to this definition"></a></dt>
 <dd><p>Update the condition state and check if it should trigger.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if safety condition triggered, False otherwise</p>
 </dd>
 </dl>
@@ -725,7 +673,7 @@ that best aligns with the parity vector.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.conditions">
-<span class="sig-name descname"><span class="pre">conditions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition" title="gnc_toolkit.fdir.safe_mode.SafeModeCondition"><span class="pre">SafeModeCondition</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.conditions" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">conditions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SafeModeCondition" title="gnc_toolkit.fdir.safe_mode.SafeModeCondition"><span class="pre">SafeModeCondition</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.conditions" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -736,7 +684,7 @@ that best aligns with the parity vector.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gnc_toolkit.fdir.SafeModeLogic.history">
-<span class="sig-name descname"><span class="pre">history</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.history" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">history</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.history" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -744,7 +692,7 @@ that best aligns with the parity vector.</p>
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.fdir.safe_mode.SystemMode" title="gnc_toolkit.fdir.safe_mode.SystemMode"><span class="pre">SystemMode</span></a></span></span><a class="reference internal" href="../_modules/gnc_toolkit/fdir/safe_mode.html#SafeModeLogic.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.fdir.SafeModeLogic.update" title="Link to this definition"></a></dt>
 <dd><p>Update mode logic based on conditions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Current SystemMode</p>
 </dd>
 </dl>
@@ -758,7 +706,10 @@ that best aligns with the parity vector.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gnc_toolkit.environment.html" class="btn btn-neutral float-left" title="gnc_toolkit.environment package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gnc_toolkit.guidance.html" class="btn btn-neutral float-right" title="gnc_toolkit.guidance package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

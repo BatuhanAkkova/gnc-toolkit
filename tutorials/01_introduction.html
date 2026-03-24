@@ -1,0 +1,188 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 01: Introduction to GNC Toolkit &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit" href="../api/modules.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 01: Introduction to GNC Toolkit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory-prerequisites">Theory Prerequisites</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#quaternion-attitude-representation">Quaternion Attitude Representation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#core-modules">Core Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Tutorial 01: Introduction to GNC Toolkit</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/01_introduction.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-01-introduction-to-gnc-toolkit">
+<h1>Tutorial 01: Introduction to GNC Toolkit<a class="headerlink" href="#tutorial-01-introduction-to-gnc-toolkit" title="Link to this heading"></a></h1>
+<p>Welcome to the <strong>GNC Toolkit</strong>, a comprehensive Python library designed for spacecraft Guidance, Navigation, and Control (GNC) simulation and analysis.</p>
+<section id="theory-prerequisites">
+<h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
+<section id="quaternion-attitude-representation">
+<h3>Quaternion Attitude Representation<a class="headerlink" href="#quaternion-attitude-representation" title="Link to this heading"></a></h3>
+<p>Spacecraft attitude is frequently parameterized using quaternions to avoid coordinate singularities (e.g., Gimbal lock in Euler angles).
+A quaternion $q$ is defined as a vector in $\mathbb{R}^4$ with a scalar part $q_s$ and a vector part $q_v = [q_x, q_y, q_z]^T$:
+$$
+q = \begin{bmatrix} q_v \ q_s \end{bmatrix}
+$$</p>
+<p>For pure rotations, we use <strong>unit quaternions</strong> ($|q| = 1$). To rotate a 3D vector $v$ by a quaternion $q$, we treat $v$ as a pure quaternion $v_q = [v^T, 0]^T$ and compute:
+$$
+v’ = q \otimes v_q \otimes q^*
+$$
+where $\otimes$ denotes quaternion multiplication and $q^*$ is the conjugate of $q$.</p>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_rot</span>
+
+<span class="c1"># 1. Define rotation axis and angle</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="c1"># Rotation about Z-axis</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>       <span class="c1"># 45 degrees in radians</span>
+
+<span class="c1"># 2. Convert to Unit Quaternion</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">axis_angle_to_quat</span><span class="p">(</span><span class="n">axis</span> <span class="o">*</span> <span class="n">angle</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Quaternion [q_x, q_y, q_z, q_w]:</span><span class="se">\n</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Set a vector to rotate</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>      <span class="c1"># Vector along X-axis</span>
+
+<span class="c1"># 4. Rotate vector using GNC Toolkit</span>
+<span class="n">v_rot</span> <span class="o">=</span> <span class="n">quat_rot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Original vector: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rotated vector after 45 deg Z-rotation: </span><span class="si">{</span><span class="n">v_rot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 5. Check Norm Preservation</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Norm Preserved: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">),</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_rot</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Quaternion [q_x, q_y, q_z, q_w]:
+[0.         0.         0.38268343 0.92387953]
+
+Original vector: [1 0 0]
+Rotated vector after 45 deg Z-rotation: [0.70710678 0.70710678 0.        ]
+
+Norm Preserved: True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="core-modules">
+<h2>Core Modules<a class="headerlink" href="#core-modules" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">environment</span></code></strong>: High-fidelity models for atmosphere (e.g., drag), magnetic fields (e.g., IGFR), and gravity (e.g., EGM2008).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">disturbances</span></code></strong>: Dynamic perturbation calculations like Solar Radiation Pressure (SRP) and Air Drag.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">kalman_filters</span></code></strong>: High-performance orbit and attitude state estimation (EKF, UKF, MEKF).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">guidance</span></code></strong>: Classical Maneuver analysis (Hohmann), Continuous thrust Indirect/Direct collocation control solvers.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">utils</span></code></strong>: Core transformations accounting for Frame Conversions &amp; kinematics tensors.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/modules.html" class="btn btn-neutral float-right" title="gnc_toolkit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

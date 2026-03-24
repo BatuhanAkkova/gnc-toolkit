@@ -8,6 +8,7 @@
   <title>gnc_toolkit.fdir.parity_space &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,15 +76,15 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+
 
 <div class="viewcode-block" id="ParitySpaceDetector">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.parity_space.ParitySpaceDetector">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ParitySpaceDetector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implements Parity Space methods for Fault Detection and Isolation (FDI) </span>
+<span class="sd">    Implements Parity Space methods for Fault Detection and Isolation (FDI)</span>
 <span class="sd">    in redundant sensor systems.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Measurement model:</span>
 <span class="sd">        y = M * x + v + f</span>
 <span class="sd">    where:</span>
@@ -88,84 +93,88 @@
 <span class="sd">        x: True state (n x 1)</span>
 <span class="sd">        v: Measurement noise</span>
 <span class="sd">        f: Fault vector</span>
-<span class="sd">        </span>
+
 <span class="sd">    Parity space matrix P satisfies:</span>
 <span class="sd">        P * M = 0</span>
 <span class="sd">        P * P^T = I</span>
 <span class="sd">    Parity vector:</span>
 <span class="sd">        p_vec = P * y</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the parity space detector.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            M: Measurement matrix (p x n) with p &gt; n</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">M</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parity space requires redundant measurements (p &gt; n)&quot;</span><span class="p">)</span>
-            
+
         <span class="c1"># Compute P matrix using SVD</span>
         <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span><span class="p">:]</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># Shape: (p-n) x p</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># Shape: (p-n) x p</span>
+
 <div class="viewcode-block" id="ParitySpaceDetector.get_parity_vector">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.get_parity_vector">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_parity_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the parity vector for a given measurement.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            y: Measurement vector (p x 1)</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">            p_vec: Parity vector (p-n x 1)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="n">y</span></div>
 
-        
+
 <div class="viewcode-block" id="ParitySpaceDetector.detect_fault">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.detect_fault">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">detect_fault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Detect if a fault is present.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            y: Measurement vector</span>
 <span class="sd">            threshold: Magnitude threshold for the parity vector norm</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">            True if fault detected, False otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parity_vector</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p_vec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span></div>
 
-        
+
 <div class="viewcode-block" id="ParitySpaceDetector.isolate_fault">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.fdir.html#gnc_toolkit.fdir.parity_space.ParitySpaceDetector.isolate_fault">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">isolate_fault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Isolate which sensor is faulty by finding the column of P </span>
+<span class="sd">        Isolate which sensor is faulty by finding the column of P</span>
 <span class="sd">        that best aligns with the parity vector.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            y: Measurement vector</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">            Isolated sensor index (0 to p-1)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parity_vector</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        
+
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p_vec</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># No fault</span>
-            
+
         <span class="c1"># Normalize parity vector</span>
         <span class="n">p_norm</span> <span class="o">=</span> <span class="n">p_vec</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p_vec</span><span class="p">)</span>
-        
+
         <span class="c1"># Calculate alignment with columns of P</span>
         <span class="n">alignments</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">):</span>
@@ -175,7 +184,7 @@
                 <span class="n">alignments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">p_norm</span><span class="p">,</span> <span class="n">P_col_norm</span><span class="p">)))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">alignments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
-                
+
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">alignments</span><span class="p">))</span></div>
 </div>
 

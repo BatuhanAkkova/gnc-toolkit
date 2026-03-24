@@ -1,0 +1,263 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 13: Rendezvous &amp; CW Equation Tracking &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 13: Rendezvous &amp; CW Equation Tracking</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/13_rendezvous.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-13-rendezvous-cw-equation-tracking">
+<h1>Tutorial 13: Rendezvous &amp; CW Equation Tracking<a class="headerlink" href="#tutorial-13-rendezvous-cw-equation-tracking" title="Link to this heading"></a></h1>
+<p>This tutorial covers <strong>Relative Orbital Mechanics</strong> and relative targeting using the Clohessy-Wiltshire (CW) equations and absolute targeting via Lambert’s problem.</p>
+<hr class="docutils" />
+<section id="theory-prerequisite">
+<h2>1. Theory Prerequisite<a class="headerlink" href="#theory-prerequisite" title="Link to this heading"></a></h2>
+<section id="clohessy-wiltshire-hill-s-equations">
+<h3>1.1 Clohessy-Wiltshire (Hill’s) Equations<a class="headerlink" href="#clohessy-wiltshire-hill-s-equations" title="Link to this heading"></a></h3>
+<p>Describes the relative motion of a <strong>Chaser</strong> spacecraft with respect to a <strong>Target</strong> spacecraft in a circular orbit.</p>
+<ul class="simple">
+<li><p><strong>Frame</strong>: Local-Vertical Local-Horizontal (LVLH)</p>
+<ul>
+<li><p>$x$: Radial (Away from center)</p></li>
+<li><p>$y$: Along-track (Velocity direction)</p></li>
+<li><p>$z$: Cross-track (Angular momentum)</p></li>
+</ul>
+</li>
+</ul>
+<p>State yields analytical equations of motion when relative distance is $r \ll r_{target}$.</p>
+</section>
+<section id="lambert-s-problem">
+<h3>1.2 Lambert’s Problem<a class="headerlink" href="#lambert-s-problem" title="Link to this heading"></a></h3>
+<p>Given initial position $r_1$, final position $r_2$, and a time-of-flight $\Delta t$, determine the initial velocity $v_1$ and final velocity $v_2$ required to connect the two points under Keplerian dynamics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.guidance.rendezvous</span><span class="w"> </span><span class="kn">import</span> <span class="n">cw_equations</span><span class="p">,</span> <span class="n">cw_targeting</span><span class="p">,</span> <span class="n">solve_lambert</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="demonstration-clohessy-wiltshire-propagation">
+<h2>2. Demonstration: Clohessy-Wiltshire Propagation<a class="headerlink" href="#demonstration-clohessy-wiltshire-propagation" title="Link to this heading"></a></h2>
+<p>We simulate a chaser starting 1 km behind and 500m above the target with some relative velocity offset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_orbit</span> <span class="o">=</span> <span class="mf">0.0011</span>  <span class="c1"># Mean motion (rad/s) for a standard LEO orbit</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>  <span class="c1"># [x, y, z] in km (500m radial node higher, 1km behind)</span>
+<span class="n">v0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>   <span class="c1"># stationary relative to target initially</span>
+
+<span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># 1 hour simulation</span>
+<span class="n">history_r</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time</span><span class="p">:</span>
+    <span class="n">r_t</span><span class="p">,</span> <span class="n">v_t</span> <span class="o">=</span> <span class="n">cw_equations</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">n_orbit</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">history_r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_t</span><span class="p">)</span>
+    
+<span class="n">history_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_r</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history_r</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">history_r</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Chaser Trajectory&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Target&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Along-track (Y) [km]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Radial (X) [km]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Relative Motion in LVLH Frame (CW Propagation)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>  <span class="c1"># Target is ahead on negative Y for chaser scaling commonly</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/1295a89744dfff16808d2b105e40bc445b314e6b3d00199f41510505b82a5970.png" src="../_images/1295a89744dfff16808d2b105e40bc445b314e6b3d00199f41510505b82a5970.png" />
+</div>
+</div>
+</section>
+<section id="cw-targeting-rendezvous">
+<h2>3. CW Targeting (Rendezvous)<a class="headerlink" href="#cw-targeting-rendezvous" title="Link to this heading"></a></h2>
+<p>Now we calculate an impulse to rendezvous with the target ($r_{target} = [0, 0, 0]$) in 30 minutes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_transfer</span> <span class="o">=</span> <span class="mf">1800.0</span>  <span class="c1"># 30 minutes</span>
+<span class="n">r_target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>  <span class="c1"># Meet the target</span>
+
+<span class="n">v0_req</span> <span class="o">=</span> <span class="n">cw_targeting</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">r_target</span><span class="p">,</span> <span class="n">t_transfer</span><span class="p">,</span> <span class="n">n_orbit</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initial Relative Position: </span><span class="si">{</span><span class="n">r0</span><span class="si">}</span><span class="s2"> km&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required Burn Velocity v0: </span><span class="si">{</span><span class="n">v0_req</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Delta-V Needed: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v0_req</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verify by propagating with required v0</span>
+<span class="n">r_final</span><span class="p">,</span> <span class="n">v_final</span> <span class="o">=</span> <span class="n">cw_equations</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">v0_req</span><span class="p">,</span> <span class="n">n_orbit</span><span class="p">,</span> <span class="n">t_transfer</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Position at t=</span><span class="si">{</span><span class="n">t_transfer</span><span class="si">}</span><span class="s2">s: </span><span class="si">{</span><span class="n">r_final</span><span class="si">}</span><span class="s2"> km (Should be near [0,0,0])&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- Visualization of Targeted Rendezvous ---</span>
+<span class="n">time_targeting</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">t_transfer</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">history_r_target</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_targeting</span><span class="p">:</span>
+    <span class="n">r_t</span><span class="p">,</span> <span class="n">v_t</span> <span class="o">=</span> <span class="n">cw_equations</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">v0_req</span><span class="p">,</span> <span class="n">n_orbit</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">history_r_target</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_t</span><span class="p">)</span>
+    
+<span class="n">history_r_target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_r_target</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history_r_target</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">history_r_target</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Chaser Trajectory (Targeted)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Target&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Along-track (Y) [km]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Radial (X) [km]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Relative Motion supporting CW Targeting&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initial Relative Position: [ 0.5 -1.   0. ] km
+Required Burn Velocity v0: [-0.00111513 -0.00065579  0.        ] km/s
+Delta-V Needed: 0.001294 km/s
+
+Position at t=1800.0s: [2.22044605e-16 0.00000000e+00 0.00000000e+00] km (Should be near [0,0,0])
+</pre></div>
+</div>
+<img alt="../_images/05c7ec683b39eea7892a176cdb5f7cbd9c9666cf0ed2d2e4f378e277e709655f.png" src="../_images/05c7ec683b39eea7892a176cdb5f7cbd9c9666cf0ed2d2e4f378e277e709655f.png" />
+</div>
+</div>
+</section>
+<section id="lambert-solver-targeting">
+<h2>4. Lambert Solver Targeting<a class="headerlink" href="#lambert-solver-targeting" title="Link to this heading"></a></h2>
+<p>For large absolute separations or higher accuracy, we solve the boundary value problem.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span> <span class="o">=</span> <span class="mf">398600.4418</span>
+<span class="n">r1_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">7000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>  <span class="c1"># 7000 km radius</span>
+<span class="n">r2_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>  <span class="c1"># 90-degree phasing</span>
+<span class="n">dt_lambert</span> <span class="o">=</span> <span class="mf">1800.0</span>  <span class="c1"># 1800 seconds</span>
+
+<span class="n">v1_req</span><span class="p">,</span> <span class="n">v2_req</span> <span class="o">=</span> <span class="n">solve_lambert</span><span class="p">(</span><span class="n">r1_eci</span><span class="p">,</span> <span class="n">r2_eci</span><span class="p">,</span> <span class="n">dt_lambert</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Lambert Solver State ---&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required v1 at r1: </span><span class="si">{</span><span class="n">v1_req</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required v2 at r2: </span><span class="si">{</span><span class="n">v2_req</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Energy-like requirement: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1_req</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> km/s v1 depth&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Lambert Solver State ---
+Required v1 at r1: [1.41321741 6.87245562 0.        ] km/s
+Required v2 at r2: [-6.87245562 -1.41321741 -0.        ] km/s
+Energy-like requirement: 7.0163 km/s v1 depth
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

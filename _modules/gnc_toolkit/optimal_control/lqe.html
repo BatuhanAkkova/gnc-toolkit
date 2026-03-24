@@ -8,6 +8,7 @@
   <title>gnc_toolkit.optimal_control.lqe &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -73,27 +78,29 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_continuous_are</span>
 
+
 <div class="viewcode-block" id="LQE">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.lqe.LQE">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LQE</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Linear Quadratic Estimator (LQE) / Kalman Filter.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Designs an optimal observer gain L for the system:</span>
 <span class="sd">    x_dot = Ax + Bu + Gw</span>
 <span class="sd">    y = Cx + v</span>
-<span class="sd">    </span>
+
 <span class="sd">    Where:</span>
 <span class="sd">    w is N(0, Q) (Process Noise)</span>
 <span class="sd">    v is N(0, R) (Measurement Noise)</span>
-<span class="sd">    </span>
+
 <span class="sd">    The observer dynamics are:</span>
 <span class="sd">    x_hat_dot = A x_hat + B u + L(y - C x_hat)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the LQE.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            A (np.ndarray): State matrix</span>
 <span class="sd">            G (np.ndarray): Process noise input matrix (often Identity)</span>
@@ -113,7 +120,7 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.lqe.LQE.solve">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Solve the Continuous Algebraic Riccati Equation (CARE) for estimation.        </span>
+<span class="sd">        Solve the Continuous Algebraic Riccati Equation (CARE) for estimation.</span>
 <span class="sd">        Mapping:</span>
 <span class="sd">        X -&gt; P</span>
 <span class="sd">        a -&gt; A.T</span>
@@ -125,7 +132,7 @@
         <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">T</span>
         <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">T</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">solve_continuous_are</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span></div>
 
@@ -139,11 +146,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-            
+
         <span class="c1"># For robustness, use R instead of inv(R) since R is square</span>
         <span class="n">term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">T</span>
-        
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span></div>
 </div>
 

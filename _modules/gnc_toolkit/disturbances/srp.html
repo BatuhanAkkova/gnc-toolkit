@@ -1,0 +1,180 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.disturbances.srp &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.disturbances.srp</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.disturbances.srp</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Solar Radiation Pressure (SRP) acceleration models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.environment.solar</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sun</span>
+
+
+<div class="viewcode-block" id="Canonball">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Canonball</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SRP canonball model.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sun_model</span> <span class="o">=</span> <span class="n">Sun</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_sun</span> <span class="o">=</span> <span class="mf">4.56e-6</span>  <span class="c1"># N/m^2 (Solar radiation pressure at 1 AU)</span>
+
+<div class="viewcode-block" id="Canonball.get_acceleration">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball.get_acceleration">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_acceleration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate SRP acceleration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            r_eci (np.ndarray): Position ECI [m]</span>
+<span class="sd">            jd (float): Julian Date</span>
+<span class="sd">            mass (float): Mass [kg]</span>
+<span class="sd">            area (float): Area [m^2]</span>
+<span class="sd">            cr (float): Reflectivity coefficient</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            np.ndarray: Acceleration ECI [m/s^2]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r_sun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sun_model</span><span class="o">.</span><span class="n">calculate_sun_eci</span><span class="p">(</span><span class="n">jd</span><span class="p">)</span>
+
+        <span class="c1"># Vector from Sat to Sun</span>
+        <span class="n">sat_to_sun</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">-</span> <span class="n">r_eci</span>
+        <span class="n">dist_sun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sat_to_sun</span><span class="p">)</span>
+        <span class="n">u_sun</span> <span class="o">=</span> <span class="n">sat_to_sun</span> <span class="o">/</span> <span class="n">dist_sun</span>
+
+        <span class="c1"># Shadow function</span>
+        <span class="n">nu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_eclipse</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">)</span>
+
+        <span class="c1"># SRP pressure at distance (Inverse Square Law)</span>
+        <span class="n">au</span> <span class="o">=</span> <span class="mf">149597870700.0</span>
+        <span class="n">p_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_sun</span> <span class="o">*</span> <span class="p">(</span><span class="n">au</span> <span class="o">/</span> <span class="n">dist_sun</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="n">acc_mag</span> <span class="o">=</span> <span class="n">nu</span> <span class="o">*</span> <span class="n">p_dist</span> <span class="o">*</span> <span class="n">cr</span> <span class="o">*</span> <span class="p">(</span><span class="n">area</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="o">-</span><span class="n">acc_mag</span> <span class="o">*</span> <span class="n">u_sun</span>  <span class="c1"># force away from sun</span></div>
+
+
+<div class="viewcode-block" id="Canonball.check_eclipse">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball.check_eclipse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_eclipse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_sat</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cylindrical shadow model.</span>
+<span class="sd">        Returns 1.0 if in sunlight, 0.0 if in shadow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Projection of r_sat onto Sun vector</span>
+        <span class="n">u_sun</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_sun</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_sat</span><span class="p">,</span> <span class="n">u_sun</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1.0</span>
+
+        <span class="c1"># Perpendicular distance</span>
+        <span class="n">r_perp_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_sat</span><span class="p">,</span> <span class="n">r_sat</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span>
+
+        <span class="n">R_earth</span> <span class="o">=</span> <span class="mf">6378137.0</span>
+        <span class="k">if</span> <span class="n">r_perp_sq</span> <span class="o">&lt;</span> <span class="n">R_earth</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="mf">1.0</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

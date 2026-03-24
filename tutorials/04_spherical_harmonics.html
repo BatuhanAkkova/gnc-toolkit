@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 04: EGM2008 &amp; Mass Gravity Models &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 04: EGM2008 &amp; Mass Gravity Models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/04_spherical_harmonics.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-04-egm2008-mass-gravity-models">
+<h1>Tutorial 04: EGM2008 &amp; Mass Gravity Models<a class="headerlink" href="#tutorial-04-egm2008-mass-gravity-models" title="Link to this heading"></a></h1>
+<p>This tutorial demonstrates the high-fidelity gravitational mechanics modeled in <code class="docutils literal notranslate"><span class="pre">gnc-toolkit</span></code>, covering Two-Body, $J_2$, and full Spherical Harmonic perturbations (EGM2008).</p>
+<hr class="docutils" />
+<section id="theory-prerequisites">
+<h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
+<section id="two-body-gravity">
+<h3>1. Two-Body Gravity<a class="headerlink" href="#two-body-gravity" title="Link to this heading"></a></h3>
+<p>The simplest model assuming Earth is a point mass. Acceleration is along the nadir vector:
+$$
+\mathbf{a}_{2B} = -\frac{\mu}{r^3} \mathbf{r}
+$$</p>
+</section>
+<section id="j-2-oblateness">
+<h3>2. $J_2$ Oblateness<a class="headerlink" href="#j-2-oblateness" title="Link to this heading"></a></h3>
+<p>Accounting for the equatorial bulge of the Earth via the dominant zonal harmonic $J_2$:
+$$
+a_{J_2, x} = \frac{3}{2} J_2 \frac{\mu}{r^2} \left(\frac{R_E}{r}\right)^2 \frac{x}{r} \left(5 \frac{z^2}{r^2} - 1\right)
+$$
+Adding this to $\mathbf{a}_{2B}$ introduces <strong>Nodal Precession</strong> and <strong>Apsidal Rotation</strong>.</p>
+</section>
+<section id="spherical-harmonics-egm2008">
+<h3>3. Spherical Harmonics (EGM2008)<a class="headerlink" href="#spherical-harmonics-egm2008" title="Link to this heading"></a></h3>
+<p>For high-accuracy drag, decay, or orbital maintenance triggers, the Earth’s potential $U$ is expanded into Associated Legendre Polynomials $P_{nm}$:
+$$
+U = \frac{\mu}{r} \sum_{n=0}^{N} \left(\frac{R_E}{r}\right)^n \sum_{m=0}^{n} P_{nm}(\sin\phi) \left( C_{nm}\cos(m\lambda) + S_{nm}\sin(m\lambda) \right)
+$$</p>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.disturbances.gravity</span><span class="w"> </span><span class="kn">import</span> <span class="n">TwoBodyGravity</span><span class="p">,</span> <span class="n">J2Gravity</span><span class="p">,</span> <span class="n">HarmonicsGravity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.propagators.cowell</span><span class="w"> </span><span class="kn">import</span> <span class="n">CowellPropagator</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gravity modules loaded.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Gravity modules loaded.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="comparing-gravity-accelerations">
+<h2>1. Comparing Gravity Accelerations<a class="headerlink" href="#comparing-gravity-accelerations" title="Link to this heading"></a></h2>
+<p>Let’s evaluate the difference in acceleration magnitudes at a specific position in Low Earth Orbit (LEO) for Two-Body, $J_2$, and a Degree 10 Spherical Harmonic Model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Spacecraft Position in ECI [m] (Approx 500km altitude)</span>
+<span class="n">r_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">6878137.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="c1"># Equatorial plane</span>
+<span class="n">jd_epoch</span> <span class="o">=</span> <span class="mf">2451545.0</span> <span class="c1"># J2000</span>
+
+<span class="c1"># 1. Initialize models</span>
+<span class="n">gravity_2b</span> <span class="o">=</span> <span class="n">TwoBodyGravity</span><span class="p">()</span>
+<span class="n">gravity_j2</span> <span class="o">=</span> <span class="n">J2Gravity</span><span class="p">()</span>
+<span class="n">gravity_harmonics</span> <span class="o">=</span> <span class="n">HarmonicsGravity</span><span class="p">(</span><span class="n">n_max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">m_max</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># Using N=10 for speed in validation</span>
+
+<span class="c1"># 2. Calculate Accelerations</span>
+<span class="n">a_2b</span> <span class="o">=</span> <span class="n">gravity_2b</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
+<span class="n">a_j2</span> <span class="o">=</span> <span class="n">gravity_j2</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
+<span class="n">a_har</span> <span class="o">=</span> <span class="n">gravity_harmonics</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd_epoch</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Two-Body Accel Magnitude:  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a_2b</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> m/s^2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;J2 Gravity Accel Magnitude: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a_j2</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> m/s^2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Degree 10 Accel Magnitude:  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a_har</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> m/s^2&quot;</span><span class="p">)</span>
+
+<span class="c1"># Delta metrics</span>
+<span class="n">delta_j2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a_j2</span> <span class="o">-</span> <span class="n">a_2b</span><span class="p">)</span>
+<span class="n">delta_har</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a_har</span> <span class="o">-</span> <span class="n">a_j2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Effect of J2 alone: </span><span class="si">{</span><span class="n">delta_j2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> m/s^2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Effect of Higher Order (10x10) over J2: </span><span class="si">{</span><span class="n">delta_har</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2"> m/s^2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Two-Body Accel Magnitude:  8.425509 m/s^2
+J2 Gravity Accel Magnitude: 8.437274 m/s^2
+Degree 10 Accel Magnitude:  0.016811 m/s^2
+
+Effect of J2 alone: 0.011766 m/s^2
+Effect of Higher Order (10x10) over J2: 8.420463e+00 m/s^2
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dynamic-impact-orbit-precession">
+<h2>2. Dynamic Impact: Orbit Precession<a class="headerlink" href="#dynamic-impact-orbit-precession" title="Link to this heading"></a></h2>
+<p>The $J_2$ effect causes the right ascension of the ascending node (RAAN) to precess over time. Let’s propagate a short orbit under $J_2$ and see the trajectory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.visualization.orbit</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_orbit_3d</span>
+
+<span class="c1"># Initial Orbit State [m], [m/s]</span>
+<span class="n">r_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">6878137.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">v_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7612.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">45</span><span class="p">)),</span> <span class="mf">7612.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">45</span><span class="p">))])</span> <span class="c1"># 45 deg inclination</span>
+
+<span class="n">propagator</span> <span class="o">=</span> <span class="n">CowellPropagator</span><span class="p">()</span>
+
+<span class="c1"># Setup perturbation function for J2</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">j2_perturbation</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="c1"># J2Gravity.get_acceleration already returns (TwoBody + J2)</span>
+    <span class="c1"># propagator integrates (TwoBody + perturbation_acc_fn)</span>
+    <span class="c1"># So we must return ONLY the perturbative acceleration</span>
+    <span class="k">return</span> <span class="n">J2Gravity</span><span class="p">()</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="n">TwoBodyGravity</span><span class="p">()</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="c1"># Propagate for 1 Orbit (approx 5400 seconds)</span>
+<span class="n">dt_span</span> <span class="o">=</span> <span class="mi">5400</span>
+<span class="n">states</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">540</span>
+<span class="n">dt_step</span> <span class="o">=</span> <span class="n">dt_span</span> <span class="o">/</span> <span class="n">steps</span>
+
+<span class="n">curr_r</span><span class="p">,</span> <span class="n">curr_v</span> <span class="o">=</span> <span class="n">r_0</span><span class="p">,</span> <span class="n">v_0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_r</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="c1"># Single-step propagation workaround for demo loops or use integrate() directly</span>
+    <span class="c1"># For simplicity, we can just use the internal integrator if desired, </span>
+    <span class="c1"># but for visualization we want multiple points.</span>
+    <span class="n">curr_r</span><span class="p">,</span> <span class="n">curr_v</span> <span class="o">=</span> <span class="n">propagator</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">curr_r</span><span class="p">,</span> <span class="n">curr_v</span><span class="p">,</span> <span class="n">dt_step</span><span class="p">,</span> <span class="n">perturbation_acc_fn</span><span class="o">=</span><span class="n">j2_perturbation</span><span class="p">)</span>
+
+<span class="n">states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Propagated over </span><span class="si">{</span><span class="n">steps</span><span class="si">}</span><span class="s2"> discrete steps.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Propagated over 540 discrete steps.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h2>3. Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">gnc_toolkit.visualization</span></code> module, we can display our 3D orbit around a spherical Earth model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Render the orbit in 3D</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plot_orbit_3d</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;LEO orbit under J2 Disturbances&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

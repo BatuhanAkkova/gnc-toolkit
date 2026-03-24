@@ -8,6 +8,7 @@
   <title>gnc_toolkit.guidance.continuous_thrust &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,15 +76,24 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.state_to_elements</span><span class="w"> </span><span class="kn">import</span> <span class="n">eci2kepler</span>
+
 
 <div class="viewcode-block" id="q_law_guidance">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.q_law_guidance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">q_law_guidance</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">target_oe</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">q_law_guidance</span><span class="p">(</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">target_oe</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">f_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Lyapunov-based Q-law guidance for low-thrust orbit transfers.</span>
 <span class="sd">    Targets [a, e, i, raan, argp].</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        r (np.ndarray): Position ECI (m).</span>
 <span class="sd">        v (np.ndarray): Velocity ECI (m/s).</span>
@@ -87,81 +101,90 @@
 <span class="sd">        mu (float): Gravitational parameter (m^3/s^2).</span>
 <span class="sd">        f_max (float): Maximum thrust acceleration (m/s^2).</span>
 <span class="sd">        weights (np.ndarray): Weights for each element in Q function.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: Optimal thrust acceleration vector in ECI (m/s^2).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">arglat</span><span class="p">,</span> <span class="n">truelon</span><span class="p">,</span> <span class="n">lonper</span> <span class="o">=</span> <span class="n">eci2kepler</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-    
+
     <span class="n">oe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">])</span>
     <span class="n">oe_target</span> <span class="o">=</span> <span class="n">target_oe</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
-    
+
     <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="o">/</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-        
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+
     <span class="c1"># Gauss Variational Equations (GVE) in RTN frame</span>
     <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
     <span class="n">h_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h_vec</span><span class="p">)</span>
     <span class="n">theta</span> <span class="o">=</span> <span class="n">argp</span> <span class="o">+</span> <span class="n">nu</span>
-    
+
     <span class="c1"># B_a (radial, tangential, normal)</span>
-    <span class="n">B_a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="n">p</span><span class="o">/</span><span class="n">r_mag</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-    
+    <span class="n">B_a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="n">p</span> <span class="o">/</span> <span class="n">r_mag</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
     <span class="c1"># B_e</span>
-    <span class="n">B_e</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">r_mag</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span> <span class="o">+</span> <span class="n">r_mag</span><span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-    
+    <span class="n">B_e</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r_mag</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span> <span class="o">+</span> <span class="n">r_mag</span> <span class="o">*</span> <span class="n">e</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
     <span class="c1"># B_i</span>
     <span class="n">B_i</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-    
+
     <span class="c1"># B_raan</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">B_raan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">B_raan</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-        
+
     <span class="c1"># B_argp</span>
-    <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">e</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">r_mag</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">])</span>
+    <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">e</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">r_mag</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">term2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">term2</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
     <span class="n">B_argp</span> <span class="o">=</span> <span class="n">term1</span> <span class="o">-</span> <span class="n">term2</span>
-    
+
     <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">B_a</span><span class="p">,</span> <span class="n">B_e</span><span class="p">,</span> <span class="n">B_i</span><span class="p">,</span> <span class="n">B_raan</span><span class="p">,</span> <span class="n">B_argp</span><span class="p">])</span>
-    
+
     <span class="c1"># Gradient of Q = sum W_i * (oe_i - target_i)^2</span>
     <span class="c1"># dQ/doe = 2 * W_i * (oe_i - target_i)</span>
     <span class="n">grad_Q_oe</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">weights</span> <span class="o">*</span> <span class="p">(</span><span class="n">oe</span> <span class="o">-</span> <span class="n">oe_target</span><span class="p">)</span>
-    
+
     <span class="c1"># Optimal thrust direction in RTN is anti-parallel to grad_Q_oe * B</span>
     <span class="c1"># Direction D = -(grad_Q_oe @ B)</span>
-    <span class="n">D</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">grad_Q_oe</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span>
-    
+    <span class="n">D</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">grad_Q_oe</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-        
+
     <span class="n">u_rtn</span> <span class="o">=</span> <span class="n">D</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
     <span class="n">f_rtn</span> <span class="o">=</span> <span class="n">f_max</span> <span class="o">*</span> <span class="n">u_rtn</span>
-    
+
     <span class="c1"># Convert RTN to ECI</span>
     <span class="n">u_r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="n">r_mag</span>
     <span class="n">u_n</span> <span class="o">=</span> <span class="n">h_vec</span> <span class="o">/</span> <span class="n">h</span>
     <span class="n">u_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">u_n</span><span class="p">,</span> <span class="n">u_r</span><span class="p">)</span>
-    
+
     <span class="n">R_rtn_to_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">u_r</span><span class="p">,</span> <span class="n">u_t</span><span class="p">,</span> <span class="n">u_n</span><span class="p">])</span>
     <span class="n">f_eci</span> <span class="o">=</span> <span class="n">R_rtn_to_eci</span> <span class="o">@</span> <span class="n">f_rtn</span>
-    
+
     <span class="k">return</span> <span class="n">f_eci</span></div>
+
 
 
 <div class="viewcode-block" id="zem_zev_guidance">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.zem_zev_guidance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">zem_zev_guidance</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">t_go</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gravity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zem_zev_guidance</span><span class="p">(</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">r_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">v_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">t_go</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">gravity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Zero-Effort Miss (ZEM) and Zero-Effort Velocity (ZEV) feedback guidance.</span>
 <span class="sd">    Used for terminal intercept or landing.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        r (np.ndarray): Current position (m).</span>
 <span class="sd">        v (np.ndarray): Current velocity (m/s).</span>
@@ -169,86 +192,101 @@
 <span class="sd">        v_target (np.ndarray): Target velocity (m/s).</span>
 <span class="sd">        t_go (float): Time-to-go (s).</span>
 <span class="sd">        gravity (np.ndarray): Local gravity vector (m/s^2). Defaults to zero.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: Commanded acceleration vector (m/s^2).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">t_go</span> <span class="o">&lt;=</span> <span class="mf">1e-6</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-        
+
     <span class="k">if</span> <span class="n">gravity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">gravity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-        
+
     <span class="c1"># ZEM = r_target - (r + v * t_go + 0.5 * gravity * t_go^2)</span>
     <span class="c1"># ZEV = v_target - (v + gravity * t_go)</span>
-    
+
     <span class="n">zem</span> <span class="o">=</span> <span class="n">r_target</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">t_go</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">t_go</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">zev</span> <span class="o">=</span> <span class="n">v_target</span> <span class="o">-</span> <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">t_go</span><span class="p">)</span>
-    
+
     <span class="n">a_cmd</span> <span class="o">=</span> <span class="p">(</span><span class="mf">6.0</span> <span class="o">/</span> <span class="n">t_go</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">zem</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">t_go</span><span class="p">)</span> <span class="o">*</span> <span class="n">zev</span>
-    
+
     <span class="k">return</span> <span class="n">a_cmd</span></div>
+
 
 
 <div class="viewcode-block" id="gravity_turn_guidance">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.gravity_turn_guidance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gravity_turn_guidance</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">f_mag</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;descent&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gravity_turn_guidance</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">f_mag</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;descent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gravity turn steering law. Thrust is aligned with velocity vector.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        v (np.ndarray): Velocity vector (m/s).</span>
 <span class="sd">        f_mag (float): Thrust acceleration magnitude (m/s^2).</span>
 <span class="sd">        mode (str): &#39;descent&#39; (anti-parallel to v) or &#39;ascent&#39; (parallel to v).</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: Thrust acceleration vector (m/s^2).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">v_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">v_mag</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-        
+
     <span class="n">u_v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">v_mag</span>
-    
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;descent&#39;</span><span class="p">:</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;descent&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="o">-</span><span class="n">f_mag</span> <span class="o">*</span> <span class="n">u_v</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">f_mag</span> <span class="o">*</span> <span class="n">u_v</span></div>
 
 
+
 <div class="viewcode-block" id="apollo_dps_guidance">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.apollo_dps_guidance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">apollo_dps_guidance</span><span class="p">(</span><span class="n">t_go</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gravity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apollo_dps_guidance</span><span class="p">(</span>
+    <span class="n">t_go</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">r_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">v_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">a_target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">gravity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    E-guidance (Apollo Descent Propulsion System style).</span>
 <span class="sd">    Targets position, velocity, and acceleration.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        t_go (float): Time-to-go (s).</span>
 <span class="sd">        r, v: Current state.</span>
 <span class="sd">        r_target, v_target, a_target: Target state.</span>
 <span class="sd">        gravity (np.ndarray): Local gravity.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: Commanded acceleration (m/s^2).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">t_go</span> <span class="o">&lt;=</span> <span class="mf">1e-6</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">a_target</span>
-        
+
     <span class="k">if</span> <span class="n">gravity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">gravity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-        
+
     <span class="c1"># General polynomial guidance</span>
     <span class="n">delta_r</span> <span class="o">=</span> <span class="n">r_target</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">t_go</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">t_go</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">delta_v</span> <span class="o">=</span> <span class="n">v_target</span> <span class="o">-</span> <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">t_go</span><span class="p">)</span>
-    
+
     <span class="c1"># Standard Apollo lunar landing coefficients</span>
     <span class="n">a_cmd</span> <span class="o">=</span> <span class="n">a_target</span> <span class="o">+</span> <span class="p">(</span><span class="mf">12.0</span> <span class="o">/</span> <span class="n">t_go</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_r</span> <span class="o">+</span> <span class="p">(</span><span class="mf">6.0</span> <span class="o">/</span> <span class="n">t_go</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_v</span>
-    
+
     <span class="k">return</span> <span class="n">a_cmd</span></div>
 
 
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_bvp</span>
+
 
 <div class="viewcode-block" id="indirect_optimal_guidance">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.indirect_optimal_guidance">[docs]</a>
@@ -257,26 +295,28 @@
 <span class="sd">    Indirect optimal guidance using Pontryagin&#39;s Minimum Principle (PMP).</span>
 <span class="sd">    Solves for minimum energy (acceleration squared integral).</span>
 <span class="sd">    This is a Boundary Value Problem (BVP).</span>
-<span class="sd">    </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        tuple: (time_array, acceleration_profile)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
         <span class="n">lr</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
         <span class="n">lv</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="mi">12</span><span class="p">]</span>
-        
+
         <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># Dynamics</span>
         <span class="n">dr</span> <span class="o">=</span> <span class="n">v</span>
         <span class="n">dv</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lv</span>
-        
+
         <span class="c1"># Costate dynamics: dot(lambda) = -dH/dx</span>
         <span class="c1"># Gravity gradient: dg/dr = -(mu/r^3)I + 3(mu/r^5)r*r^T</span>
         <span class="n">r_mag_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">r_mag</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">unit_r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="n">r_mag_mat</span>
-        
+
         <span class="c1"># G(r) = -(mu/r^3) * (I - 3*u*u^T)</span>
         <span class="n">dlr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
@@ -285,28 +325,23 @@
             <span class="n">lvi</span> <span class="o">=</span> <span class="n">lv</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
             <span class="n">grad_g</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">rm</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">ri</span><span class="p">,</span> <span class="n">ri</span><span class="p">)</span> <span class="o">/</span> <span class="n">rm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">dlr</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">grad_g</span> <span class="o">@</span> <span class="n">lvi</span>
-            
+
         <span class="n">dlv</span> <span class="o">=</span> <span class="o">-</span><span class="n">lr</span>
-        
+
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">dr</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">dlr</span><span class="p">,</span> <span class="n">dlv</span><span class="p">])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">bc</span><span class="p">(</span><span class="n">ya</span><span class="p">,</span> <span class="n">yb</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span>
-            <span class="n">ya</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">r0</span><span class="p">,</span>
-            <span class="n">ya</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">v0</span><span class="p">,</span>
-            <span class="n">yb</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">rf</span><span class="p">,</span>
-            <span class="n">yb</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">vf</span>
-        <span class="p">])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">ya</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">r0</span><span class="p">,</span> <span class="n">ya</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">v0</span><span class="p">,</span> <span class="n">yb</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">rf</span><span class="p">,</span> <span class="n">yb</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">vf</span><span class="p">])</span>
 
     <span class="n">t_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
     <span class="n">y_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span> <span class="n">t_init</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
     <span class="c1"># Interpolate state for initial guess</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
         <span class="n">y_init</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">r0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rf</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">t_init</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-        <span class="n">y_init</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">v0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vf</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">t_init</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">y_init</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">v0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vf</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">t_init</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="n">solve_bvp</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">t_init</span><span class="p">,</span> <span class="n">y_init</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
         <span class="n">lv_sol</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="mi">12</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">lv_sol</span>
@@ -314,7 +349,9 @@
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 
 
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+
 
 <div class="viewcode-block" id="direct_collocation_guidance">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.continuous_thrust.direct_collocation_guidance">[docs]</a>
@@ -324,48 +361,48 @@
 <span class="sd">    Minimizes sum of acceleration squared.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    
+
     <span class="c1"># x = [r1, v1, a1, ..., rn, vn, an]</span>
     <span class="c1"># Length = n_nodes * 9</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">accs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">9</span><span class="p">))[:,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">accs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">accs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">constraints</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">states</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
         <span class="n">cons</span> <span class="o">=</span> <span class="p">[]</span>
-        
+
         <span class="c1"># Dynamics constraints (Trapezoidal)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">r_i</span><span class="p">,</span> <span class="n">v_i</span><span class="p">,</span> <span class="n">a_i</span> <span class="o">=</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
-            <span class="n">r_next</span><span class="p">,</span> <span class="n">v_next</span><span class="p">,</span> <span class="n">a_next</span> <span class="o">=</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
-            
-            <span class="n">g_i</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_i</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_i</span>
-            <span class="n">g_next</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_next</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_next</span>
-            
+            <span class="n">r_next</span><span class="p">,</span> <span class="n">v_next</span><span class="p">,</span> <span class="n">a_next</span> <span class="o">=</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">states</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+
+            <span class="n">g_i</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_i</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_i</span>
+            <span class="n">g_next</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_next</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_next</span>
+
             <span class="c1"># dot(r) = v</span>
             <span class="n">cons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_next</span> <span class="o">-</span> <span class="n">r_i</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_i</span> <span class="o">+</span> <span class="n">v_next</span><span class="p">))</span>
             <span class="c1"># dot(v) = g + a</span>
             <span class="n">cons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v_next</span> <span class="o">-</span> <span class="n">v_i</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">g_i</span> <span class="o">+</span> <span class="n">a_i</span> <span class="o">+</span> <span class="n">g_next</span> <span class="o">+</span> <span class="n">a_next</span><span class="p">))</span>
-            
+
         <span class="c1"># Boundary constraints</span>
         <span class="n">cons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">r0</span><span class="p">)</span>
         <span class="n">cons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">v0</span><span class="p">)</span>
         <span class="n">cons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">rf</span><span class="p">)</span>
         <span class="n">cons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">vf</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cons</span><span class="p">])</span>
 
     <span class="c1"># Initial guess: linear interpolation</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_nodes</span> <span class="o">*</span> <span class="mi">9</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">):</span>
         <span class="n">frac</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">9</span> <span class="p">:</span> <span class="n">i</span><span class="o">*</span><span class="mi">9</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">r0</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="p">(</span><span class="n">rf</span> <span class="o">-</span> <span class="n">r0</span><span class="p">)</span>
-        <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">9</span><span class="o">+</span><span class="mi">3</span> <span class="p">:</span> <span class="n">i</span><span class="o">*</span><span class="mi">9</span><span class="o">+</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="p">(</span><span class="n">vf</span> <span class="o">-</span> <span class="n">v0</span><span class="p">)</span>
+        <span class="n">x0</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">9</span> <span class="p">:</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">r0</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="p">(</span><span class="n">rf</span> <span class="o">-</span> <span class="n">r0</span><span class="p">)</span>
+        <span class="n">x0</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="mi">3</span> <span class="p">:</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="p">(</span><span class="n">vf</span> <span class="o">-</span> <span class="n">v0</span><span class="p">)</span>
 
-    <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;eq&#39;</span><span class="p">,</span> <span class="s1">&#39;fun&#39;</span><span class="p">:</span> <span class="n">constraints</span><span class="p">},</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;SLSQP&#39;</span><span class="p">)</span>
-    
+    <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;eq&quot;</span><span class="p">,</span> <span class="s2">&quot;fun&quot;</span><span class="p">:</span> <span class="n">constraints</span><span class="p">},</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;SLSQP&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>

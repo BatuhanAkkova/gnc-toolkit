@@ -8,6 +8,7 @@
   <title>gnc_toolkit.navigation.terrain_nav &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -72,6 +77,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+
 <div class="viewcode-block" id="FeatureMatchingTRN">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FeatureMatchingTRN</span><span class="p">:</span>
@@ -79,22 +85,23 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Terrain-Relative Navigation (TRN) feature matcher.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="n">map_database</span> <span class="c1"># List of (position, descriptor)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="n">map_database</span>  <span class="c1"># List of (position, descriptor)</span>
 
 <div class="viewcode-block" id="FeatureMatchingTRN.match_features">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">match_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed_features</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Matches observed camera/LIDAR features to the map.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns:</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">            list of (map_pos, observed_pos)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">obs_pos</span> <span class="ow">in</span> <span class="n">observed_features</span><span class="p">:</span>
             <span class="c1"># Simple nearest neighbor search</span>
             <span class="n">best_match</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">min_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+            <span class="n">min_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">map_pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">:</span>
                 <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">obs_pos</span> <span class="o">-</span> <span class="n">map_pos</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">min_dist</span><span class="p">:</span>
@@ -106,39 +113,41 @@
 </div>
 
 
+
 <div class="viewcode-block" id="map_relative_localization_update">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.terrain_nav.map_relative_localization_update">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">map_relative_localization_update</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    EKF measurement update for TRN.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        x (np.ndarray): State estimate [pos, vel].</span>
 <span class="sd">        P (np.ndarray): Covariance.</span>
 <span class="sd">        matches (list): (map_pos, observed_pos) pairs.</span>
 <span class="sd">        R (np.ndarray): Measurement noise covariance.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        tuple: (updated_x, updated_P)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">P</span>
-        
+
     <span class="c1"># Z = observed_pos, H = identity (mapping state position to observation)</span>
     <span class="k">for</span> <span class="n">map_pos</span><span class="p">,</span> <span class="n">obs_pos</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">obs_pos</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">map_pos</span>
-        
+
         <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
         <span class="n">H</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-        
+
         <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">H</span> <span class="o">@</span> <span class="n">x</span>
         <span class="n">S</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">P</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">R</span>
         <span class="n">K</span> <span class="o">=</span> <span class="n">P</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
-        
+
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">K</span> <span class="o">@</span> <span class="n">y</span>
         <span class="n">P</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">-</span> <span class="n">K</span> <span class="o">@</span> <span class="n">H</span><span class="p">)</span> <span class="o">@</span> <span class="n">P</span>
-    
+
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">P</span></div>
 
 </pre></div>

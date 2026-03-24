@@ -3,15 +3,16 @@ Welcome to the GNC Toolkit Documentation!
 
 This is the comprehensive guide to using the GNC Toolkit.
 
-Table of Contents
------------------
+.. toctree::
+   :maxdepth: 2
+   :caption: Navigation
 
-1. Introduction
-2. Installation
-3. Usage
-4. API Reference
-5. Examples
-6. Contributing
-7. License
+   tutorials
+   api/modules
 
-Feel free to navigate through the sections to learn more!
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

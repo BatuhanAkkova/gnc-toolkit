@@ -1,0 +1,109 @@
+gnc\_toolkit.utils package
+==========================
+
+Submodules
+----------
+
+gnc\_toolkit.utils.cayley\_klein\_utils module
+----------------------------------------------
+
+.. automodule:: gnc_toolkit.utils.cayley_klein_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.crp\_utils module
+------------------------------------
+
+.. automodule:: gnc_toolkit.utils.crp_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.equinoctial\_utils module
+--------------------------------------------
+
+.. automodule:: gnc_toolkit.utils.equinoctial_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.euler\_utils module
+--------------------------------------
+
+.. automodule:: gnc_toolkit.utils.euler_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.frame\_conversion module
+-------------------------------------------
+
+.. automodule:: gnc_toolkit.utils.frame_conversion
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.mean\_elements module
+----------------------------------------
+
+.. automodule:: gnc_toolkit.utils.mean_elements
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.mee\_utils module
+------------------------------------
+
+.. automodule:: gnc_toolkit.utils.mee_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.mrp\_utils module
+------------------------------------
+
+.. automodule:: gnc_toolkit.utils.mrp_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.quat\_utils module
+-------------------------------------
+
+.. automodule:: gnc_toolkit.utils.quat_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.state\_conversion module
+-------------------------------------------
+
+.. automodule:: gnc_toolkit.utils.state_conversion
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.state\_to\_elements module
+---------------------------------------------
+
+.. automodule:: gnc_toolkit.utils.state_to_elements
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gnc\_toolkit.utils.time\_utils module
+-------------------------------------
+
+.. automodule:: gnc_toolkit.utils.time_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gnc_toolkit.utils
+   :members:
+   :show-inheritance:
+   :undoc-members:

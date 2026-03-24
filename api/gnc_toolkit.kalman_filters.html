@@ -9,6 +9,7 @@
   <title>gnc_toolkit.kalman_filters package &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,7 +19,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit.mission_design package" href="gnc_toolkit.mission_design.html" />
+    <link rel="prev" title="gnc_toolkit.integrators package" href="gnc_toolkit.integrators.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,114 +43,42 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">gnc_toolkit.kalman_filters package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.akf">gnc_toolkit.kalman_filters.akf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.akf.AKF"><code class="docutils literal notranslate"><span class="pre">AKF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.akf.AKF.predict"><code class="docutils literal notranslate"><span class="pre">AKF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.akf.AKF.update"><code class="docutils literal notranslate"><span class="pre">AKF.update()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gnc_toolkit</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gnc_toolkit.html">gnc_toolkit package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gnc_toolkit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.actuators.html">gnc_toolkit.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_determination.html">gnc_toolkit.attitude_determination package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_dynamics.html">gnc_toolkit.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.classical_control.html">gnc_toolkit.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.disturbances.html">gnc_toolkit.disturbances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.environment.html">gnc_toolkit.environment package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.fdir.html">gnc_toolkit.fdir package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html">gnc_toolkit.guidance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gnc_toolkit.kalman_filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.mission_design.html">gnc_toolkit.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html">gnc_toolkit.navigation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.optimal_control.html">gnc_toolkit.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html">gnc_toolkit.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.sensors.html">gnc_toolkit.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.simulation.html">gnc_toolkit.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.ssa.html">gnc_toolkit.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.utils.html">gnc_toolkit.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.visualization.html">gnc_toolkit.visualization package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.ckf">gnc_toolkit.kalman_filters.ckf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ckf.CKF"><code class="docutils literal notranslate"><span class="pre">CKF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ckf.CKF.predict"><code class="docutils literal notranslate"><span class="pre">CKF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ckf.CKF.update"><code class="docutils literal notranslate"><span class="pre">CKF.update()</span></code></a></li>
 </ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.ekf">gnc_toolkit.kalman_filters.ekf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ekf.EKF"><code class="docutils literal notranslate"><span class="pre">EKF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ekf.EKF.predict"><code class="docutils literal notranslate"><span class="pre">EKF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ekf.EKF.update"><code class="docutils literal notranslate"><span class="pre">EKF.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.enkf">gnc_toolkit.kalman_filters.enkf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.enkf.EnKF"><code class="docutils literal notranslate"><span class="pre">EnKF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.enkf.EnKF.P"><code class="docutils literal notranslate"><span class="pre">EnKF.P</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.enkf.EnKF.initialize_ensemble"><code class="docutils literal notranslate"><span class="pre">EnKF.initialize_ensemble()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.enkf.EnKF.predict"><code class="docutils literal notranslate"><span class="pre">EnKF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.enkf.EnKF.update"><code class="docutils literal notranslate"><span class="pre">EnKF.update()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.enkf.EnKF.x"><code class="docutils literal notranslate"><span class="pre">EnKF.x</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.fixed_interval_smoother">gnc_toolkit.kalman_filters.fixed_interval_smoother module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother"><code class="docutils literal notranslate"><span class="pre">fixed_interval_smoother()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.imm">gnc_toolkit.kalman_filters.imm module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.imm.IMM"><code class="docutils literal notranslate"><span class="pre">IMM</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.imm.IMM.predict"><code class="docutils literal notranslate"><span class="pre">IMM.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.imm.IMM.update"><code class="docutils literal notranslate"><span class="pre">IMM.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.kf">gnc_toolkit.kalman_filters.kf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.kf.KF"><code class="docutils literal notranslate"><span class="pre">KF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.kf.KF.predict"><code class="docutils literal notranslate"><span class="pre">KF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.kf.KF.update"><code class="docutils literal notranslate"><span class="pre">KF.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.mekf">gnc_toolkit.kalman_filters.mekf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.mekf.MEKF"><code class="docutils literal notranslate"><span class="pre">MEKF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.mekf.MEKF.predict"><code class="docutils literal notranslate"><span class="pre">MEKF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.mekf.MEKF.update"><code class="docutils literal notranslate"><span class="pre">MEKF.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.pf">gnc_toolkit.kalman_filters.pf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter"><code class="docutils literal notranslate"><span class="pre">ParticleFilter</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.P"><code class="docutils literal notranslate"><span class="pre">ParticleFilter.P</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.initialize_particles"><code class="docutils literal notranslate"><span class="pre">ParticleFilter.initialize_particles()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.neff"><code class="docutils literal notranslate"><span class="pre">ParticleFilter.neff()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.predict"><code class="docutils literal notranslate"><span class="pre">ParticleFilter.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.resample"><code class="docutils literal notranslate"><span class="pre">ParticleFilter.resample()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.update"><code class="docutils literal notranslate"><span class="pre">ParticleFilter.update()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.x"><code class="docutils literal notranslate"><span class="pre">ParticleFilter.x</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.rts_smoother">gnc_toolkit.kalman_filters.rts_smoother module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.rts_smoother.rts_smoother"><code class="docutils literal notranslate"><span class="pre">rts_smoother()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.sr_ukf">gnc_toolkit.kalman_filters.sr_ukf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF"><code class="docutils literal notranslate"><span class="pre">SRUKF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.P"><code class="docutils literal notranslate"><span class="pre">SRUKF.P</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.predict"><code class="docutils literal notranslate"><span class="pre">SRUKF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.update"><code class="docutils literal notranslate"><span class="pre">SRUKF.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters.ukf">gnc_toolkit.kalman_filters.ukf module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF"><code class="docutils literal notranslate"><span class="pre">UKF</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF.generate_sigma_points"><code class="docutils literal notranslate"><span class="pre">UKF.generate_sigma_points()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF.predict"><code class="docutils literal notranslate"><span class="pre">UKF.predict()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF.update"><code class="docutils literal notranslate"><span class="pre">UKF.update()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF_Attitude"><code class="docutils literal notranslate"><span class="pre">UKF_Attitude</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.kalman_filters">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -162,6 +93,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">gnc_toolkit</a></li>
+          <li class="breadcrumb-item"><a href="gnc_toolkit.html">gnc_toolkit package</a></li>
       <li class="breadcrumb-item active">gnc_toolkit.kalman_filters package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/gnc_toolkit.kalman_filters.rst.txt" rel="nofollow"> View page source</a>
@@ -337,11 +270,11 @@ Combines a forward Kalman filter with a backward information filter.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Smoothed states.
-P_smooth (np.ndarray): Smoothed covariances.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>X_smooth (np.ndarray)</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>X_smooth (np.ndarray)</strong> (<em>Smoothed states.</em>)</p></li>
+<li><p><strong>P_smooth (np.ndarray)</strong> (<em>Smoothed covariances.</em>)</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -518,11 +451,11 @@ Length N-1. Qs[k] is Q from k to k+1.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Smoothed states, (N, dim_x).
-P_smooth (np.ndarray): Smoothed covariances, (N, dim_x, dim_x).</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>X_smooth (np.ndarray)</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>X_smooth (np.ndarray)</strong> (<em>Smoothed states, (N, dim_x).</em>)</p></li>
+<li><p><strong>P_smooth (np.ndarray)</strong> (<em>Smoothed covariances, (N, dim_x, dim_x).</em>)</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -618,7 +551,10 @@ Covariance/Error: 6 dim (tangent space)</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gnc_toolkit.integrators.html" class="btn btn-neutral float-left" title="gnc_toolkit.integrators package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gnc_toolkit.mission_design.html" class="btn btn-neutral float-right" title="gnc_toolkit.mission_design package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

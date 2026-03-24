@@ -9,6 +9,7 @@
   <title>gnc_toolkit.integrators package &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,7 +19,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit.kalman_filters package" href="gnc_toolkit.kalman_filters.html" />
+    <link rel="prev" title="gnc_toolkit.guidance package" href="gnc_toolkit.guidance.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,71 +43,42 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">gnc_toolkit.integrators package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.ab_moulton">gnc_toolkit.integrators.ab_moulton module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator.integrate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.step"><code class="docutils literal notranslate"><span class="pre">AdamsBashforthMoultonIntegrator.step()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gnc_toolkit</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gnc_toolkit.html">gnc_toolkit package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gnc_toolkit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.actuators.html">gnc_toolkit.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_determination.html">gnc_toolkit.attitude_determination package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_dynamics.html">gnc_toolkit.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.classical_control.html">gnc_toolkit.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.disturbances.html">gnc_toolkit.disturbances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.environment.html">gnc_toolkit.environment package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.fdir.html">gnc_toolkit.fdir package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html">gnc_toolkit.guidance package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gnc_toolkit.integrators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.kalman_filters.html">gnc_toolkit.kalman_filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.mission_design.html">gnc_toolkit.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html">gnc_toolkit.navigation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.optimal_control.html">gnc_toolkit.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html">gnc_toolkit.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.sensors.html">gnc_toolkit.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.simulation.html">gnc_toolkit.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.ssa.html">gnc_toolkit.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.utils.html">gnc_toolkit.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.visualization.html">gnc_toolkit.visualization package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.dop853_coeffs">gnc_toolkit.integrators.dop853_coeffs module</a></li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.gauss_jackson">gnc_toolkit.integrators.gauss_jackson module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator.integrate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator.step"><code class="docutils literal notranslate"><span class="pre">GaussJacksonIntegrator.step()</span></code></a></li>
 </ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.integrator">gnc_toolkit.integrators.integrator module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator"><code class="docutils literal notranslate"><span class="pre">Integrator</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator.integrate"><code class="docutils literal notranslate"><span class="pre">Integrator.integrate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.integrator.Integrator.step"><code class="docutils literal notranslate"><span class="pre">Integrator.step()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.rk4">gnc_toolkit.integrators.rk4 module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk4.RK4"><code class="docutils literal notranslate"><span class="pre">RK4</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk4.RK4.step"><code class="docutils literal notranslate"><span class="pre">RK4.step()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.rk45">gnc_toolkit.integrators.rk45 module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk45.RK45"><code class="docutils literal notranslate"><span class="pre">RK45</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk45.RK45.integrate"><code class="docutils literal notranslate"><span class="pre">RK45.integrate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk45.RK45.step"><code class="docutils literal notranslate"><span class="pre">RK45.step()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.rk853">gnc_toolkit.integrators.rk853 module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk853.RK853"><code class="docutils literal notranslate"><span class="pre">RK853</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk853.RK853.integrate"><code class="docutils literal notranslate"><span class="pre">RK853.integrate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.rk853.RK853.step"><code class="docutils literal notranslate"><span class="pre">RK853.step()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators.symplectic">gnc_toolkit.integrators.symplectic module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.integrate"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator.integrate()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.integrators.symplectic.SymplecticIntegrator.step"><code class="docutils literal notranslate"><span class="pre">SymplecticIntegrator.step()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.integrators">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -119,6 +93,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">gnc_toolkit</a></li>
+          <li class="breadcrumb-item"><a href="gnc_toolkit.html">gnc_toolkit package</a></li>
       <li class="breadcrumb-item active">gnc_toolkit.integrators package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/gnc_toolkit.integrators.rst.txt" rel="nofollow"> View page source</a>
@@ -210,11 +186,11 @@ Assumes state y = [r, v] where r, v are 3D vectors.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Array of time points
-y_values: Array of state vectors</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>t_values</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_values</strong> (<em>Array of time points</em>)</p></li>
+<li><p><strong>y_values</strong> (<em>Array of state vectors</em>)</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -234,12 +210,12 @@ y_values: Array of state vectors</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>State at t + dt
-t_next: Time at t + dt
-dt_next: Suggested next time step (for variable step methods), or dt used</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>y_next</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>y_next</strong> (<em>State at t + dt</em>)</p></li>
+<li><p><strong>t_next</strong> (<em>Time at t + dt</em>)</p></li>
+<li><p><strong>dt_next</strong> (<em>Suggested next time step (for variable step methods), or dt used</em>)</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -311,11 +287,11 @@ High order integrator for high precision requirements.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Array of time points
-y_values: Array of state vectors</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>t_values</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_values</strong> (<em>Array of time points</em>)</p></li>
+<li><p><strong>y_values</strong> (<em>Array of state vectors</em>)</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -365,7 +341,10 @@ f: function that returns [v, a].</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gnc_toolkit.guidance.html" class="btn btn-neutral float-left" title="gnc_toolkit.guidance package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gnc_toolkit.kalman_filters.html" class="btn btn-neutral float-right" title="gnc_toolkit.kalman_filters package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

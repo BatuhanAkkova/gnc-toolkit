@@ -9,6 +9,7 @@
   <title>gnc_toolkit.guidance package &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,7 +19,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit.integrators package" href="gnc_toolkit.integrators.html" />
+    <link rel="prev" title="gnc_toolkit.fdir package" href="gnc_toolkit.fdir.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,65 +43,42 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">gnc_toolkit.guidance package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-gnc_toolkit.guidance.attitude_guidance">gnc_toolkit.guidance.attitude_guidance module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.attitude_blending"><code class="docutils literal notranslate"><span class="pre">attitude_blending()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.eigenaxis_slew_path_planning"><code class="docutils literal notranslate"><span class="pre">eigenaxis_slew_path_planning()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.nadir_pointing_reference"><code class="docutils literal notranslate"><span class="pre">nadir_pointing_reference()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.sun_pointing_reference"><code class="docutils literal notranslate"><span class="pre">sun_pointing_reference()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.attitude_guidance.target_tracking_reference"><code class="docutils literal notranslate"><span class="pre">target_tracking_reference()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gnc_toolkit</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gnc_toolkit.html">gnc_toolkit package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gnc_toolkit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.actuators.html">gnc_toolkit.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_determination.html">gnc_toolkit.attitude_determination package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_dynamics.html">gnc_toolkit.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.classical_control.html">gnc_toolkit.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.disturbances.html">gnc_toolkit.disturbances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.environment.html">gnc_toolkit.environment package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.fdir.html">gnc_toolkit.fdir package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gnc_toolkit.guidance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.kalman_filters.html">gnc_toolkit.kalman_filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.mission_design.html">gnc_toolkit.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html">gnc_toolkit.navigation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.optimal_control.html">gnc_toolkit.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html">gnc_toolkit.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.sensors.html">gnc_toolkit.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.simulation.html">gnc_toolkit.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.ssa.html">gnc_toolkit.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.utils.html">gnc_toolkit.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.visualization.html">gnc_toolkit.visualization package</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-gnc_toolkit.guidance.continuous_thrust">gnc_toolkit.guidance.continuous_thrust module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.apollo_dps_guidance"><code class="docutils literal notranslate"><span class="pre">apollo_dps_guidance()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.direct_collocation_guidance"><code class="docutils literal notranslate"><span class="pre">direct_collocation_guidance()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.gravity_turn_guidance"><code class="docutils literal notranslate"><span class="pre">gravity_turn_guidance()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.indirect_optimal_guidance"><code class="docutils literal notranslate"><span class="pre">indirect_optimal_guidance()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.q_law_guidance"><code class="docutils literal notranslate"><span class="pre">q_law_guidance()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.continuous_thrust.zem_zev_guidance"><code class="docutils literal notranslate"><span class="pre">zem_zev_guidance()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.guidance.formation_flying">gnc_toolkit.guidance.formation_flying module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.distributed_consensus_control"><code class="docutils literal notranslate"><span class="pre">distributed_consensus_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.fuel_balanced_formation_keeping"><code class="docutils literal notranslate"><span class="pre">fuel_balanced_formation_keeping()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.leader_follower_control"><code class="docutils literal notranslate"><span class="pre">leader_follower_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.formation_flying.virtual_structure_control"><code class="docutils literal notranslate"><span class="pre">virtual_structure_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.guidance.maneuvers">gnc_toolkit.guidance.maneuvers module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.bi_elliptic_transfer"><code class="docutils literal notranslate"><span class="pre">bi_elliptic_transfer()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.combined_plane_change"><code class="docutils literal notranslate"><span class="pre">combined_plane_change()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.delta_v_budget"><code class="docutils literal notranslate"><span class="pre">delta_v_budget()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.hohmann_transfer"><code class="docutils literal notranslate"><span class="pre">hohmann_transfer()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.optimal_combined_maneuver"><code class="docutils literal notranslate"><span class="pre">optimal_combined_maneuver()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.phasing_maneuver"><code class="docutils literal notranslate"><span class="pre">phasing_maneuver()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.plane_change"><code class="docutils literal notranslate"><span class="pre">plane_change()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.maneuvers.raan_change"><code class="docutils literal notranslate"><span class="pre">raan_change()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.guidance.porkchop">gnc_toolkit.guidance.porkchop module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.porkchop.generate_porkchop_grid"><code class="docutils literal notranslate"><span class="pre">generate_porkchop_grid()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.guidance.rendezvous">gnc_toolkit.guidance.rendezvous module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.cw_equations"><code class="docutils literal notranslate"><span class="pre">cw_equations()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.cw_targeting"><code class="docutils literal notranslate"><span class="pre">cw_targeting()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.is_within_corridor"><code class="docutils literal notranslate"><span class="pre">is_within_corridor()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.optimize_rpo_collocation"><code class="docutils literal notranslate"><span class="pre">optimize_rpo_collocation()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.primer_vector_analysis"><code class="docutils literal notranslate"><span class="pre">primer_vector_analysis()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.solve_lambert"><code class="docutils literal notranslate"><span class="pre">solve_lambert()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.solve_lambert_multi_rev"><code class="docutils literal notranslate"><span class="pre">solve_lambert_multi_rev()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.guidance.rendezvous.tschauner_hempel_propagation"><code class="docutils literal notranslate"><span class="pre">tschauner_hempel_propagation()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.guidance">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>
 </ul>
 </li>
 </ul>
-</div>
+</li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -113,6 +93,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">gnc_toolkit</a></li>
+          <li class="breadcrumb-item"><a href="gnc_toolkit.html">gnc_toolkit package</a></li>
       <li class="breadcrumb-item active">gnc_toolkit.guidance package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/gnc_toolkit.guidance.rst.txt" rel="nofollow"> View page source</a>
@@ -143,8 +125,8 @@
 <li><p><strong>alpha</strong> – Blending factor [0, 1]</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Blended quaternion [x, y, z, w]</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Blended quaternion [<a class="reference internal" href="gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="gnc_toolkit.kalman_filters.enkf.EnKF.x">x</a>, y, z, w]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -162,7 +144,7 @@ Using SLERP (Spherical Linear Interpolation).</p>
 <li><p><strong>time_span</strong> – Normalized time values [0, 1] (N,)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of quaternions along the path</p>
 </dd>
 </dl>
@@ -181,8 +163,8 @@ X-axis completes the right-handed frame (approximately velocity direction).</p>
 <li><p><strong>vel_eci</strong> – ECI velocity vector [m/s] (3,)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Reference quaternion [x, y, z, w]</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference quaternion [<a class="reference internal" href="gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="gnc_toolkit.kalman_filters.enkf.EnKF.x">x</a>, y, z, w]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -197,8 +179,8 @@ Secondary objective: Minimize rotation about Sun vector (constrained pointing).<
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>sun_vec_eci</strong> – ECI Sun direction vector (3,)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Reference quaternion [x, y, z, w]</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference quaternion [<a class="reference internal" href="gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="gnc_toolkit.kalman_filters.enkf.EnKF.x">x</a>, y, z, w]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -215,8 +197,8 @@ Target frame: Z-axis aligned with boresight (towards target).</p>
 <li><p><strong>target_pos_eci</strong> – ECI position vector of target [m] (3,)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Reference quaternion [x, y, z, w]</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference quaternion [<a class="reference internal" href="gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="gnc_toolkit.kalman_filters.enkf.EnKF.x">x</a>, y, z, w]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -243,10 +225,10 @@ Targets position, velocity, and acceleration.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Commanded acceleration (m/s^2).</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Commanded acceleration (m/s^2).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -271,10 +253,10 @@ Minimizes sum of acceleration squared.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Thrust acceleration vector (m/s^2).</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Thrust acceleration vector (m/s^2).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -287,10 +269,10 @@ Solves for minimum energy (acceleration squared integral).
 This is a Boundary Value Problem (BVP).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(time_array, acceleration_profile)</p>
+<dd class="field-odd"><p><strong>tuple</strong></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
+<dd class="field-even"><p>(time_array, acceleration_profile)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -312,10 +294,10 @@ Targets [a, e, i, raan, argp].</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimal thrust acceleration vector in ECI (m/s^2).</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Optimal thrust acceleration vector in ECI (m/s^2).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -337,10 +319,10 @@ Used for terminal intercept or landing.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Commanded acceleration vector (m/s^2).</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Commanded acceleration vector (m/s^2).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -366,10 +348,10 @@ In matrix form: U = -K * (L &#64; X)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>N x M array of control inputs.</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>N x M array of control inputs.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -388,10 +370,10 @@ Spacecraft with more fuel provide more control effort.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Fuel-balanced control actions.</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Fuel-balanced control actions.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -411,10 +393,10 @@ relative state with respect to a leader spacecraft.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control command for the follower.</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control command for the follower.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -432,10 +414,10 @@ relative state with respect to a leader spacecraft.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Computed control actions for each spacecraft (N x control_dim).</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Computed control actions for each spacecraft (N x control_dim).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -486,10 +468,10 @@ Using Law of Cosines.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Delta-V required (km/s).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Delta-V required (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -507,10 +489,10 @@ Using Law of Cosines.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propellant mass required (kg).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Propellant mass required (kg).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -610,10 +592,10 @@ Usually T_phase is small relative to orbital period.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Delta-V required (km/s).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Delta-V required (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -632,10 +614,10 @@ Assuming circular orbit and maneuver performed at the poles (max efficiency).</p
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Delta-V required (km/s).</p>
+<dd class="field-even"><p><strong>float</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Delta-V required (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -661,10 +643,10 @@ Assuming circular orbit and maneuver performed at the poles (max efficiency).</p
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Containing grids for ‘c3’, ‘v_inf_arr’, ‘tof’, and the input axes.</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Containing grids for ‘c3’, ‘v_inf_arr’, ‘tof’, and the input axes.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -715,10 +697,10 @@ Assumes circular target orbit.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Required initial velocity v0.</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Required initial velocity v0.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -736,10 +718,10 @@ Assumes circular target orbit.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if inside the corridor.</p>
+<dd class="field-even"><p><strong>bool</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p>True if inside the corridor.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -761,10 +743,10 @@ Minimizes total control effort (acceleration squared).</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimized trajectory and control profile.</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Optimized trajectory and control profile.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -785,10 +767,10 @@ Minimizes total control effort (acceleration squared).</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Results including max primer magnitude and optimality flag.</p>
+<dd class="field-even"><p><strong>dict</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Results including max primer magnitude and optimality flag.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -837,10 +819,10 @@ Finds v1 and v2 given r1, r2, and time of flight dt.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>v1, v2 (km/s).</p>
+<dd class="field-even"><p><strong>tuple[np.ndarray, np.ndarray]</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+<dd class="field-odd"><p>v1, v2 (km/s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -860,10 +842,10 @@ equivalent Yamanaka-Ankersen STM.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Final relative state.</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Final relative state.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -877,7 +859,10 @@ equivalent Yamanaka-Ankersen STM.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gnc_toolkit.fdir.html" class="btn btn-neutral float-left" title="gnc_toolkit.fdir package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gnc_toolkit.integrators.html" class="btn btn-neutral float-right" title="gnc_toolkit.integrators package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

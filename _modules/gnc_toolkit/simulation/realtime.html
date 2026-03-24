@@ -8,6 +8,7 @@
   <title>gnc_toolkit.simulation.realtime &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -67,8 +72,10 @@
              
   <h1>Source code for gnc_toolkit.simulation.realtime</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.simulator</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissionSimulator</span>
+
 
 <div class="viewcode-block" id="RealTimeSimulator">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.simulation.html#gnc_toolkit.simulation.realtime.RealTimeSimulator">[docs]</a>
@@ -85,7 +92,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        rtf : float</span>
-<span class="sd">            Real-Time Factor. </span>
+<span class="sd">            Real-Time Factor.</span>
 <span class="sd">            rtf = 1.0 means simulation runs exactly at wall-clock speed.</span>
 <span class="sd">            rtf = 2.0 means simulation runs twice as fast.</span>
 <span class="sd">        *args : Any</span>
@@ -122,14 +129,14 @@
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">t_end</span><span class="p">:</span>
             <span class="c1"># step logic</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
-            
+
             <span class="c1"># calculate required delay</span>
             <span class="n">elapsed_sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_clock_start</span>
             <span class="n">expected_wall_clock</span> <span class="o">=</span> <span class="n">elapsed_sim</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtf</span>
-            
+
             <span class="n">elapsed_wall</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">wall_clock_start</span>
             <span class="n">sleep_time</span> <span class="o">=</span> <span class="n">expected_wall_clock</span> <span class="o">-</span> <span class="n">elapsed_wall</span>
-            
+
             <span class="k">if</span> <span class="n">sleep_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">sleep_time</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">dt</span><span class="p">:</span>

@@ -9,6 +9,7 @@
   <title>gnc_toolkit.optimal_control package &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,7 +19,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit.propagators package" href="gnc_toolkit.propagators.html" />
+    <link rel="prev" title="gnc_toolkit.navigation package" href="gnc_toolkit.navigation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,216 +43,42 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">gnc_toolkit.optimal_control package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.adaptive_control">gnc_toolkit.optimal_control.adaptive_control module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.compute_control"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl.update_theta"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.update_theta()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gnc_toolkit</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gnc_toolkit.html">gnc_toolkit package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gnc_toolkit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.actuators.html">gnc_toolkit.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_determination.html">gnc_toolkit.attitude_determination package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_dynamics.html">gnc_toolkit.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.classical_control.html">gnc_toolkit.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.disturbances.html">gnc_toolkit.disturbances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.environment.html">gnc_toolkit.environment package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.fdir.html">gnc_toolkit.fdir package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html">gnc_toolkit.guidance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.kalman_filters.html">gnc_toolkit.kalman_filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.mission_design.html">gnc_toolkit.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html">gnc_toolkit.navigation package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gnc_toolkit.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html">gnc_toolkit.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.sensors.html">gnc_toolkit.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.simulation.html">gnc_toolkit.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.ssa.html">gnc_toolkit.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.utils.html">gnc_toolkit.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.visualization.html">gnc_toolkit.visualization package</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.backstepping_control">gnc_toolkit.optimal_control.backstepping_control module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController"><code class="docutils literal notranslate"><span class="pre">BacksteppingController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.backstepping_control.BacksteppingController.compute_control"><code class="docutils literal notranslate"><span class="pre">BacksteppingController.compute_control()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.feedback_linearization">gnc_toolkit.optimal_control.feedback_linearization module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.feedback_linearization.FeedbackLinearization.compute_control"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization.compute_control()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.finite_horizon_lqr">gnc_toolkit.optimal_control.finite_horizon_lqr module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR.compute_control"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR.get_gain"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR.get_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.finite_horizon_lqr.FiniteHorizonLQR.solve"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR.solve()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.geometric_control">gnc_toolkit.optimal_control.geometric_control module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.GeometricController"><code class="docutils literal notranslate"><span class="pre">GeometricController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.GeometricController.compute_control"><code class="docutils literal notranslate"><span class="pre">GeometricController.compute_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.hat_map"><code class="docutils literal notranslate"><span class="pre">hat_map()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.geometric_control.vee_map"><code class="docutils literal notranslate"><span class="pre">vee_map()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.h2_control">gnc_toolkit.optimal_control.h2_control module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.h2_control.H2Controller"><code class="docutils literal notranslate"><span class="pre">H2Controller</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.h2_control.H2Controller.solve"><code class="docutils literal notranslate"><span class="pre">H2Controller.solve()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.h_infinity">gnc_toolkit.optimal_control.h_infinity module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.h_infinity.HInfinityController"><code class="docutils literal notranslate"><span class="pre">HInfinityController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.h_infinity.HInfinityController.compute_control"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.h_infinity.HInfinityController.compute_gain"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.h_infinity.HInfinityController.solve"><code class="docutils literal notranslate"><span class="pre">HInfinityController.solve()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.indi_control">gnc_toolkit.optimal_control.indi_control module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIController"><code class="docutils literal notranslate"><span class="pre">INDIController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIController.compute_control"><code class="docutils literal notranslate"><span class="pre">INDIController.compute_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.indi_control.INDIOuterLoopPD.compute_v"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD.compute_v()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.lqe">gnc_toolkit.optimal_control.lqe module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqe.LQE"><code class="docutils literal notranslate"><span class="pre">LQE</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqe.LQE.compute_gain"><code class="docutils literal notranslate"><span class="pre">LQE.compute_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqe.LQE.solve"><code class="docutils literal notranslate"><span class="pre">LQE.solve()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.lqg">gnc_toolkit.optimal_control.lqg module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqg.LQG"><code class="docutils literal notranslate"><span class="pre">LQG</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqg.LQG.compute_control"><code class="docutils literal notranslate"><span class="pre">LQG.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqg.LQG.update_estimation"><code class="docutils literal notranslate"><span class="pre">LQG.update_estimation()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.lqr">gnc_toolkit.optimal_control.lqr module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqr.LQR"><code class="docutils literal notranslate"><span class="pre">LQR</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqr.LQR.compute_gain"><code class="docutils literal notranslate"><span class="pre">LQR.compute_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.lqr.LQR.solve"><code class="docutils literal notranslate"><span class="pre">LQR.solve()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.mpc">gnc_toolkit.optimal_control.mpc module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.LinearMPC"><code class="docutils literal notranslate"><span class="pre">LinearMPC</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.LinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">LinearMPC.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.NonlinearMPC"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc.NonlinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC.solve()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.mpc_casadi">gnc_toolkit.optimal_control.mpc_casadi module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC.solve"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC.solve()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.passivity_control">gnc_toolkit.optimal_control.passivity_control module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.passivity_control.PassivityBasedController"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.passivity_control.PassivityBasedController.compute_control"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController.compute_control()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control.sliding_mode">gnc_toolkit.optimal_control.sliding_mode module</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController"><code class="docutils literal notranslate"><span class="pre">SlidingModeController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController.compute_control"><code class="docutils literal notranslate"><span class="pre">SlidingModeController.compute_control()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gnc_toolkit.optimal_control">Module contents</a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.BacksteppingController"><code class="docutils literal notranslate"><span class="pre">BacksteppingController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.BacksteppingController.compute_control"><code class="docutils literal notranslate"><span class="pre">BacksteppingController.compute_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.CasadiNMPC"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.CasadiNMPC.solve"><code class="docutils literal notranslate"><span class="pre">CasadiNMPC.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.FeedbackLinearization"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.FeedbackLinearization.compute_control"><code class="docutils literal notranslate"><span class="pre">FeedbackLinearization.compute_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.FiniteHorizonLQR"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.FiniteHorizonLQR.compute_control"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.FiniteHorizonLQR.get_gain"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR.get_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.FiniteHorizonLQR.solve"><code class="docutils literal notranslate"><span class="pre">FiniteHorizonLQR.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.GeometricController"><code class="docutils literal notranslate"><span class="pre">GeometricController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.GeometricController.compute_control"><code class="docutils literal notranslate"><span class="pre">GeometricController.compute_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.H2Controller"><code class="docutils literal notranslate"><span class="pre">H2Controller</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.H2Controller.solve"><code class="docutils literal notranslate"><span class="pre">H2Controller.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.HInfinityController"><code class="docutils literal notranslate"><span class="pre">HInfinityController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.HInfinityController.compute_control"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.HInfinityController.compute_gain"><code class="docutils literal notranslate"><span class="pre">HInfinityController.compute_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.HInfinityController.solve"><code class="docutils literal notranslate"><span class="pre">HInfinityController.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIController"><code class="docutils literal notranslate"><span class="pre">INDIController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIController.compute_control"><code class="docutils literal notranslate"><span class="pre">INDIController.compute_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIOuterLoopPD"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.INDIOuterLoopPD.compute_v"><code class="docutils literal notranslate"><span class="pre">INDIOuterLoopPD.compute_v()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQE"><code class="docutils literal notranslate"><span class="pre">LQE</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQE.compute_gain"><code class="docutils literal notranslate"><span class="pre">LQE.compute_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQE.solve"><code class="docutils literal notranslate"><span class="pre">LQE.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQG"><code class="docutils literal notranslate"><span class="pre">LQG</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQG.compute_control"><code class="docutils literal notranslate"><span class="pre">LQG.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQG.update_estimation"><code class="docutils literal notranslate"><span class="pre">LQG.update_estimation()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQR"><code class="docutils literal notranslate"><span class="pre">LQR</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQR.compute_gain"><code class="docutils literal notranslate"><span class="pre">LQR.compute_gain()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LQR.solve"><code class="docutils literal notranslate"><span class="pre">LQR.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LinearMPC"><code class="docutils literal notranslate"><span class="pre">LinearMPC</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.LinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">LinearMPC.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.compute_control"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.compute_control()</span></code></a></li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.ModelReferenceAdaptiveControl.update_theta"><code class="docutils literal notranslate"><span class="pre">ModelReferenceAdaptiveControl.update_theta()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.NonlinearMPC"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.NonlinearMPC.solve"><code class="docutils literal notranslate"><span class="pre">NonlinearMPC.solve()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.PassivityBasedController"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.PassivityBasedController.compute_control"><code class="docutils literal notranslate"><span class="pre">PassivityBasedController.compute_control()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.SlidingModeController"><code class="docutils literal notranslate"><span class="pre">SlidingModeController</span></code></a><ul>
-<li><a class="reference internal" href="#gnc_toolkit.optimal_control.SlidingModeController.compute_control"><code class="docutils literal notranslate"><span class="pre">SlidingModeController.compute_control()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -264,6 +93,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">gnc_toolkit</a></li>
+          <li class="breadcrumb-item"><a href="gnc_toolkit.html">gnc_toolkit package</a></li>
       <li class="breadcrumb-item active">gnc_toolkit.optimal_control package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/gnc_toolkit.optimal_control.rst.txt" rel="nofollow"> View page source</a>
@@ -309,10 +140,10 @@ d_theta_hat/dt = Gamma * phi(x) * e^T * P * B</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control effort u [m].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control effort u [m].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -355,10 +186,10 @@ Commonly used for mechanical systems with rigid body dynamics.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control effort u [m].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control effort u [m].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -392,10 +223,10 @@ u = g(x)^-1 * (v - f(x))</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control input u.</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control input u.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -463,10 +294,10 @@ Provides global stability and avoids singularities.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control torque [3].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control torque [3].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -580,10 +411,10 @@ u = u0 + g(x0, x_dot0)^-1 * (v - x_ddot0)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>New control effort u [m].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>New control effort u [m].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -671,10 +502,10 @@ u = -K * x_hat</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control input u</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control input u</p>
 </dd>
 </dl>
 </dd></dl>
@@ -746,10 +577,10 @@ Cost: sum_{k=0}^{N-1} (x[k].T Q x[k] + u[k].T R u[k]) + x[N].T P x[N]</p>
 <dd class="field-odd"><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimal control sequence [u_0, u_1, …, u_{N-1}].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Optimal control sequence [u_0, u_1, …, u_{N-1}].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -773,10 +604,10 @@ Cost: sum_{k=0}^{N-1} L(x[k], u[k]) + V(x[N])</p>
 <dd class="field-odd"><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimal control sequence [u_0, …, u_{N-1}].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Optimal control sequence [u_0, …, u_{N-1}].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -806,10 +637,10 @@ Uses Multiple Shooting formulation for numerical stability and faster convergenc
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimal control sequence [N, nu].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Optimal control sequence [N, nu].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -843,10 +674,10 @@ System: M(q) * q_ddot + C(q, q_dot) * q_dot + G(q) = u</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control effort u [n].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control effort u [n].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -876,10 +707,10 @@ u = u_eq(x, t) - K * sign(s(x, t))</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control input u.</p>
+<dd class="field-even"><p><strong>float or np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float or np.ndarray</p>
+<dd class="field-odd"><p>Control input u.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -914,10 +745,10 @@ Commonly used for mechanical systems with rigid body dynamics.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control effort u [m].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control effort u [m].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -943,10 +774,10 @@ Uses Multiple Shooting formulation for numerical stability and faster convergenc
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimal control sequence [N, nu].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Optimal control sequence [N, nu].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -976,10 +807,10 @@ u = g(x)^-1 * (v - f(x))</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control input u.</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control input u.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1039,10 +870,10 @@ Provides global stability and avoids singularities.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control torque [3].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control torque [3].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1131,10 +962,10 @@ u = u0 + g(x0, x_dot0)^-1 * (v - x_ddot0)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>New control effort u [m].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>New control effort u [m].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1214,10 +1045,10 @@ u = -K * x_hat</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control input u</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control input u</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1281,10 +1112,10 @@ Cost: sum_{k=0}^{N-1} (x[k].T Q x[k] + u[k].T R u[k]) + x[N].T P x[N]</p>
 <dd class="field-odd"><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimal control sequence [u_0, u_1, …, u_{N-1}].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Optimal control sequence [u_0, u_1, …, u_{N-1}].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1318,10 +1149,10 @@ d_theta_hat/dt = Gamma * phi(x) * e^T * P * B</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control effort u [m].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control effort u [m].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1352,10 +1183,10 @@ Cost: sum_{k=0}^{N-1} L(x[k], u[k]) + V(x[N])</p>
 <dd class="field-odd"><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimal control sequence [u_0, …, u_{N-1}].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Optimal control sequence [u_0, …, u_{N-1}].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1385,10 +1216,10 @@ System: M(q) * q_ddot + C(q, q_dot) * q_dot + G(q) = u</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control effort u [n].</p>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>Control effort u [n].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1414,10 +1245,10 @@ u = u_eq(x, t) - K * sign(s(x, t))</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Control input u.</p>
+<dd class="field-even"><p><strong>float or np.ndarray</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float or np.ndarray</p>
+<dd class="field-odd"><p>Control input u.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1430,7 +1261,10 @@ u = u_eq(x, t) - K * sign(s(x, t))</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gnc_toolkit.navigation.html" class="btn btn-neutral float-left" title="gnc_toolkit.navigation package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gnc_toolkit.propagators.html" class="btn btn-neutral float-right" title="gnc_toolkit.propagators package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

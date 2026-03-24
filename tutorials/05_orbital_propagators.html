@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 05: Comparison: Cowell vs Encke &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 05: Comparison: Cowell vs Encke</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/05_orbital_propagators.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-05-comparison-cowell-vs-encke">
+<h1>Tutorial 05: Comparison: Cowell vs Encke<a class="headerlink" href="#tutorial-05-comparison-cowell-vs-encke" title="Link to this heading"></a></h1>
+<p>This tutorial compares absolute numerical integration (<strong>Cowell’s Method</strong>) and perturbative numerical integration (<strong>Encke’s Method</strong>) within <code class="docutils literal notranslate"><span class="pre">gnc-toolkit</span></code>.</p>
+<hr class="docutils" />
+<section id="theory-prerequisites">
+<h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
+<section id="cowell-s-method">
+<h3>1. Cowell’s Method<a class="headerlink" href="#cowell-s-method" title="Link to this heading"></a></h3>
+<p>Integrates the absolute equations of motion directly. The state integrated is the absolute position $\mathbf{r}$ and velocity $\mathbf{v}$:
+$$
+\ddot{\mathbf{r}} = -\frac{\mu}{r^3}\mathbf{r} + \mathbf{a}_{pert}
+$$</p>
+</section>
+<section id="encke-s-method">
+<h3>2. Encke’s Method<a class="headerlink" href="#encke-s-method" title="Link to this heading"></a></h3>
+<p>Useful for orbits where perturbations are small. It integrates the <strong>deviation</strong> $\delta \mathbf{r}$ from a reference Keplerian orbit $\mathbf{r}<em>{ref}$:
+$$
+\mathbf{r} = \mathbf{r}</em>{ref} + \delta \mathbf{r}
+$$
+$$
+\ddot{\delta \mathbf{r}} = \frac{\mu}{r_{ref}^3} \left( f(q)\mathbf{r}<em>{ref} - \delta\mathbf{r} \right) + \mathbf{a}</em>{pert}
+$$
+where $q = \frac{\delta\mathbf{r} \cdot (\delta\mathbf{r} - 2\mathbf{r}<em>{ref})}{r</em>{ref}^2}$. Encke’s method reduces numerical roundoff errors for bound orbits with small disturbances.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.propagators.cowell</span><span class="w"> </span><span class="kn">import</span> <span class="n">CowellPropagator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.propagators.encke</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnckePropagator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.disturbances.gravity</span><span class="w"> </span><span class="kn">import</span> <span class="n">J2Gravity</span><span class="p">,</span> <span class="n">TwoBodyGravity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.integrators.rk4</span><span class="w"> </span><span class="kn">import</span> <span class="n">RK4</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Propagator modules loaded.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Propagator modules loaded.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="setup-simulation-environment">
+<h2>1. Setup Simulation Environment<a class="headerlink" href="#setup-simulation-environment" title="Link to this heading"></a></h2>
+<p>We define a LEO orbit and introduce a $J_2$ disturbance to trigger the perturbative integrator loops on both solvers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial Orbit (m, m/s)</span>
+<span class="n">r_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">7000000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">v_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7546.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">28</span><span class="p">)),</span> <span class="mf">7546.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">28</span><span class="p">))])</span> 
+
+<span class="n">duration</span> <span class="o">=</span> <span class="mf">10000.0</span> <span class="c1"># [s] - Approx 2 orbits</span>
+<span class="n">dt_step</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="c1"># Steps size [s]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">j2_perturbation</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">J2Gravity</span><span class="p">()</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="n">TwoBodyGravity</span><span class="p">()</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="cowell-propagation-benchmarking">
+<h2>2. Cowell Propagation Benchmarking<a class="headerlink" href="#cowell-propagation-benchmarking" title="Link to this heading"></a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cowell</span> <span class="o">=</span> <span class="n">CowellPropagator</span><span class="p">()</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">r_f_cowell</span><span class="p">,</span> <span class="n">v_f_cowell</span> <span class="o">=</span> <span class="n">cowell</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">r_0</span><span class="p">,</span> <span class="n">v_0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">perturbation_acc_fn</span><span class="o">=</span><span class="n">j2_perturbation</span><span class="p">,</span> <span class="n">dt_step</span><span class="o">=</span><span class="n">dt_step</span><span class="p">)</span>
+<span class="n">t_cowell</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cowell Final Pos:  </span><span class="si">{</span><span class="n">r_f_cowell</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cowell Execution Time: </span><span class="si">{</span><span class="n">t_cowell</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cowell Final Pos:  [-1310807.66896629 -6060113.86490409 -3226579.61689067] m
+Cowell Execution Time: 0.075907 seconds
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="encke-propagation-benchmarking">
+<h2>3. Encke Propagation Benchmarking<a class="headerlink" href="#encke-propagation-benchmarking" title="Link to this heading"></a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encke</span> <span class="o">=</span> <span class="n">EnckePropagator</span><span class="p">(</span><span class="n">rect_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span> <span class="c1"># Triggers rectification when deviation gets large</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">r_f_encke</span><span class="p">,</span> <span class="n">v_f_encke</span> <span class="o">=</span> <span class="n">encke</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">r_0</span><span class="p">,</span> <span class="n">v_0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">perturbation_acc_fn</span><span class="o">=</span><span class="n">j2_perturbation</span><span class="p">,</span> <span class="n">dt_step</span><span class="o">=</span><span class="n">dt_step</span><span class="p">)</span>
+<span class="n">t_encke</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Encke Final Pos:  </span><span class="si">{</span><span class="n">r_f_encke</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Encke Execution Time: </span><span class="si">{</span><span class="n">t_encke</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Encke Final Pos:  [-1311079.24910403 -6060081.37923322 -3226564.18300095] m
+Encke Execution Time: 0.241742 seconds
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparison-summary">
+<h2>4. Comparison Summary<a class="headerlink" href="#comparison-summary" title="Link to this heading"></a></h2>
+<p>Let’s compare the magnitude difference between both methods and speed ratio.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pos_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_f_cowell</span> <span class="o">-</span> <span class="n">r_f_encke</span><span class="p">)</span>
+<span class="n">speedup</span> <span class="o">=</span> <span class="n">t_cowell</span> <span class="o">/</span> <span class="n">t_encke</span> <span class="k">if</span> <span class="n">t_encke</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Position Difference: </span><span class="si">{</span><span class="n">pos_diff</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Speed Advantage (Cowell/Encke ratio): </span><span class="si">{</span><span class="n">speedup</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Note: Encke is often faster/more accurate over long continuous orbits because it integrates smaller variables, reducing numerical noise limits on large loops.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final Position Difference: 273.951264 m
+Speed Advantage (Cowell/Encke ratio): 0.31x
+
+Note: Encke is often faster/more accurate over long continuous orbits because it integrates smaller variables, reducing numerical noise limits on large loops.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

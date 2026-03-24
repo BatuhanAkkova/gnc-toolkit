@@ -8,6 +8,7 @@
   <title>gnc_toolkit.propagators.sgp4_propagator &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,9 +76,10 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sgp4.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Satrec</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Propagator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sgp4.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Satrec</span><span class="p">,</span> <span class="n">jday</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_jd</span><span class="p">,</span> <span class="n">calc_gmst</span> <span class="c1"># If available</span>
+
 
 <div class="viewcode-block" id="Sgp4Propagator">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator">[docs]</a>
@@ -83,6 +89,7 @@
 <span class="sd">    Wraps the `sgp4` library to propagate orbits using Two-Line Elements (TLEs).</span>
 <span class="sd">    State output is typically in the TEME frame.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the SGP4 Propagator with a TLE.</span>
@@ -101,33 +108,35 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Propagates the satellite state from TLE epoch forward by dt.</span>
-<span class="sd">        Note: initial position/velocity input (r_i, v_i) is IGNORED, </span>
+<span class="sd">        Note: initial position/velocity input (r_i, v_i) is IGNORED,</span>
 <span class="sd">        as SGP4 is fully determined by the initialized TLE.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            r_i (np.ndarray): Ignored.</span>
 <span class="sd">            v_i (np.ndarray): Ignored.</span>
 <span class="sd">            dt (float): Propagation time relative to TLE epoch [s].</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">            tuple: (r_f, v_f) Position and Velocity in TEME frame [m, m/s].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
         <span class="c1"># SGP4 takes time in minutes from epoch</span>
         <span class="n">minutes_from_epoch</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">/</span> <span class="mf">60.0</span>
-        
+
         <span class="c1"># sgp4 evaluation</span>
         <span class="c1"># returns (error_code, position, velocity)</span>
         <span class="c1"># position in km, velocity in km/s (TEME)</span>
-        <span class="n">err</span><span class="p">,</span> <span class="n">r_km</span><span class="p">,</span> <span class="n">v_kms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">sgp4</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jdsatepoch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jdsatepochF</span> <span class="o">+</span> <span class="n">minutes_from_epoch</span> <span class="o">/</span> <span class="mf">1440.0</span><span class="p">)</span>
-        
+        <span class="n">err</span><span class="p">,</span> <span class="n">r_km</span><span class="p">,</span> <span class="n">v_kms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">sgp4</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">jdsatepoch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jdsatepochF</span> <span class="o">+</span> <span class="n">minutes_from_epoch</span> <span class="o">/</span> <span class="mf">1440.0</span>
+        <span class="p">)</span>
+
         <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SGP4 error code </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">: Propagation failed.&quot;</span><span class="p">)</span>
 
         <span class="c1"># Convert to SI units [m, m/s]</span>
         <span class="n">r_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r_km</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
         <span class="n">v_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v_kms</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
-        
+
         <span class="k">return</span> <span class="n">r_f</span><span class="p">,</span> <span class="n">v_f</span></div>
 
 
@@ -140,7 +149,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">err</span><span class="p">,</span> <span class="n">r_km</span><span class="p">,</span> <span class="n">v_kms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">sgp4</span><span class="p">(</span><span class="n">jd_f</span><span class="p">,</span> <span class="n">jd_f_frac</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SGP4 error code </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SGP4 error code </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r_km</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v_kms</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span></div>
 </div>
 

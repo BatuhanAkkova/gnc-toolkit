@@ -8,6 +8,7 @@
   <title>gnc_toolkit.edl &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,14 +76,25 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.environment.density</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
+
 
 <div class="viewcode-block" id="ballistic_entry_dynamics">
 <a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.ballistic_entry_dynamics">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">ballistic_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.986e14</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6371000.0</span><span class="p">,</span> <span class="n">rho_model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ballistic_entry_dynamics</span><span class="p">(</span>
+    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.986e14</span><span class="p">,</span>
+    <span class="n">r_planet</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6371000.0</span><span class="p">,</span>
+    <span class="n">rho_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ODE for ballistic entry dynamics in Cartesian coordinates.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        t (float): Time (s).</span>
 <span class="sd">        state (np.ndarray): [x, y, z, vx, vy, vz] (m, m/s).</span>
@@ -88,38 +104,51 @@
 <span class="sd">        mu (float): Gravitational parameter (m^3/s^2).</span>
 <span class="sd">        r_planet (float): Planet radius (m).</span>
 <span class="sd">        rho_model: Object with get_density(r_eci, jd) method.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: State derivative [vx, vy, vz, ax, ay, az].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">r_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">v_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
     <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span>
     <span class="n">v_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_vec</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">rho_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Default to simple exponential for Earth if not provided</span>
         <span class="n">rho_model</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">rho0</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
-        
+
     <span class="n">rho</span> <span class="o">=</span> <span class="n">rho_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># jd=0 placeholder for simple models</span>
-    
+
     <span class="c1"># Aerodynamic Drag</span>
     <span class="n">dynamic_pressure</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">v_mag</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">drag_mag</span> <span class="o">=</span> <span class="n">dynamic_pressure</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">*</span> <span class="n">area</span>
     <span class="n">a_drag</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">drag_mag</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_vec</span> <span class="o">/</span> <span class="n">v_mag</span><span class="p">)</span> <span class="k">if</span> <span class="n">v_mag</span> <span class="o">&gt;</span> <span class="mf">1e-6</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-    
+
     <span class="c1"># Gravity (Point mass)</span>
     <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_vec</span>
-    
+
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span><span class="p">])</span></div>
+
 
 
 <div class="viewcode-block" id="lifting_entry_dynamics">
 <a class="viewcode-back" href="../../api/gnc_toolkit.html#gnc_toolkit.edl.lifting_entry_dynamics">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">lifting_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">cd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bank_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.986e14</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6371000.0</span><span class="p">,</span> <span class="n">rho_model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lifting_entry_dynamics</span><span class="p">(</span>
+    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">cd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">bank_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.986e14</span><span class="p">,</span>
+    <span class="n">r_planet</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6371000.0</span><span class="p">,</span>
+    <span class="n">rho_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ODE for lifting entry dynamics in Cartesian coordinates.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        t (float): Time (s).</span>
 <span class="sd">        state (np.ndarray): [x, y, z, vx, vy, vz] (m, m/s).</span>
@@ -129,39 +158,41 @@
 <span class="sd">        mass (float): Mass (kg).</span>
 <span class="sd">        mu, r_planet: Planet parameters.</span>
 <span class="sd">        rho_model: Density model.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: State derivative.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">r_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">v_vec</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
     <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span>
     <span class="n">v_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_vec</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">rho_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">rho_model</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">rho0</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
-        
+
     <span class="n">rho</span> <span class="o">=</span> <span class="n">rho_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="n">dynamic_pressure</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">v_mag</span><span class="o">**</span><span class="mi">2</span>
-    
+
     <span class="c1"># Unit vectors for Drag, Lift</span>
     <span class="n">u_v</span> <span class="o">=</span> <span class="n">v_vec</span> <span class="o">/</span> <span class="n">v_mag</span> <span class="k">if</span> <span class="n">v_mag</span> <span class="o">&gt;</span> <span class="mf">1e-6</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">u_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">v_vec</span><span class="p">)</span>
     <span class="n">u_h</span> <span class="o">=</span> <span class="n">u_h</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u_h</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u_h</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-    <span class="n">u_l_vertical</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">u_v</span><span class="p">,</span> <span class="n">u_h</span><span class="p">)</span> <span class="c1"># Lift vector in the vertical plane</span>
-    
+    <span class="n">u_l_vertical</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">u_v</span><span class="p">,</span> <span class="n">u_h</span><span class="p">)</span>  <span class="c1"># Lift vector in the vertical plane</span>
+
     <span class="c1"># Rotate lift vector by bank angle</span>
     <span class="c1"># L = L_mag * (cos(bank) * u_l_vertical + sin(bank) * u_h)</span>
     <span class="n">lift_mag</span> <span class="o">=</span> <span class="n">dynamic_pressure</span> <span class="o">*</span> <span class="n">cl</span> <span class="o">*</span> <span class="n">area</span>
     <span class="n">drag_mag</span> <span class="o">=</span> <span class="n">dynamic_pressure</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">*</span> <span class="n">area</span>
-    
+
     <span class="n">a_drag</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">drag_mag</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_v</span>
     <span class="n">a_lift</span> <span class="o">=</span> <span class="p">(</span><span class="n">lift_mag</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bank_angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_l_vertical</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">bank_angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_h</span><span class="p">)</span>
-    
+
     <span class="c1"># Gravity</span>
     <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_vec</span>
-    
+
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span> <span class="o">+</span> <span class="n">a_lift</span><span class="p">])</span></div>
+
 
 
 <div class="viewcode-block" id="sutton_grave_heating">
@@ -171,17 +202,19 @@
 <span class="sd">    Stagnation point heat flux estimation (W/m^2) using Sutton-Grave formula.</span>
 <span class="sd">    Simplified constant for Earth: k = 1.74153e-4 (for cooling Rn in meters)</span>
 <span class="sd">    q = k * sqrt(rho/rn) * v^3</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        rho (float): Density (kg/m^3).</span>
 <span class="sd">        v (float): Velocity (m/s).</span>
 <span class="sd">        rn (float): Nose radius (m).</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        float: Heat flux (W/m^2).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">k</span> <span class="o">=</span> <span class="mf">1.74153e-4</span>
     <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">/</span> <span class="n">rn</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="o">**</span><span class="mi">3</span></div>
+
 
 
 <div class="viewcode-block" id="calculate_g_load">
@@ -189,15 +222,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_g_load</span><span class="p">(</span><span class="n">acc_vec</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates G-load from acceleration vector.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        acc_vec (np.ndarray): Acceleration (m/s^2).</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        float: G-load (multiples of g0).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">g0</span> <span class="o">=</span> <span class="mf">9.80665</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">acc_vec</span><span class="p">)</span> <span class="o">/</span> <span class="n">g0</span></div>
+
 
 
 <div class="viewcode-block" id="aerocapture_guidance">
@@ -208,12 +243,12 @@
 <span class="sd">    Adjusts bank angle (if cl &gt; 0) to target a specific exit apoapsis using numerical predictor-corrector.</span>
 <span class="sd">    Returns: bank_angle (rad)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mu</span> <span class="o">=</span> <span class="n">planet_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="mf">3.986e14</span><span class="p">)</span>
-    <span class="n">r_planet</span> <span class="o">=</span> <span class="n">planet_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;r_planet&#39;</span><span class="p">,</span> <span class="mf">6371000.0</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">planet_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mu&quot;</span><span class="p">,</span> <span class="mf">3.986e14</span><span class="p">)</span>
+    <span class="n">r_planet</span> <span class="o">=</span> <span class="n">planet_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;r_planet&quot;</span><span class="p">,</span> <span class="mf">6371000.0</span><span class="p">)</span>
     <span class="n">atm_interface</span> <span class="o">=</span> <span class="n">r_planet</span> <span class="o">+</span> <span class="mf">120000.0</span>  <span class="c1"># Assumed 120km interface</span>
-    
+
     <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_apoapsis_from_state</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
         <span class="n">r_vec</span><span class="p">,</span> <span class="n">v_vec</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span>
@@ -229,39 +264,45 @@
 
     <span class="k">if</span> <span class="n">cl</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
         <span class="k">return</span> <span class="mf">0.0</span>  <span class="c1"># Cannot modulate bank angle without lift</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="nf">predict_apoapsis</span><span class="p">(</span><span class="n">bank_angle</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">lifting_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">bank_angle</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">,</span> <span class="n">rho_model</span><span class="p">)</span>
-            
+            <span class="k">return</span> <span class="n">lifting_entry_dynamics</span><span class="p">(</span>
+                <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">bank_angle</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">,</span> <span class="n">rho_model</span>
+            <span class="p">)</span>
+
         <span class="k">def</span><span class="w"> </span><span class="nf">exit_event</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="n">atm_interface</span>
+
         <span class="n">exit_event</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">exit_event</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="mi">1</span>
-        
+
         <span class="c1"># Integrate forward to exit</span>
-        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">dynamics</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">),</span> <span class="n">state</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">[</span><span class="n">exit_event</span><span class="p">],</span> <span class="n">max_step</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
+            <span class="n">dynamics</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">),</span> <span class="n">state</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">[</span><span class="n">exit_event</span><span class="p">],</span> <span class="n">max_step</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">get_apoapsis_from_state</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="n">bank_up</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">bank_down</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">best_bank</span> <span class="o">=</span> <span class="mf">0.0</span>
-    
+
     <span class="c1"># Simple bisection search on bank angle</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
         <span class="n">bank_mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">bank_up</span> <span class="o">+</span> <span class="n">bank_down</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">ap_mid</span> <span class="o">=</span> <span class="n">predict_apoapsis</span><span class="p">(</span><span class="n">bank_mid</span><span class="p">)</span>
         <span class="n">best_bank</span> <span class="o">=</span> <span class="n">bank_mid</span>
-        
+
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">ap_mid</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ap_mid</span> <span class="o">&gt;</span> <span class="n">target_apoapsis</span><span class="p">:</span>
             <span class="n">bank_up</span> <span class="o">=</span> <span class="n">bank_mid</span>  <span class="c1"># Need more pull-down (higher atmospheric time)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">bank_down</span> <span class="o">=</span> <span class="n">bank_mid</span>
-            
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">ap_mid</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ap_mid</span> <span class="o">-</span> <span class="n">target_apoapsis</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1000.0</span><span class="p">:</span>
             <span class="k">break</span>
-            
+
     <span class="k">return</span> <span class="n">best_bank</span></div>
+
 
 
 <div class="viewcode-block" id="hazard_avoidance">
@@ -270,13 +311,14 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple hazard avoidance logic.</span>
 <span class="sd">    Computes a divert maneuver if a hazard is detected near the landing site.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        r (np.ndarray): Position (m).</span>
 <span class="sd">        v (np.ndarray): Velocity (m/s).</span>
 <span class="sd">        hazards (list): List of hazard positions [x, y, z].</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: Correction velocity delta_v (m/s).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hazards</span><span class="p">:</span>
@@ -284,7 +326,7 @@
         <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">safety_margin</span><span class="p">:</span>
             <span class="c1"># Divert away from hazard</span>
             <span class="n">u_divert</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="n">dist</span>
-            <span class="k">return</span> <span class="n">u_divert</span> <span class="o">*</span> <span class="mf">5.0</span> <span class="c1"># 5 m/s nudge</span>
+            <span class="k">return</span> <span class="n">u_divert</span> <span class="o">*</span> <span class="mf">5.0</span>  <span class="c1"># 5 m/s nudge</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
 
 </pre></div>

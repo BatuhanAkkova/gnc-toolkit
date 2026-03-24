@@ -8,6 +8,7 @@
   <title>gnc_toolkit.navigation.surface_nav &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,7 +76,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.ekf</span><span class="w"> </span><span class="kn">import</span> <span class="n">EKF</span>
+
 
 <div class="viewcode-block" id="SurfaceNavigationEKF">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF">[docs]</a>
@@ -81,6 +88,7 @@
 <span class="sd">    Estimates lander/rover position and velocity [x, y, z, vx, vy, vz]</span>
 <span class="sd">    using measurements to known landmarks.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">P0</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -100,25 +108,26 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">accel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict state using constant velocity or constant acceleration model.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            dt (float): Time step [s].</span>
 <span class="sd">            accel (np.ndarray, optional): Constant acceleration input [m/s^2].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span><span class="w"> </span><span class="nf">fx</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
             <span class="n">a</span> <span class="o">=</span> <span class="n">u</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-            
+
             <span class="n">r_new</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span>
             <span class="n">v_new</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">dt</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_new</span><span class="p">,</span> <span class="n">v_new</span><span class="p">])</span>
-            
+
         <span class="k">def</span><span class="w"> </span><span class="nf">F_jac</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
             <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
             <span class="n">F</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
             <span class="k">return</span> <span class="n">F</span>
-            
+
         <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">F_jac</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="n">accel</span><span class="p">)</span></div>
 
 
@@ -127,20 +136,21 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">update_landmark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_obs</span><span class="p">,</span> <span class="n">landmark_pos</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update state using observed relative vector to a known landmark.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            z_obs (np.ndarray): Measured relative vector [dx, dy, dz] in local frame.</span>
 <span class="sd">            landmark_pos (np.ndarray): Known position of the landmark in local frame.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span><span class="w"> </span><span class="nf">hx</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="c1"># Relative vector: landmark - rover</span>
             <span class="k">return</span> <span class="n">landmark_pos</span> <span class="o">-</span> <span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
-            
+
         <span class="k">def</span><span class="w"> </span><span class="nf">H_jac</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
             <span class="n">H</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">H</span>
-            
+
         <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z_obs</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">H_jac</span><span class="p">)</span></div>
 
 

@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 14: Indirect &amp; Direct Collocation Optimal Control &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 14: Indirect &amp; Direct Collocation Optimal Control</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/14_optimal_control.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-14-indirect-direct-collocation-optimal-control">
+<h1>Tutorial 14: Indirect &amp; Direct Collocation Optimal Control<a class="headerlink" href="#tutorial-14-indirect-direct-collocation-optimal-control" title="Link to this heading"></a></h1>
+<p>This tutorial covers Continuous Thrust Guidance using <strong>Indirect Methods</strong> (Pontryagin’s Minimum Principle) and <strong>Direct Methods</strong> (Direct Collocation) to solve low-thrust trajectory optimization problems.</p>
+<hr class="docutils" />
+<section id="theory-prerequisite">
+<h2>1. Theory Prerequisite<a class="headerlink" href="#theory-prerequisite" title="Link to this heading"></a></h2>
+<section id="indirect-method-pmp">
+<h3>1.1 Indirect Method (PMP)<a class="headerlink" href="#indirect-method-pmp" title="Link to this heading"></a></h3>
+<p>Formulates the problem by augmenting the state $x$ with costates $\lambda$ and forming the Hamiltonian $H$. Necessary conditions for optimality require solving a <strong>Boundary Value Problem (BVP)</strong>:
+$$\dot{x} = \frac{\partial H}{\partial \lambda}, \quad \dot{\lambda} = -\frac{\partial H}{\partial x}$$
+With boundary conditions for state at $t_0$ and $t_f$.</p>
+</section>
+<section id="direct-collocation">
+<h3>1.2 Direct Collocation<a class="headerlink" href="#direct-collocation" title="Link to this heading"></a></h3>
+<p>Discretizes the trajectory into a series of $N$ nodes. States and controls at nodes are treated as optimization variables. Linear/Quad constraints enforce that the dynamics update rule holds (e.g., Trapezoidal rule).</p>
+<ul class="simple">
+<li><p><strong>Objective</strong>: Minimize total control effort $\int ||u(t)||^2 dt \approx \sum ||u_i||^2$</p></li>
+<li><p><strong>Constraints</strong>: $\dot{x} = f(x, u)$ enforced via algebraic transcription formulation.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.guidance.continuous_thrust</span><span class="w"> </span><span class="kn">import</span> <span class="n">indirect_optimal_guidance</span><span class="p">,</span> <span class="n">direct_collocation_guidance</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="demonstration-indirect-optimal-guidance-bvp">
+<h2>2. Demonstration: Indirect Optimal Guidance (BVP)<a class="headerlink" href="#demonstration-indirect-optimal-guidance-bvp" title="Link to this heading"></a></h2>
+<p>We solve for a continuous thrust maneuver from position $r_0$ to $r_f$ with specified velocities in a given time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span> <span class="o">=</span> <span class="mf">398600.4418</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">7000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">v0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
+<span class="n">rf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">vf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
+<span class="n">tf</span> <span class="o">=</span> <span class="mf">1800.0</span>  <span class="c1"># 30 minutes transfer time</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solving BVP (Indirect Method)... This might take a few seconds.&quot;</span><span class="p">)</span>
+<span class="n">t_array</span><span class="p">,</span> <span class="n">acc_profile</span> <span class="o">=</span> <span class="n">indirect_optimal_guidance</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">rf</span><span class="p">,</span> <span class="n">vf</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">t_array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal Solution Found!&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">acc_profile</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thrust $u_x$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">acc_profile</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thrust $u_y$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">acc_profile</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thrust $u_z$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Acceleration [$km/s^2$]&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Indirect Optimal Guidance Thrust Profile&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solver did not converge. Sensitivity to initial guess high (standard BVP issue).&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solving BVP (Indirect Method)... This might take a few seconds.
+Optimal Solution Found!
+</pre></div>
+</div>
+<img alt="../_images/ec8b22a056be3e4aeab264389d0ba09a2f6c2eac1d43b260e87d1a7de561d287.png" src="../_images/ec8b22a056be3e4aeab264389d0ba09a2f6c2eac1d43b260e87d1a7de561d287.png" />
+</div>
+</div>
+</section>
+<section id="demonstration-direct-collocation-guidance">
+<h2>3. Demonstration: Direct Collocation Guidance<a class="headerlink" href="#demonstration-direct-collocation-guidance" title="Link to this heading"></a></h2>
+<p>Direct methods aggregate state trajectories into large sparse formulations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solving Direct Collocation NLP...&quot;</span><span class="p">)</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">direct_collocation_guidance</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">rf</span><span class="p">,</span> <span class="n">vf</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">n_nodes</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">sol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Direct Collocation Solved!&quot;</span><span class="p">)</span>
+    <span class="c1"># sol shape: (n_nodes, 9) where state layout is [rx, ry, rz, vx, vy, vz, ax, ay, az]</span>
+    <span class="n">accs</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+    <span class="n">time_colloc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">time_colloc</span><span class="p">,</span> <span class="n">accs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">where</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thrust $u_x$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">time_colloc</span><span class="p">,</span> <span class="n">accs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">where</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thrust $u_y$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Acceleration [$km/s^2$]&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Direct Collocation Nodes Acceleration Schedule&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Direct Collocation Solver failed to find feasible point.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solving Direct Collocation NLP...
+Direct Collocation Solved!
+</pre></div>
+</div>
+<img alt="../_images/ce78007268ccf941ebfce79f0e8764b148a0a8b001cfd366b87b6af34179c9d5.png" src="../_images/ce78007268ccf941ebfce79f0e8764b148a0a8b001cfd366b87b6af34179c9d5.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

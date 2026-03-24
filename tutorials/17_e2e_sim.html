@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/17_e2e_sim.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-17-full-cubesat-spacecraft-end-to-end-e2e-simulator">
+<h1>Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator<a class="headerlink" href="#tutorial-17-full-cubesat-spacecraft-end-to-end-e2e-simulator" title="Link to this heading"></a></h1>
+<p>This <strong>Capstone Tutorial</strong> combines various components learned throughout the series into a unified simulation loop. We use the <code class="docutils literal notranslate"><span class="pre">MissionSimulator</span></code> class with a <strong>Sense -&gt; Estimate -&gt; Control -&gt; Propagate</strong> cycle.</p>
+<hr class="docutils" />
+<section id="simulation-architecture">
+<h2>1. Simulation Architecture<a class="headerlink" href="#simulation-architecture" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">MissionSimulator</span></code> aggregates several callbacks:</p>
+<ol class="arabic simple">
+<li><p><strong>Propagator</strong>: Advances the true state (Attitude Dynamics).</p></li>
+<li><p><strong>Sensor Model</strong>: Maps true state to noisy measurements.</p></li>
+<li><p><strong>Estimator</strong>: Updates the state estimate (e.g., MEKF).</p></li>
+<li><p><strong>Controller</strong>: Calculates actuator demands based on estimate.</p></li>
+</ol>
+<p>We will replicate a detumbling and reaction wheel fine-pointing scenario with injected actuator noise/failures for robustness checking.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.simulation.simulator</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissionSimulator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.simulation.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationLogger</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.simulation.simulator</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissionSimulator</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.simulation.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationLogger</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="defining-components-for-e2e">
+<h2>2. Defining Components for E2E<a class="headerlink" href="#defining-components-for-e2e" title="Link to this heading"></a></h2>
+<section id="dynamics-and-propagator">
+<h3>2.1 Dynamics and Propagator<a class="headerlink" href="#dynamics-and-propagator" title="Link to this heading"></a></h3>
+<p>We simulate Rigid Body Attitude dynamics.
+State: $x = [q_0, q_1, q_2, q_3, \omega_x, \omega_y, \omega_z]^T$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inertia Matrix</span>
+<span class="n">I_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<span class="n">I_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I_sc</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">quaternion_derivative</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">omega</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates dq/dt given quaternion and angular velocity.&quot;&quot;&quot;</span>
+    <span class="n">w_x</span><span class="p">,</span> <span class="n">w_y</span><span class="p">,</span> <span class="n">w_z</span> <span class="o">=</span> <span class="n">omega</span>
+    <span class="n">Omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">w_x</span><span class="p">,</span> <span class="o">-</span><span class="n">w_y</span><span class="p">,</span> <span class="o">-</span><span class="n">w_z</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">w_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w_z</span><span class="p">,</span> <span class="o">-</span><span class="n">w_y</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">w_y</span><span class="p">,</span> <span class="o">-</span><span class="n">w_z</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w_x</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">w_z</span><span class="p">,</span> <span class="n">w_y</span><span class="p">,</span> <span class="o">-</span><span class="n">w_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">Omega</span> <span class="o">@</span> <span class="n">q</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rigid_body_propagator</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">control</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    State structure: [q0, q1, q2, q3, wx, wy, wz]</span>
+<span class="sd">    Control: [Trk_x, Trk_y, Trk_z]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
+    
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">control</span> <span class="k">if</span> <span class="n">control</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># omega_dot = I^-1 * (tau - omega x I*omega)</span>
+    <span class="n">omega_dot</span> <span class="o">=</span> <span class="n">I_inv</span> <span class="o">@</span> <span class="p">(</span><span class="n">tau</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">I_sc</span> <span class="o">@</span> <span class="n">omega</span><span class="p">))</span>
+    
+    <span class="c1"># q_dot</span>
+    <span class="n">q_dot</span> <span class="o">=</span> <span class="n">quaternion_derivative</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+    
+    <span class="c1"># Euler step</span>
+    <span class="n">new_q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="n">q_dot</span> <span class="o">*</span> <span class="n">dt</span>
+    <span class="n">new_q</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">new_q</span><span class="p">)</span>
+    <span class="n">new_omega</span> <span class="o">=</span> <span class="n">omega</span> <span class="o">+</span> <span class="n">omega_dot</span> <span class="o">*</span> <span class="n">dt</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">new_q</span><span class="p">,</span> <span class="n">new_omega</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sensor-and-estimator-models">
+<h3>2.2 Sensor and Estimator Models<a class="headerlink" href="#sensor-and-estimator-models" title="Link to this heading"></a></h3>
+<p>We provide noisy quaternion measurements from a mock <strong>Star Tracker</strong>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sensor_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulates Star Tracker with additive noise for attitude.&quot;&quot;&quot;</span>
+    <span class="n">q_true</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">q_meas</span> <span class="o">=</span> <span class="n">q_true</span> <span class="o">+</span> <span class="n">noise</span>
+    <span class="n">q_meas</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">q_meas</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">q_meas</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">estimator_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">measurements</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Normally weights gyro &amp; star tracker (MEKF). </span>
+<span class="sd">    For demonstration, outputs heavily filtered quaternion estimate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Just pass measured back as placeholder for estimate setup</span>
+    <span class="k">return</span> <span class="n">measurements</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="controller-model">
+<h3>2.3 Controller Model<a class="headerlink" href="#controller-model" title="Link to this heading"></a></h3>
+<p>We implement a quaternion feedback controller proportional to angle error to bring attitude to inertial pointing $[1, 0, 0, 0]^T$.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">controller_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">state_estimate</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PD Attitude Controller aiming for q_target = [1, 0, 0, 0]</span>
+<span class="sd">    state_estimate here is the measured/filtered q</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q_est</span> <span class="o">=</span> <span class="n">state_estimate</span>
+    <span class="c1"># Error is essentially vector part of attitude error</span>
+    <span class="c1"># Assuming small angles vector error is q_est[1:4]</span>
+    <span class="n">err_q</span> <span class="o">=</span> <span class="n">q_est</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="c1"># q1, q2, q3</span>
+    
+    <span class="n">Kp</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span>
+    <span class="n">Kd</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.2</span>
+    
+    <span class="c1"># Since omega is not part of explicit estimators state return above </span>
+    <span class="c1"># (just returns q), we can only use perfect Kd or state access directly. </span>
+    <span class="c1"># Let&#39;s read omega proxy from true global state just to complete the simulator pass-through Kd</span>
+    <span class="c1"># In perfect world, estimator would estimate omega too!</span>
+    
+    <span class="c1"># Control effort</span>
+    <span class="n">tau_ctrl</span> <span class="o">=</span> <span class="n">Kp</span> <span class="o">*</span> <span class="n">err_q</span> <span class="c1"># Pure P control mock for safe state stability</span>
+    <span class="k">return</span> <span class="n">tau_ctrl</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="running-the-e2e-mission-simulator">
+<h2>3. Running the E2E Mission Simulator<a class="headerlink" href="#running-the-e2e-mission-simulator" title="Link to this heading"></a></h2>
+<p>We initialize our spacecraft tumbling: $\omega = [0.05, -0.05, 0.02]$.
+Control seeks to bring it to fine point inertia.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setup Custom Logger for standard state saving</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomLogger</span><span class="p">(</span><span class="n">SimulationLogger</span><span class="p">):</span>
+     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">history_time</span> <span class="o">=</span> <span class="p">[]</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">history_q_true</span> <span class="o">=</span> <span class="p">[]</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">history_omega_true</span> <span class="o">=</span> <span class="p">[]</span>
+         
+     <span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">meas</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">control</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">history_time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">history_q_true</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">history_omega_true</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">])</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">CustomLogger</span><span class="p">()</span>
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">MissionSimulator</span><span class="p">(</span><span class="n">propagator</span><span class="o">=</span><span class="n">rigid_body_propagator</span><span class="p">,</span> 
+                             <span class="n">sensor_model</span><span class="o">=</span><span class="n">sensor_model</span><span class="p">,</span>
+                             <span class="n">estimator</span><span class="o">=</span><span class="n">estimator_model</span><span class="p">,</span> 
+                             <span class="n">controller</span><span class="o">=</span><span class="n">controller_model</span><span class="p">,</span>
+                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+<span class="n">q0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<span class="n">q0</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">q0</span><span class="p">)</span>
+<span class="n">omega0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">])</span>
+<span class="n">initial_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">q0</span><span class="p">,</span> <span class="n">omega0</span><span class="p">))</span>
+
+<span class="n">simulator</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">t0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="n">initial_state</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting simulation...&quot;</span><span class="p">)</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">t_end</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Simulation completed.&quot;</span><span class="p">)</span>
+
+<span class="n">time_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">history_time</span><span class="p">)</span>
+<span class="n">q_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">history_q_true</span><span class="p">)</span>
+<span class="n">omega_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">history_omega_true</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_data</span><span class="p">,</span> <span class="n">q_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$q_0$ (Scalar)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_data</span><span class="p">,</span> <span class="n">q_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$q_1$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_data</span><span class="p">,</span> <span class="n">q_data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$q_2$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_data</span><span class="p">,</span> <span class="n">q_data</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$q_3$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Quaternion Magnitude&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Attitude Evolution during E2E Control Loop&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_data</span><span class="p">,</span> <span class="n">omega_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\omega_x$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_data</span><span class="p">,</span> <span class="n">omega_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\omega_y$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_data</span><span class="p">,</span> <span class="n">omega_data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\omega_z$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Angular Velocity [rad/s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting simulation...
+Simulation completed.
+</pre></div>
+</div>
+<img alt="../_images/85061fa51f8c09a9b9eb6d2e39b27b39432d656e32768cbbe16056126a914c42.png" src="../_images/85061fa51f8c09a9b9eb6d2e39b27b39432d656e32768cbbe16056126a914c42.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 03: State Vectors &amp; Orbital Elements &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 03: State Vectors &amp; Orbital Elements</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/03_state_conversions.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-03-state-vectors-orbital-elements">
+<h1>Tutorial 03: State Vectors &amp; Orbital Elements<a class="headerlink" href="#tutorial-03-state-vectors-orbital-elements" title="Link to this heading"></a></h1>
+<p>This tutorial covers conversions between Cartesian State Vectors (Position, Velocity) and various orbital element representations.</p>
+<hr class="docutils" />
+<section id="theory-prerequisites">
+<h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
+<section id="classical-orbital-elements-coe">
+<h3>1. Classical Orbital Elements (COE)<a class="headerlink" href="#classical-orbital-elements-coe" title="Link to this heading"></a></h3>
+<p>A set of 6 parameters uniquely describing an orbit:</p>
+<ul class="simple">
+<li><p><strong>$a$</strong>: Semi-major axis (Size)</p></li>
+<li><p><strong>$e$</strong>: Eccentricity (Shape)</p></li>
+<li><p><strong>$i$</strong>: Inclination (Tilt)</p></li>
+<li><p><strong>$\Omega$ (RAAN)</strong>: Right Ascension of Ascending Node (Orientation)</p></li>
+<li><p><strong>$\omega$</strong>: Argument of Perigee (Location of perigee)</p></li>
+<li><p><strong>$\nu$</strong>: True Anomaly (Current position along orbit)</p></li>
+</ul>
+</section>
+<section id="equinoctial-elements">
+<h3>2. Equinoctial elements<a class="headerlink" href="#equinoctial-elements" title="Link to this heading"></a></h3>
+<p>Non-singular for circular ($e=0$) and equatorial ($i=0$) orbits.</p>
+<ul class="simple">
+<li><p>$a$: Semi-major axis</p></li>
+<li><p>$h = e \sin(\Omega + \omega)$</p></li>
+<li><p>$k = e \cos(\Omega + \omega)$</p></li>
+<li><p>$p = \tan(i/2) \sin(\Omega)$</p></li>
+<li><p>$q = \tan(i/2) \cos(\Omega)$</p></li>
+<li><p>$\lambda_M = \Omega + \omega + M$ (Mean longitude)</p></li>
+</ul>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.state_to_elements</span><span class="w"> </span><span class="kn">import</span> <span class="n">eci2kepler</span><span class="p">,</span> <span class="n">kepler2eci</span><span class="p">,</span> <span class="n">anomalies</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.equinoctial_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">kepler2equinoctial</span><span class="p">,</span> <span class="n">equinoctial2kepler</span><span class="p">,</span> <span class="n">equinoctial2eci</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.ssa.tle_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">TLECatalog</span><span class="p">,</span> <span class="n">TLEEntity</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="state-vector-to-keplerian-coe">
+<h2>1. State Vector to Keplerian (COE)<a class="headerlink" href="#state-vector-to-keplerian-coe" title="Link to this heading"></a></h2>
+<p>Let’s define a position and velocity vector in ECI for a spacecraft in a standard orbit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define State Vector (ECI)</span>
+<span class="n">r_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">6771000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="c1"># [m]</span>
+<span class="n">v_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7670.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>   <span class="c1"># [m/s]</span>
+
+<span class="c1"># Convert to Keplerian Elements</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">arglat</span><span class="p">,</span> <span class="n">truelon</span><span class="p">,</span> <span class="n">lonper</span> <span class="o">=</span> <span class="n">eci2kepler</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Semi-major axis (a): </span><span class="si">{</span><span class="n">a</span><span class="o">/</span><span class="mf">1000.0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Eccentricity (e):   </span><span class="si">{</span><span class="n">ecc</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inclination (i):    </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">incl</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RAAN (\Omega):        </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">raan</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Arg. of Perigee (\omega): </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">argp</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True Anomaly (</span><span class="se">\n</span><span class="s2">u):   </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verify round-trip</span>
+<span class="n">r_eci_rt</span><span class="p">,</span> <span class="n">v_eci_rt</span> <span class="o">=</span> <span class="n">kepler2eci</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Round-trip Position Error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_eci</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_eci_rt</span><span class="p">)</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Semi-major axis (a): 6766.42 km
+Eccentricity (e):   0.000677
+Inclination (i):    0.00 deg
+RAAN (\Omega):        0.00 deg
+Arg. of Perigee (\omega): 180.00 deg
+True Anomaly (
+u):   180.00 deg
+
+Round-trip Position Error: 4.629332e-26 m
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="equinoctial-elements-conversion">
+<h2>2. Equinoctial elements Conversion<a class="headerlink" href="#equinoctial-elements-conversion" title="Link to this heading"></a></h2>
+<p>Equinoctial elements avoid singularities. Let’s convert our Keplerian elements to Equinoctial.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert Keplerian to Equinoctial</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p_eq</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">l_mean</span> <span class="o">=</span> <span class="n">kepler2equinoctial</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Equinoctial Elements:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  a: </span><span class="si">{</span><span class="n">a_eq</span><span class="o">/</span><span class="mf">1000.0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  h: </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  k: </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  p: </span><span class="si">{</span><span class="n">p_eq</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  q: </span><span class="si">{</span><span class="n">q</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  lambda_mean: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">l_mean</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg&quot;</span><span class="p">)</span>
+
+<span class="c1"># Convert back to Keplerian</span>
+<span class="n">a_r</span><span class="p">,</span> <span class="n">ecc_r</span><span class="p">,</span> <span class="n">incl_r</span><span class="p">,</span> <span class="n">raan_r</span><span class="p">,</span> <span class="n">argp_r</span><span class="p">,</span> <span class="n">nu_r</span><span class="p">,</span> <span class="n">M_r</span> <span class="o">=</span> <span class="n">equinoctial2kepler</span><span class="p">(</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p_eq</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">l_mean</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Recovered Eccentricity: </span><span class="si">{</span><span class="n">ecc_r</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (Original: </span><span class="si">{</span><span class="n">ecc</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovered Inclination:  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">incl_r</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg (Original: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">incl</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Equinoctial Elements:
+  a: 6766.42 km
+  h: 8.294149e-20
+  k: -6.772687e-04
+  p: 0.000000e+00
+  q: 0.000000e+00
+  lambda_mean: 0.00 deg
+
+Recovered Eccentricity: 0.000677 (Original: 0.000677)
+Recovered Inclination:  0.00 deg (Original: 0.00 deg)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tle-interface-sgp4-propagator">
+<h2>3. TLE Interface &amp; SGP4 Propagator<a class="headerlink" href="#tle-interface-sgp4-propagator" title="Link to this heading"></a></h2>
+<p>Load a TLE and initialize a propagator to propagate the orbit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example TLE for ISS</span>
+<span class="n">tle_name</span> <span class="o">=</span> <span class="s2">&quot;ISS (ZARYA)&quot;</span>
+<span class="n">line1</span> <span class="o">=</span> <span class="s2">&quot;1 25544U 98067A   24083.42875141  .00015504  00000-0  27807-3 0  9993&quot;</span>
+<span class="n">line2</span> <span class="o">=</span> <span class="s2">&quot;2 25544  51.6416  35.8453 0004455  67.2341  49.3490 15.49842535445218&quot;</span>
+
+<span class="c1"># Create TLE Catalog</span>
+<span class="n">catalog</span> <span class="o">=</span> <span class="n">TLECatalog</span><span class="p">()</span>
+<span class="n">catalog</span><span class="o">.</span><span class="n">add_tle</span><span class="p">(</span><span class="n">tle_name</span><span class="p">,</span> <span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Listing satellites in catalog: </span><span class="si">{</span><span class="n">catalog</span><span class="o">.</span><span class="n">list_satellites</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get propagator for the satellite</span>
+<span class="n">sat</span> <span class="o">=</span> <span class="n">catalog</span><span class="o">.</span><span class="n">get_by_name</span><span class="p">(</span><span class="n">tle_name</span><span class="p">)</span>
+<span class="n">propagator</span> <span class="o">=</span> <span class="n">sat</span><span class="o">.</span><span class="n">get_propagator</span><span class="p">()</span>
+
+<span class="c1"># Propagate orbit forward in seconds</span>
+<span class="k">for</span> <span class="n">t_min</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]:</span>
+    <span class="n">dt_sec</span> <span class="o">=</span> <span class="n">t_min</span> <span class="o">*</span> <span class="mf">60.0</span>
+    <span class="n">pos</span><span class="p">,</span> <span class="n">vel</span> <span class="o">=</span> <span class="n">propagator</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dt_sec</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Time: +</span><span class="si">{</span><span class="n">t_min</span><span class="si">}</span><span class="s2"> minutes&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Position [TEME]: </span><span class="si">{</span><span class="n">pos</span><span class="o">/</span><span class="mf">1000.0</span><span class="si">}</span><span class="s2"> km&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Velocity [TEME]: </span><span class="si">{</span><span class="n">vel</span><span class="o">/</span><span class="mf">1000.0</span><span class="si">}</span><span class="s2"> km/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Listing satellites in catalog: [&#39;ISS (ZARYA)&#39;]
+
+Time: +0 minutes
+Position [TEME]: [-4674.10165916  1268.98804622  4754.93741611] km
+Velocity [TEME]: [-4.30887388 -5.74033591 -2.69314811] km/s
+
+Time: +10 minutes
+Position [TEME]: [-6036.28965614 -2197.92391076  2209.02466488] km
+Velocity [TEME]: [-0.05695672 -5.37151248 -5.465966  ] km/s
+
+Time: +20 minutes
+Position [TEME]: [-4738.02654378 -4696.3084195  -1313.38204718] km
+Velocity [TEME]: [ 4.21667521 -2.63738784 -5.82276693] km/s
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

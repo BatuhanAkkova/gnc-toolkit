@@ -8,6 +8,7 @@
   <title>gnc_toolkit.optimal_control.adaptive_control &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -73,27 +78,29 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_continuous_lyapunov</span>
 
+
 <div class="viewcode-block" id="ModelReferenceAdaptiveControl">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.adaptive_control.ModelReferenceAdaptiveControl">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelReferenceAdaptiveControl</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Model Reference Adaptive Controller (MRAC) for state-space systems.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Plant with parametric uncertainty:</span>
 <span class="sd">    dx/dt = A * x + B * (u + theta^T * phi(x))</span>
-<span class="sd">    </span>
+
 <span class="sd">    Reference Model:</span>
 <span class="sd">    dx_m/dt = A_m * x_m + B_m * r</span>
-<span class="sd">    </span>
+
 <span class="sd">    Adaptive estimate update law:</span>
 <span class="sd">    d_theta_hat/dt = Gamma * phi(x) * e^T * P * B</span>
-<span class="sd">    </span>
+
 <span class="sd">    where e = x - x_m, and P solves A_m^T * P + P * A_m = -Q.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A_m</span><span class="p">,</span> <span class="n">B_m</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">Gamma</span><span class="p">,</span> <span class="n">Q_lyap</span><span class="p">,</span> <span class="n">phi_func</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the MRAC.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            A_m (np.ndarray): Reference model system matrix [n x n].</span>
 <span class="sd">            B_m (np.ndarray): Reference model input matrix [n x m].</span>
@@ -107,19 +114,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Gamma</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">phi_func</span>
-        
+
         <span class="c1"># Solve Lyapunov Equation: A_m.T * P + P * A_m = -Q</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">solve_continuous_lyapunov</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A_m</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Q_lyap</span><span class="p">))</span>
-        
+
         <span class="c1"># Initial estimate of theta (unknown parameters)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        
+
         <span class="c1"># Verify dimension of phi</span>
         <span class="n">test_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">)</span>
         <span class="n">test_phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_phi</span><span class="p">)</span>
-        
+
         <span class="c1"># Parameter estimate matrix [k_params, nu]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">k_params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">))</span>
 
@@ -128,37 +135,38 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">kx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute control input u.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            x (np.ndarray): Current plant state [n].</span>
 <span class="sd">            x_m (np.ndarray): Current reference model state [n].</span>
 <span class="sd">            r (np.ndarray): Reference input [m].</span>
 <span class="sd">            kx (np.ndarray, optional): Optimal gain for A + B*kx = A_m. Defaults to using values that assume A=A_m.</span>
 <span class="sd">            kr (np.ndarray, optional): Optimal gain for B*kr = B_m. Defaults to ones.</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">            np.ndarray: Control effort u [m].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_m</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-        
+
         <span class="c1"># Defaults if not provided (ideal matching gains)</span>
         <span class="k">if</span> <span class="n">kx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">))</span>  <span class="c1"># Assume A = A_m</span>
         <span class="k">if</span> <span class="n">kr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">kr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>                <span class="c1"># Assume B = B_m</span>
-            
+            <span class="n">kr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>  <span class="c1"># Assume B = B_m</span>
+
         <span class="n">phi_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># [k x 1]</span>
         <span class="n">adaptive_term</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_hat</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">phi_x</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">kx</span> <span class="o">@</span> <span class="n">x</span> <span class="o">+</span> <span class="n">kr</span> <span class="o">@</span> <span class="n">r</span> <span class="o">-</span> <span class="n">adaptive_term</span>
-        
+
         <span class="c1"># Parameter derivative for Euler update: d_theta = Gamma * phi(x) * e.T * P * B</span>
         <span class="n">e</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x_m</span>
         <span class="n">error_term</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span>  <span class="c1"># [1 x m]</span>
-        <span class="n">d_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Gamma</span> <span class="o">@</span> <span class="n">phi_x</span> <span class="o">@</span> <span class="n">error_term</span>         <span class="c1"># [k x m]</span>
+        <span class="n">d_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Gamma</span> <span class="o">@</span> <span class="n">phi_x</span> <span class="o">@</span> <span class="n">error_term</span>  <span class="c1"># [k x m]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">d_theta_hat</span> <span class="o">=</span> <span class="n">d_theta</span>
-        
+
         <span class="k">return</span> <span class="n">u</span></div>
 
 
@@ -169,8 +177,8 @@
 <span class="sd">        Update the parameter estimate using Euler integration.</span>
 <span class="sd">        Should be called after compute_control and plant simulation step.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;d_theta_hat&#39;</span><span class="p">):</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">theta_hat</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_theta_hat</span> <span class="o">*</span> <span class="n">dt</span></div>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;d_theta_hat&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">theta_hat</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_theta_hat</span> <span class="o">*</span> <span class="n">dt</span></div>
 </div>
 
 </pre></div>

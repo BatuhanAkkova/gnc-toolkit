@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 10: Multiplicative Extended Kalman Filter (MEKF) &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 10: Multiplicative Extended Kalman Filter (MEKF)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/10_mekf.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-10-multiplicative-extended-kalman-filter-mekf">
+<h1>Tutorial 10: Multiplicative Extended Kalman Filter (MEKF)<a class="headerlink" href="#tutorial-10-multiplicative-extended-kalman-filter-mekf" title="Link to this heading"></a></h1>
+<p>This tutorial demonstrates the <strong>Multiplicative Extended Kalman Filter (MEKF)</strong> for spacecraft attitude estimation.</p>
+<p>Unlike position vectors, quaternions live on a hypersphere ($S^3$) and have unit-norm constraints. Adding states linearly breaks this norm. MEKF solves this by using a <strong>multiplicative error state</strong> representation.</p>
+<hr class="docutils" />
+<section id="theory-prerequisite-mekf-formulation">
+<h2>1. Theory Prerequisite: MEKF Formulation<a class="headerlink" href="#theory-prerequisite-mekf-formulation" title="Link to this heading"></a></h2>
+<p>We represent the true quaternion $q$ as the multiplication of an estimated quaternion $\hat{q}$ and an error quaternion $\delta q$:</p>
+<p>$$q = \hat{q} \otimes \delta q$$</p>
+<p>For small errors, the error quaternion is approximated by an attitude error vector $\delta \vec{\theta} \in \mathbb{R}^3$:</p>
+<p>$$\delta q_{approx} \begin{bmatrix} \frac{1}{2} \delta \vec{\theta} \ 1 \end{bmatrix}$$</p>
+<section id="state-and-error-state">
+<h3>State and Error State<a class="headerlink" href="#state-and-error-state" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Global State</strong> ($7\times1$): $x = [q^T, \vec{\beta}^T]^T$ (Quaternion &amp; Gyro Bias)</p></li>
+<li><p><strong>Error State</strong> ($6\times1$): $\Delta x = [\delta \vec{\theta}^T, \delta \vec{\beta}^T]^T$</p></li>
+</ul>
+</section>
+<section id="predict-kinematics-integration">
+<h3>Predict (Kinematics Integration)<a class="headerlink" href="#predict-kinematics-integration" title="Link to this heading"></a></h3>
+<p>$$\dot{\hat{q}} = \frac{1}{2} \hat{q} \otimes \begin{bmatrix} \vec{\omega} \ 0 \end{bmatrix}, \quad \vec{\omega} = \vec{\omega}_{meas} - \hat{\vec{\beta}}$$</p>
+</section>
+<section id="update">
+<h3>Update<a class="headerlink" href="#update" title="Link to this heading"></a></h3>
+<p>Given a reference vector in inertial frame $\vec{v}<em>{I}$ and its body measurement $\vec{v}</em>{B}$:
+$$\hat{\vec{v}}<em>{B} = R(\hat{q})^T \vec{v}</em>{I}$$
+The innovation is $y = \vec{v}<em>{B} - \hat{\vec{v}}</em>{B}$.
+The Sensitivity Matrix is:
+$$H = [ [\hat{\vec{v}}<em>{B}\times] \quad 0</em>{3\times3} ]$$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.mekf</span><span class="w"> </span><span class="kn">import</span> <span class="n">MEKF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_normalize</span><span class="p">,</span> <span class="n">quat_mult</span><span class="p">,</span> <span class="n">quat_rot</span><span class="p">,</span> <span class="n">quat_conj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.sensors.sun_sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">SunSensor</span> <span class="c1"># Standard vector sensor equivalent</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="simulating-attitude-dynamics-and-sensors">
+<h3>1.1 Simulating Attitude Dynamics and Sensors<a class="headerlink" href="#simulating-attitude-dynamics-and-sensors" title="Link to this heading"></a></h3>
+<p>We simulate a spacecraft rotating at a constant rate but measured with a GYRO that has <strong>Bias</strong> and <strong>Noise</strong>, and a vector sensor.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># 10 Hz rate</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">omega_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span> <span class="c1"># True constant body rate [rad/s]</span>
+<span class="n">bias_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.015</span><span class="p">])</span> <span class="c1"># Gyro Bias</span>
+
+<span class="n">z_ref_inertial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="c1"># Inertial reference vector (e.g., Sun or Magnetic field)</span>
+
+<span class="c1"># Initialize MEKF with zero bias and identity quaternion</span>
+<span class="n">mekf</span> <span class="o">=</span> <span class="n">MEKF</span><span class="p">(</span><span class="n">q_init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span> <span class="n">beta_init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">mekf</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
+<span class="n">mekf</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.0001</span> <span class="c1"># Process noise</span>
+<span class="n">mekf</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span>   <span class="c1"># Measure noise</span>
+
+<span class="n">q_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">history_q_true</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_q_est</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_bias_true</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_bias_est</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_cov</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_err_theta</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+    <span class="c1"># 1. Physics: Update true attitude</span>
+    <span class="n">dq</span> <span class="o">=</span> <span class="n">axis_angle_to_quat</span><span class="p">(</span><span class="n">omega_true</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">q_true</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">quat_mult</span><span class="p">(</span><span class="n">q_true</span><span class="p">,</span> <span class="n">dq</span><span class="p">))</span>
+    
+    <span class="c1"># 2. Sensor: Gyro Rate Measurement (Add bias + noise)</span>
+    <span class="n">gyro_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">omega_meas</span> <span class="o">=</span> <span class="n">omega_true</span> <span class="o">+</span> <span class="n">bias_true</span> <span class="o">+</span> <span class="n">gyro_noise</span>
+    
+    <span class="c1"># 3. Sensor: Vector Measurement (e.g., Star Tracker/Sun Sensor)</span>
+    <span class="n">z_body_true</span> <span class="o">=</span> <span class="n">quat_rot</span><span class="p">(</span><span class="n">quat_conj</span><span class="p">(</span><span class="n">q_true</span><span class="p">),</span> <span class="n">z_ref_inertial</span><span class="p">)</span>
+    <span class="n">meas_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">z_body_meas</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">z_body_true</span> <span class="o">+</span> <span class="n">meas_noise</span><span class="p">)</span>
+    
+    <span class="c1"># 4. MEKF Cycle</span>
+    <span class="n">mekf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">omega_meas</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">mekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z_body_meas</span><span class="p">,</span> <span class="n">z_ref_inertial</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate small angle error for plotting</span>
+    <span class="c1"># q_err = q_true * q_est_conj</span>
+    <span class="n">q_err</span> <span class="o">=</span> <span class="n">quat_mult</span><span class="p">(</span><span class="n">q_true</span><span class="p">,</span> <span class="n">quat_conj</span><span class="p">(</span><span class="n">mekf</span><span class="o">.</span><span class="n">q</span><span class="p">))</span>
+    <span class="n">theta_err</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">q_err</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># Approximate angle error</span>
+    
+    <span class="c1"># Save History</span>
+    <span class="n">history_q_true</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q_true</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_q_est</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mekf</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_bias_true</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bias_true</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_bias_est</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mekf</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_err_theta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">theta_err</span><span class="p">)</span>
+    <span class="n">history_cov</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mekf</span><span class="o">.</span><span class="n">P</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+<span class="n">history_q_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_q_true</span><span class="p">)</span>
+<span class="n">history_q_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_q_est</span><span class="p">)</span>
+<span class="n">history_bias_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_bias_true</span><span class="p">)</span>
+<span class="n">history_bias_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_bias_est</span><span class="p">)</span>
+<span class="n">history_err_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_err_theta</span><span class="p">)</span>
+<span class="n">history_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_cov</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MEKF run complete.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MEKF run complete.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_err_theta</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Error $</span><span class="se">\t</span><span class="s1">heta_x$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$3\sigma$ Bound&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Angle Error [rad]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_err_theta</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Error $</span><span class="se">\t</span><span class="s1">heta_y$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Angle Error [rad]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_err_theta</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Error $</span><span class="se">\t</span><span class="s1">heta_z$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Angle Error [rad]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/51d1c46f9fdb295f2a434b7e1c5fc6c565ffdce5fd0f077e7033176e127d0b3e.png" src="../_images/51d1c46f9fdb295f2a434b7e1c5fc6c565ffdce5fd0f077e7033176e127d0b3e.png" />
+</div>
+</div>
+</section>
+<section id="gyro-bias-estimation">
+<h3>1.2 Gyro Bias Estimation<a class="headerlink" href="#gyro-bias-estimation" title="Link to this heading"></a></h3>
+<p>Notice how the estimated bias converges to the true bias values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_bias_est</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Est Bias X&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_bias_est</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Est Bias Y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_bias_est</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Est Bias Z&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bias_true</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Bias X&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bias_true</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Bias Y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bias_true</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Bias Z&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Gyro Bias Convergence&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Bias [rad/s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/39269902a9977ed2e916dbaedc07126ad351c4945c3f6fad2589eb18ec333e97.png" src="../_images/39269902a9977ed2e916dbaedc07126ad351c4945c3f6fad2589eb18ec333e97.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

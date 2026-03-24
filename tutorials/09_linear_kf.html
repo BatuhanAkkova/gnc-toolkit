@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 09: Linear Kalman Filter and EKF Setup &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 09: Linear Kalman Filter and EKF Setup</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/09_linear_kf.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-09-linear-kalman-filter-and-ekf-setup">
+<h1>Tutorial 09: Linear Kalman Filter and EKF Setup<a class="headerlink" href="#tutorial-09-linear-kalman-filter-and-ekf-setup" title="Link to this heading"></a></h1>
+<p>This tutorial covers the implementation and setup of <strong>Linear Kalman Filters (LKF)</strong> and <strong>Extended Kalman Filters (EKF)</strong> for spacecraft navigation and tracking.</p>
+<p>We will demonstrate:</p>
+<ol class="arabic simple">
+<li><p><strong>Linear KF</strong>: 1D Constant Velocity Tracking (Simple formulation).</p></li>
+<li><p><strong>Extended KF (EKF)</strong>: 3D Relative Navigation tracking with ranging devices (Non-linear measurement model).</p></li>
+</ol>
+<hr class="docutils" />
+<section id="theory-prerequisite-linear-kalman-filter">
+<h2>1. Theory Prerequisite: Linear Kalman Filter<a class="headerlink" href="#theory-prerequisite-linear-kalman-filter" title="Link to this heading"></a></h2>
+<p>The Linear Kalman Filter estimates the state $x \in \mathbb{R}^n$ of a discrete-time process governed by the linear stochastic difference equation:</p>
+<p>$$x_k = F x_{k-1} + B u_{k-1} + w_{k-1}$$</p>
+<p>with a measurement $z \in \mathbb{R}^m$:</p>
+<p>$$z_k = H x_k + v_k$$</p>
+<p>Where:</p>
+<ul class="simple">
+<li><p>$F$: State transition matrix</p></li>
+<li><p>$B$: Control input matrix</p></li>
+<li><p>$H$: Measurement matrix</p></li>
+<li><p>$w \sim \mathcal{N}(0, Q)$: Process Noise</p></li>
+<li><p>$v \sim \mathcal{N}(0, R)$: Measurement Noise</p></li>
+</ul>
+<section id="predict-update-cycles">
+<h3>Predict/Update Cycles<a class="headerlink" href="#predict-update-cycles" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Predict</strong>:</p>
+<ul class="simple">
+<li><p>$\hat{x}<em>{k|k-1} = F \hat{x}</em>{k-1|k-1} + B u_{k-1}$</p></li>
+<li><p>$P_{k|k-1} = F P_{k-1|k-1} F^T + Q$</p></li>
+</ul>
+</li>
+<li><p><strong>Update</strong>:</p>
+<ul class="simple">
+<li><p>$K_k = P_{k|k-1} H^T (H P_{k|k-1} H^T + R)^{-1}$</p></li>
+<li><p>$\hat{x}<em>{k|k} = \hat{x}</em>{k|k-1} + K_k (z_k - H \hat{x}_{k|k-1})$</p></li>
+<li><p>$P_{k|k} = (I - K_k H) P_{k|k-1}$</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.kf</span><span class="w"> </span><span class="kn">import</span> <span class="n">KF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.ekf</span><span class="w"> </span><span class="kn">import</span> <span class="n">EKF</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="c1"># For reproducible tutorial results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imports successful.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.kf</span><span class="w"> </span><span class="kn">import</span> <span class="n">KF</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.ekf</span><span class="w"> </span><span class="kn">import</span> <span class="n">EKF</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="demonstration-1d-constant-velocity-tracking">
+<h3>1.1 Demonstration: 1D Constant Velocity Tracking<a class="headerlink" href="#demonstration-1d-constant-velocity-tracking" title="Link to this heading"></a></h3>
+<p>We track a satellite’s relative range along a single axis assuming constant velocity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Time step [s]</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="c1"># Initialize Filter</span>
+<span class="n">linear_kf</span> <span class="o">=</span> <span class="n">KF</span><span class="p">(</span><span class="n">dim_x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># State: [Position, Velocity]</span>
+
+<span class="c1"># System Matrices</span>
+<span class="n">linear_kf</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="n">dt</span><span class="p">],</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">linear_kf</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span> <span class="c1"># Measure range only</span>
+
+<span class="c1"># Noise and Covariance Setup</span>
+<span class="n">linear_kf</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">]])</span>        <span class="c1"># Measurement Noise Var</span>
+<span class="n">linear_kf</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]])</span>    <span class="c1"># Process Noise Var</span>
+<span class="n">linear_kf</span><span class="o">.</span><span class="n">P</span> <span class="o">*=</span> <span class="mf">10.0</span>                     <span class="c1"># High initial uncertainty</span>
+
+<span class="c1"># True Initial State</span>
+<span class="n">true_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">])</span> <span class="c1"># Pos=0m, Vel=10m/s</span>
+
+<span class="n">history_true</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_est</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_meas</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_cov</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+    <span class="c1"># Step Simulation</span>
+    <span class="n">process_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">linear_kf</span><span class="o">.</span><span class="n">Q</span><span class="p">)</span>
+    <span class="n">true_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">linear_kf</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">true_x</span><span class="p">)</span> <span class="o">+</span> <span class="n">process_noise</span>
+    
+    <span class="c1"># Measure</span>
+    <span class="n">meas_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">linear_kf</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">linear_kf</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">true_x</span><span class="p">)</span> <span class="o">+</span> <span class="n">meas_noise</span>
+    
+    <span class="c1"># Filter update</span>
+    <span class="n">linear_kf</span><span class="o">.</span><span class="n">predict</span><span class="p">()</span>
+    <span class="n">linear_kf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    
+    <span class="c1"># Save for plotting</span>
+    <span class="n">history_true</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">true_x</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_est</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linear_kf</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_meas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">history_cov</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linear_kf</span><span class="o">.</span><span class="n">P</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+<span class="n">history_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_true</span><span class="p">)</span>
+<span class="n">history_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_est</span><span class="p">)</span>
+<span class="n">history_meas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_meas</span><span class="p">)</span>
+<span class="n">history_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_cov</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear KF run complete.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear KF run complete.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plotting Linear KF Results</span>
+<span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_true</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Position&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_meas</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Measurements&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_est</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated Position&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Linear KF: 1D Constant Velocity&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Position [m]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">history_true</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">history_est</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Position Error&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_cov</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$3\sigma$ Bound&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Estimation Error with Covariance Bounds&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Error [m]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8318801f17ad09d90c3f5537d6a40c66e21922cd140abf191273fe079c3e0778.png" src="../_images/8318801f17ad09d90c3f5537d6a40c66e21922cd140abf191273fe079c3e0778.png" />
+<img alt="../_images/9a60211a87c7a332768ce79c8ebd359d79b709b7eee31555fd01aa3b4e0b1a14.png" src="../_images/9a60211a87c7a332768ce79c8ebd359d79b709b7eee31555fd01aa3b4e0b1a14.png" />
+</div>
+</div>
+<blockquote>
+<div><p>[!NOTE]
+<strong>Linear KF Performance</strong>: Brief, occasional 1-step exceedances of the $3\sigma$ bounds followed by automatic recovery are normal statistical variances for stochastic filters. $3\sigma$ encompasses $99.73%$ of cases; for 100-step simulations, sparse failures are theoretically consistent with normal noise distribution.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="theory-prerequisite-extended-kalman-filter">
+<h2>2. Theory Prerequisite: Extended Kalman Filter<a class="headerlink" href="#theory-prerequisite-extended-kalman-filter" title="Link to this heading"></a></h2>
+<p>For non-linear systems:</p>
+<p>$$x_k = f(x_{k-1}, u_{k-1}) + w_{k-1}$$
+$$z_k = h(x_k) + v_k$$</p>
+<p>We linearize about the current estimate using Taylor series expansion:</p>
+<ul class="simple">
+<li><p><strong>Dynamics Jacobian</strong>: $F_{k-1} = \frac{\partial f}{\partial x}\Big|<em>{\hat{x}</em>{k-1|k-1}}$</p></li>
+<li><p><strong>Measurement Jacobian</strong>: $H_k = \frac{\partial h}{\partial x}\Big|<em>{\hat{x}</em>{k|k-1}}$</p></li>
+</ul>
+<p>The filter cycles proceed identically to the linear case, but use the Jacobian matrices for covariance propagation and the non-linear functions for predicting the state and measurement residuals.</p>
+<section id="demonstration-3d-relative-navigation-with-range-only-measurement">
+<h3>2.1 Demonstration: 3D Relative Navigation with Range-Only Measurement<a class="headerlink" href="#demonstration-3d-relative-navigation-with-range-only-measurement" title="Link to this heading"></a></h3>
+<p>We use <strong>Clohessy-Wiltshire (CW)</strong> equations for dynamics (linear) but assume a <strong>non-linear measurement</strong> from a laser rangefinder calculating distance to target.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># State: [rx, ry, rz, vx, vy, vz]</span>
+<span class="n">n_orbit</span> <span class="o">=</span> <span class="mf">0.0011</span> <span class="c1"># Orbit mean motion (approx 90 min LEO orbit)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cw_dynamics_step</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clohessy-Wiltshire State Transition&quot;&quot;&quot;</span>
+    <span class="n">r0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    
+    <span class="c1"># Matrix formulation of CW</span>
+    <span class="n">sn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">n_orbit</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">cn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">n_orbit</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    
+    <span class="c1"># Pos propagation</span>
+    <span class="n">rx</span> <span class="o">=</span> <span class="n">r0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">cn</span><span class="p">)</span> <span class="o">+</span> <span class="n">v0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">sn</span><span class="o">/</span><span class="n">n_orbit</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">v0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">n_orbit</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cn</span><span class="p">)</span>
+    <span class="n">ry</span> <span class="o">=</span> <span class="mi">6</span><span class="o">*</span><span class="n">r0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">sn</span> <span class="o">-</span> <span class="n">n_orbit</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span> <span class="o">+</span> <span class="n">r0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">v0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">cn</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n_orbit</span> <span class="o">+</span> <span class="n">v0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">sn</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n_orbit</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span><span class="o">/</span><span class="n">n_orbit</span>
+    <span class="n">rz</span> <span class="o">=</span> <span class="n">r0</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">cn</span> <span class="o">+</span> <span class="n">v0</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">sn</span><span class="o">/</span><span class="n">n_orbit</span>
+    
+    <span class="c1"># Vel propagation</span>
+    <span class="n">vx</span> <span class="o">=</span> <span class="n">r0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="n">n_orbit</span><span class="o">*</span><span class="n">sn</span> <span class="o">+</span> <span class="n">v0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cn</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">v0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">sn</span>
+    <span class="n">vy</span> <span class="o">=</span> <span class="mi">6</span><span class="o">*</span><span class="n">r0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">n_orbit</span><span class="o">*</span><span class="p">(</span><span class="n">cn</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">v0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">sn</span> <span class="o">+</span> <span class="n">v0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">cn</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">vz</span> <span class="o">=</span> <span class="o">-</span><span class="n">r0</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">n_orbit</span><span class="o">*</span><span class="n">sn</span> <span class="o">+</span> <span class="n">v0</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">cn</span>
+    
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">,</span> <span class="n">rz</span><span class="p">,</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">cw_dynamics_step</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f_jac</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Analytical Jacobian of CW is the CW matrix itself</span>
+    <span class="n">sn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">n_orbit</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">cn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">n_orbit</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">cn</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">sn</span><span class="o">/</span><span class="n">n_orbit</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">cn</span><span class="p">)</span><span class="o">/</span><span class="n">n_orbit</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="o">*</span><span class="p">(</span><span class="n">sn</span> <span class="o">-</span> <span class="n">n_orbit</span><span class="o">*</span><span class="n">dt</span><span class="p">);</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">cn</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n_orbit</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">sn</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n_orbit</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span><span class="o">/</span><span class="n">n_orbit</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cn</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">sn</span><span class="o">/</span><span class="n">n_orbit</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">n_orbit</span><span class="o">*</span><span class="n">sn</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">cn</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">sn</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="o">*</span><span class="n">n_orbit</span><span class="o">*</span><span class="p">(</span><span class="n">cn</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="n">F</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">sn</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">cn</span><span class="o">-</span><span class="mi">3</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">n_orbit</span><span class="o">*</span><span class="n">sn</span><span class="p">;</span> <span class="n">F</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">cn</span>
+    <span class="k">return</span> <span class="n">F</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">h_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Measurement is range to origin</span>
+    <span class="n">range_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">range_val</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">h_jac</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">H</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">/</span> <span class="n">norm</span>
+    <span class="k">return</span> <span class="n">H</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dt_ekf</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="c1"># Seconds</span>
+<span class="n">steps_ekf</span> <span class="o">=</span> <span class="mi">60</span>
+
+<span class="n">ekf</span> <span class="o">=</span> <span class="n">EKF</span><span class="p">(</span><span class="n">dim_x</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ekf</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="c1"># Setup Initial Guess slightly off</span>
+
+<span class="n">ekf</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+<span class="n">ekf</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.00001</span> <span class="c1"># Stable relative dynamics</span>
+<span class="n">ekf</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]])</span>     <span class="c1"># 1m range error std</span>
+
+<span class="n">true_x_ekf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">110.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">])</span> <span class="c1"># True initial</span>
+
+<span class="n">history_ekf_true</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_ekf_est</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_ekf_meas</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">history_ekf_cov</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps_ekf</span><span class="p">):</span>
+    <span class="c1"># Physics step</span>
+    <span class="n">true_x_ekf</span> <span class="o">=</span> <span class="n">cw_dynamics_step</span><span class="p">(</span><span class="n">true_x_ekf</span><span class="p">,</span> <span class="n">dt_ekf</span><span class="p">)</span>
+    
+    <span class="c1"># Measure</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">h_func</span><span class="p">(</span><span class="n">true_x_ekf</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="c1"># EKF Step</span>
+    <span class="n">ekf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">f_func</span><span class="p">,</span> <span class="n">f_jac</span><span class="p">,</span> <span class="n">dt_ekf</span><span class="p">)</span>
+    <span class="n">ekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">h_func</span><span class="p">,</span> <span class="n">h_jac</span><span class="p">)</span>
+    
+    <span class="n">history_ekf_true</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">true_x_ekf</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_ekf_est</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekf</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">history_ekf_meas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">history_ekf_cov</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekf</span><span class="o">.</span><span class="n">P</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    
+<span class="n">history_ekf_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_ekf_true</span><span class="p">)</span>
+<span class="n">history_ekf_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_ekf_est</span><span class="p">)</span>
+<span class="n">history_ekf_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history_ekf_cov</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EKF run complete.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>EKF run complete.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">time_ekf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">steps_ekf</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt_ekf</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_ekf</span><span class="p">,</span> <span class="n">history_ekf_true</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True $r_x$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_ekf</span><span class="p">,</span> <span class="n">history_ekf_est</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Est $r_x$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_ekf</span><span class="p">,</span> <span class="n">history_ekf_true</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True $r_y$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_ekf</span><span class="p">,</span> <span class="n">history_ekf_est</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;b:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Est $r_y$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;EKF: Continuous Relative Orbit Position estimate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Distance [m]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">history_ekf_true</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">history_ekf_est</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">bound</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">history_ekf_cov</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_ekf</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Position $r_x$ Error&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time_ekf</span><span class="p">,</span> <span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$3\sigma$ Bound&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Estimator Convergence (Position axis X)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Error [m]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f9a4eba9f8778a4fe6d9f66486a2767bee687c1b59aeef546b8b5b81fbf9271f.png" src="../_images/f9a4eba9f8778a4fe6d9f66486a2767bee687c1b59aeef546b8b5b81fbf9271f.png" />
+<img alt="../_images/afdf85382875d5f4a2479fd6c0acef9e2966f1a67a32aa915d874caf70e4b1b7.png" src="../_images/afdf85382875d5f4a2479fd6c0acef9e2966f1a67a32aa915d874caf70e4b1b7.png" />
+</div>
+</div>
+<blockquote>
+<div><p>[!IMPORTANT]
+<strong>EKF Range-Only (3D)</strong>: Out-of-plane position $r_z$ is decoupled in Clohessy-Wiltshire state equations and range sensitivity is extremely low ($\approx r_z / \text{range}$ using single beacons). Expanding initial covariance state representations avoids overconfident settle lag causing boundary escapes.</p>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

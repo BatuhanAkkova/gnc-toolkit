@@ -8,6 +8,7 @@
   <title>gnc_toolkit.integrators.gauss_jackson &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,8 +76,10 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.rk4</span><span class="w"> </span><span class="kn">import</span> <span class="n">RK4</span>
+
 
 <div class="viewcode-block" id="GaussJacksonIntegrator">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.gauss_jackson.GaussJacksonIntegrator">[docs]</a>
@@ -82,18 +89,71 @@
 <span class="sd">    Specifically for second-order ODEs: dy/dt = [v, a].</span>
 <span class="sd">    Assumes state y = [r, v] where r, v are 3D vectors.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Predictor Coefficients (Position) - Full series from index 0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span> <span class="mi">19</span><span class="o">/</span><span class="mi">240</span><span class="p">,</span> <span class="mi">3</span><span class="o">/</span><span class="mi">40</span><span class="p">,</span> <span class="mi">863</span><span class="o">/</span><span class="mi">12096</span><span class="p">,</span> <span class="mi">275</span><span class="o">/</span><span class="mi">4032</span><span class="p">,</span> <span class="mi">33953</span><span class="o">/</span><span class="mi">518400</span><span class="p">,</span> <span class="mi">8183</span><span class="o">/</span><span class="mi">129600</span><span class="p">])</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">19</span> <span class="o">/</span> <span class="mi">240</span><span class="p">,</span>
+                <span class="mi">3</span> <span class="o">/</span> <span class="mi">40</span><span class="p">,</span>
+                <span class="mi">863</span> <span class="o">/</span> <span class="mi">12096</span><span class="p">,</span>
+                <span class="mi">275</span> <span class="o">/</span> <span class="mi">4032</span><span class="p">,</span>
+                <span class="mi">33953</span> <span class="o">/</span> <span class="mi">518400</span><span class="p">,</span>
+                <span class="mi">8183</span> <span class="o">/</span> <span class="mi">129600</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
         <span class="c1"># Predictor Coefficients (Velocity)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="mi">251</span><span class="o">/</span><span class="mi">720</span><span class="p">,</span> <span class="mi">95</span><span class="o">/</span><span class="mi">288</span><span class="p">,</span> <span class="mi">19087</span><span class="o">/</span><span class="mi">60480</span><span class="p">,</span> <span class="mi">5257</span><span class="o">/</span><span class="mi">17280</span><span class="p">,</span> <span class="mi">1070017</span><span class="o">/</span><span class="mi">3628800</span><span class="p">,</span> <span class="mi">25713</span><span class="o">/</span><span class="mi">89600</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">5</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">3</span> <span class="o">/</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="mi">251</span> <span class="o">/</span> <span class="mi">720</span><span class="p">,</span>
+                <span class="mi">95</span> <span class="o">/</span> <span class="mi">288</span><span class="p">,</span>
+                <span class="mi">19087</span> <span class="o">/</span> <span class="mi">60480</span><span class="p">,</span>
+                <span class="mi">5257</span> <span class="o">/</span> <span class="mi">17280</span><span class="p">,</span>
+                <span class="mi">1070017</span> <span class="o">/</span> <span class="mi">3628800</span><span class="p">,</span>
+                <span class="mi">25713</span> <span class="o">/</span> <span class="mi">89600</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="c1"># Corrector Coefficients (Position)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">c_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">240</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">240</span><span class="p">,</span> <span class="o">-</span><span class="mi">221</span><span class="o">/</span><span class="mi">60480</span><span class="p">,</span> <span class="o">-</span><span class="mi">19</span><span class="o">/</span><span class="mi">6048</span><span class="p">,</span> <span class="o">-</span><span class="mi">9829</span><span class="o">/</span><span class="mi">3628800</span><span class="p">,</span> <span class="o">-</span><span class="mi">407</span><span class="o">/</span><span class="mi">172800</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">240</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">240</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">221</span> <span class="o">/</span> <span class="mi">60480</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">19</span> <span class="o">/</span> <span class="mi">6048</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">9829</span> <span class="o">/</span> <span class="mi">3628800</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">407</span> <span class="o">/</span> <span class="mi">172800</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="c1"># Corrector Coefficients (Velocity)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">c_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">24</span><span class="p">,</span> <span class="mi">19</span><span class="o">/</span><span class="mi">720</span><span class="p">,</span> <span class="mi">3</span><span class="o">/</span><span class="mi">160</span><span class="p">,</span> <span class="mi">863</span><span class="o">/</span><span class="mi">60480</span><span class="p">,</span> <span class="mi">275</span><span class="o">/</span><span class="mi">24192</span><span class="p">,</span> <span class="mi">33953</span><span class="o">/</span><span class="mi">3628800</span><span class="p">,</span> <span class="mi">8183</span><span class="o">/</span><span class="mi">1036800</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">24</span><span class="p">,</span>
+                <span class="mi">19</span> <span class="o">/</span> <span class="mi">720</span><span class="p">,</span>
+                <span class="mi">3</span> <span class="o">/</span> <span class="mi">160</span><span class="p">,</span>
+                <span class="mi">863</span> <span class="o">/</span> <span class="mi">60480</span><span class="p">,</span>
+                <span class="mi">275</span> <span class="o">/</span> <span class="mi">24192</span><span class="p">,</span>
+                <span class="mi">33953</span> <span class="o">/</span> <span class="mi">3628800</span><span class="p">,</span>
+                <span class="mi">8183</span> <span class="o">/</span> <span class="mi">1036800</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_calc_differences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -104,15 +164,15 @@
         <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        
+
         <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">history</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">diff</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># \nabla^0 a_n = a_n</span>
-        
+        <span class="n">diff</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># \nabla^0 a_n = a_n</span>
+
         <span class="n">current_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
             <span class="n">current_diff</span> <span class="o">=</span> <span class="n">current_diff</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">current_diff</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">diff</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">current_diff</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            
+
         <span class="k">return</span> <span class="n">diff</span>
 
 <div class="viewcode-block" id="GaussJacksonIntegrator.integrate">
@@ -124,7 +184,7 @@
         <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span> <span class="o">=</span> <span class="n">t_span</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">dt</span>
-        
+
         <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span><span class="p">):</span>
             <span class="n">h</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span>
 
@@ -133,22 +193,22 @@
 
         <span class="c1"># Initialize with single-step method (RK4)</span>
         <span class="n">rk4</span> <span class="o">=</span> <span class="n">RK4</span><span class="p">()</span>
-        
+
         <span class="n">history_r</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">]]</span>
         <span class="n">history_v</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:]]</span>
         <span class="c1"># Calculate initial acceleration</span>
         <span class="n">dy0</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">history_a</span> <span class="o">=</span> <span class="p">[</span><span class="n">dy0</span><span class="p">[</span><span class="mi">3</span><span class="p">:]]</span>
-        
+
         <span class="n">curr_t</span> <span class="o">=</span> <span class="n">t0</span>
         <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        
+
         <span class="c1"># We need 8 points (n=0 to 7)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
             <span class="n">curr_y</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rk4</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
             <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
             <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
-            
+
             <span class="n">history_r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
             <span class="n">history_v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
             <span class="n">dy</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">)</span>
@@ -156,14 +216,14 @@
 
         <span class="c1"># Compute Back Differences at step 7</span>
         <span class="n">diffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc_differences</span><span class="p">(</span><span class="n">history_a</span><span class="p">)</span>
-        
+
         <span class="c1"># Initialize Sum Variables S1, S2 at step 7</span>
         <span class="n">sum_c_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">sum_c_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
             <span class="n">sum_c_vel</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_vel</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
             <span class="n">sum_c_pos</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_pos</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-            
+
         <span class="n">S1</span> <span class="o">=</span> <span class="n">history_v</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">h</span> <span class="o">-</span> <span class="n">sum_c_vel</span>
         <span class="n">S2</span> <span class="o">=</span> <span class="n">history_r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">sum_c_pos</span>
 
@@ -184,57 +244,57 @@
 
             <span class="c1"># Predictor step for step n+1</span>
             <span class="n">diffs_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc_differences</span><span class="p">(</span><span class="n">history_a</span><span class="p">)</span>
-            
+
             <span class="n">sum_p_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
             <span class="n">sum_p_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
                 <span class="n">sum_p_vel</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_vel</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_n</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
                 <span class="n">sum_p_pos</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_pos</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_n</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                
+
             <span class="n">v_p</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">S1</span> <span class="o">+</span> <span class="n">sum_p_vel</span><span class="p">)</span>
             <span class="n">r_p</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">S2</span> <span class="o">+</span> <span class="n">S1</span> <span class="o">+</span> <span class="n">sum_p_pos</span><span class="p">)</span>
-            
+
             <span class="k">if</span> <span class="n">step_count</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STEP </span><span class="si">{</span><span class="n">step_count</span><span class="si">}</span><span class="s2"> PREDICTOR:&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  r_p: </span><span class="si">{</span><span class="n">r_p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  v_p: </span><span class="si">{</span><span class="n">v_p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+
             <span class="c1"># Evaluate Accelerations</span>
             <span class="n">y_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_p</span><span class="p">,</span> <span class="n">v_p</span><span class="p">])</span>
             <span class="n">next_t</span> <span class="o">=</span> <span class="n">curr_t</span> <span class="o">+</span> <span class="n">h</span>
             <span class="n">dy_p</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_p</span><span class="p">)</span>
             <span class="n">a_p</span> <span class="o">=</span> <span class="n">dy_p</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
-            
+
             <span class="c1"># Corrector Step</span>
             <span class="n">n_iter</span> <span class="o">=</span> <span class="mi">3</span>
             <span class="n">v_c</span> <span class="o">=</span> <span class="n">v_p</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">r_c</span> <span class="o">=</span> <span class="n">r_p</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">a_c_iter</span> <span class="o">=</span> <span class="n">a_p</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            
+
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">):</span>
                 <span class="c1"># Update history with latest acceleration estimate</span>
                 <span class="n">temp_history_a</span> <span class="o">=</span> <span class="n">history_a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">a_c_iter</span><span class="p">]</span>
                 <span class="n">diffs_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc_differences</span><span class="p">(</span><span class="n">temp_history_a</span><span class="p">)</span>
-                
+
                 <span class="n">S1_next</span> <span class="o">=</span> <span class="n">S1</span> <span class="o">+</span> <span class="n">a_c_iter</span>
                 <span class="n">S2_next</span> <span class="o">=</span> <span class="n">S2</span> <span class="o">+</span> <span class="n">S1_next</span>
-                
+
                 <span class="n">sum_c_vel_next</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
                 <span class="n">sum_c_pos_next</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
                     <span class="n">sum_c_vel_next</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_vel</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_next</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
                     <span class="n">sum_c_pos_next</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_pos</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_next</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                    
+
                 <span class="n">v_c</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">S1_next</span> <span class="o">+</span> <span class="n">sum_c_vel_next</span><span class="p">)</span>
                 <span class="n">r_c</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">S2_next</span> <span class="o">+</span> <span class="n">sum_c_pos_next</span><span class="p">)</span>
-                
+
                 <span class="c1"># Evaluate acceleration with corrected state</span>
                 <span class="n">y_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_c</span><span class="p">,</span> <span class="n">v_c</span><span class="p">])</span>
                 <span class="n">dy_c</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_c</span><span class="p">)</span>
                 <span class="n">a_c_iter</span> <span class="o">=</span> <span class="n">dy_c</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
 
             <span class="n">a_c</span> <span class="o">=</span> <span class="n">a_c_iter</span>
-            
+
             <span class="k">if</span> <span class="n">step_count</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STEP </span><span class="si">{</span><span class="n">step_count</span><span class="si">}</span><span class="s2"> CORRECTOR:&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  r_c: </span><span class="si">{</span><span class="n">r_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -244,16 +304,16 @@
             <span class="c1"># Final update of sums</span>
             <span class="n">S1</span> <span class="o">=</span> <span class="n">S1</span> <span class="o">+</span> <span class="n">a_c</span>
             <span class="n">S2</span> <span class="o">=</span> <span class="n">S2</span> <span class="o">+</span> <span class="n">S1</span>
-            
+
             <span class="c1"># Update history_a</span>
             <span class="n">history_a</span> <span class="o">=</span> <span class="n">history_a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">a_c</span><span class="p">]</span>
-            
+
             <span class="n">curr_t</span> <span class="o">=</span> <span class="n">next_t</span>
             <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y_c</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            
+
             <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
             <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
-            
+
             <span class="n">step_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c1"># Convert back to arrays to maintain interface consistency</span>

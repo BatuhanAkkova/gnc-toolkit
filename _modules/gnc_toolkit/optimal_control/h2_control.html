@@ -8,6 +8,7 @@
   <title>gnc_toolkit.optimal_control.h2_control &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -70,23 +75,24 @@
 <span class="sd">H2 Optimal Controller (LQG equivalent).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.lqg</span><span class="w"> </span><span class="kn">import</span> <span class="n">LQG</span>
+
 
 <div class="viewcode-block" id="H2Controller">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.h2_control.H2Controller">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">H2Controller</span><span class="p">(</span><span class="n">LQG</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    H2 Optimal Controller.</span>
-<span class="sd">    </span>
+
 <span class="sd">    The H2 control problem is equivalent to the LQG problem for a linear system</span>
-<span class="sd">    subject to white Gaussian noise, where the objective is to minimize the </span>
+<span class="sd">    subject to white Gaussian noise, where the objective is to minimize the</span>
 <span class="sd">    H2 norm of the transfer function from disturbances to regulated outputs.</span>
-<span class="sd">    </span>
+
 <span class="sd">    This class inherits from LQG as the implementation is identical for standard</span>
-<span class="sd">    state-space systems. It provides an alias and can be extended for more </span>
+<span class="sd">    state-space systems. It provides an alias and can be extended for more</span>
 <span class="sd">    general H2 problems.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Q_lqr</span><span class="p">,</span> <span class="n">R_lqr</span><span class="p">,</span> <span class="n">Q_lqe</span><span class="p">,</span> <span class="n">R_lqe</span><span class="p">,</span> <span class="n">G_lqe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize H2 Controller (LQG equivalent).</span>

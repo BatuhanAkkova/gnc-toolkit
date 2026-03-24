@@ -8,6 +8,7 @@
   <title>gnc_toolkit.propagators.encke &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,10 +76,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..integrators.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..integrators.rk4</span><span class="w"> </span><span class="kn">import</span> <span class="n">RK4</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Propagator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.kepler</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeplerPropagator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..integrators.rk4</span><span class="w"> </span><span class="kn">import</span> <span class="n">RK4</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..integrators.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
+
 
 <div class="viewcode-block" id="EnckePropagator">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.encke.EnckePropagator">[docs]</a>
@@ -84,6 +91,7 @@
 <span class="sd">    Integrates the deviation from a reference Keplerian orbit.</span>
 <span class="sd">    Suitable for orbit propagation with small disturbances.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">integrator</span><span class="p">:</span> <span class="n">Integrator</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">398600.4418e9</span><span class="p">,</span> <span class="n">rect_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize EnckePropagator.</span>
@@ -100,7 +108,9 @@
 
 <div class="viewcode-block" id="EnckePropagator.propagate">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.encke.EnckePropagator.propagate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">perturbation_acc_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">perturbation_acc_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Propagate state using Encke&#39;s method.</span>
 
@@ -111,14 +121,14 @@
 <span class="sd">            perturbation_acc_fn (callable, optional): Function that returns perturbation accelerations.</span>
 <span class="sd">                                                      Signature: acc_pert = f(t, r, v)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">step_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dt_step&#39;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+        <span class="n">step_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dt_step&quot;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">step_size</span> <span class="o">&gt;</span> <span class="n">dt</span><span class="p">:</span>
             <span class="n">step_size</span> <span class="o">=</span> <span class="n">dt</span>
 
         <span class="n">curr_t</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">curr_r_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r_i</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">curr_v_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v_i</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-        <span class="n">curr_y_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="c1"># [dr, dv]</span>
+        <span class="n">curr_y_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># [dr, dv]</span>
 
         <span class="k">while</span> <span class="n">curr_t</span> <span class="o">&lt;</span> <span class="n">dt</span><span class="p">:</span>
             <span class="n">h</span> <span class="o">=</span> <span class="n">step_size</span>
@@ -141,11 +151,11 @@
                 <span class="n">q_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">d_r</span><span class="p">,</span> <span class="n">d_r</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r_r</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">r_r_mag</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
                 <span class="c1"># f(q) = q * (3 + 3q + q^2) / (1 + (1+q)^(3/2))</span>
-                <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
                     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">q_val</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
-                        <span class="n">f_q_val</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># Small q limit</span>
+                        <span class="n">f_q_val</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Small q limit</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">f_q_val</span> <span class="o">=</span> <span class="n">q_val</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">q_val</span> <span class="o">+</span> <span class="n">q_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">q_val</span><span class="p">)</span><span class="o">**</span><span class="mf">1.5</span><span class="p">)</span>
+                        <span class="n">f_q_val</span> <span class="o">=</span> <span class="n">q_val</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">q_val</span> <span class="o">+</span> <span class="n">q_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">q_val</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.5</span><span class="p">)</span>
 
                 <span class="n">a_pt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">perturbation_acc_fn</span><span class="p">:</span>

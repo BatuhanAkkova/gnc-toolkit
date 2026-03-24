@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.environment package &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnc_toolkit.fdir package" href="gnc_toolkit.fdir.html" />
+    <link rel="prev" title="gnc_toolkit.disturbances package" href="gnc_toolkit.disturbances.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gnc_toolkit</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gnc_toolkit.html">gnc_toolkit package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gnc_toolkit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.actuators.html">gnc_toolkit.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_determination.html">gnc_toolkit.attitude_determination package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.attitude_dynamics.html">gnc_toolkit.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.classical_control.html">gnc_toolkit.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.disturbances.html">gnc_toolkit.disturbances package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gnc_toolkit.environment package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.fdir.html">gnc_toolkit.fdir package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.guidance.html">gnc_toolkit.guidance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.integrators.html">gnc_toolkit.integrators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.kalman_filters.html">gnc_toolkit.kalman_filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.mission_design.html">gnc_toolkit.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.navigation.html">gnc_toolkit.navigation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.optimal_control.html">gnc_toolkit.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.propagators.html">gnc_toolkit.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.sensors.html">gnc_toolkit.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.simulation.html">gnc_toolkit.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.ssa.html">gnc_toolkit.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.utils.html">gnc_toolkit.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gnc_toolkit.visualization.html">gnc_toolkit.visualization package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit.edl">gnc_toolkit.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnc_toolkit.html#module-gnc_toolkit">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">gnc_toolkit</a></li>
+          <li class="breadcrumb-item"><a href="gnc_toolkit.html">gnc_toolkit package</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.environment package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gnc_toolkit.environment.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gnc-toolkit-environment-package">
+<h1>gnc_toolkit.environment package<a class="headerlink" href="#gnc-toolkit-environment-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-gnc_toolkit.environment.density">
+<span id="gnc-toolkit-environment-density-module"></span><h2>gnc_toolkit.environment.density module<a class="headerlink" href="#module-gnc_toolkit.environment.density" title="Link to this heading"></a></h2>
+<p>Atmospheric density models (Exponential, Harris-Priester, NRLMSISE-00, JB2008).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.CIRA72">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">CIRA72</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#CIRA72"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.CIRA72" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>COSPAR International Reference Atmosphere (CIRA) 1972 simplified version.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.CIRA72.get_density">
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#CIRA72.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.CIRA72.get_density" title="Link to this definition"></a></dt>
+<dd><p>Simplified CIRA-72 density calculation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.Exponential">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">Exponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.225</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#Exponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.Exponential" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.Exponential.get_density">
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#Exponential.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.Exponential.get_density" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.HarrisPriester">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">HarrisPriester</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#HarrisPriester"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.HarrisPriester" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.HarrisPriester.get_density">
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#HarrisPriester.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.HarrisPriester.get_density" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.JB2008">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">JB2008</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space_weather</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#JB2008"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.JB2008" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simplified Jacchia-Bowman 2008 (JB2008) Atmosphere Model.
+This implementation focuses on the structure and requires solar indices.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.JB2008.get_density">
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#JB2008.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.JB2008.get_density" title="Link to this definition"></a></dt>
+<dd><p>Simplified JB2008: exponential base density scaled by F10.7 solar flux.
+Full JB2008 requires look-up tables for solar/geomagnetic corrections.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.NRLMSISE00">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">NRLMSISE00</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#NRLMSISE00"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.NRLMSISE00" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>NRLMSISE-00 atmospheric model using pymsis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.density.NRLMSISE00.get_density">
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#NRLMSISE00.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.NRLMSISE00.get_density" title="Link to this definition"></a></dt>
+<dd><p>Get total mass density [kg/m^3].
+:param r_eci: Position vector in ECI frame [km].
+:type r_eci: np.ndarray
+:param date: Current time.
+:type date: datetime</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment.mag_field">
+<span id="gnc-toolkit-environment-mag-field-module"></span><h2>gnc_toolkit.environment.mag_field module<a class="headerlink" href="#module-gnc_toolkit.environment.mag_field" title="Link to this heading"></a></h2>
+<p>Earth magnetic field models (IGRF, WMM, Tilted Dipole).</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.mag_field.igrf_field">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">igrf_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#igrf_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.igrf_field" title="Link to this definition"></a></dt>
+<dd><p>Get the IGRF magnetic field at a given location and time.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.mag_field.tilted_dipole_field">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">tilted_dipole_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_ecef</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#tilted_dipole_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.tilted_dipole_field" title="Link to this definition"></a></dt>
+<dd><p>Calculates the magnetic field vector at a given position using the tilted dipole model.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.mag_field.wmm_field">
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">wmm_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#wmm_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.wmm_field" title="Link to this definition"></a></dt>
+<dd><p>Get the World Magnetic Model (WMM) field.</p>
+<p>Proxied via IGRF (closely related for GNC purposes). For high precision
+load WMM2020.COF via a dedicated WMM library.</p>
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment.moon">
+<span id="gnc-toolkit-environment-moon-module"></span><h2>gnc_toolkit.environment.moon module<a class="headerlink" href="#module-gnc_toolkit.environment.moon" title="Link to this heading"></a></h2>
+<p>Simplified Lunar Ephemeris Model for position calculation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.moon.Moon">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.moon.</span></span><span class="sig-name descname"><span class="pre">Moon</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/moon.html#Moon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.moon.Moon" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simplified Lunar Ephemeris Model.
+Based on low-precision formulas (e.g., Vallado).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.moon.Moon.calculate_moon_eci">
+<span class="sig-name descname"><span class="pre">calculate_moon_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/moon.html#Moon.calculate_moon_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.moon.Moon.calculate_moon_eci" title="Link to this definition"></a></dt>
+<dd><p>Calculates Moon vector in ECI frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>jd</strong> (<em>float</em>) – Julian Date</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Moon position vector in ECI frame [m]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment.radiation">
+<span id="gnc-toolkit-environment-radiation-module"></span><h2>gnc_toolkit.environment.radiation module<a class="headerlink" href="#module-gnc_toolkit.environment.radiation" title="Link to this heading"></a></h2>
+<p>Radiation environment models for TID and SEU rates estimation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.radiation.RadiationModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.radiation.</span></span><span class="sig-name descname"><span class="pre">RadiationModel</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic radiation environment models for spacecraft.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.radiation.RadiationModel.estimate_seu_rate">
+<span class="sig-name descname"><span class="pre">estimate_seu_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_km</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_cross_section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel.estimate_seu_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel.estimate_seu_rate" title="Link to this definition"></a></dt>
+<dd><p>Estimate Single Event Upset (SEU) rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>altitude_km</strong> (<em>float</em>) – Orbit altitude</p></li>
+<li><p><strong>device_cross_section</strong> (<em>float</em>) – Sensitive area [cm^2/bit]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>float</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SEUs per bit-day</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.radiation.RadiationModel.estimate_tid">
+<span class="sig-name descname"><span class="pre">estimate_tid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_km</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclination_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_days</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel.estimate_tid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel.estimate_tid" title="Link to this definition"></a></dt>
+<dd><p>Estimate Total Ionising Dose (TID) in kRad(Si).
+Rough parametric model for LEO.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment.solar">
+<span id="gnc-toolkit-environment-solar-module"></span><h2>gnc_toolkit.environment.solar module<a class="headerlink" href="#module-gnc_toolkit.environment.solar" title="Link to this heading"></a></h2>
+<p>Solar position models based on Julian Date.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.solar.Sun">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.solar.</span></span><span class="sig-name descname"><span class="pre">Sun</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/solar.html#Sun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.solar.Sun" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.solar.Sun.calculate_sun_eci">
+<span class="sig-name descname"><span class="pre">calculate_sun_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/solar.html#Sun.calculate_sun_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.solar.Sun.calculate_sun_eci" title="Link to this definition"></a></dt>
+<dd><p>Calculates Sun vector in ECI frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>jd</strong> (<em>float</em>) – Julian Date</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>np.array</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sun vector in ECI frame (km).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment.space_weather">
+<span id="gnc-toolkit-environment-space-weather-module"></span><h2>gnc_toolkit.environment.space_weather module<a class="headerlink" href="#module-gnc_toolkit.environment.space_weather" title="Link to this heading"></a></h2>
+<p>Space weather index management (F10.7, Ap, Kp) for disturbance models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.space_weather.SpaceWeather">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.space_weather.</span></span><span class="sig-name descname"><span class="pre">SpaceWeather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f107</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f107_avg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model for managing space weather indices like F10.7, Ap, and Kp.
+Used for atmospheric density and radiation models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.space_weather.SpaceWeather.get_indices">
+<span class="sig-name descname"><span class="pre">get_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather.get_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather.get_indices" title="Link to this definition"></a></dt>
+<dd><p>Get indices for a specific date.
+Currently returns static values, but can be extended for database lookup.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.space_weather.SpaceWeather.set_solar_flux">
+<span class="sig-name descname"><span class="pre">set_solar_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f107</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f107_avg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather.set_solar_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather.set_solar_flux" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment.thermal">
+<span id="gnc-toolkit-environment-thermal-module"></span><h2>gnc_toolkit.environment.thermal module<a class="headerlink" href="#module-gnc_toolkit.environment.thermal" title="Link to this heading"></a></h2>
+<p>Spacecraft thermal environment flux models (Solar, Albedo, Earth IR).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.thermal.</span></span><span class="sig-name descname"><span class="pre">ThermalEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo_coeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">earth_ir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">230.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Models for external thermal fluxes: Solar, Albedo, and Earth IR.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment.get_albedo_flux">
+<span class="sig-name descname"><span class="pre">get_albedo_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_sat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_sun</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_albedo_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_albedo_flux" title="Link to this definition"></a></dt>
+<dd><p>Calculate albedo flux on a nadir-facing surface.
+Simplified model based on angle between Sat-Sun and Nadir.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment.get_earth_ir_flux">
+<span class="sig-name descname"><span class="pre">get_earth_ir_flux</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_earth_ir_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_earth_ir_flux" title="Link to this definition"></a></dt>
+<dd><p>Earth IR flux [W/m^2].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment.get_solar_flux">
+<span class="sig-name descname"><span class="pre">get_solar_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_au</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_solar_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_solar_flux" title="Link to this definition"></a></dt>
+<dd><p>Direct solar flux at distance [W/m^2].</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment.wind">
+<span id="gnc-toolkit-environment-wind-module"></span><h2>gnc_toolkit.environment.wind module<a class="headerlink" href="#module-gnc_toolkit.environment.wind" title="Link to this heading"></a></h2>
+<p>Atmospheric wind and earth co-rotation modeling.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.wind.AtmosphereCoRotation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.wind.</span></span><span class="sig-name descname"><span class="pre">AtmosphereCoRotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omega_earth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7.2921151467e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Calculates atmospheric wind velocity assuming co-rotation with Earth.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.wind.AtmosphereCoRotation.get_relative_velocity">
+<span class="sig-name descname"><span class="pre">get_relative_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation.get_relative_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_relative_velocity" title="Link to this definition"></a></dt>
+<dd><p>Calculate spacecraft velocity relative to the atmosphere.
+v_rel = v_sc - v_wind</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.wind.AtmosphereCoRotation.get_wind_velocity">
+<span class="sig-name descname"><span class="pre">get_wind_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation.get_wind_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_wind_velocity" title="Link to this definition"></a></dt>
+<dd><p>Calculate wind velocity in ECI frame.
+v_wind = omega x r</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position vector in ECI frame [m]</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>np.ndarray</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Wind velocity vector in ECI [m/s]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gnc_toolkit.environment">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.environment" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gnc_toolkit.disturbances.html" class="btn btn-neutral float-left" title="gnc_toolkit.disturbances package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gnc_toolkit.fdir.html" class="btn btn-neutral float-right" title="gnc_toolkit.fdir package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

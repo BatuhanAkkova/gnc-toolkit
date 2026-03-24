@@ -8,6 +8,7 @@
   <title>gnc_toolkit.kalman_filters.fixed_interval_smoother &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -69,7 +74,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Fixed-Interval Smoother (Fraser-Potter / Two-Filter) for linear systems.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 
 <div class="viewcode-block" id="fixed_interval_smoother">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother">[docs]</a>
@@ -87,7 +94,8 @@
 <span class="sd">        Hs (list of np.ndarray): Measurement matrices H_k.</span>
 <span class="sd">        Rs (list of np.ndarray): Measurement noise covariances R_k.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        X_smooth (np.ndarray): Smoothed states.</span>
 <span class="sd">        P_smooth (np.ndarray): Smoothed covariances.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -99,21 +107,21 @@
     <span class="c1"># Y_b: information matrix (inv(P))</span>
     <span class="n">y_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
     <span class="n">Y_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
-    
+
     <span class="c1"># Backward pass</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Update with measurement at k+1</span>
-        <span class="n">H</span> <span class="o">=</span> <span class="n">Hs</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">R_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Rs</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-        
+        <span class="n">H</span> <span class="o">=</span> <span class="n">Hs</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">R_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Rs</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
         <span class="c1"># Information update</span>
-        <span class="n">Y_hat</span> <span class="o">=</span> <span class="n">Y_b</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_inv</span> <span class="o">@</span> <span class="n">H</span>
-        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">y_b</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_inv</span> <span class="o">@</span> <span class="n">Zs</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-        
+        <span class="n">Y_hat</span> <span class="o">=</span> <span class="n">Y_b</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_inv</span> <span class="o">@</span> <span class="n">H</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">y_b</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_inv</span> <span class="o">@</span> <span class="n">Zs</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
         <span class="c1"># Backward predict to k</span>
         <span class="n">F</span> <span class="o">=</span> <span class="n">Fs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
         <span class="n">Q</span> <span class="o">=</span> <span class="n">Qs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-        
+
         <span class="c1"># Backward prediction (Information form)</span>
         <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">+</span> <span class="n">Y_hat</span> <span class="o">@</span> <span class="n">Q</span><span class="p">)</span>

@@ -8,6 +8,7 @@
   <title>gnc_toolkit.navigation.gps_nav &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,7 +76,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.orbit_determination</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrbitDeterminationEKF</span>
+
 
 <div class="viewcode-block" id="GPSNavigation">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.gps_nav.GPSNavigation">[docs]</a>
@@ -80,12 +87,13 @@
 <span class="sd">    Navigation using GNSS (GPS) measurements.</span>
 <span class="sd">    Processes position and velocity updates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="GPSNavigation.update_gps">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_gps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_meas</span><span class="p">,</span> <span class="n">v_meas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">R_gps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update state using GPS measurements.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            r_meas (np.ndarray): Measured position [x, y, z] in ECI [m].</span>
 <span class="sd">            v_meas (np.ndarray, optional): Measured velocity [vx, vy, vz] in ECI [m/s].</span>
@@ -94,21 +102,21 @@
         <span class="k">if</span> <span class="n">v_meas</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Update with both position and velocity (6D measurement)</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_meas</span><span class="p">,</span> <span class="n">v_meas</span><span class="p">])</span>
-            
+
             <span class="k">def</span><span class="w"> </span><span class="nf">hx</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">x</span> <span class="c1"># Measurement is the full state (pos, vel)</span>
-                
+                <span class="k">return</span> <span class="n">x</span>  <span class="c1"># Measurement is the full state (pos, vel)</span>
+
             <span class="k">def</span><span class="w"> </span><span class="nf">H_jac</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-            
+
             <span class="k">if</span> <span class="n">R_gps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># Default GPS R: 3x3 for pos, 3x3 for vel</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
                 <span class="n">R</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span>
-                <span class="n">R</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="mf">0.01</span> 
+                <span class="n">R</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="mf">0.01</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">R_gps</span>
-                
+
             <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">H_jac</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Fallback to position-only update (defined in base class)</span>

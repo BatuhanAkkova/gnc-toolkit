@@ -8,6 +8,7 @@
   <title>gnc_toolkit.ssa.maneuver &mdash; gnc-toolkit  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -39,8 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -71,17 +76,22 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
+
 
 <div class="viewcode-block" id="plan_avoidance_maneuver">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.maneuver.plan_avoidance_maneuver">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plan_avoidance_maneuver</span><span class="p">(</span><span class="n">r_sat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_sat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                           <span class="n">r_debris</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_debris</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                           <span class="n">safety_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">t_encounter</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plan_avoidance_maneuver</span><span class="p">(</span>
+    <span class="n">r_sat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">v_sat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">r_debris</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">v_debris</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">safety_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t_encounter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plans an impulsive avoidance maneuver (Along-Track).</span>
 <span class="sd">    Along-Track maneuvers are generally most efficient for phasing to avoid collisions.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        r_sat (np.ndarray): Sat position [m]</span>
 <span class="sd">        v_sat (np.ndarray): Sat velocity [m/s]</span>
@@ -89,8 +99,9 @@
 <span class="sd">        v_debris (np.ndarray): Debris velocity [m/s]</span>
 <span class="sd">        safety_radius (float): Target miss distance [m]</span>
 <span class="sd">        t_encounter (float): Time to encounter [s] (Time delta)</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        Tuple[np.ndarray, float]: (Delta-V Vector [m/s], Miss distance [m] after maneuver)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">v_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_sat</span><span class="p">)</span>
@@ -103,27 +114,31 @@
     <span class="c1"># Current miss distance</span>
     <span class="n">r_rel</span> <span class="o">=</span> <span class="n">r_sat</span> <span class="o">-</span> <span class="n">r_debris</span>
     <span class="n">current_miss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_rel</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">current_miss</span> <span class="o">&gt;=</span> <span class="n">safety_radius</span><span class="p">:</span>
-         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">current_miss</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">current_miss</span>
 
     <span class="c1"># Approximate Relative Motion (Clohessy-Wiltshire for Along-Track)</span>
     <span class="c1"># Displacement along track is roughly delta_r = 3 * t_encounter * dv_t</span>
     <span class="c1"># dv_t = delta_r / (3 * t_encounter)</span>
     <span class="c1"># To achieve safety_radius, we want delta_r = safety_radius - current_miss</span>
     <span class="n">delta_r_req</span> <span class="o">=</span> <span class="n">safety_radius</span> <span class="o">-</span> <span class="n">current_miss</span>
-    
+
     <span class="k">if</span> <span class="n">t_encounter</span> <span class="o">&lt;</span> <span class="mf">10.0</span><span class="p">:</span>
-         <span class="n">dv_mag</span> <span class="o">=</span> <span class="n">delta_r_req</span> <span class="o">/</span> <span class="n">t_encounter</span> <span class="c1"># Impulse at encounter essentially doesn&#39;t work, requires high speed</span>
+        <span class="n">dv_mag</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">delta_r_req</span> <span class="o">/</span> <span class="n">t_encounter</span>
+        <span class="p">)</span>  <span class="c1"># Impulse at encounter essentially doesn&#39;t work, requires high speed</span>
     <span class="k">else</span><span class="p">:</span>
-         <span class="c1"># Along-Track phasing approximation</span>
-         <span class="n">dv_mag</span> <span class="o">=</span> <span class="n">delta_r_req</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">t_encounter</span><span class="p">)</span>
+        <span class="c1"># Along-Track phasing approximation</span>
+        <span class="n">dv_mag</span> <span class="o">=</span> <span class="n">delta_r_req</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">t_encounter</span><span class="p">)</span>
 
     <span class="n">dv_vec</span> <span class="o">=</span> <span class="n">t_dir</span> <span class="o">*</span> <span class="n">dv_mag</span>
-    
+
     <span class="c1"># Return estimated new miss distance</span>
-    <span class="n">estimated_miss</span> <span class="o">=</span> <span class="n">current_miss</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dv_mag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">t_encounter</span> <span class="k">if</span> <span class="n">t_encounter</span> <span class="o">&gt;</span> <span class="mf">10.0</span> <span class="k">else</span> <span class="n">t_encounter</span><span class="p">)</span>
-    
+    <span class="n">estimated_miss</span> <span class="o">=</span> <span class="n">current_miss</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dv_mag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="mf">3.0</span> <span class="o">*</span> <span class="n">t_encounter</span> <span class="k">if</span> <span class="n">t_encounter</span> <span class="o">&gt;</span> <span class="mf">10.0</span> <span class="k">else</span> <span class="n">t_encounter</span>
+    <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">dv_vec</span><span class="p">,</span> <span class="n">estimated_miss</span></div>
 
 </pre></div>

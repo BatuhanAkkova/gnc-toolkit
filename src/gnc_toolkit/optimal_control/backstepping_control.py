@@ -4,21 +4,23 @@ Backstepping Controller for generic 2nd order nonlinear systems.
 
 import numpy as np
 
+
 class BacksteppingController:
     """
     Backstepping Controller for generic 2nd order nonlinear systems.
-    
+
     System model:
     x1_dot = x2
     x2_dot = f(x) + g(x) * u
-    
+
     where x = [x1, x2].
     Commonly used for mechanical systems with rigid body dynamics.
     """
+
     def __init__(self, f_func, g_func, k1, k2):
         """
         Initialize the Backstepping Controller.
-        
+
         Args:
             f_func (callable): Function returns f(x1, x2). scalar/array [n].
             g_func (callable): Function returns g(x1, x2). matrix/scalar [n x m].
@@ -33,15 +35,16 @@ class BacksteppingController:
     def compute_control(self, x1, x2, x1_d, x1_dot_d, x1_ddot_d=None):
         """
         Compute control input u.
-        
+
         Args:
             x1 (np.ndarray): State 1 (e.g., position) [n].
             x2 (np.ndarray): State 2 (e.g., velocity) [n].
             x1_d (np.ndarray): Desired State 1 [n].
             x1_dot_d (np.ndarray): Desired Velocity [n].
             x1_ddot_d (np.ndarray, optional): Desired Acceleration [n].
-            
-        Returns:
+
+        Returns
+        -------
             np.ndarray: Control effort u [m].
         """
         x1 = np.array(x1)
@@ -80,9 +83,14 @@ class BacksteppingController:
         # 6. Control Law Step 2
         # u = g_inv * (-e1 - f + alpha_dot - k2 * e2)
         # Assuming g is invertible (square or full rank)
-        inner_term = -e1 - f_val + alpha_dot - (self.k2 @ e2 if isinstance(self.k2, np.ndarray) else self.k2 * e2)
+        inner_term = (
+            -e1
+            - f_val
+            + alpha_dot
+            - (self.k2 @ e2 if isinstance(self.k2, np.ndarray) else self.k2 * e2)
+        )
 
-        if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1,1):
+        if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1, 1):
             u = inner_term / g_val
         else:
             # pinv for robustness to non-square systems or singularity

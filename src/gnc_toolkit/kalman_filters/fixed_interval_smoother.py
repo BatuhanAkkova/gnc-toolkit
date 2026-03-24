@@ -1,7 +1,9 @@
 """
 Fixed-Interval Smoother (Fraser-Potter / Two-Filter) for linear systems.
 """
+
 import numpy as np
+
 
 def fixed_interval_smoother(Xs_f, Ps_f, Fs, Qs, Zs, Hs, Rs):
     """
@@ -17,7 +19,8 @@ def fixed_interval_smoother(Xs_f, Ps_f, Fs, Qs, Zs, Hs, Rs):
         Hs (list of np.ndarray): Measurement matrices H_k.
         Rs (list of np.ndarray): Measurement noise covariances R_k.
 
-    Returns:
+    Returns
+    -------
         X_smooth (np.ndarray): Smoothed states.
         P_smooth (np.ndarray): Smoothed covariances.
     """
@@ -29,21 +32,21 @@ def fixed_interval_smoother(Xs_f, Ps_f, Fs, Qs, Zs, Hs, Rs):
     # Y_b: information matrix (inv(P))
     y_b = np.zeros((num_steps, dim_x))
     Y_b = np.zeros((num_steps, dim_x, dim_x))
-    
+
     # Backward pass
     for k in range(num_steps - 2, -1, -1):
         # Update with measurement at k+1
-        H = Hs[k+1]
-        R_inv = np.linalg.inv(Rs[k+1])
-        
+        H = Hs[k + 1]
+        R_inv = np.linalg.inv(Rs[k + 1])
+
         # Information update
-        Y_hat = Y_b[k+1] + H.T @ R_inv @ H
-        y_hat = y_b[k+1] + H.T @ R_inv @ Zs[k+1]
-        
+        Y_hat = Y_b[k + 1] + H.T @ R_inv @ H
+        y_hat = y_b[k + 1] + H.T @ R_inv @ Zs[k + 1]
+
         # Backward predict to k
         F = Fs[k]
         Q = Qs[k]
-        
+
         # Backward prediction (Information form)
         I = np.eye(dim_x)
         tmp = np.linalg.inv(I + Y_hat @ Q)

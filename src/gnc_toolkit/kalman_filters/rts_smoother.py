@@ -4,6 +4,7 @@ Rauch-Tung-Striebel (RTS) Smoother for linear systems.
 
 import numpy as np
 
+
 def rts_smoother(Xs, Ps, Fs, Qs):
     """
     Rauch-Tung-Striebel (RTS) Smoother.
@@ -20,7 +21,8 @@ def rts_smoother(Xs, Ps, Fs, Qs):
         Qs (list of np.ndarray): List of process noise covariances.
                                  Length N-1. Qs[k] is Q from k to k+1.
 
-    Returns:
+    Returns
+    -------
         X_smooth (np.ndarray): Smoothed states, (N, dim_x).
         P_smooth (np.ndarray): Smoothed covariances, (N, dim_x, dim_x).
     """
@@ -44,9 +46,9 @@ def rts_smoother(Xs, Ps, Fs, Qs):
 
         # Smoothed state
         X_pred = np.dot(Fs[k], Xs[k])
-        X_smooth[k] = Xs[k] + np.dot(C, X_smooth[k+1] - X_pred)
+        X_smooth[k] = Xs[k] + np.dot(C, X_smooth[k + 1] - X_pred)
 
         # Smoothed covariance
-        P_smooth[k] = Ps[k] + np.dot(np.dot(C, P_smooth[k+1] - P_pred), C.T)
+        P_smooth[k] = Ps[k] + np.dot(np.dot(C, P_smooth[k + 1] - P_pred), C.T)
 
     return X_smooth, P_smooth

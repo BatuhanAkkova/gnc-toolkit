@@ -1,35 +1,35 @@
-from .lqr import LQR
+from .adaptive_control import ModelReferenceAdaptiveControl
+from .backstepping_control import BacksteppingController
+from .feedback_linearization import FeedbackLinearization
+from .finite_horizon_lqr import FiniteHorizonLQR
+from .geometric_control import GeometricController
+from .h2_control import H2Controller
+from .h_infinity import HInfinityController
+from .indi_control import INDIController, INDIOuterLoopPD
 from .lqe import LQE
 from .lqg import LQG
-from .finite_horizon_lqr import FiniteHorizonLQR
-from .h_infinity import HInfinityController
-from .h2_control import H2Controller
+from .lqr import LQR
 from .mpc import LinearMPC, NonlinearMPC
 from .mpc_casadi import CasadiNMPC
-from .sliding_mode import SlidingModeController
-from .feedback_linearization import FeedbackLinearization
-from .geometric_control import GeometricController
 from .passivity_control import PassivityBasedController
-from .backstepping_control import BacksteppingController
-from .adaptive_control import ModelReferenceAdaptiveControl
-from .indi_control import INDIController, INDIOuterLoopPD
+from .sliding_mode import SlidingModeController
 
 __all__ = [
-    "LQR",
     "LQE",
     "LQG",
-    "FiniteHorizonLQR",
-    "HInfinityController",
-    "H2Controller",
-    "LinearMPC",
-    "NonlinearMPC",
-    "CasadiNMPC",
-    "SlidingModeController",
-    "FeedbackLinearization",
-    "GeometricController",
-    "PassivityBasedController",
+    "LQR",
     "BacksteppingController",
-    "ModelReferenceAdaptiveControl",
+    "CasadiNMPC",
+    "FeedbackLinearization",
+    "FiniteHorizonLQR",
+    "GeometricController",
+    "H2Controller",
+    "HInfinityController",
     "INDIController",
-    "INDIOuterLoopPD"
+    "INDIOuterLoopPD",
+    "LinearMPC",
+    "ModelReferenceAdaptiveControl",
+    "NonlinearMPC",
+    "PassivityBasedController",
+    "SlidingModeController",
 ]

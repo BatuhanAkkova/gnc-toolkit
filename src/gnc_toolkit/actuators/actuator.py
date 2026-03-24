@@ -3,12 +3,15 @@ Abstract base class for actuator models.
 """
 
 from abc import ABC, abstractmethod
+
 import numpy as np
+
 
 class Actuator(ABC):
     """
     Abstract base class for all actuators.
     """
+
     def __init__(self, name="Actuator", saturation=None, deadband=None):
         """
         Args:
@@ -24,12 +27,13 @@ class Actuator(ABC):
     def command(self, signal, **kwargs):
         """
         Calculate the actuator output based on the command signal.
-        
+
         Args:
             signal: The commanded input (e.g., torque, dipole, voltage).
             kwargs: Additional state info (e.g., current speed, environment).
-            
-        Returns:
+
+        Returns
+        -------
             The actual output applied to the system.
         """
         pass
@@ -40,7 +44,7 @@ class Actuator(ABC):
         """
         if self.saturation is None:
             return value
-        
+
         if isinstance(self.saturation, (int, float)):
             limit = abs(self.saturation)
             return np.clip(value, -limit, limit)
@@ -54,7 +58,7 @@ class Actuator(ABC):
         """
         if self.deadband is None or self.deadband == 0:
             return value
-        
+
         if abs(value) < self.deadband:
             return 0.0
         return value

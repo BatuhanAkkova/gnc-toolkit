@@ -3,14 +3,17 @@ Inertial Measurement Unit (IMU) with Accelerometer and Gyroscope.
 """
 
 import numpy as np
-from gnc_toolkit.sensors.sensor import Sensor
+
 from gnc_toolkit.sensors.gyroscope import Gyroscope
+from gnc_toolkit.sensors.sensor import Sensor
+
 
 class Accelerometer(Sensor):
     """
     Accelerometer sensor model.
     Measures non-gravitational acceleration: a_meas = a_true + bias + noise
     """
+
     def __init__(self, noise_std=0.0, bias=None, scale_factor=1.0, name="Accelerometer"):
         """
         Args:
@@ -32,10 +35,12 @@ class Accelerometer(Sensor):
         measured_accel = self.scale_factor * true_accel + self.bias + noise
         return measured_accel
 
+
 class IMU(Sensor):
     """
     Inertial Measurement Unit (IMU) combining Gyroscope and Accelerometer.
     """
+
     def __init__(self, gyro_params=None, accel_params=None, name="IMU"):
         """
         Args:
@@ -45,7 +50,7 @@ class IMU(Sensor):
         super().__init__(name)
         gyro_p = gyro_params if gyro_params is not None else {}
         accel_p = accel_params if accel_params is not None else {}
-        
+
         self.gyro = Gyroscope(**gyro_p)
         self.accel = Accelerometer(**accel_p)
 
@@ -54,8 +59,9 @@ class IMU(Sensor):
         Args:
             true_omega (np.ndarray): True angular velocity [rad/s].
             true_accel (np.ndarray): True non-gravitational acceleration [m/s^2].
-            
-        Returns:
+
+        Returns
+        -------
             tuple: (measured_omega, measured_accel)
         """
         meas_omega = self.gyro.measure(true_omega, **kwargs)

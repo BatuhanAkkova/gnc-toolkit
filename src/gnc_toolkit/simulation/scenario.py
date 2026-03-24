@@ -1,7 +1,7 @@
 import json
-import os
 from pathlib import Path
-from typing import Dict, Any, Union
+from typing import Any
+
 
 class ScenarioConfig:
     """
@@ -9,7 +9,7 @@ class ScenarioConfig:
     Responsible for parsing reproducible mission setups from JSON (or YAML if available).
     """
 
-    def __init__(self, filename: Union[str, Path]):
+    def __init__(self, filename: str | Path):
         """
         Initialize the scenario configuration.
 
@@ -19,7 +19,7 @@ class ScenarioConfig:
             Path to the JSON or YAML configuration file.
         """
         self.filename = Path(filename)
-        self.config: Dict[str, Any] = {}
+        self.config: dict[str, Any] = {}
         self.load()
 
     def load(self):
@@ -29,15 +29,18 @@ class ScenarioConfig:
 
         ext = self.filename.suffix.lower()
         if ext == ".json":
-            with open(self.filename, 'r', encoding='utf-8') as f:
+            with open(self.filename, encoding="utf-8") as f:
                 self.config = json.load(f)
         elif ext in [".yaml", ".yml"]:
             try:
                 import yaml
-                with open(self.filename, 'r', encoding='utf-8') as f:
+
+                with open(self.filename, encoding="utf-8") as f:
                     self.config = yaml.safe_load(f)
             except ImportError:
-                raise ImportError("PyYAML is required to parse YAML scenarios. Install it with `pip install pyyaml`.")
+                raise ImportError(
+                    "PyYAML is required to parse YAML scenarios. Install it with `pip install pyyaml`."
+                )
         else:
             raise ValueError(f"Unsupported configuration file extension: {ext}")
 
@@ -57,7 +60,7 @@ class ScenarioConfig:
         Any
             The configuration value.
         """
-        keys = key.split('.')
+        keys = key.split(".")
         current = self.config
         for k in keys:
             if isinstance(current, dict) and k in current:

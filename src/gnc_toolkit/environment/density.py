@@ -3,10 +3,12 @@ Atmospheric density models (Exponential, Harris-Priester, NRLMSISE-00, JB2008).
 """
 
 import numpy as np
+import pymsis
+
+from gnc_toolkit.environment.solar import Sun
 from gnc_toolkit.utils.frame_conversion import eci2geodetic, eci2llh
 from gnc_toolkit.utils.time_utils import calc_jd
-from gnc_toolkit.environment.solar import Sun
-import pymsis
+
 
 class Exponential:
     def __init__(self, rho0=1.225, h0=0.0, H=8.5):
@@ -14,18 +16,19 @@ class Exponential:
         self.rho0 = rho0
         self.h0 = h0
         self.H = H
-        self.R_earth = 6378.137 # km
+        self.R_earth = 6378.137  # km
 
     def get_density(self, r_eci, jd):
         _, _, h = eci2geodetic(r_eci, jd)
-        
+
         if h < 0:
             return self.rho0
-            
+
         # Convert h to km for scale height calculation
         h_km = h / 1000.0
         rho = self.rho0 * np.exp(-(h_km - self.h0) / self.H)
         return rho
+
 
 class HarrisPriester:
     def __init__(self, lag=30.0):
@@ -35,18 +38,20 @@ class HarrisPriester:
 
     def get_density(self, r_eci, jd):
         r_sun = self.sun_model.calculate_sun_eci(jd)
-        sun = r_sun / np.linalg.norm(r_sun) # Unit vector
+        sun = r_sun / np.linalg.norm(r_sun)  # Unit vector
 
-        apex = np.array([
-            sun[0] * np.cos(self.lag) - sun[1] * np.sin(self.lag),
-            sun[0] * np.sin(self.lag) + sun[1] * np.cos(self.lag),
-            sun[2]
-        ]) # Apex of the diurnal bulge
+        apex = np.array(
+            [
+                sun[0] * np.cos(self.lag) - sun[1] * np.sin(self.lag),
+                sun[0] * np.sin(self.lag) + sun[1] * np.cos(self.lag),
+                sun[2],
+            ]
+        )  # Apex of the diurnal bulge
 
         r_unit = r_eci / np.linalg.norm(r_eci)
-        cos_psi = np.dot(r_unit, apex) # Angle between satellite and apex
+        cos_psi = np.dot(r_unit, apex)  # Angle between satellite and apex
 
-        n = 2 # 2 for low inclination, 6 for polar orbit
+        n = 2  # 2 for low inclination, 6 for polar orbit
         cos_term = np.abs(np.cos(np.arccos(cos_psi) / 2.0)) ** n
 
         # Look up table for mean solar flux (F10.7=150)
@@ -101,38 +106,41 @@ class HarrisPriester:
             (880000.0, 3.200e-15, 4.210e-14),
             (920000.0, 2.210e-15, 3.130e-14),
             (960000.0, 1.560e-15, 2.360e-14),
-            (1000000.0, 1.150e-15, 1.810e-14)
+            (1000000.0, 1.150e-15, 1.810e-14),
         ]
 
-        _, _, h = eci2llh(r_eci, jd) # Altitude [m]
+        _, _, h = eci2llh(r_eci, jd)  # Altitude [m]
 
         # Edge Cases
-        if h < rho_mod[0][0]: return rho_mod[0][1]
-        elif h > rho_mod[-1][0]: return rho_mod[-1][1]
+        if h < rho_mod[0][0]:
+            return rho_mod[0][1]
+        elif h > rho_mod[-1][0]:
+            return rho_mod[-1][1]
 
         i = 0
-        while i < len(rho_mod) - 2 and h > rho_mod[i+1][0]:
+        while i < len(rho_mod) - 2 and h > rho_mod[i + 1][0]:
             i += 1
 
         # Linear interpolation in Log-Density
         h1 = rho_mod[i][0]
         rho_min1 = rho_mod[i][1]
         rho_max1 = rho_mod[i][2]
-        
-        h2 = rho_mod[i+1][0]
-        rho_min2 = rho_mod[i+1][1]
-        rho_max2 = rho_mod[i+1][2]
-        
+
+        h2 = rho_mod[i + 1][0]
+        rho_min2 = rho_mod[i + 1][1]
+        rho_max2 = rho_mod[i + 1][2]
+
         frac = (h - h1) / (h2 - h1)
-        
+
         rho_min = np.exp(np.log(rho_min1) + frac * (np.log(rho_min2) - np.log(rho_min1)))
         rho_max = np.exp(np.log(rho_max1) + frac * (np.log(rho_max2) - np.log(rho_max1)))
 
         return rho_min + (rho_max - rho_min) * cos_term
 
+
 class NRLMSISE00:
     """NRLMSISE-00 atmospheric model using pymsis."""
-    
+
     def __init__(self):
         pass
 
@@ -148,22 +156,25 @@ class NRLMSISE00:
         lon, lat, alt = eci2geodetic(r_eci, jd)
 
         output = pymsis.calculate(date, lon, lat, alt)
-        
+
         output = np.squeeze(output)
         if output.ndim == 0:
             rho = float(output)
         else:
-            rho = float(output[0]) # Total mass density
-        
+            rho = float(output[0])  # Total mass density
+
         return rho
+
 
 class JB2008:
     """
     Simplified Jacchia-Bowman 2008 (JB2008) Atmosphere Model.
     This implementation focuses on the structure and requires solar indices.
     """
+
     def __init__(self, space_weather=None):
         from gnc_toolkit.environment.space_weather import SpaceWeather
+
         self.sw = space_weather if space_weather else SpaceWeather()
         self.sun_model = Sun()
 
@@ -175,25 +186,27 @@ class JB2008:
         # Get altitude and solar position
         lon, lat, h = eci2geodetic(r_eci, jd)
         indices = self.sw.get_indices(jd)
-        F10 = indices['f107']
-        F10bar = indices['f107_avg']
-        
+        F10 = indices["f107"]
+        F10bar = indices["f107_avg"]
+
         # Base density from exponential model scaled by solar flux
         # Base scale height H ~ 8.5 km, rho0 ~ 1.225 at sea level
         # For thermosphere (h > 100km), scale height varies significantly.
-        H = 7.0 + 0.05 * (h/1000.0) # km, very rough approximation
-        rho_base = 1.225 * np.exp(- (h/1000.0) / H)
-        
+        H = 7.0 + 0.05 * (h / 1000.0)  # km, very rough approximation
+        rho_base = 1.225 * np.exp(-(h / 1000.0) / H)
+
         # Scaling based on F10.7 (Solar activity correction)
         phi = (F10 + F10bar) / 2.0
         solar_factor = 1.0 + 0.01 * (phi - 70.0)
-        
+
         return rho_base * solar_factor
+
 
 class CIRA72:
     """
     COSPAR International Reference Atmosphere (CIRA) 1972 simplified version.
     """
+
     def __init__(self):
         # CIRA-72 often uses look-up tables or polynomial fits.
         pass
@@ -204,10 +217,10 @@ class CIRA72:
         """
         _, _, h = eci2geodetic(r_eci, jd)
         h_km = h / 1000.0
-        
+
         if h_km < 100:
             return 1.225 * np.exp(-h_km / 8.5)
-        
+
         # Polynomial fit for log10(rho) vs altitude, mean solar conditions, 100-800 km
-        log_rho = -9.0 - 0.015 * (h_km - 100.0) + 1.2e-5 * (h_km - 100.0)**2
+        log_rho = -9.0 - 0.015 * (h_km - 100.0) + 1.2e-5 * (h_km - 100.0) ** 2
         return 10**log_rho

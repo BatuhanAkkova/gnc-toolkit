@@ -2,14 +2,17 @@
 Control allocation algorithms mapping generalized forces to actuator commands.
 """
 
-import numpy as np
 from abc import ABC, abstractmethod
+
+import numpy as np
+
 
 class ControlAllocator(ABC):
     """
     Abstract base class for control allocation.
     Maps a desired generalized force (force/torque) to actuator commands.
     """
+
     def __init__(self, actuator_matrix):
         """
         Args:
@@ -25,17 +28,20 @@ class ControlAllocator(ABC):
         """
         Args:
             desired_output (np.array): Desired force/torque (m,).
-            
-        Returns:
+
+        Returns
+        -------
             np.array: Actuator commands (n,).
         """
         pass
+
 
 class PseudoInverseAllocator(ControlAllocator):
     """
     Standard pseudo-inverse allocator: u = A^T * (A * A^T)^-1 * Y.
     Minimizes the L2-norm of the actuator commands (energy optimal).
     """
+
     def __init__(self, actuator_matrix):
         super().__init__(actuator_matrix)
         # Precompute pseudo-inverse: A+ = A^T (A A^T)^-1
@@ -44,12 +50,14 @@ class PseudoInverseAllocator(ControlAllocator):
     def allocate(self, desired_output):
         return self.A_pinv @ np.array(desired_output)
 
+
 class SingularRobustAllocator(ControlAllocator):
     """
     Singular Robust Inverse (SR-Inverse) for CMGs.
     Adds a regularization term to avoid high gimbal rates near singularities.
     u = A^T * (A * A^T + lambda * I)^-1 * Y
     """
+
     def __init__(self, actuator_matrix, epsilon=0.01, lambda0=0.01):
         super().__init__(actuator_matrix)
         self.epsilon = epsilon
@@ -62,21 +70,22 @@ class SingularRobustAllocator(ControlAllocator):
             A_current (np.array): Current Jacobian matrix if time-varying.
         """
         A = A_current if A_current is not None else self.A
-        
+
         # Calculate manipulability measure (determinant of AA^T)
         m_measure = np.linalg.det(A @ A.T)
-        
+
         # Regularization parameter lambda
         if m_measure < self.epsilon:
-            lam = self.lambda0 * (1 - m_measure/self.epsilon)**2
+            lam = self.lambda0 * (1 - m_measure / self.epsilon) ** 2
         else:
             lam = 0.0
-            
+
         # SR-Inverse: A^T (A A^T + lam * I)^-1
         m = A.shape[0]
         inv_term = np.linalg.inv(A @ A.T + lam * np.eye(m))
         u = A.T @ inv_term @ desired_output
         return u
+
 
 class NullMotionManager:
     """
@@ -84,6 +93,7 @@ class NullMotionManager:
     u_net = u_alloc + u_null
     u_null = (I - A+ * A) * z
     """
+
     def __init__(self, actuator_matrix):
         self.A = np.array(actuator_matrix)
         self.m, self.n = self.A.shape
@@ -98,7 +108,7 @@ class NullMotionManager:
     def apply_null_command(self, u_base, z, A_current=None):
         """
         Adds null-motion component to base command.
-        
+
         Args:
             u_base (np.array): Base actuator commands (e.g. from pseudo-inverse).
             z (np.array): Desired secondary goal (e.g. move gimbals away from limits).

@@ -1,26 +1,28 @@
 import numpy as np
 
+
 class INDIController:
     """
     Incremental Nonlinear Dynamic Inversion (INDI) Controller.
-    
+
     Exploits fast control rates and sensor measurements to reduce model dependence.
     System Model:
     x_ddot = f(x, x_dot) + g(x, x_dot) * u
-    
+
     INDI discrete approximation:
     u = u0 + g(x0, x_dot0)^-1 * (v - x_ddot0)
-    
+
     where:
     - u0: Previous control input.
     - x_ddot0: Measured/estimated acceleration at current step.
     - v: Desired acceleration (e.g., from outer-loop PD controller).
     - x0, x_dot0: State measurements at current step.
     """
+
     def __init__(self, g_func):
         """
         Initialize the INDI Controller.
-        
+
         Args:
             g_func (callable): Function returns g(x, x_dot). matrix/scalar [n x m].
         """
@@ -29,15 +31,16 @@ class INDIController:
     def compute_control(self, u0, x_ddot0, v, x0, x_dot0):
         """
         Compute control input u.
-        
+
         Args:
             u0 (np.ndarray): Previous control input [m].
             x_ddot0 (np.ndarray): Measured/estimated acceleration [n].
             v (np.ndarray): Desired acceleration [n].
             x0 (np.ndarray): Current state 1 (e.g. position) [n].
             x_dot0 (np.ndarray): Current state 2 (e.g. velocity) [n].
-            
-        Returns:
+
+        Returns
+        -------
             np.ndarray: New control effort u [m].
         """
         u0 = np.array(u0)
@@ -51,17 +54,19 @@ class INDIController:
         # Incremental control: delta_u = g^-1 (v - x_ddot0)
         acc_error = v - x_ddot0
 
-        if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1,1):
+        if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1, 1):
             delta_u = acc_error / g_val
         else:
             delta_u = np.linalg.pinv(g_val) @ acc_error  # pinv for robustness
 
         return u0 + delta_u
 
+
 class INDIOuterLoopPD:
     """
     Helper for outer-loop tracking (computes desired acceleration v).
     """
+
     def __init__(self, Kp, Kd):
         """
         Args:

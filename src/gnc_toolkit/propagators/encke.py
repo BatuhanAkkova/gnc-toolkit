@@ -3,10 +3,12 @@ Encke's Method Propagator.
 """
 
 import numpy as np
+
+from ..integrators.integrator import Integrator
+from ..integrators.rk4 import RK4
 from .base import Propagator
 from .kepler import KeplerPropagator
-from ..integrators.rk4 import RK4
-from ..integrators.integrator import Integrator
+
 
 class EnckePropagator(Propagator):
     """
@@ -14,6 +16,7 @@ class EnckePropagator(Propagator):
     Integrates the deviation from a reference Keplerian orbit.
     Suitable for orbit propagation with small disturbances.
     """
+
     def __init__(self, integrator: Integrator = None, mu=398600.4418e9, rect_tol=1e-6):
         """
         Initialize EnckePropagator.
@@ -28,7 +31,9 @@ class EnckePropagator(Propagator):
         self.rect_tol = rect_tol
         self.kepler = KeplerPropagator(mu=mu)
 
-    def propagate(self, r_i: np.ndarray, v_i: np.ndarray, dt: float, perturbation_acc_fn=None, **kwargs):
+    def propagate(
+        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, perturbation_acc_fn=None, **kwargs
+    ):
         """
         Propagate state using Encke's method.
 
@@ -39,14 +44,14 @@ class EnckePropagator(Propagator):
             perturbation_acc_fn (callable, optional): Function that returns perturbation accelerations.
                                                       Signature: acc_pert = f(t, r, v)
         """
-        step_size = kwargs.get('dt_step', 10.0)
+        step_size = kwargs.get("dt_step", 10.0)
         if step_size > dt:
             step_size = dt
 
         curr_t = 0.0
         curr_r_ref = np.array(r_i, dtype=float)
         curr_v_ref = np.array(v_i, dtype=float)
-        curr_y_dev = np.zeros(6, dtype=float) # [dr, dv]
+        curr_y_dev = np.zeros(6, dtype=float)  # [dr, dv]
 
         while curr_t < dt:
             h = step_size
@@ -69,11 +74,11 @@ class EnckePropagator(Propagator):
                 q_val = np.dot(d_r, d_r - 2 * r_r) / (r_r_mag**2)
 
                 # f(q) = q * (3 + 3q + q^2) / (1 + (1+q)^(3/2))
-                with np.errstate(divide='ignore', invalid='ignore'):
+                with np.errstate(divide="ignore", invalid="ignore"):
                     if abs(q_val) < 1e-12:
-                        f_q_val = 0.0 # Small q limit
+                        f_q_val = 0.0  # Small q limit
                     else:
-                        f_q_val = q_val * (3 + 3*q_val + q_val**2) / (1 + (1 + q_val)**1.5)
+                        f_q_val = q_val * (3 + 3 * q_val + q_val**2) / (1 + (1 + q_val) ** 1.5)
 
                 a_pt = np.zeros(3)
                 if perturbation_acc_fn:

@@ -4,11 +4,13 @@ Standard Linear Kalman Filter (KF) implementation.
 
 import numpy as np
 
+
 class KF:
     """
     Standard Linear Kalman Filter (KF).
     Suitable for linear estimation and navigation (e.g., constant velocity models).
     """
+
     def __init__(self, dim_x, dim_z):
         """
         Initialize the KF.
@@ -34,9 +36,12 @@ class KF:
         Q: Process noise covariance
         B: Control input matrix
         """
-        if F is None: F = self.F
-        if Q is None: Q = self.Q
-        if B is None: B = self.B
+        if F is None:
+            F = self.F
+        if Q is None:
+            Q = self.Q
+        if B is None:
+            B = self.B
 
         # x = Fx + Bu
         if B is not None and u is not None:
@@ -54,8 +59,10 @@ class KF:
         H: Measurement matrix
         R: Measurement noise covariance
         """
-        if H is None: H = self.H
-        if R is None: R = self.R
+        if H is None:
+            H = self.H
+        if R is None:
+            R = self.R
 
         # y = z - Hx
         y = z - np.dot(H, self.x)

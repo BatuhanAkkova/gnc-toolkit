@@ -5,19 +5,21 @@ Linear Quadratic Regulator (LQR) Controller.
 import numpy as np
 from scipy.linalg import solve_continuous_are
 
+
 class LQR:
     """
     Linear Quadratic Regulator (LQR) Controller.
-    
+
     Minimizes the cost function:
     J = integral(x.T * Q * x + u.T * R * u) dt
-    
+
     The control law is u = -K * x
     """
+
     def __init__(self, A, B, Q, R):
         """
         Initialize the LQR controller.
-        
+
         Args:
             A (np.ndarray): State matrix
             B (np.ndarray): Input matrix

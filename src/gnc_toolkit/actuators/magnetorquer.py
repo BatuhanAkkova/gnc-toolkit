@@ -2,13 +2,14 @@
 Magnetorquer actuator model.
 """
 
-import numpy as np
 from gnc_toolkit.actuators.actuator import Actuator
+
 
 class Magnetorquer(Actuator):
     """
     Magnetorquer model.
     """
+
     def __init__(self, max_dipole=None, name="MTQ"):
         """
         Args:
@@ -21,8 +22,9 @@ class Magnetorquer(Actuator):
         """
         Args:
             dipole_cmd (float): Commanded dipole moment [Am^2].
-            
-        Returns:
+
+        Returns
+        -------
             float: Delivered dipole moment [Am^2].
         """
         # Apply saturation

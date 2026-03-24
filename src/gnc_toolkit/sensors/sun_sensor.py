@@ -3,14 +3,19 @@ Sun Sensor model.
 """
 
 import numpy as np
+
 from gnc_toolkit.sensors.sensor import Sensor
+
 
 class SunSensor(Sensor):
     """
     Sun Sensor model.
     Measures the sun vector in the body frame.
     """
-    def __init__(self, noise_std=0.0, bias=None, misalignment=None, scale_factor=1.0, name="SunSensor"):
+
+    def __init__(
+        self, noise_std=0.0, bias=None, misalignment=None, scale_factor=1.0, name="SunSensor"
+    ):
         """
         Args:
             noise_std (float): Standard deviation of noise [rad] or unitless depending on vector norm.
@@ -30,17 +35,19 @@ class SunSensor(Sensor):
             true_sun_vec_body (np.ndarray): True sun vector in body frame.
         """
         # Apply calibration
-        calibrated = self.apply_calibration(true_sun_vec_body, self.misalignment, self.scale_factor, self.bias)
-        
+        calibrated = self.apply_calibration(
+            true_sun_vec_body, self.misalignment, self.scale_factor, self.bias
+        )
+
         # Add noise
         measured_vec = self.add_gaussian_noise(calibrated, self.noise_std)
-        
+
         # Apply faults
         measured_vec = self.apply_faults(measured_vec)
-        
+
         # Normalize
         norm = np.linalg.norm(measured_vec)
         if norm > 0:
             measured_vec = measured_vec / norm
-            
+
         return measured_vec

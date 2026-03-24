@@ -3,7 +3,9 @@ Symplectic integrator (Yoshida 4th order) for conservative systems.
 """
 
 import numpy as np
+
 from .integrator import Integrator
+
 
 class SymplecticIntegrator(Integrator):
     """
@@ -12,9 +14,10 @@ class SymplecticIntegrator(Integrator):
     Assumes state vector y = [r, v] where dy/dt = [v, a(r)].
     Specifically for systems where a depends only on r (a = f(r)).
     """
+
     def __init__(self):
         # Yoshida 4th Order Coefficients
-        two_to_third = 2**(1/3)
+        two_to_third = 2 ** (1 / 3)
         denom = 2 - two_to_third
         self.w1 = 1 / denom
         self.w0 = -two_to_third / denom
@@ -38,7 +41,7 @@ class SymplecticIntegrator(Integrator):
         t0, tf = t_span
         y = np.array(y0)
         h = dt
-        
+
         if h > (tf - t0):
             h = tf - t0
 
@@ -86,5 +89,5 @@ class SymplecticIntegrator(Integrator):
         Single step wrapper.
         """
         # Compose a single step
-        res_t, res_y = self.integrate(f, [t, t+dt], y, dt=dt)
+        res_t, res_y = self.integrate(f, [t, t + dt], y, dt=dt)
         return res_y[-1], res_t[-1], None

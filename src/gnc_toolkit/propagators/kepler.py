@@ -3,16 +3,19 @@ Analytical Two-Body Propagator using Kepler's Equation.
 """
 
 import numpy as np
+
 from .base import Propagator
+
 
 class KeplerPropagator(Propagator):
     """
     Analytical Two-Body Propagator using Kepler's Equation.
     """
+
     def __init__(self, mu=398600.4418e9):
         """
         Initialize the Kepler Propagator.
-        
+
         Args:
             mu (float): Gravitational parameter [m^3/s^2]. Default is Earth.
         """
@@ -25,44 +28,53 @@ class KeplerPropagator(Propagator):
         mu = self.mu
         r_i_mag = np.linalg.norm(r_i)
         v_i_mag = np.linalg.norm(v_i)
-        energy = 0.5 * v_i_mag**2 - mu/r_i_mag # Specific orbital energy
+        energy = 0.5 * v_i_mag**2 - mu / r_i_mag  # Specific orbital energy
 
-        alpha = -2 * energy / mu # Reciprocal of semi-major axis
-        
+        alpha = -2 * energy / mu  # Reciprocal of semi-major axis
+
         # Check for near-parabolic or undefined orbits
         if np.abs(energy) < 1e-9:
-             alpha = 0
+            alpha = 0
 
         # Universal variable initialization
-        if alpha > 1e-9: # Circular or Elliptical
+        if alpha > 1e-9:  # Circular or Elliptical
             try:
-                T = 2 * np.pi * np.sqrt(np.abs(1.0/alpha)**3 / mu) # Period
+                T = 2 * np.pi * np.sqrt(np.abs(1.0 / alpha) ** 3 / mu)  # Period
                 if np.abs(dt) > np.abs(T):
                     dt = dt % T
             except:  # pragma: no cover
-                pass # Fallback if calculation fails
+                pass  # Fallback if calculation fails
 
             x_i = np.sqrt(mu) * dt * alpha
 
-        elif np.abs(alpha) < 1e-9: # Parabolic
+        elif np.abs(alpha) < 1e-9:  # Parabolic
             h = np.cross(r_i, v_i)
             h_mag = np.linalg.norm(h)
             p = h_mag**2 / mu
-            
+
             s = 0.5 * (np.pi / 2 - np.arctan(3 * np.sqrt(mu / (p**3)) * dt))
-            w = np.arctan(np.tan(s) ** (1/3))
-            
-            x_i = np.sqrt(p) * (2 / np.tan(2*w))
+            w = np.arctan(np.tan(s) ** (1 / 3))
+
+            x_i = np.sqrt(p) * (2 / np.tan(2 * w))
             alpha = 0
 
-        else: # Hyperbolic
+        else:  # Hyperbolic
             # Avoid division by zero and domain errors
             try:
-                temp = (-2 * mu * alpha * dt / (np.dot(r_i, v_i) + np.sign(dt) * np.sqrt(-mu/alpha) * (1 - r_i_mag * alpha)))
-                x_i = np.sign(dt) * np.sqrt(-1/alpha) * np.log(temp)
+                temp = (
+                    -2
+                    * mu
+                    * alpha
+                    * dt
+                    / (
+                        np.dot(r_i, v_i)
+                        + np.sign(dt) * np.sqrt(-mu / alpha) * (1 - r_i_mag * alpha)
+                    )
+                )
+                x_i = np.sign(dt) * np.sqrt(-1 / alpha) * np.log(temp)
             except:
-                 # Fallback for very specific hyperbolic cases or numerical issues
-                 x_i = np.sqrt(mu) * dt * alpha # Rough guess
+                # Fallback for very specific hyperbolic cases or numerical issues
+                x_i = np.sqrt(mu) * dt * alpha  # Rough guess
 
         # Newton-Raphson iteration
         i = 0
@@ -70,16 +82,25 @@ class KeplerPropagator(Propagator):
         while i < n_iter:
             yaw = (x_i**2) * alpha
             c2, c3 = self._c23_eq(yaw)
-            
+
             r_dot_v = np.dot(r_i, v_i)
-            
-            nom = np.sqrt(mu) * dt - x_i**3 * c3 - r_dot_v / np.sqrt(mu) * x_i**2 * c2 - r_i_mag * x_i * (1 - yaw*c3)
-            denom = x_i**2 * c2 + r_dot_v / np.sqrt(mu) * x_i * (1 - yaw*c3) + r_i_mag * (1 - yaw*c2)
-            
-            if abs(denom) < 1e-12: # Avoid catastrophic cancellation
+
+            nom = (
+                np.sqrt(mu) * dt
+                - x_i**3 * c3
+                - r_dot_v / np.sqrt(mu) * x_i**2 * c2
+                - r_i_mag * x_i * (1 - yaw * c3)
+            )
+            denom = (
+                x_i**2 * c2
+                + r_dot_v / np.sqrt(mu) * x_i * (1 - yaw * c3)
+                + r_i_mag * (1 - yaw * c2)
+            )
+
+            if abs(denom) < 1e-12:  # Avoid catastrophic cancellation
                 break  # pragma: no cover
 
-            x_new = x_i + nom/denom
+            x_new = x_i + nom / denom
 
             if np.abs(x_new - x_i) < 1e-8:
                 break
@@ -91,9 +112,9 @@ class KeplerPropagator(Propagator):
         g = dt - x_new**3 / np.sqrt(mu) * c3
         r_new = f * r_i + g * v_i
         r_new_mag = np.linalg.norm(r_new)
-        
+
         fdot = np.sqrt(mu) / (r_new_mag * r_i_mag) * x_new * ((x_new**2) * alpha * c3 - 1)
-        gdot = 1 - (x_new**2/r_new_mag) * c2
+        gdot = 1 - (x_new**2 / r_new_mag) * c2
         v_new = fdot * r_i + gdot * v_i
 
         return r_new, v_new
@@ -110,5 +131,5 @@ class KeplerPropagator(Propagator):
             c3 = (np.sinh(sqrt_neg_yaw) - sqrt_neg_yaw) / ((-yaw) * sqrt_neg_yaw)
         else:
             c2 = 0.5
-            c3 = 1/6.0
+            c3 = 1 / 6.0
         return c2, c3

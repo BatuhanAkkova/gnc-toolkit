@@ -4,11 +4,13 @@ Extended Kalman Filter (EKF) for non-linear systems using Jacobians.
 
 import numpy as np
 
+
 class EKF:
     """
     Extended Kalman Filter (EKF).
     Suitable for non-linear estimation and navigation.
     """
+
     def __init__(self, dim_x, dim_z):
         """
         Initialize the EKF.
@@ -32,7 +34,8 @@ class EKF:
         u: Optional control input
         Q: Optional process noise covariance
         """
-        if Q is None: Q = self.Q
+        if Q is None:
+            Q = self.Q
 
         # State Prediction: x = f(x, dt, u)
         self.x = fx(self.x, dt, u, **kwargs)
@@ -49,23 +52,24 @@ class EKF:
         H_jac: Function that returns the Jacobian of h at x -> H matrix
         R: Optional measurement noise covariance
         """
-        if R is None: R = self.R
+        if R is None:
+            R = self.R
 
         # Innovation: y = z - h(x)
         y = z - hx(self.x, **kwargs)
 
         # Jacobian H
         H = H_jac(self.x, **kwargs)
-            
+
         # Innovation Covariance: S = HPH' + R
         S = np.dot(np.dot(H, self.P), H.T) + R
-        
+
         # Kalman Gain: K = PH'S^-1
         K = np.dot(np.dot(self.P, H.T), np.linalg.inv(S))
-        
+
         # State Correction: x = x + Ky
         self.x = self.x + np.dot(K, y)
-        
+
         # Covariance Correction: P = (I - KH)P(I - KH)' + KRK' (Joseph Form)
         I = np.eye(self.dim_x)
         I_KH = I - np.dot(K, H)

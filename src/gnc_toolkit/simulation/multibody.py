@@ -1,6 +1,9 @@
-from typing import List, Dict, Any, Callable
-from .simulator import MissionSimulator
+from collections.abc import Callable
+from typing import Any
+
 from .logging import SimulationLogger
+from .simulator import MissionSimulator
+
 
 class ConstellationSimulator:
     """
@@ -8,13 +11,15 @@ class ConstellationSimulator:
     Simulates N independent or coupled spacecraft simultaneously.
     """
 
-    def __init__(self, 
-                 num_satellites: int,
-                 propagator: Callable,
-                 sensor_model: Callable = None,
-                 estimator: Callable = None,
-                 controller: Callable = None,
-                 logger: SimulationLogger = None):
+    def __init__(
+        self,
+        num_satellites: int,
+        propagator: Callable,
+        sensor_model: Callable = None,
+        estimator: Callable = None,
+        controller: Callable = None,
+        logger: SimulationLogger = None,
+    ):
         """
         Initialize constellation simulator.
 
@@ -37,10 +42,10 @@ class ConstellationSimulator:
             sensor_model=sensor_model,
             estimator=estimator,
             controller=controller,
-            logger=logger
+            logger=logger,
         )
 
-    def initialize(self, t0: float, initial_states: List[Any]):
+    def initialize(self, t0: float, initial_states: list[Any]):
         """
         Initialize constellation simulation.
 
@@ -52,8 +57,10 @@ class ConstellationSimulator:
             List of initial states for each spacecraft.
         """
         if len(initial_states) != self.num_satellites:
-            raise ValueError(f"Expected {self.num_satellites} initial states, got {len(initial_states)}")
-            
+            raise ValueError(
+                f"Expected {self.num_satellites} initial states, got {len(initial_states)}"
+            )
+
         self.simulator.initialize(t0, initial_states)
 
     def run(self, t_end: float, dt: float):

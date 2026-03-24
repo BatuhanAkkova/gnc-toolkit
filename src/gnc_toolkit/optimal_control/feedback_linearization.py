@@ -4,23 +4,25 @@ Feedback Linearization Controller for nonlinear systems.
 
 import numpy as np
 
+
 class FeedbackLinearization:
     """
     Feedback Linearization Controller.
-    
+
     For a system of the form:
     dot_x = f(x) + g(x) u
-    
+
     Computes the control input u that achieves the desired linear dynamics:
     dot_x = v
-    
+
     The control law is:
     u = g(x)^-1 * (v - f(x))
     """
+
     def __init__(self, f_func, g_func):
         """
         Initialize the Feedback Linearization Controller.
-        
+
         Args:
             f_func (callable): Function f(x) returning the drift vector.
             g_func (callable): Function g(x) returning the input matrix.
@@ -31,25 +33,26 @@ class FeedbackLinearization:
     def compute_control(self, x, v):
         """
         Compute the linearizing control input.
-        
+
         Args:
             x (np.ndarray): Current state vector.
             v (np.ndarray): Desired linear dynamics input (pseudo-control).
-            
-        Returns:
+
+        Returns
+        -------
             np.ndarray: Control input u.
         """
         x = np.array(x)
         v = np.array(v)
-        
+
         f_val = np.array(self.f_func(x))
         g_val = np.array(self.g_func(x))
-        
+
         # Check dimensions
         if g_val.size == 1:
             # Scalar case
             u = (v - f_val) / g_val
         else:
             u = np.linalg.solve(g_val, v - f_val)
-             
+
         return u

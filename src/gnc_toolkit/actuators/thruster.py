@@ -3,13 +3,16 @@ Thruster models including Chemical, Electric, and Multi-thruster clusters.
 """
 
 import numpy as np
+
 from gnc_toolkit.actuators.actuator import Actuator
+
 
 class Thruster(Actuator):
     """
     Base Thruster model.
     Produces thrust Force.
     """
+
     def __init__(self, max_thrust=1.0, min_impulse_bit=0.0, isp=None, name="Thruster"):
         """
         Args:
@@ -28,13 +31,14 @@ class Thruster(Actuator):
         Args:
             thrust_cmd (float): Commanded thrust [N].
             dt (float, optional): Time step duration [s]. Required for MIB checks.
-            
-        Returns:
+
+        Returns
+        -------
             float: Delivered thrust [N].
         """
         # Saturation (clip to max thrust)
         thrust = self.apply_saturation(thrust_cmd)
-        
+
         # Minimum Impulse Bit Logic
         # If dt is provided, check if the requested impulse is possible.
         if dt is not None and self.min_impulse_bit > 0 and abs(thrust) > 1e-9:
@@ -42,7 +46,7 @@ class Thruster(Actuator):
             if requested_impulse < self.min_impulse_bit:
                 # Deadband behavior for impulses < MIB
                 thrust = 0.0
-                
+
         return thrust
 
     def get_mass_flow(self, thrust):
@@ -58,6 +62,7 @@ class ChemicalThruster(Thruster):
     Chemical Thruster.
     Models On/Off behavior or PWM-averaged thrust.
     """
+
     def __init__(self, max_thrust=10.0, isp=300.0, min_on_time=0.010, name="ChemThruster"):
         """
         Args:
@@ -67,20 +72,20 @@ class ChemicalThruster(Thruster):
         self.min_on_time = min_on_time
         mib = max_thrust * min_on_time
         super().__init__(max_thrust=max_thrust, isp=isp, min_impulse_bit=mib, name=name)
-    
+
     def command(self, thrust_cmd, dt=None, **kwargs):
         """
         Considers PWM constraints.
         If the commanded thrust implies an on-time < min_on_time, it is zeroed.
         """
         thrust = super().command(thrust_cmd, dt=dt, **kwargs)
-        
+
         if dt is not None and self.min_on_time > 0 and abs(thrust) > 1e-9:
             required_on_time = (abs(thrust) / self.max_thrust) * dt
-            
+
             if required_on_time < self.min_on_time:
                 thrust = 0.0
-                
+
         return thrust
 
 
@@ -89,6 +94,7 @@ class ElectricThruster(Thruster):
     Electric Thruster (e.g. Hall Effect, Ion).
     Power-limited.
     """
+
     def __init__(self, max_thrust=0.1, isp=1500.0, power_efficiency=0.6, name="ElecThruster"):
         """
         Args:
@@ -102,16 +108,19 @@ class ElectricThruster(Thruster):
         """Calculate required electrical power [W]."""
         # P_in = Thrust * ve / (2 * eta)
         # ve = Isp * g0
-        if self.power_efficiency <= 0: return float('inf')
-        
+        if self.power_efficiency <= 0:
+            return float("inf")
+
         ve = self.isp * self.g0
         return thrust * ve / (2 * self.power_efficiency)
+
 
 class ThrusterCluster:
     """
     A collection of thrusters with a defined allocation logic.
     Maps generalized force/torque to individual thruster on-times or throttle levels.
     """
+
     def __init__(self, thrusters, positions, directions):
         """
         Args:
@@ -123,36 +132,38 @@ class ThrusterCluster:
         self.N = len(thrusters)
         self.pos = np.array(positions)
         self.dir = np.array(directions)
-        
+
         # Force_i = T_i * dir_i
         # Torque_i = pos_i x (T_i * dir_i)
         self.A = np.zeros((6, self.N))
         for i in range(self.N):
             self.A[0:3, i] = self.dir[i]
             self.A[3:6, i] = np.cross(self.pos[i], self.dir[i])
-            
+
         # Default allocator
         from gnc_toolkit.actuators.allocation import PseudoInverseAllocator
+
         self.allocator = PseudoInverseAllocator(self.A)
 
     def command(self, force_torque_cmd, dt=None):
         """
         Distribute 6-DOF command to thrusters.
-        
+
         Args:
             force_torque_cmd (np.array): (6,) desired [Fx, Fy, Fz, Tx, Ty, Tz].
             dt (float): Time step for MIB checks.
-            
-        Returns:
+
+        Returns
+        -------
             np.array: Delivered thrusts for each thruster.
         """
         thrust_cmds = self.allocator.allocate(force_torque_cmd)
-        
+
         # Apply individual thruster constraints
         delivered_thrusts = []
         for i, cmd in enumerate(thrust_cmds):
             cmd_clamped = max(0.0, cmd)
             delivered = self.thrusters[i].command(cmd_clamped, dt=dt)
             delivered_thrusts.append(delivered)
-            
+
         return np.array(delivered_thrusts)

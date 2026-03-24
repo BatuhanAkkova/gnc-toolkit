@@ -3,7 +3,8 @@ Square-Root Unscented Kalman Filter (SR-UKF) algorithm.
 """
 
 import numpy as np
-from scipy.linalg import qr, cholesky, solve_triangular
+from scipy.linalg import cholesky, qr, solve_triangular
+
 
 class SRUKF:
     """
@@ -11,6 +12,7 @@ class SRUKF:
     Provides better numerical stability and efficiency than standard UKF
     by propagating the Cholesky factor (S) of the covariance matrix P = S*S.T.
     """
+
     def __init__(self, dim_x, dim_z, alpha=1e-3, beta=2.0, kappa=0.0):
         """
         Initialize the SR-UKF.
@@ -20,29 +22,29 @@ class SRUKF:
         """
         self.dim_x = dim_x
         self.dim_z = dim_z
-        
+
         self.alpha = alpha
         self.beta = beta
         self.kappa = kappa
-        
+
         self.lambda_ = alpha**2 * (dim_x + kappa) - dim_x
         self.gamma = np.sqrt(dim_x + self.lambda_)
-        
+
         self.num_sigmas = 2 * dim_x + 1
         self.Wm = np.zeros(self.num_sigmas)
         self.Wc = np.zeros(self.num_sigmas)
-        
+
         self.Wm[0] = self.lambda_ / (dim_x + self.lambda_)
         self.Wc[0] = self.Wm[0] + (1 - alpha**2 + beta)
-        
+
         weight = 1.0 / (2 * (dim_x + self.lambda_))
         for i in range(1, self.num_sigmas):
             self.Wm[i] = weight
             self.Wc[i] = weight
-            
+
         self.x = np.zeros(dim_x)
         self.S = np.eye(dim_x)  # Cholesky factor of covariance P
-        
+
         # Square-root noise covariances
         self.Qs = np.eye(dim_x)
         self.Rs = np.eye(dim_z)
@@ -54,27 +56,28 @@ class SRUKF:
         fx: State transition function f(x, dt, **kwargs) -> x_new
         Qs: Optional square-root process noise covariance (S_Q)
         """
-        if Qs is None: Qs = self.Qs
-        
+        if Qs is None:
+            Qs = self.Qs
+
         # Generate sigma points using S
         sigmas = self._generate_sigma_points()
-        
+
         # Propagate sigma points
         sigmas_f = np.zeros((self.num_sigmas, self.dim_x))
         for i in range(self.num_sigmas):
             sigmas_f[i] = fx(sigmas[i], dt, **kwargs)
-            
+
         # Predicted mean
         self.x = np.dot(self.Wm, sigmas_f)
-        
+
         # Update square-root covariance S
         # Compute S- using QR decomposition of the propagated sigma points and process noise
         X = np.sqrt(self.Wc[1]) * (sigmas_f[1:] - self.x)
-        
+
         # QR decomposition
-        _, St = qr(np.vstack((X, Qs)), mode='economic')
-        self.S = St[:self.dim_x, :self.dim_x].T
-        
+        _, St = qr(np.vstack((X, Qs)), mode="economic")
+        self.S = St[: self.dim_x, : self.dim_x].T
+
         # Cholesky rank-1 update for the first weight
         dx = sigmas_f[0] - self.x
         self.S = self._cholesky_update(self.S, dx, self.Wc[0])
@@ -86,41 +89,42 @@ class SRUKF:
         hx: Measurement function h(x, **kwargs) -> z_pred
         Rs: Optional square-root measurement noise covariance (S_R)
         """
-        if Rs is None: Rs = self.Rs
-        
+        if Rs is None:
+            Rs = self.Rs
+
         # Regenerate sigma points
         sigmas_f = self._generate_sigma_points()
-        
+
         # Transform to measurement space
         sigmas_h = np.zeros((self.num_sigmas, self.dim_z))
         for i in range(self.num_sigmas):
             sigmas_h[i] = hx(sigmas_f[i], **kwargs)
-            
+
         # Mean measurement
         zp = np.dot(self.Wm, sigmas_h)
-        
+
         # Square-root innovation covariance Sy
         H = np.sqrt(self.Wc[1]) * (sigmas_h[1:] - zp)
-        _, St = qr(np.vstack((H, Rs)), mode='economic')
-        Sy = St[:self.dim_z, :self.dim_z].T
-        
+        _, St = qr(np.vstack((H, Rs)), mode="economic")
+        Sy = St[: self.dim_z, : self.dim_z].T
+
         # Rank-1 update for first weight
         dz_0 = sigmas_h[0] - zp
         Sy = self._cholesky_update(Sy, dz_0, self.Wc[0])
-        
+
         # Cross-covariance Pxz
         Pxz = np.zeros((self.dim_x, self.dim_z))
         for i in range(self.num_sigmas):
             dx = sigmas_f[i] - self.x
             dz = sigmas_h[i] - zp
             Pxz += self.Wc[i] * np.outer(dx, dz)
-            
+
         # Kalman gain
-        K = solve_triangular(Sy, solve_triangular(Sy, Pxz.T, lower=True), lower=True, trans='T').T
-        
+        K = solve_triangular(Sy, solve_triangular(Sy, Pxz.T, lower=True), lower=True, trans="T").T
+
         # Correct mean and square-root covariance
         self.x += np.dot(K, z - zp)
-        
+
         U = np.dot(K, Sy)
         for i in range(self.dim_z):
             self.S = self._cholesky_update(self.S, U[:, i], -1.0)
@@ -129,8 +133,8 @@ class SRUKF:
         sigmas = np.zeros((self.num_sigmas, self.dim_x))
         sigmas[0] = self.x
         for i in range(self.dim_x):
-            sigmas[i+1] = self.x + self.gamma * self.S[:, i]
-            sigmas[i+1+self.dim_x] = self.x - self.gamma * self.S[:, i]
+            sigmas[i + 1] = self.x + self.gamma * self.S[:, i]
+            sigmas[i + 1 + self.dim_x] = self.x - self.gamma * self.S[:, i]
         return sigmas
 
     def _cholesky_update(self, S, v, weight):
@@ -143,8 +147,8 @@ class SRUKF:
         if weight > 0:
             v_scaled = np.sqrt(weight) * v
             # Use QR to get updated S
-            _, St = qr(np.vstack((S.T, v_scaled)), mode='economic')
-            return St[:S.shape[0], :S.shape[1]].T
+            _, St = qr(np.vstack((S.T, v_scaled)), mode="economic")
+            return St[: S.shape[0], : S.shape[1]].T
         else:
             P = np.dot(S, S.T) + weight * np.outer(v, v)
             try:

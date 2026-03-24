@@ -3,7 +3,9 @@ Control Moment Gyro (CMG) actuator model.
 """
 
 import numpy as np
+
 from gnc_toolkit.actuators.actuator import Actuator
+
 
 class ControlMomentGyro(Actuator):
     """
@@ -11,7 +13,10 @@ class ControlMomentGyro(Actuator):
     Models torque produced by changing the orientation of a constant-speed momentum wheel.
      Torque = gimbal_rate x momentum
     """
-    def __init__(self, wheel_momentum, gimbal_axis, spin_axis_init, name="CMG", max_gimbal_rate=None):
+
+    def __init__(
+        self, wheel_momentum, gimbal_axis, spin_axis_init, name="CMG", max_gimbal_rate=None
+    ):
         """
         Args:
             wheel_momentum (float): Angular momentum magnitude [Nms].
@@ -24,7 +29,7 @@ class ControlMomentGyro(Actuator):
         self.h_mag = wheel_momentum
         self.g_axis = np.array(gimbal_axis) / np.linalg.norm(gimbal_axis)
         self.s_axis = np.array(spin_axis_init) / np.linalg.norm(spin_axis_init)
-        
+
         # Verify orthogonality (approximately)
         if abs(np.dot(self.g_axis, self.s_axis)) > 1e-6:
             # Re-orthogonalize s_axis
@@ -37,11 +42,12 @@ class ControlMomentGyro(Actuator):
     def get_axes(self, angle=None):
         """
         Get the current spin and transverse axes for a given gimbal angle.
-        
+
         Args:
             angle (float, optional): Gimbal angle [rad]. If None, uses current.
-            
-        Returns:
+
+        Returns
+        -------
             tuple: (spin_axis, transverse_axis)
         """
         theta = angle if angle is not None else self.gimbal_angle
@@ -53,39 +59,41 @@ class ControlMomentGyro(Actuator):
     def command(self, gimbal_rate_cmd, dt=None):
         """
         Calculate torque produced by gimbal rate.
-        
+
         Args:
             gimbal_rate_cmd (float): Commanded gimbal rate [rad/s].
             dt (float, optional): Time step [s] to update gimbal angle.
-            
-        Returns:
+
+        Returns
+        -------
             np.array: Torque vector [Nm] (3,).
         """
         # Apply rate limits
         g_rate = self.apply_saturation(gimbal_rate_cmd)
-        
+
         # Current axes
         s, t = self.get_axes()
-        
+
         # Torque = g_rate * h_mag * (g x s) = g_rate * h_mag * t
         torque_vec = g_rate * self.h_mag * t
-        
+
         # Update gimbal angle
         if dt is not None:
             self.gimbal_angle += g_rate * dt
             # Normalize angle to [-pi, pi]
             self.gimbal_angle = (self.gimbal_angle + np.pi) % (2 * np.pi) - np.pi
-            
+
         return torque_vec
 
     def get_torque_jacobian(self, angle=None):
         """
         Returns the Jacobian mapping gimbal rate to torque: T = A * g_rate.
-        
+
         Args:
             angle (float, optional): Angle to evaluate at.
-            
-        Returns:
+
+        Returns
+        -------
             np.array: (3,1) mapping matrix.
         """
         _, t = self.get_axes(angle)

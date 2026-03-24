@@ -1,7 +1,9 @@
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from .events import EventQueue
 from .logging import SimulationLogger
+
 
 class MissionSimulator:
     """
@@ -9,12 +11,14 @@ class MissionSimulator:
     Executes a unified simulation loop: propagate -> sense -> estimate -> control.
     """
 
-    def __init__(self, 
-                 propagator: Callable,
-                 sensor_model: Callable,
-                 estimator: Callable,
-                 controller: Callable,
-                 logger: SimulationLogger = None):
+    def __init__(
+        self,
+        propagator: Callable,
+        sensor_model: Callable,
+        estimator: Callable,
+        controller: Callable,
+        logger: SimulationLogger = None,
+    ):
         """
         Initialize the mission simulator.
 
@@ -39,10 +43,10 @@ class MissionSimulator:
         self.sensor_model = sensor_model
         self.estimator = estimator
         self.controller = controller
-        
+
         self.logger = logger
         self.event_queue = EventQueue()
-        
+
         self.time = 0.0
         self.state = None
 
@@ -63,7 +67,7 @@ class MissionSimulator:
     def schedule_event(self, t: float, callback: Callable, *args, **kwargs):
         """
         Schedules a discrete event in the simulation.
-        
+
         Parameters
         ----------
         t : float
@@ -101,7 +105,9 @@ class MissionSimulator:
             self.logger.log(self.time, self.state, meas, est, u)
 
         # 6. Propagate truth
-        self.state = self.propagator(self.time, self.state, dt, u) if self.propagator else self.state
+        self.state = (
+            self.propagator(self.time, self.state, dt, u) if self.propagator else self.state
+        )
         self.time += dt
 
     def run(self, t_end: float, dt: float):

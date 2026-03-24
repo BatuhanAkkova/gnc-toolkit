@@ -1,6 +1,8 @@
 import time
-from typing import Callable, Any
+from typing import Any
+
 from .simulator import MissionSimulator
+
 
 class RealTimeSimulator(MissionSimulator):
     """
@@ -15,7 +17,7 @@ class RealTimeSimulator(MissionSimulator):
         Parameters
         ----------
         rtf : float
-            Real-Time Factor. 
+            Real-Time Factor.
             rtf = 1.0 means simulation runs exactly at wall-clock speed.
             rtf = 2.0 means simulation runs twice as fast.
         *args : Any
@@ -47,14 +49,14 @@ class RealTimeSimulator(MissionSimulator):
         while self.time <= t_end:
             # step logic
             super().step(dt)
-            
+
             # calculate required delay
             elapsed_sim = self.time - self.sim_clock_start
             expected_wall_clock = elapsed_sim / self.rtf
-            
+
             elapsed_wall = time.time() - self.wall_clock_start
             sleep_time = expected_wall_clock - elapsed_wall
-            
+
             if sleep_time > 0:
                 time.sleep(sleep_time)
             elif sleep_time < -dt:

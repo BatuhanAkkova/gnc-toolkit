@@ -1,5 +1,7 @@
 import multiprocessing as mp
-from typing import Callable, List, Dict, Any
+from collections.abc import Callable
+from typing import Any
+
 
 class MonteCarloSim:
     """
@@ -17,10 +19,10 @@ class MonteCarloSim:
             Signature: `factory_fn(seed: int, kwargs) -> MissionSimulator`
         """
         self.simulator_factory = simulator_factory
-        self.results: List[Any] = []
+        self.results: list[Any] = []
 
     def _run_single(self, kwargs) -> Any:
-        seed = kwargs.pop('seed')
+        seed = kwargs.pop("seed")
         sim = self.simulator_factory(seed, **kwargs)
         # Assumes sim.run() returns a result object or log
         # if not, `sim.logger.history` might be returned.
@@ -38,7 +40,7 @@ class MonteCarloSim:
         self.results = []
         for i in range(num_runs):
             params = dict(kwargs)
-            params['seed'] = i
+            params["seed"] = i
             result = self._run_single(params)
             self.results.append(result)
 
@@ -57,8 +59,8 @@ class MonteCarloSim:
         pool_kwargs = []
         for i in range(num_runs):
             params = dict(kwargs)
-            params['seed'] = i
+            params["seed"] = i
             pool_kwargs.append(params)
-            
+
         with mp.Pool(processes) as pool:
             self.results = pool.map(self._run_single, pool_kwargs)

@@ -3,7 +3,9 @@ Abstract base class for orbit propagators.
 """
 
 from abc import ABC, abstractmethod
+
 import numpy as np
+
 
 class Propagator(ABC):
     """
@@ -21,7 +23,8 @@ class Propagator(ABC):
             dt (float): Time step to propagate [s].
             **kwargs: Additional arguments specific to the propagator.
 
-        Returns:
+        Returns
+        -------
             tuple: (r_f, v_f) Final position and velocity vectors.
         """
         pass

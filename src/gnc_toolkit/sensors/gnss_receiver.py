@@ -3,7 +3,9 @@ GNSS Receiver sensor model.
 """
 
 import numpy as np
+
 from gnc_toolkit.sensors.sensor import Sensor
+
 
 class GNSSReceiver(Sensor):
     """
@@ -12,8 +14,10 @@ class GNSSReceiver(Sensor):
     r_meas = r_true + pos_bias + pos_noise
     v_meas = v_true + vel_bias + vel_noise
     """
-    def __init__(self, pos_noise_std=1.0, vel_noise_std=0.01, 
-                 pos_bias=None, vel_bias=None, name="GNSS"):
+
+    def __init__(
+        self, pos_noise_std=1.0, vel_noise_std=0.01, pos_bias=None, vel_bias=None, name="GNSS"
+    ):
         """
         Args:
             pos_noise_std (float): Standard deviation of position noise [m].
@@ -32,11 +36,12 @@ class GNSSReceiver(Sensor):
         Args:
             true_r (np.ndarray): True position vector [m].
             true_v (np.ndarray): True velocity vector [m/s].
-            
-        Returns:
+
+        Returns
+        -------
             tuple: (measured_r, measured_v)
         """
         meas_r = true_r + self.pos_bias + np.random.normal(0, self.pos_noise_std, 3)
         meas_v = true_v + self.vel_bias + np.random.normal(0, self.vel_noise_std, 3)
-        
+
         return meas_r, meas_v

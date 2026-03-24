@@ -3,14 +3,19 @@ Magnetometer sensor model.
 """
 
 import numpy as np
+
 from gnc_toolkit.sensors.sensor import Sensor
+
 
 class Magnetometer(Sensor):
     """
     Magnetometer sensor model.
     Measures magnetic field vector in body frame.
     """
-    def __init__(self, noise_std=0.0, bias=None, misalignment=None, scale_factor=1.0, name="Magnetometer"):
+
+    def __init__(
+        self, noise_std=0.0, bias=None, misalignment=None, scale_factor=1.0, name="Magnetometer"
+    ):
         """
         Args:
             noise_std (float): Standard deviation of measurement noise [Tesla].
@@ -30,12 +35,14 @@ class Magnetometer(Sensor):
             true_mag_vec_body (np.ndarray): True magnetic field vector in body frame [Tesla].
         """
         # Apply calibration (soft iron, misalignment, hard iron bias)
-        calibrated = self.apply_calibration(true_mag_vec_body, self.misalignment, self.scale_factor, self.bias)
-        
+        calibrated = self.apply_calibration(
+            true_mag_vec_body, self.misalignment, self.scale_factor, self.bias
+        )
+
         # Add noise
         measured = self.add_gaussian_noise(calibrated, self.noise_std)
-        
+
         # Apply faults
         measured = self.apply_faults(measured)
-        
+
         return measured

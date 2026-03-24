@@ -93,7 +93,7 @@ class AnalyticalRedundancy:
 
     @staticmethod
     def gyro_vs_quaternion_residual(q_dot_measured: np.ndarray, q_dot_calculated: np.ndarray) -> np.ndarray:
-        """
+        r"""
         Calculates residual between measured quaternion rate (from ST) and calculated from gyro.
         
         q_dot_calculated = 0.5 * q \otimes [0, \omega]^T

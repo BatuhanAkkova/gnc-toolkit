@@ -8,12 +8,30 @@ from gnc_toolkit.utils.time_utils import (
     calc_jd, jd_to_datetime, day_to_mdtime, calc_gmst,
     calc_last, calc_lst, calc_doy, is_leap_year, convert_time
 )
-from gnc_toolkit.utils.state_to_elements import eci2kepler, kepler2eci
+from gnc_toolkit.utils.state_to_elements import eci2kepler, kepler2eci, anomalies
 from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, elements2perifocal_dcm
 from gnc_toolkit.utils.state_conversion import (
     quat_to_dcm, quat_to_euler, dcm_to_quat, dcm_to_euler,
     euler_to_quat, euler_to_dcm, rot_x, rot_y, rot_z
 )
+from gnc_toolkit.utils.mean_elements import osculating2mean, get_j2_secular_rates
+
+# MEAN ELEMENTS
+def test_osculating2mean_identity():
+    elements = (7000e3, 0.01, 1.0, 0.0, 0.0, 0.0)
+    out = osculating2mean(*elements)
+    assert out == elements
+
+def test_j2_secular_rates():
+    a = 7000e3
+    ecc = 0.001
+    incl = np.radians(45.0)
+    
+    raan_dot, argp_dot, M_dot = get_j2_secular_rates(a, ecc, incl)
+    assert raan_dot < 0
+    assert argp_dot > 0
+    n = np.sqrt(398600.4415e9 / a**3)
+    assert M_dot > n
 
 # QUAT UTILS
 
@@ -31,12 +49,10 @@ def test_quat_norm_normalize():
 def test_quat_ops_basic():
     q = np.array([0, 0, 0, 1]) # Identity
     
-    # Conjugate
-    q_conj = quat_conj(q)
+    q_conj = quat_conj(q) # Conjugate
     np.testing.assert_array_equal(q_conj, np.array([0, 0, 0, 1]))
     
-    # Inverse
-    q_inv = quat_inv(q)
+    q_inv = quat_inv(q) # Inverse
     np.testing.assert_array_equal(q_inv, np.array([0, 0, 0, 1]))
     
     q2 = np.array([1, 0, 0, 0])
@@ -44,15 +60,12 @@ def test_quat_ops_basic():
     np.testing.assert_array_equal(q_mult, np.array([0, 0, 0, -1]))
 
 def test_quat_rot():
-    # Rotate vector [1, 0, 0] by 90 deg around z-axis
-    # q = [0, 0, sin(45), cos(45)] = [0, 0, 0.7071, 0.7071]
     angle = np.pi/2
     q = np.array([0, 0, np.sin(angle/2), np.cos(angle/2)])
     
     v = np.array([1, 0, 0])
     v_rot = quat_rot(q, v)
     
-    # Expect [0, 1, 0]
     np.testing.assert_allclose(v_rot, np.array([0, 1, 0]), atol=1e-10)
 
 def test_axis_angle_to_quat():
@@ -65,20 +78,16 @@ def test_axis_angle_to_quat():
     
     np.testing.assert_allclose(q, expected, atol=1e-10)
     
-    # Zero rotation
-    q_zero = axis_angle_to_quat(np.zeros(3))
+    q_zero = axis_angle_to_quat(np.zeros(3)) # Zero rotation
     np.testing.assert_array_equal(q_zero, np.array([0, 0, 0, 1]))
 
 def test_quat_to_rmat():
-    # Identity
-    q = np.array([0, 0, 0, 1])
+    q = np.array([0, 0, 0, 1]) # Identity
     rmat = quat_to_rmat(q)
     np.testing.assert_array_equal(rmat, np.eye(3))
     
-    # 90 deg Z rotation
-    # q = [0, 0, 1/sqrt(2), 1/sqrt(2)]
     val = 1.0/np.sqrt(2)
-    q_z = np.array([0, 0, val, val])
+    q_z = np.array([0, 0, val, val]) # 90 deg Z rotation
     rmat_z = quat_to_rmat(q_z)
     
     expected = np.array([
@@ -108,16 +117,13 @@ def test_jd_datetime_roundtrip():
     assert np.isclose(s, s2, atol=1e-6)
 
 def test_calc_gmst():
-    # J2000 GMST verify
     jd = 2451545.0
     gmst_rad = calc_gmst(jd)
     gmst_deg = np.degrees(gmst_rad)
     
-    # Expected approx 280.4606 deg
-    assert np.isclose(gmst_deg, 280.4606, atol=1e-2)
+    assert np.isclose(gmst_deg, 280.4606, atol=1e-2) # Expected approx 280.4606 deg
     
-    # Range check
-    assert 0 <= gmst_rad < 2*np.pi
+    assert 0 <= gmst_rad < 2*np.pi # Range check
 
 def test_is_leap_year():
     assert is_leap_year(2000)
@@ -132,14 +138,12 @@ def test_calc_doy():
     assert calc_doy(2023, 3, 1) == 60
 
 def test_calc_lst():
-    # LST = GMST + lon
     gmst = 1.0
     lon = 0.5
-    lst = calc_lst(gmst, lon)
+    lst = calc_lst(gmst, lon) # LST = GMST + lon
     assert np.isclose(lst, 1.5)
 
 def test_convert_time():
-    # Should run without error
     res = convert_time(2024, 1, 1, 12, 0, 0, 0, 0, 0, 37)
     assert isinstance(res, tuple)
     assert len(res) == 15
@@ -147,9 +151,7 @@ def test_convert_time():
 # STATE TRANSFORM
 
 def test_state_transform_roundtrip():
-    # Define a state in ECI (Meters, m/s)
-    # 7000 km orbit, circular-ish
-    r = np.array([7000000.0, 0, 0])
+    r = np.array([7000000.0, 0, 0]) # Define a state in ECI (Meters, m/s)
     mu = 398600.4415e9
     v_mag = np.sqrt(mu / np.linalg.norm(r))
     v = np.array([0, v_mag, 0])
@@ -169,19 +171,24 @@ def test_state_transform_roundtrip():
     assert np.isclose(truelon, 0, rtol=1e-6)
     assert np.isclose(lonper, 0, rtol=1e-6)
     
-    # Round trip
-    r_back, v_back = kepler2eci(a, ecc, incl, raan, argp, nu)
+    r_back, v_back = kepler2eci(a, ecc, incl, raan, argp, nu) # Round trip
     
     np.testing.assert_allclose(r_back, r, rtol=1e-6, atol=1e-6)
     np.testing.assert_allclose(v_back, v, rtol=1e-6, atol=1e-6)
 
+def test_anomalies_negative_mean():
+    ecc = 0.5
+    nu = np.pi + 0.1
+    E, M = anomalies(ecc, nu)
+    assert 0 <= M < 2*np.pi
+    assert 0 <= E < 2*np.pi
+
 # CONVERSIONS
 
 def test_eci_ecef_roundtrip():
-    """Test ECI to ECEF and back."""
     reci = np.array([7000, 0, 0])
     veci = np.array([0, 7.5, 0])
-    jdut1 = 2451545.0 # Some Julian Date
+    jdut1 = 2451545.0
     
     recef, vecef = eci2ecef(reci, veci, jdut1)
     reci_back, veci_back = ecef2eci(recef, vecef, jdut1)
@@ -190,14 +197,8 @@ def test_eci_ecef_roundtrip():
     np.testing.assert_allclose(veci, veci_back, atol=1e-10)
 
 def test_eci2lvlh_dcm():
-    """Test ECI to LVLH direction cosine matrix."""
     r = np.array([7000, 0, 0])
     v = np.array([0, 7.5, 0])
-    
-    # Orbit normal h = r x v = (0, 0, 7000*7.5) = +Z direction
-    # y_lvlh = -h/norm = (0, 0, -1)
-    # z_lvlh = -r/norm = (-1, 0, 0)
-    # x_lvlh = y x z = (0, 0, -1) x (-1, 0, 0) = (0, 1, 0)
     
     expected_dcm = np.array([
         [0, 1, 0],
@@ -215,17 +216,12 @@ def test_eci2llh():
     np.testing.assert_allclose(h, 300000, atol=1e-10)
 
 def test_elements2perifocal_dcm():
-    """Test elements to perifocal direction cosine matrix."""
-    # Case: Identity (all zero)
-    dcm = elements2perifocal_dcm(0, 0, 0)
+    dcm = elements2perifocal_dcm(0, 0, 0) # Identity (all zero)
     np.testing.assert_allclose(dcm, np.eye(3), atol=1e-10)
     
-    # Case: 90 deg inclination (x-rotation)
     dcm_inc = elements2perifocal_dcm(0, np.pi/2, 0)
     np.testing.assert_allclose(np.dot(dcm_inc, dcm_inc.T), np.eye(3), atol=1e-10)
     
-    # Explicit check for 90 deg inclination (Rotation about X axis of perifocal? No, ECI X if node is there)
-    # R = [1, 0, 0; 0, 0, -1; 0, 1, 0]
     expected_inc = np.array([
         [1, 0, 0],
         [0, 0, -1],
@@ -233,9 +229,7 @@ def test_elements2perifocal_dcm():
     ])
     np.testing.assert_allclose(dcm_inc, expected_inc, atol=1e-10)
 
-    # Case: RAAN 90 (z-rotation)
-    # R = Rz(90) = [[0, -1, 0], [1, 0, 0], [0, 0, 1]]
-    dcm_raan = elements2perifocal_dcm(np.pi/2, 0, 0)
+    dcm_raan = elements2perifocal_dcm(np.pi/2, 0, 0) # Case: RAAN 90 (z-rotation)
     expected_raan = np.array([
         [0, -1, 0],
         [1, 0, 0],
@@ -244,7 +238,6 @@ def test_elements2perifocal_dcm():
     np.testing.assert_allclose(dcm_raan, expected_raan, atol=1e-10)
 
 def test_rotation_matrices():
-    """Test rotation matrices rot_x, rot_y, rot_z."""
     angle = np.pi / 2
     
     Rx = rot_x(angle)
@@ -272,18 +265,14 @@ def test_rotation_matrices():
     np.testing.assert_allclose(Rz, expected_Rz, atol=1e-10)
 
 def test_quat_dcm_roundtrip():
-    """Test quaternion to direction cosine matrix and back."""
-    # Identity
-    q_id = np.array([0, 0, 0, 1])
+    q_id = np.array([0, 0, 0, 1]) # Identity
     dcm_id = quat_to_dcm(q_id)
     np.testing.assert_allclose(dcm_id, np.eye(3), atol=1e-10)
     q_out = dcm_to_quat(dcm_id)
-    # Quaternion double cover check
-    if np.dot(q_id, q_out) < 0:
+    if np.dot(q_id, q_out) < 0: # Quaternion double cover check
         q_out = -q_out
     np.testing.assert_allclose(q_out, q_id, atol=1e-10)
 
-    # Random rotation
     angle = np.pi / 3
     axis = np.array([1, 1, 1])
     axis = axis / np.linalg.norm(axis)
@@ -304,8 +293,6 @@ def test_quat_dcm_roundtrip():
 # FRAME CONVERSIONS
 
 def test_euler_dcm_roundtrip():
-    """Test Euler angles to direction cosine matrix and back."""
-    # Sequence 3-2-1 (scipy style z-y-x)
     angles = np.array([0.1, 0.2, 0.3])
     seq = "321"
     
@@ -315,7 +302,6 @@ def test_euler_dcm_roundtrip():
     np.testing.assert_allclose(angles_out, angles, atol=1e-10)
 
 def test_euler_quat_roundtrip():
-    """Test Euler angles to quaternion and back."""
     angles = np.array([0.5, -0.2, 0.1])
     seq = "123"
     
@@ -329,8 +315,281 @@ def test_euler_quat_roundtrip():
     np.testing.assert_allclose(angles_back, angles, atol=1e-10)
 
 def test_invalid_sequence():
-    """Test invalid Euler angle sequences."""
     with pytest.raises(ValueError):
         euler_to_dcm([0,0,0], "12")
     with pytest.raises(ValueError):
         euler_to_quat([0,0,0], "1234")
+
+def test_calc_jd_frac_overflow():
+    jd, jdfrac = calc_jd(2000, 1, 1, hour=30)   
+    assert jd == 2451545.5
+    assert jdfrac == pytest.approx(0.25)
+
+def test_jd_to_datetime_edge():
+    y, m, d, h, mn, s = jd_to_datetime(2451545.2, 0.0)
+    assert y == 2000
+
+def test_day_to_mdtime():
+    m, d, h, mn, s = day_to_mdtime(2024, 60.5)
+    assert m == 2
+    assert d == 29
+    
+    m2, d2, h2, mn2, s2 = day_to_mdtime(2023, 60.5)
+    assert m2 == 3
+    assert d2 == 1
+
+def test_calc_last():
+    last = calc_last(2451545.0, 0.5)
+    assert 0 <= last < 2*np.pi
+
+def test_eci_icrf_conversions():
+    from gnc_toolkit.utils.frame_conversion import eci2icrf, icrf2eci, eci2eme2000, eme20002eci
+    reci = np.array([7000.0, 0, 0])
+    veci = np.array([0, 7.5, 0])
+    jd = 2451545.0
+    
+    r_icrf, v_icrf = eci2icrf(reci, veci, jd)
+    r_back, v_back = icrf2eci(r_icrf, v_icrf, jd)
+    np.testing.assert_allclose(reci, r_back, rtol=1e-5)
+    
+    r_eme, v_eme = eci2eme2000(reci, veci)
+    r_back_eme, v_back_eme = eme20002eci(r_eme, v_eme)
+    np.testing.assert_allclose(reci, r_back_eme)
+
+def test_mrp_utils():
+    from gnc_toolkit.utils.mrp_utils import quat_to_mrp, mrp_to_quat, mrp_to_dcm, get_shadow_mrp, check_mrp_switching
+    
+    q = np.array([0, 0, 0, 1])
+    mrp = quat_to_mrp(q)
+    assert np.allclose(mrp, np.zeros(3))
+
+    q_back = mrp_to_quat(mrp)
+    assert np.allclose(q_back, q)
+
+    dcm = mrp_to_dcm(mrp)
+    assert np.allclose(dcm, np.eye(3))
+
+    shadow = get_shadow_mrp(np.array([2.0, 0, 0]))
+    assert np.allclose(shadow, np.array([-0.5, 0, 0]))
+    assert np.allclose(get_shadow_mrp(np.zeros(3)), np.zeros(3))
+
+    sigma_small = np.array([0.5, 0, 0])
+    res = check_mrp_switching(sigma_small)
+    assert np.allclose(res, sigma_small)
+
+    sigma_large = np.array([1.5, 0, 0])
+    res_large = check_mrp_switching(sigma_large)
+    assert np.allclose(res_large, get_shadow_mrp(sigma_large))
+
+def test_jd_to_datetime_edge_negative():
+    res = jd_to_datetime(-1.6, 0.0)
+    assert isinstance(res, tuple)
+
+def test_state_to_elements_edge_cases():
+    from gnc_toolkit.utils.state_to_elements import rot_y as s_rot_y
+    Ry = s_rot_y(0.0)
+    assert np.allclose(Ry, np.eye(3))
+
+    mu = 398600.4415e9
+
+    # 1. Circular orbit
+    r1 = np.array([0.0, 7000000.0, 0.0])
+    v_mag = np.sqrt(mu / 7000000.0)
+    v1 = np.array([0.0, 0.0, -v_mag])
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(r1, v1)
+    assert np.isclose(ecc, 0, atol=1e-6)
+
+    # 2. Retrograde orbit
+    r2 = np.array([0.0, -7000000.0, 0.0])
+    v2 = np.array([-8000.0, 0.0, 0.0])
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(r2, v2)
+    assert np.isclose(incl, np.pi, rtol=1e-6)
+
+    # 3. Inclined orbit (90 degrees)
+    r3 = np.array([7000000.0, 0.0, 0.0])
+    v3 = np.array([0.0, 0.0, 7500.0])
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(r3, v3)
+    assert np.isclose(incl, np.pi/2, rtol=1e-6)
+
+    # 4. Inclination 135 degrees
+    reci, veci = kepler2eci(7000000.0, 0.1, np.pi * 0.75, 0.0, 0.0, 0.0)
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(reci, veci)
+    assert np.isclose(incl, np.pi * 0.75, rtol=1e-6)
+
+    # 5. RAAN 90 degrees
+    reci, veci = kepler2eci(7000000.0, 0.0, 0.1, np.pi/2, 0.0, 0.0)
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(reci, veci)
+    assert np.isclose(raan, np.pi/2, rtol=1e-6)
+
+    # 6. Argument of periapsis 270 degrees
+    reci, veci = kepler2eci(7000000.0, 0.1, 0.1, 0.0, np.pi * 1.5, 0.0)
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(reci, veci)
+    assert np.isclose(argp, np.pi * 1.5, rtol=1e-6)
+
+    # 7. Retrograde equatorial
+    reci, veci = kepler2eci(7000000.0, 0.1, np.pi, 0.0, 0.0, 0.0)
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(reci, veci)
+    assert np.isclose(incl, np.pi, rtol=1e-6)
+
+    # 8. Hyperbolic anomaly
+    reci, veci = kepler2eci(-7000000.0, 1.2, 0.1, 0.0, 0.0, 0.0)
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(reci, veci)
+    assert np.isclose(ecc, 1.2, rtol=1e-6)
+
+    # 9. argp e_vec[2] < 0
+    reci, veci = kepler2eci(7000000.0, 0.1, 0.5, 0.0, np.pi * 1.5, 0.0)
+    a, ecc, incl, raan, argp, nu, M, E, p, arglat, truelon, lonper = eci2kepler(reci, veci)
+    assert np.isclose(argp, np.pi * 1.5, rtol=1e-6)
+
+# KINEMATICS TESTS
+def test_euler_sequences():
+    from gnc_toolkit.utils.euler_utils import euler_to_dcm, dcm_to_euler
+    sequences = ['321', '313', '123', '121', '232', '213']
+    angles = np.array([0.1, 0.2, 0.3]) # radians
+    
+    for seq in sequences:
+        dcm = euler_to_dcm(angles, seq)
+        angles_est = dcm_to_euler(dcm, seq)
+        np.testing.assert_allclose(angles_est, angles, atol=1e-10)
+
+def test_mrp_conversions_kinematics():
+    from gnc_toolkit.utils.mrp_utils import quat_to_mrp, mrp_to_quat, mrp_to_dcm
+    from gnc_toolkit.utils.state_conversion import quat_to_dcm
+    q = np.array([0.1, 0.2, 0.3, 0.911])
+    q = q / np.linalg.norm(q)
+    
+    sigma = quat_to_mrp(q)
+    q_est = mrp_to_quat(sigma)
+    np.testing.assert_allclose(q_est, q, atol=1e-10)
+    
+    dcm_mrp = mrp_to_dcm(sigma)
+    dcm_quat = quat_to_dcm(q)
+    np.testing.assert_allclose(dcm_mrp, dcm_quat, atol=1e-10)
+
+def test_mrp_shadow_kinematics():
+    from gnc_toolkit.utils.mrp_utils import mrp_to_quat, get_shadow_mrp
+    sigma = np.array([0.8, 0.0, 0.0])
+    sigma_shadow = get_shadow_mrp(sigma)
+    
+    q = mrp_to_quat(sigma)
+    q_shadow = mrp_to_quat(sigma_shadow)
+    
+    if np.dot(q, q_shadow) < 0:
+        q_shadow = -q_shadow
+    np.testing.assert_allclose(q, q_shadow, atol=1e-10)
+
+def test_crp_conversions():
+    from gnc_toolkit.utils.crp_utils import quat_to_crp, crp_to_quat
+    q = np.array([0.1, 0.1, 0.1, 0.98])
+    q = q / np.linalg.norm(q)
+    
+    q_crp = quat_to_crp(q)
+    q_est = crp_to_quat(q_crp)
+    np.testing.assert_allclose(q_est, q, atol=1e-10)
+
+def test_crp_addition():
+    from gnc_toolkit.utils.crp_utils import crp_to_quat, crp_addition
+    from gnc_toolkit.utils.quat_utils import quat_mult
+    q1_crp = np.array([0.1, 0.0, 0.0])
+    q2_crp = np.array([0.0, 0.1, 0.0])
+    
+    q_res = crp_addition(q1_crp, q2_crp)
+    q1 = crp_to_quat(q1_crp)
+    q2 = crp_to_quat(q2_crp)
+    
+    q_ref = quat_mult(q2, q1)
+    q_est = crp_to_quat(q_res)
+    
+    if np.dot(q_est, q_ref) < 0:
+        q_est = -q_est
+    np.testing.assert_allclose(q_est, q_ref, atol=1e-10)
+
+def test_cayley_klein():
+    from gnc_toolkit.utils.cayley_klein_utils import quat_to_cayley_klein, cayley_klein_to_quat
+    q = np.array([0.1, 0.2, 0.3, 0.911])
+    q = q / np.linalg.norm(q)
+    
+    U = quat_to_cayley_klein(q)
+    q_est = cayley_klein_to_quat(U)
+    np.testing.assert_allclose(q_est, q, atol=1e-10)
+    np.testing.assert_allclose(U @ np.conj(U).T, np.eye(2), atol=1e-10)
+
+def test_cayley_klein_mult():
+    from gnc_toolkit.utils.cayley_klein_utils import quat_to_cayley_klein, cayley_klein_mult
+    U1 = quat_to_cayley_klein(np.array([0, 0, 0, 1.0]))
+    U2 = quat_to_cayley_klein(np.array([0.1, 0, 0, 0.995]))
+    res = cayley_klein_mult(U1, U2)
+    np.testing.assert_allclose(res, U2, atol=1e-10)
+
+def test_crp_singularities():
+    from gnc_toolkit.utils.crp_utils import quat_to_crp, crp_to_dcm, crp_addition
+    with pytest.raises(ValueError):
+        quat_to_crp(np.array([1.0, 0.0, 0.0, 0.0]))
+        
+    dcm = crp_to_dcm(np.array([0.1, 0.2, 0.3]))
+    assert dcm.shape == (3, 3)
+    
+    with pytest.raises(ValueError):
+        crp_addition(np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
+
+def test_euler_singularities():
+    from gnc_toolkit.utils.euler_utils import euler_to_dcm, dcm_to_euler
+    from gnc_toolkit.utils.state_conversion import rot_y
+    with pytest.raises(ValueError):
+        euler_to_dcm([0.1, 0.2, 0.3], '32')
+        
+    dcm_sym = np.eye(3) # theta2 = 0 for '313'
+    angles = dcm_to_euler(dcm_sym, '313')
+    np.testing.assert_allclose(angles, np.zeros(3))
+    
+    dcm_asym = rot_y(np.pi/2) # 90 deg about Y
+    angles_asym = dcm_to_euler(dcm_asym, '123') # sequence '123'
+    assert angles_asym.shape == (3,)
+
+def test_mrp_edge_cases_kinematics():
+    from gnc_toolkit.utils.mrp_utils import get_shadow_mrp, check_mrp_switching
+    
+    sigma_zero = np.zeros(3)
+    res_shadow = get_shadow_mrp(sigma_zero)
+    np.testing.assert_allclose(res_shadow, np.zeros(3))
+    
+    sigma_large = np.array([2.0, 0, 0])
+    res_switch = check_mrp_switching(sigma_large)
+    np.testing.assert_allclose(res_switch, get_shadow_mrp(sigma_large))
+
+def test_quat_inv_singularity_kinematics():
+    from gnc_toolkit.utils.quat_utils import quat_inv
+    with pytest.raises(ValueError):
+        quat_inv(np.zeros(4))
+
+def test_state_conversion_singularities():
+    from gnc_toolkit.utils.state_conversion import quat_to_euler, dcm_to_euler, dcm_to_quat
+
+    with pytest.raises(ValueError):
+        quat_to_euler(np.array([0,0,0,1]), '12')
+    with pytest.raises(ValueError):
+        dcm_to_euler(np.eye(3), '12')
+
+    R2 = np.array([
+        [1.0, 0.0, 0.0],
+        [0.0, -1.0, 0.0],
+        [0.0, 0.0, -1.0]
+    ])
+    d2 = dcm_to_quat(R2)
+    np.testing.assert_allclose(np.abs(d2), [1, 0, 0, 0], atol=1e-7)
+    
+    R3 = np.array([
+        [-1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [0.0, 0.0, -1.0]
+    ])
+    d3 = dcm_to_quat(R3)
+    np.testing.assert_allclose(np.abs(d3), [0, 1, 0, 0], atol=1e-7)
+    
+    R4 = np.array([
+        [-1.0, 0.0, 0.0],
+        [0.0, -1.0, 0.0],
+        [0.0, 0.0, 1.0]
+    ])
+    d4 = dcm_to_quat(R4)
+    np.testing.assert_allclose(np.abs(d4), [0, 0, 1, 0], atol=1e-7)

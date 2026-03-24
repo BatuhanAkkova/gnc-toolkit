@@ -46,9 +46,9 @@ def davenport_q(body_vectors, ref_vectors, weights=None):
     S = B + B.T
     sigma = np.trace(B)
     Z = np.array([
-        B[1, 2] - B[2, 1],
-        B[2, 0] - B[0, 2],
-        B[0, 1] - B[1, 0]
+        B[2, 1] - B[1, 2],
+        B[0, 2] - B[2, 0],
+        B[1, 0] - B[0, 1]
     ])
 
     # Construct Davenport K-matrix

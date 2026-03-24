@@ -46,8 +46,8 @@ def mee2eci(p, f, g, h, k, L, mu=398600.4415e9):
     
     v_coeff = np.sqrt(mu / p) / s2
     veci = v_coeff * np.array([
-        -(sinL * (1 + h**2 - k**2) - 2 * h * k * cosL + g + f * h**2 - f * k**2 + 2 * g * h * k),
-        (cosL * (1 - h**2 + k**2) + 2 * h * k * sinL + f - g * h**2 + g * k**2 + 2 * f * h * k),
+        -(sinL * (1 + h**2 - k**2) - 2 * h * k * cosL + g + g * h**2 - g * k**2 - 2 * f * h * k),
+        (cosL * (1 - h**2 + k**2) - 2 * h * k * sinL + f - f * h**2 + f * k**2 - 2 * g * h * k),
         2 * (cosL + f) * h + 2 * (sinL + g) * k
     ])
     

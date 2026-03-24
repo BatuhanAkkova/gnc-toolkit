@@ -59,9 +59,9 @@ class RequestFilter:
         dS = dB + dB.T
         d_sigma = np.trace(dB)
         dZ = np.array([
-            dB[1, 2] - dB[2, 1],
-            dB[2, 0] - dB[0, 2],
-            dB[0, 1] - dB[1, 0]
+            dB[2, 1] - dB[1, 2],
+            dB[0, 2] - dB[2, 0],
+            dB[1, 0] - dB[0, 1]
         ])
         
         # Incremental K-matrix

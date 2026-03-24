@@ -46,14 +46,10 @@ class FeedbackLinearization:
         g_val = np.array(self.g_func(x))
         
         # Check dimensions
-        if g_val.ndim < 2:
+        if g_val.size == 1:
             # Scalar case
-            if g_val.size == 1:
-                u = (v - f_val) / g_val
-            else:
-                # Using solve for square matrix stability
-                u = np.linalg.solve(g_val, v - f_val)
+            u = (v - f_val) / g_val
         else:
-             u = np.linalg.solve(g_val, v - f_val)
+            u = np.linalg.solve(g_val, v - f_val)
              
         return u

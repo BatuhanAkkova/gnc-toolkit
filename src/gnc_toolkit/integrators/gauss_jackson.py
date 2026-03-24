@@ -13,23 +13,17 @@ class GaussJacksonIntegrator(Integrator):
     Assumes state y = [r, v] where r, v are 3D vectors.
     """
     def __init__(self):
-        # Predictor Coefficients (Position)
-        self.p_pos = np.array([
-            1/12, 1/12, 19/240, 3/40, 863/12096, 275/4032, 33953/518400, 8183/129600
-        ])
+        # Predictor Coefficients (Position) - Full series from index 0
+        self.p_pos = np.array([1, 0, 1/12, 1/12, 19/240, 3/40, 863/12096, 275/4032, 33953/518400, 8183/129600])
         
         # Predictor Coefficients (Velocity)
-        self.p_vel = np.array([
-            1/2, 5/12, 3/8, 251/720, 95/288, 19087/60480, 5257/17280, 1070017/3628800
-        ])
+        self.p_vel = np.array([1, 1/2, 5/12, 3/8, 251/720, 95/288, 19087/60480, 5257/17280, 1070017/3628800, 25713/89600])
 
         # Corrector Coefficients (Position)
-        self.c_pos = -self.p_pos
+        self.c_pos = np.array([1, -1, 1/12, 0, -1/240, -1/240, -221/60480, -19/6048, -9829/3628800, -407/172800])
 
         # Corrector Coefficients (Velocity)
-        self.c_vel = np.array([
-            -1/2, -1/12, -1/24, -19/720, -3/160, -863/60480, -275/24192, -33953/3628800
-        ])
+        self.c_vel = np.array([1, 1/2, 1/12, 1/24, 19/720, 3/160, 863/60480, 275/24192, 33953/3628800, 8183/1036800])
 
     def _calc_differences(self, history):
         """

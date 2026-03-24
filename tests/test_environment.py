@@ -1,8 +1,14 @@
 import pytest
 import numpy as np
 import datetime
-from gnc_toolkit.environment.density import Exponential, HarrisPriester, NRLMSISE00
-from gnc_toolkit.environment.mag_field import tilted_dipole_field, igrf_field
+from gnc_toolkit.environment.density import Exponential, HarrisPriester, NRLMSISE00, JB2008, CIRA72
+from gnc_toolkit.environment.mag_field import tilted_dipole_field, igrf_field, wmm_field
+from gnc_toolkit.environment.space_weather import SpaceWeather
+from gnc_toolkit.environment.radiation import RadiationModel
+from gnc_toolkit.environment.thermal import ThermalEnvironment
+from gnc_toolkit.environment.wind import AtmosphereCoRotation
+from gnc_toolkit.environment.moon import Moon
+from gnc_toolkit.utils.time_utils import calc_jd
 
 def test_exponential_model():
     model = Exponential()
@@ -71,4 +77,164 @@ def test_igrf_field_mock(mocker):
     res = igrf_field(lat, lon, alt, date)
     assert len(res) == 3
     assert np.allclose(res, [1e-5, 2e-5, 3e-5])
+    assert np.allclose(res, [1e-5, 2e-5, 3e-5])
     mock_igrf.assert_called_once()
+
+def test_exponential_model_below_sea_level():
+    model = Exponential()
+    # R_earth is 6378.137 km in model. Position < R_earth.
+    r_eci = np.array([6000e3, 0.0, 0.0]) 
+    jd = 2451545.0
+    rho = model.get_density(r_eci, jd)
+    assert rho == model.rho0
+
+def test_nrlmsise_model_array_output(mocker):
+    mock_calc = mocker.patch("pymsis.calculate")
+    # Return multiple elements so np.squeeze leaves ndim=1
+    mock_calc.return_value = np.array([1.5e-12, 2.0e-12])
+    
+    model = NRLMSISE00()
+    r_eci = np.array([7000e3, 0.0, 0.0])
+    date = datetime.datetime(2024, 1, 1, 12, 0, 0)
+    
+    rho = model.get_density(r_eci, date)
+    assert rho == 1.5e-12 # Should take output[0]
+
+def test_cira72_model_low_altitude():
+    from gnc_toolkit.environment.density import CIRA72
+    model = CIRA72()
+    # Altitude < 100 km (e.g., 50 km) -> h_km = 50
+    # geodetic height h above Re
+    r_eci = np.array([6378137.0 + 50000.0, 0, 0]) # approximate
+    jd = 2451545.0
+    rho = model.get_density(r_eci, jd)
+    assert rho > 0
+
+def test_igrf_field_import_error(mocker):
+    import gnc_toolkit.environment.mag_field as mag_field
+    mocker.patch.object(mag_field, 'ppigrf', None)
+    
+    with pytest.raises(ImportError, match="ppigrf not installed"):
+        mag_field.igrf_field(0, 0, 600, datetime.datetime(2024, 1, 1))
+
+
+
+# --- Extended Environment Tests ---
+
+def test_wmm_field_mock(mocker):
+    # Mock ppigrf.igrf since wmm_field uses it as a proxy
+    mock_igrf = mocker.patch("ppigrf.igrf")
+    mock_igrf.return_value = [1.1e-5, 2.1e-5, 3.1e-5]
+    
+    lat, lon, alt = 45.0, -120.0, 500.0
+    date = datetime.datetime(2025, 1, 1)
+    
+    res = wmm_field(lat, lon, alt, date)
+    assert len(res) == 3
+    assert np.allclose(res, [1.1e-5, 2.1e-5, 3.1e-5])
+
+def test_space_weather():
+    sw = SpaceWeather(f107=140.0, ap=20.0)
+    indices = sw.get_indices()
+    assert indices['f107'] == 140.0
+    assert indices['ap'] == 20.0
+    assert indices['kp'] > 0
+    
+    sw.set_solar_flux(180.0)
+    assert sw.f107 == 180.0
+    assert sw.f107_avg == 180.0
+
+def test_radiation_model():
+    rad = RadiationModel()
+    tid = rad.estimate_tid(500, 51.6, 365)
+    assert tid > 0
+    
+    seu_rate = rad.estimate_seu_rate(500)
+    assert seu_rate > 0
+
+def test_thermal_environment():
+    thermal = ThermalEnvironment(albedo_coeff=0.3)
+    
+    # Test Solar Flux
+    solar = thermal.get_solar_flux(1.0)
+    assert np.isclose(solar, 1361.0)
+    
+    # Test Albedo (Nadir facing Sat-Sun aligned)
+    r_sat = np.array([7000, 0, 0])
+    r_sun = np.array([149e6, 0, 0])
+    albedo = thermal.get_albedo_flux(r_sat, r_sun)
+    assert albedo > 0
+    assert albedo < 1361.0 * 0.35 # Should be around 1361 * 0.3
+    
+    # Night side Albedo
+    r_sun_night = np.array([-149e6, 0, 0])
+    albedo_night = thermal.get_albedo_flux(r_sat, r_sun_night)
+    assert albedo_night == 0.0
+
+    # Earth IR
+    ir = thermal.get_earth_ir_flux()
+    assert ir == 230.0
+
+def test_space_weather_set_solar_flux_avg():
+    sw = SpaceWeather(f107=140.0, ap=20.0)
+    sw.set_solar_flux(180.0, 170.0)
+    assert sw.f107 == 180.0
+    assert sw.f107_avg == 170.0
+
+def test_atmosphere_wind_relative_velocity():
+    from gnc_toolkit.environment.wind import AtmosphereCoRotation
+    model = AtmosphereCoRotation()
+    r_eci = np.array([7000e3, 0.0, 0.0])
+    v_eci = np.array([0.0, 7500.0, 0.0])
+    jd = 2451545.0
+    
+    v_rel = model.get_relative_velocity(r_eci, v_eci, jd)
+    assert v_rel.shape == (3,)
+    # Wind with omega_z should affect Y-velocity for X-position
+    assert not np.allclose(v_rel, v_eci)
+
+
+# --- Environment Models Tests ---
+
+def test_jb2008_density():
+    model = JB2008()
+    r_eci = np.array([7000.0, 0.0, 0.0]) * 1000.0 # 622 km altitude
+    jd = 2451545.0
+    rho = model.get_density(r_eci, jd)
+    assert rho > 0
+    assert rho < 1e-6
+
+def test_cira72_density():
+    model = CIRA72()
+    r_eci = np.array([7000.0, 0.0, 0.0]) * 1000.0
+    jd = 2451545.0
+    rho1 = model.get_density(r_eci, jd)
+    
+    r_eci2 = np.array([7100.0, 0.0, 0.0]) * 1000.0
+    rho2 = model.get_density(r_eci2, jd)
+    
+    assert rho1 > rho2 # Density should decrease with altitude
+    assert rho1 > 0
+
+def test_atmosphere_corotation():
+    model = AtmosphereCoRotation()
+    r_eci = np.array([7000.0, 0.0, 0.0]) * 1000.0 # Equator
+    jd = 2451545.0
+    v_wind = model.get_wind_velocity(r_eci, jd)
+    
+    # At equator (7000km), v = omega * r
+    # v ~ 7.29e-5 * 7e6 ~ 510 m/s
+    assert np.allclose(v_wind, [0, 510.448, 0], atol=1.0)
+    
+    r_pole = np.array([0, 0, 7000.0]) * 1000.0
+    v_wind_pole = model.get_wind_velocity(r_pole, jd)
+    assert np.allclose(v_wind_pole, [0, 0, 0])
+
+def test_moon_position():
+    model = Moon()
+    jd = 2451545.0 # J2000
+    r_moon = model.calculate_moon_eci(jd)
+    
+    # Moon distance is approx 384,400 km
+    dist = np.linalg.norm(r_moon) / 1000.0
+    assert dist > 350000 and dist < 410000

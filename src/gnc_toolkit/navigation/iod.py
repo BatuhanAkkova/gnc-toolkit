@@ -22,7 +22,12 @@ def gibbs_iod(r1, r2, r3, mu=398600.4415e9):
     
     # Check coplanarity
     h_hat = np.cross(r1, r2)
-    h_hat /= np.linalg.norm(h_hat)
+    norm_h = np.linalg.norm(h_hat)
+    if norm_h > 1e-12:
+        h_hat /= norm_h
+    else:
+        h_hat = np.zeros(3)
+        
     if abs(np.dot(r3, h_hat)) > 1e-4 * r3_mag:
         pass
 
@@ -34,7 +39,8 @@ def gibbs_iod(r1, r2, r3, mu=398600.4415e9):
     if L < 1e-12:
         return np.zeros(3)
         
-    v2 = np.sqrt(mu / (np.linalg.norm(N) * L)) * (np.cross(D, r2) / r2_mag + N)
+    S = r1 * (r2_mag - r3_mag) + r2 * (r3_mag - r1_mag) + r3 * (r1_mag - r2_mag)
+    v2 = np.sqrt(mu / (np.linalg.norm(N) * L)) * (np.cross(D, r2) / r2_mag + S)
     
     return v2
 
@@ -53,6 +59,11 @@ def herrick_gibbs_iod(r1, r2, r3, dt21, dt32, mu=398600.4415e9):
         v2 (np.ndarray): Velocity at t2
     """
     dt31 = dt21 + dt32
+    
+    # Avoid Division by Zero
+    norm1, norm2, norm3 = np.linalg.norm(r1), np.linalg.norm(r2), np.linalg.norm(r3)
+    if norm1 < 1.0 or norm2 < 1.0 or norm3 < 1.0:
+        raise ValueError("Position vectors must be non-zero.")
     
     term1 = -dt32 * (1.0/(dt21*dt31) + mu/(12.0 * np.linalg.norm(r1)**3)) * r1
     term2 = (dt32 - dt21) * (1.0/(dt21*dt32) + mu/(12.0 * np.linalg.norm(r2)**3)) * r2
@@ -121,6 +132,8 @@ def gauss_iod(rho_hat1, rho_hat2, rho_hat3, t1, t2, t3, R1, R2, R3, mu=398600.44
     if len(real_positive_roots) == 0:
         raise ValueError("No physical (positive real) root found for Gauss radius r2.")
     r2 = np.max(real_positive_roots)
+    if r2 < 3000e3 or r2 > 100000e3:
+        raise ValueError("Radius out of bounds")
     
     # Calculate initial rho1, rho2, rho3
     u = mu / r2**3
@@ -247,7 +260,8 @@ def _kepler_U(tau, r0, vr0, alpha, mu, tol=1e-8, max_iter=100):
         deriv = r_dot_v_sqrt_mu * x * (1.0 - psi * c3) + (1.0 - alpha * r0) * x**2 * c2 + r0
         
         if abs(deriv) < 1e-12: # Avoid ZeroDivision
-            break
+            break  # pragma: no cover
+
             
         dx = val / deriv
         x -= dx

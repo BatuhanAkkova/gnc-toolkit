@@ -59,3 +59,78 @@ def test_target_tracking():
     body_z = quat_rot(quat_conj(q), [0, 0, 1.0])
     expected_z = target / np.linalg.norm(target)
     np.testing.assert_allclose(body_z, expected_z, atol=1e-7)
+
+def test_sun_pointing_aligned():
+    # Dot > 0.999999
+    q1 = sun_pointing_reference(np.array([1.0, 0.0, 0.0]))
+    np.testing.assert_allclose(q1, [0.0, 0.0, 0.0, 1.0])
+    
+    # Dot < -0.999999
+    q2 = sun_pointing_reference(np.array([-1.0, 0.0, 0.0]))
+    np.testing.assert_allclose(q2, [0.0, 1.0, 0.0, 0.0])
+
+def test_target_tracking_aligned():
+    # LOS aligned with Z-axis
+    pos = np.array([0, 0, 0])
+    target = np.array([0, 0, 10.0])
+    q = target_tracking_reference(pos, target)
+    assert quat_norm(q) == pytest.approx(1.0)
+
+def test_eigenaxis_slew():
+    q1 = np.array([0, 0, 0, 1.0])
+    q2 = np.array([0, 0, 1.0, 0.0]) # 180 deg rotation
+    path = eigenaxis_slew_path_planning(q1, q2, np.array([0, 0.5, 1.0]))
+    assert len(path) == 3
+
+def test_attitude_blending_edge_cases():
+    q1 = np.array([0, 0, 0, 1.0])
+    
+    # Antipodal
+    q_anti = attitude_blending(q1, -q1, 0.5)
+    np.testing.assert_allclose(quat_norm(q_anti), 1.0)
+    
+    # Close
+    angle = 0.01
+    q_close = np.array([0, 0, np.sin(angle/2), np.cos(angle/2)])
+    q_blend = attitude_blending(q1, q_close, 0.5)
+    np.testing.assert_allclose(quat_norm(q_blend), 1.0)
+
+def test_rmat_to_quat():
+    from gnc_toolkit.guidance.attitude_guidance import _rmat_to_quat
+    
+    # tr > 0
+    R1 = np.eye(3)
+    q1 = _rmat_to_quat(R1)
+    np.testing.assert_allclose(q1, [0, 0, 0, 1.0])
+    
+    # R00 max, tr <= 0
+    # 180 deg about X
+    R2 = np.array([
+        [1.0, 0.0, 0.0],
+        [0.0, -1.0, 0.0],
+        [0.0, 0.0, -1.0]
+    ])
+    q2 = _rmat_to_quat(R2)
+    # can be [1,0,0,0] or [-1,0,0,0]
+    # abs check
+    np.testing.assert_allclose(np.abs(q2), [1, 0, 0, 0], atol=1e-7)
+    
+    # R11 max, tr <= 0
+    # 180 deg about Y
+    R3 = np.array([
+        [-1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [0.0, 0.0, -1.0]
+    ])
+    q3 = _rmat_to_quat(R3)
+    np.testing.assert_allclose(np.abs(q3), [0, 1, 0, 0], atol=1e-7)
+    
+    # R22 max, tr <= 0
+    # 180 deg about Z
+    R4 = np.array([
+        [-1.0, 0.0, 0.0],
+        [0.0, -1.0, 0.0],
+        [0.0, 0.0, 1.0]
+    ])
+    q4 = _rmat_to_quat(R4)
+    np.testing.assert_allclose(np.abs(q4), [0, 0, 1, 0], atol=1e-7)

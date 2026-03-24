@@ -56,8 +56,8 @@ def dcm_to_euler(dcm, sequence):
             theta1 = 0.0
             theta3 = np.arctan2(parity * dcm[j, k], dcm[j, j])
         else:
-            theta1 = np.arctan2(dcm[j, i], -parity * dcm[k, i])
-            theta3 = np.arctan2(dcm[i, j], parity * dcm[i, k])
+            theta1 = np.arctan2(dcm[i, j], parity * dcm[i, k])
+            theta3 = np.arctan2(dcm[j, i], -parity * dcm[k, i])
             
         return np.array([theta1, theta2, theta3])
 
@@ -70,14 +70,15 @@ def dcm_to_euler(dcm, sequence):
         # Determine sign parity
         parity = 1 if (j - i) % 3 == 1 else -1
         
-        theta2 = np.arcsin(np.clip(-parity * dcm[i, k], -1, 1))
+        # Swapped indices from original dcm[i, k]
+        theta2 = np.arcsin(np.clip(-parity * dcm[k, i], -1, 1))
         
         if abs(np.cos(theta2)) < 1e-12:
             # Singularity (theta2 = PI/2)
             theta1 = 0.0
             theta3 = np.arctan2(parity * dcm[j, i], dcm[j, j])
         else:
-            theta1 = np.arctan2(parity * dcm[j, k], dcm[k, k])
-            theta3 = np.arctan2(parity * dcm[i, j], dcm[i, i])
+            theta1 = np.arctan2(parity * dcm[k, j], dcm[k, k])
+            theta3 = np.arctan2(parity * dcm[j, i], dcm[i, i])
             
         return np.array([theta1, theta2, theta3])

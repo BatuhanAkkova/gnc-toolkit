@@ -63,8 +63,9 @@ def calculate_launch_windows(jd_start, jd_end, inc_deg, raan_deg, lat_deg, lon_d
             
             # Azimuth calculation
             cos_phi = np.cos(lat_rad)
-            if cos_phi == 0:
+            if abs(cos_phi) < 1e-12:
                 azimuth_deg = 0.0 # Pole
+
             else:
                 sin_psi = np.cos(inc_rad) / cos_phi
                 if abs(sin_psi) <= 1.0:

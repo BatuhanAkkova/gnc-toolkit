@@ -18,7 +18,6 @@ def test_event_queue():
     def callback1(val):
         results.append(val)
 
-    # Schedule out of order
     eq.schedule(10.0, callback1, "B")
     eq.schedule(5.0, callback1, "A")
     eq.schedule(15.0, callback1, "C")
@@ -34,7 +33,12 @@ def test_event_queue():
     assert results == ["A", "B", "C"]
     assert not eq.has_events()
 
+def test_event_queue_empty_next_time():
+    eq = EventQueue()
+    assert eq.next_event_time() == float('inf')
+
 def test_logger(tmp_path):
+
     log_file = tmp_path / "sim_log"
     logger = SimulationLogger(str(log_file))
 
@@ -60,6 +64,39 @@ def test_logger(tmp_path):
         assert "time" in rows[0]
         assert "state" in rows[0]
 
+def test_logger_empty_csv(tmp_path):
+    log_file = tmp_path / "empty_log"
+    logger = SimulationLogger(str(log_file))
+    logger.save_csv()
+    assert not (tmp_path / "empty_log.csv").exists()
+
+def test_logger_save_hdf5_import_error(tmp_path):
+    from unittest.mock import patch
+    log_file = tmp_path / "sim_log_h5_fail"
+    logger = SimulationLogger(str(log_file))
+    logger.log(0.0, [1,0,0])
+    
+    with patch('builtins.__import__', side_effect=ImportError):
+        logger.save_hdf5()
+        assert not (tmp_path / "sim_log_h5_fail.h5").exists()
+
+def test_logger_save_hdf5_success(tmp_path):
+    from unittest.mock import patch, MagicMock
+    log_file = tmp_path / "sim_log_h5"
+    logger = SimulationLogger(str(log_file))
+    
+    logger.log(0.0, [1,0,0])
+    logger.log(1.0, [2,0,0])
+    
+    mock_h5 = MagicMock()
+    with patch.dict('sys.modules', {'h5py': mock_h5}):
+        logger.save_hdf5()
+        assert mock_h5.File.called
+        
+    logger.log(2.0, [3,0,0,99]) # different length
+    with patch.dict('sys.modules', {'h5py': mock_h5}):
+        logger.save_hdf5()
+
 def dummy_propagator(t, state, dt, control):
     return state + dt + (control if control else 0)
 
@@ -82,28 +119,38 @@ def test_mission_simulator():
     
     sim.initialize(0.0, initial_state=0.0)
     
-    # Schedule an event changing state directly
     def force_state(new_s):
         sim.state = new_s
         
     sim.schedule_event(1.5, force_state, 10.0)
     
     sim.run(3.0, dt=1.0)
-    # t=0: state=0 -> u=0.5 -> new state = 0 + 1 + 0.5 = 1.5
-    # t=1: state=1.5 -> u=0.5 -> new state = 1.5 + 1 + 0.5 = 3.0
-    # t=1.5: event triggers, state = 10.0
-    # t=2: state=10.0 -> u=0.5 -> new state = 10.0 + 1 + 0.5 = 11.5
-    # t=3: state=11.5 -> u=0.5 -> new state = 11.5 + 1 + 0.5 = 13.0
     
     assert sim.time == 4.0 # 3.0 + dt
     assert sim.state == 13.0
+
+def test_mission_simulator_with_logger(tmp_path):
+    log_file = tmp_path / "sim_log_simulator"
+    logger = SimulationLogger(str(log_file))
+    
+    sim = MissionSimulator(
+        propagator=dummy_propagator,
+        sensor_model=dummy_sensor,
+        estimator=dummy_estimator,
+        controller=dummy_controller,
+        logger=logger
+    )
+    
+    sim.initialize(0.0, initial_state=0.0)
+    sim.step(1.0)
+    
+    assert len(logger.history) >= 1
 
 @patch("time.sleep")
 @patch("time.time")
 def test_realtime_simulator(mock_time, mock_sleep):
     mock_time.side_effect = [0.0, 0.1, 0.2, 0.3] # wall clock
     
-    # RTF = 2.0 -> 1s simulation = 0.5s wall clock
     sim = RealTimeSimulator(
         propagator=dummy_propagator,
         sensor_model=None,
@@ -115,5 +162,23 @@ def test_realtime_simulator(mock_time, mock_sleep):
     sim.initialize(0.0, initial_state=0.0)
     sim.run(1.0, dt=1.0)
     
-    # Expected sleep
     mock_sleep.assert_called()
+
+@patch("time.sleep")
+@patch("time.time")
+def test_realtime_simulator_missed_deadline(mock_time, mock_sleep):
+    from unittest.mock import patch
+    from gnc_toolkit.simulation.realtime import RealTimeSimulator
+    
+    mock_time.side_effect = [0.0, 10.0, 11.0] 
+    sim = RealTimeSimulator(dummy_propagator, None, None, None, rtf=1.0)
+    sim.initialize(0.0, 0.0)
+    
+    import io
+    from contextlib import redirect_stdout
+    f = io.StringIO()
+    with redirect_stdout(f):
+        sim.run(1.0, dt=1.0)
+    
+    assert "Real-time deadline missed" in f.getvalue()
+

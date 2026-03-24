@@ -131,6 +131,8 @@ def anomalies(ecc, nu):
         if M < 0:
             M += 2*np.pi
         E = np.fmod(E, 2*np.pi)
+        if E < 0:
+            E += 2*np.pi
     
     return E, M
 

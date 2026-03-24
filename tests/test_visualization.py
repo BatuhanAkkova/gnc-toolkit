@@ -30,6 +30,9 @@ def test_plot_ground_track():
     lons = [0, 90, -90]
     fig = plot_ground_track(lats, lons)
     assert isinstance(fig, go.Figure)
+    
+    fig_times = plot_ground_track(lats, lons, times=[0, 10, 20])
+    assert isinstance(fig_times, go.Figure)
 
 def test_plot_ground_track_mismatch():
     with pytest.raises(ValueError):
@@ -48,3 +51,11 @@ def test_create_dashboard_app():
     fig_dict = {"Orbit": fig}
     app = create_dashboard_app(fig_dict)
     assert isinstance(app, dash.Dash)
+
+def test_plot_attitude_sphere_invalid():
+    with pytest.raises(ValueError):
+        plot_attitude_sphere(np.array([1, 0, 0])) # 1D array instead of 2D
+
+def test_plot_coverage_heatmap_mismatch():
+    with pytest.raises(ValueError):
+        plot_coverage_heatmap([10, 20], [45, 90], [1.0]) # Shape mismatch

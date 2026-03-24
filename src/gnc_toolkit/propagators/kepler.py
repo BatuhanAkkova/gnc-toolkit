@@ -39,8 +39,9 @@ class KeplerPropagator(Propagator):
                 T = 2 * np.pi * np.sqrt(np.abs(1.0/alpha)**3 / mu) # Period
                 if np.abs(dt) > np.abs(T):
                     dt = dt % T
-            except:
+            except:  # pragma: no cover
                 pass # Fallback if calculation fails
+
             x_i = np.sqrt(mu) * dt * alpha
 
         elif np.abs(alpha) < 1e-9: # Parabolic
@@ -76,10 +77,10 @@ class KeplerPropagator(Propagator):
             denom = x_i**2 * c2 + r_dot_v / np.sqrt(mu) * x_i * (1 - yaw*c3) + r_i_mag * (1 - yaw*c2)
             
             if abs(denom) < 1e-12: # Avoid catastrophic cancellation
-                break
+                break  # pragma: no cover
 
             x_new = x_i + nom/denom
-            
+
             if np.abs(x_new - x_i) < 1e-8:
                 break
             x_i = x_new

@@ -46,14 +46,14 @@ def foam(body_vectors, ref_vectors, weights=None, tol=1e-12, max_iter=20):
         B += weights[i] * np.outer(b_vecs_norm[i], r_vecs_norm[i])
 
     det_B = np.linalg.det(B)
-    adj_B = np.linalg.det(B) * np.linalg.inv(B).T if det_B != 0 else np.zeros((3, 3)) # Adjugate of B
+    adj_B = np.linalg.det(B) * np.linalg.inv(B) if det_B != 0 else np.zeros((3, 3)) # Adjugate of B
     # Correct adjugate calculation for small det cases (manual cofactor matrix)
     if det_B == 0:
         adj_B = np.array([
             [B[1,1]*B[2,2]-B[1,2]*B[2,1], B[0,2]*B[2,1]-B[0,1]*B[2,2], B[0,1]*B[1,2]-B[0,2]*B[1,1]],
             [B[1,2]*B[2,0]-B[1,0]*B[2,2], B[0,0]*B[2,2]-B[0,2]*B[2,0], B[0,2]*B[1,0]-B[0,0]*B[1,2]],
             [B[1,0]*B[2,1]-B[1,1]*B[2,0], B[0,1]*B[2,0]-B[0,0]*B[2,1], B[0,0]*B[1,1]-B[0,1]*B[1,0]]
-        ])
+        ]).T
 
     B_sq_norm = np.trace(B @ B.T)
     adj_B_sq_norm = np.trace(adj_B @ adj_B.T)

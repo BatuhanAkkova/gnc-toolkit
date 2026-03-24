@@ -42,7 +42,7 @@ def mrp_to_dcm(sigma):
     ])
     
     I = np.eye(3)
-    R = I + (8 * S @ S - 4 * (1 - sigma_sq) * S) / (1 + sigma_sq)**2
+    R = I + (8 * S @ S + 4 * (1 - sigma_sq) * S) / (1 + sigma_sq)**2
     return R
 
 def get_shadow_mrp(sigma):

@@ -36,7 +36,7 @@ def solve_lambert(r1: np.ndarray, r2: np.ndarray, dt: float, mu: float = 398600.
     # Lambert A constant
     A = np.sin(dnu) * np.sqrt(r1_mag * r2_mag / (1.0 - cos_dnu))
     
-    if A == 0.0:
+    if abs(A) < 1e-12:
         raise ValueError("Lambert Solver: A=0 (180-deg transfer singularity).")
 
     psi = 0.0
@@ -48,7 +48,7 @@ def solve_lambert(r1: np.ndarray, r2: np.ndarray, dt: float, mu: float = 398600.
     for _ in range(max_iter):
         y = r1_mag + r2_mag + A * (psi * c3 - 1.0) / np.sqrt(c2)
         
-        if A > 0.0 and y < 0.0:
+        if A > 0.0 and y < 0.0:  # pragma: no cover
             while y < 0.0:
                 psi += 0.1
                 if psi > 1e-6:

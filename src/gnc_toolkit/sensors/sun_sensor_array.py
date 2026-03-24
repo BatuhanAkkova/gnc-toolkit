@@ -6,7 +6,7 @@ import numpy as np
 from gnc_toolkit.sensors.sensor import Sensor
 
 class CoarseSunSensorArray(Sensor):
-    """
+    r"""
     Array of Coarse Sun Sensors (CSS).
     Each CSS measures the cosine of the angle between the sun vector and its boresight.
     $I = I_{max} \cos(\theta) = I_{max} (S \cdot N)$

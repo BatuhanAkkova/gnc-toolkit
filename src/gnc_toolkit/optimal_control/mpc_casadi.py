@@ -52,8 +52,6 @@ class CasadiNMPC:
         if bound is None:
             return np.full(dim, default_val)
         bound_arr = np.array(bound).flatten()
-        if bound_arr.ndim == 0:
-            return np.full(dim, bound_arr)
         if len(bound_arr) == 1:
             return np.full(dim, bound_arr[0])
         if len(bound_arr) != dim:

@@ -50,9 +50,8 @@ class Sgp4Propagator(Propagator):
         err, r_km, v_kms = self.sat.sgp4(self.jdsatepoch, self.jdsatepochF + minutes_from_epoch / 1440.0)
         
         if err != 0:
-            from sgp4.earth_gravity import GravityConstants
             raise RuntimeError(f"SGP4 error code {err}: Propagation failed.")
-            
+
         # Convert to SI units [m, m/s]
         r_f = np.array(r_km) * 1000.0
         v_f = np.array(v_kms) * 1000.0

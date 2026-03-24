@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import patch, MagicMock
 from gnc_toolkit.simulation.monte_carlo import MonteCarloSim
 
 class DummySimulator:
@@ -19,8 +20,6 @@ def test_monte_carlo_sequential():
     assert len(mc.results) == 3
     for i in range(3):
         assert mc.results[i] == {"seed": i, "param": "test"}
-
-from unittest.mock import patch, MagicMock
 
 @patch("gnc_toolkit.simulation.monte_carlo.mp.Pool")
 def test_monte_carlo_parallel(mock_pool_class):

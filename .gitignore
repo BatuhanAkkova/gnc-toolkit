@@ -21,3 +21,6 @@ docs/api/
 # Jupyter Notebooks
 .ipynb_checkpoints/
 */.ipynb_checkpoints/
+
+# Simulation Logs
+sim_log.csv

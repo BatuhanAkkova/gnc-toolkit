@@ -108,3 +108,20 @@ def test_predict_lifetime_fast_decay():
     assert res['reentry_detected'] is True
     assert res['lifetime_days'] > 0
     assert res['final_altitude'] == pytest.approx(100000.0, abs=5000) # within tolerance 100km altitude
+
+
+def test_budgeting_exceptions():
+    from gnc_toolkit.mission_design.budgeting import calculate_propellant_mass, calculate_delta_v, ManeuverSequence
+    import pytest
+
+    with pytest.raises(ValueError, match="Isp must be positive"):
+        calculate_propellant_mass(1000, 1.0, 0)
+    with pytest.raises(ValueError, match="Isp must be positive"):
+        calculate_delta_v(1000, 100, 0)
+    with pytest.raises(ValueError, match="Propellant mass cannot exceed"):
+        calculate_delta_v(1000, 1500, 300)
+    
+    seq = ManeuverSequence(1000, 300)
+    with pytest.raises(ValueError, match="Delta-V must be non-negative"):
+        seq.add_maneuver("test", -1.0)
+

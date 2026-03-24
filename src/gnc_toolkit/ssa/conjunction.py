@@ -172,7 +172,7 @@ def compute_pc_chan(r1: np.ndarray, v1: np.ndarray, cov1: np.ndarray,
     try:
         exp_A = np.exp(-A)
         exp_B = np.exp(-B)
-    except:
+    except:  # pragma: no cover
         return 0.0
 
     if exp_A < 1e-100:

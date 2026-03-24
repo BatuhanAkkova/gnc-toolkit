@@ -92,7 +92,12 @@
     
     <span class="c1"># Check coplanarity</span>
     <span class="n">h_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
-    <span class="n">h_hat</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h_hat</span><span class="p">)</span>
+    <span class="n">norm_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h_hat</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">norm_h</span> <span class="o">&gt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+        <span class="n">h_hat</span> <span class="o">/=</span> <span class="n">norm_h</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">h_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r3</span><span class="p">,</span> <span class="n">h_hat</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-4</span> <span class="o">*</span> <span class="n">r3_mag</span><span class="p">:</span>
         <span class="k">pass</span>
 
@@ -104,7 +109,8 @@
     <span class="k">if</span> <span class="n">L</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         
-    <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">L</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span> <span class="o">/</span> <span class="n">r2_mag</span> <span class="o">+</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">*</span> <span class="p">(</span><span class="n">r2_mag</span> <span class="o">-</span> <span class="n">r3_mag</span><span class="p">)</span> <span class="o">+</span> <span class="n">r2</span> <span class="o">*</span> <span class="p">(</span><span class="n">r3_mag</span> <span class="o">-</span> <span class="n">r1_mag</span><span class="p">)</span> <span class="o">+</span> <span class="n">r3</span> <span class="o">*</span> <span class="p">(</span><span class="n">r1_mag</span> <span class="o">-</span> <span class="n">r2_mag</span><span class="p">)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">L</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span> <span class="o">/</span> <span class="n">r2_mag</span> <span class="o">+</span> <span class="n">S</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">v2</span></div>
 
@@ -126,6 +132,11 @@
 <span class="sd">        v2 (np.ndarray): Velocity at t2</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dt31</span> <span class="o">=</span> <span class="n">dt21</span> <span class="o">+</span> <span class="n">dt32</span>
+    
+    <span class="c1"># Avoid Division by Zero</span>
+    <span class="n">norm1</span><span class="p">,</span> <span class="n">norm2</span><span class="p">,</span> <span class="n">norm3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r3</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">norm1</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">norm2</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">norm3</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Position vectors must be non-zero.&quot;</span><span class="p">)</span>
     
     <span class="n">term1</span> <span class="o">=</span> <span class="o">-</span><span class="n">dt32</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">dt21</span><span class="o">*</span><span class="n">dt31</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu</span><span class="o">/</span><span class="p">(</span><span class="mf">12.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="n">r1</span>
     <span class="n">term2</span> <span class="o">=</span> <span class="p">(</span><span class="n">dt32</span> <span class="o">-</span> <span class="n">dt21</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">dt21</span><span class="o">*</span><span class="n">dt32</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu</span><span class="o">/</span><span class="p">(</span><span class="mf">12.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="n">r2</span>
@@ -197,6 +208,8 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_positive_roots</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No physical (positive real) root found for Gauss radius r2.&quot;</span><span class="p">)</span>
     <span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">real_positive_roots</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">r2</span> <span class="o">&lt;</span> <span class="mf">3000e3</span> <span class="ow">or</span> <span class="n">r2</span> <span class="o">&gt;</span> <span class="mf">100000e3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radius out of bounds&quot;</span><span class="p">)</span>
     
     <span class="c1"># Calculate initial rho1, rho2, rho3</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">/</span> <span class="n">r2</span><span class="o">**</span><span class="mi">3</span>
@@ -324,7 +337,8 @@
         <span class="n">deriv</span> <span class="o">=</span> <span class="n">r_dot_v_sqrt_mu</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">psi</span> <span class="o">*</span> <span class="n">c3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">r0</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">c2</span> <span class="o">+</span> <span class="n">r0</span>
         
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">deriv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span> <span class="c1"># Avoid ZeroDivision</span>
-            <span class="k">break</span>
+            <span class="k">break</span>  <span class="c1"># pragma: no cover</span>
+
             
         <span class="n">dx</span> <span class="o">=</span> <span class="n">val</span> <span class="o">/</span> <span class="n">deriv</span>
         <span class="n">x</span> <span class="o">-=</span> <span class="n">dx</span>

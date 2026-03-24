@@ -122,9 +122,8 @@
         <span class="n">err</span><span class="p">,</span> <span class="n">r_km</span><span class="p">,</span> <span class="n">v_kms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">sgp4</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jdsatepoch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jdsatepochF</span> <span class="o">+</span> <span class="n">minutes_from_epoch</span> <span class="o">/</span> <span class="mf">1440.0</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">sgp4.earth_gravity</span><span class="w"> </span><span class="kn">import</span> <span class="n">GravityConstants</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SGP4 error code </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">: Propagation failed.&quot;</span><span class="p">)</span>
-            
+
         <span class="c1"># Convert to SI units [m, m/s]</span>
         <span class="n">r_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r_km</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
         <span class="n">v_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v_kms</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>

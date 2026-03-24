@@ -5,11 +5,11 @@
 ### 11.2 Documentation
 | Feature | Status | Notes |
 |---|---|---|
-| GitHub Pages (Sphinx) | 🔄 | `docs/` skeleton exists |
-| API reference (auto-generated) | ⬜ | sphinx-autodoc |
-| Tutorial notebooks (Jupyter) | 🔄 | `tutorials/` exists; expand coverage |
-| Theory background (equations) | ⬜ | Math-heavy docs explaining algorithms |
-| Contributing guide | ⬜ | CONTRIBUTING.md |
+| GitHub Pages (Sphinx) | ✅ | API reference and tutorials integrated |
+| API reference (auto-generated) | ✅ | sphinx-autodoc included |
+| Tutorial notebooks (Jupyter) | ✅ | `tutorials/02_iod_determination.ipynb` with Theory added |
+| Theory background (equations) | ✅ | Integrated in tutorials |
+| Contributing guide | ✅ | CONTRIBUTING.md created |
 
 ### 11.3 Packaging & Distribution
 | Feature | Status | Notes |

@@ -20,12 +20,19 @@ author = 'Batuhan Akkova'
 # -- General configuration ---------------------------------------------------
 
 extensions = [
+    'myst_nb',
+    'jupyter_sphinx',
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
-    'myst_nb',
 ]
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.ipynb': 'myst-nb',
+    '.md': 'markdown',
+}
 
 myst_enable_extensions = [
     "dollarmath",
@@ -33,18 +40,22 @@ myst_enable_extensions = [
     "deflist",
     "html_image",
     "colon_fence",
+    "linkify",
 ]
 
 # MyST-NB settings
 nb_execution_mode = "off"
 myst_dmath_double_inline = True
+myst_update_mathjax = False
 
-# MathJax configuration
-mathjax3_config = {
-    'tex': {
-        'inlineMath': [['\\(', '\\)'], ['$', '$']],
-        'displayMath': [['\\[', '\\]'], ['$$', '$$']],
-    }
+# MathJax settings
+mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+mathjax_config = {
+    'tex2jax': {
+        'inlineMath': [['$', '$'], ['\\(', '\\)']],
+        'displayMath': [['$$', '$$'], ['\\[', '\\]']],
+        'processEscapes': True,
+    },
 }
 
 # The master toctree document.

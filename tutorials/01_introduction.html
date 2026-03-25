@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -100,7 +102,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-01-introduction-to-gnc-toolkit">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-01-introduction-to-gnc-toolkit">
 <h1>Tutorial 01: Introduction to GNC Toolkit<a class="headerlink" href="#tutorial-01-introduction-to-gnc-toolkit" title="Link to this heading"></a></h1>
 <p>Welcome to the <strong>GNC Toolkit</strong>, a comprehensive Python library designed for spacecraft Guidance, Navigation, and Control (GNC) simulation and analysis.</p>
 <section id="theory-prerequisites">
@@ -108,15 +110,19 @@
 <section id="quaternion-attitude-representation">
 <h3>Quaternion Attitude Representation<a class="headerlink" href="#quaternion-attitude-representation" title="Link to this heading"></a></h3>
 <p>Spacecraft attitude is frequently parameterized using quaternions to avoid coordinate singularities (e.g., Gimbal lock in Euler angles).
-A quaternion $q$ is defined as a vector in $\mathbb{R}^4$ with a scalar part $q_s$ and a vector part $q_v = [q_x, q_y, q_z]^T$:
-$$
-q = \begin{bmatrix} q_v \ q_s \end{bmatrix}
-$$</p>
-<p>For pure rotations, we use <strong>unit quaternions</strong> ($|q| = 1$). To rotate a 3D vector $v$ by a quaternion $q$, we treat $v$ as a pure quaternion $v_q = [v^T, 0]^T$ and compute:
-$$
-v’ = q \otimes v_q \otimes q^*
-$$
-where $\otimes$ denotes quaternion multiplication and $q^*$ is the conjugate of $q$.</p>
+A quaternion <span class="math notranslate nohighlight">\(q\)</span> is defined as a vector in <span class="math notranslate nohighlight">\(\mathbb{R}^4\)</span> with a scalar part <span class="math notranslate nohighlight">\(q_s\)</span> and a vector part <span class="math notranslate nohighlight">\(q_v = [q_x, q_y, q_z]^T\)</span>:
+<div class="math notranslate nohighlight">
+\[\begin{split}
+q = \begin{bmatrix} q_v \\ q_s \end{bmatrix}
+\end{split}\]</div>
+</p>
+<p>For pure rotations, we use <strong>unit quaternions</strong> (<span class="math notranslate nohighlight">\(|q| = 1\)</span>). To rotate a 3D vector <span class="math notranslate nohighlight">\(v\)</span> by a quaternion <span class="math notranslate nohighlight">\(q\)</span>, we treat <span class="math notranslate nohighlight">\(v\)</span> as a pure quaternion <span class="math notranslate nohighlight">\(v_q = [v^T, 0]^T\)</span> and compute:
+<div class="math notranslate nohighlight">
+\[
+v' = q \otimes v_q \otimes q^*
+\]</div>
+
+where <span class="math notranslate nohighlight">\(\otimes\)</span> denotes quaternion multiplication and <span class="math notranslate nohighlight">\(q^*\)</span> is the conjugate of <span class="math notranslate nohighlight">\(q\)</span>.</p>
 <hr class="docutils" />
 <div class="cell docutils container">
 <div class="cell_input docutils container">

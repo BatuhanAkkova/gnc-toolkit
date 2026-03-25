@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -103,7 +105,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-17-full-cubesat-spacecraft-end-to-end-e2e-simulator">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-17-full-cubesat-spacecraft-end-to-end-e2e-simulator">
 <h1>Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator<a class="headerlink" href="#tutorial-17-full-cubesat-spacecraft-end-to-end-e2e-simulator" title="Link to this heading"></a></h1>
 <p>This <strong>Capstone Tutorial</strong> combines various components learned throughout the series into a unified simulation loop. We use the <code class="docutils literal notranslate"><span class="pre">MissionSimulator</span></code> class with a <strong>Sense -&gt; Estimate -&gt; Control -&gt; Propagate</strong> cycle.</p>
 <hr class="docutils" />
@@ -129,15 +131,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.simulation.simulator</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissionSimulator</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.simulation.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationLogger</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
 </pre></div>
 </div>
 </div>
@@ -148,7 +142,7 @@
 <section id="dynamics-and-propagator">
 <h3>2.1 Dynamics and Propagator<a class="headerlink" href="#dynamics-and-propagator" title="Link to this heading"></a></h3>
 <p>We simulate Rigid Body Attitude dynamics.
-State: $x = [q_0, q_1, q_2, q_3, \omega_x, \omega_y, \omega_z]^T$</p>
+State: <span class="math notranslate nohighlight">\(x = [q_0, q_1, q_2, q_3, \omega_x, \omega_y, \omega_z]^T\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inertia Matrix</span>
@@ -220,7 +214,7 @@ State: $x = [q_0, q_1, q_2, q_3, \omega_x, \omega_y, \omega_z]^T$</p>
 </section>
 <section id="controller-model">
 <h3>2.3 Controller Model<a class="headerlink" href="#controller-model" title="Link to this heading"></a></h3>
-<p>We implement a quaternion feedback controller proportional to angle error to bring attitude to inertial pointing $[1, 0, 0, 0]^T$.</p>
+<p>We implement a quaternion feedback controller proportional to angle error to bring attitude to inertial pointing <span class="math notranslate nohighlight">\([1, 0, 0, 0]^T\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">controller_model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">state_estimate</span><span class="p">):</span>
@@ -252,7 +246,7 @@ State: $x = [q_0, q_1, q_2, q_3, \omega_x, \omega_y, \omega_z]^T$</p>
 </section>
 <section id="running-the-e2e-mission-simulator">
 <h2>3. Running the E2E Mission Simulator<a class="headerlink" href="#running-the-e2e-mission-simulator" title="Link to this heading"></a></h2>
-<p>We initialize our spacecraft tumbling: $\omega = [0.05, -0.05, 0.02]$.
+<p>We initialize our spacecraft tumbling: <span class="math notranslate nohighlight">\(\omega = [0.05, -0.05, 0.02]\)</span>.
 Control seeks to bring it to fine point inertia.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

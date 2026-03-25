@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,7 +106,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-05-comparison-cowell-vs-encke">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-05-comparison-cowell-vs-encke">
 <h1>Tutorial 05: Comparison: Cowell vs Encke<a class="headerlink" href="#tutorial-05-comparison-cowell-vs-encke" title="Link to this heading"></a></h1>
 <p>This tutorial compares absolute numerical integration (<strong>Cowell’s Method</strong>) and perturbative numerical integration (<strong>Encke’s Method</strong>) within <code class="docutils literal notranslate"><span class="pre">gnc-toolkit</span></code>.</p>
 <hr class="docutils" />
@@ -112,21 +114,27 @@
 <h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
 <section id="cowell-s-method">
 <h3>1. Cowell’s Method<a class="headerlink" href="#cowell-s-method" title="Link to this heading"></a></h3>
-<p>Integrates the absolute equations of motion directly. The state integrated is the absolute position $\mathbf{r}$ and velocity $\mathbf{v}$:
-$$
+<p>Integrates the absolute equations of motion directly. The state integrated is the absolute position <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and velocity <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>:
+<div class="math notranslate nohighlight">
+\[
 \ddot{\mathbf{r}} = -\frac{\mu}{r^3}\mathbf{r} + \mathbf{a}_{pert}
-$$</p>
+\]</div>
+</p>
 </section>
 <section id="encke-s-method">
 <h3>2. Encke’s Method<a class="headerlink" href="#encke-s-method" title="Link to this heading"></a></h3>
-<p>Useful for orbits where perturbations are small. It integrates the <strong>deviation</strong> $\delta \mathbf{r}$ from a reference Keplerian orbit $\mathbf{r}<em>{ref}$:
-$$
-\mathbf{r} = \mathbf{r}</em>{ref} + \delta \mathbf{r}
-$$
-$$
-\ddot{\delta \mathbf{r}} = \frac{\mu}{r_{ref}^3} \left( f(q)\mathbf{r}<em>{ref} - \delta\mathbf{r} \right) + \mathbf{a}</em>{pert}
-$$
-where $q = \frac{\delta\mathbf{r} \cdot (\delta\mathbf{r} - 2\mathbf{r}<em>{ref})}{r</em>{ref}^2}$. Encke’s method reduces numerical roundoff errors for bound orbits with small disturbances.</p>
+<p>Useful for orbits where perturbations are small. It integrates the <strong>deviation</strong> <span class="math notranslate nohighlight">\(\delta \mathbf{r}\)</span> from a reference Keplerian orbit <span class="math notranslate nohighlight">\(\mathbf{r}_{ref}\)</span>:
+<div class="math notranslate nohighlight">
+\[
+\mathbf{r} = \mathbf{r}_{ref} + \delta \mathbf{r}
+\]</div>
+
+<div class="math notranslate nohighlight">
+\[
+\ddot{\delta \mathbf{r}} = \frac{\mu}{r_{ref}^3} \left( f(q)\mathbf{r}_{ref} - \delta\mathbf{r} \right) + \mathbf{a}_{pert}
+\]</div>
+
+where <span class="math notranslate nohighlight">\(q = \frac{\delta\mathbf{r} \cdot (\delta\mathbf{r} - 2\mathbf{r}_{ref})}{r_{ref}^2}\)</span>. Encke’s method reduces numerical roundoff errors for bound orbits with small disturbances.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -150,7 +158,7 @@ where $q = \frac{\delta\mathbf{r} \cdot (\delta\mathbf{r} - 2\mathbf{r}<em>{ref}
 </section>
 <section id="setup-simulation-environment">
 <h2>1. Setup Simulation Environment<a class="headerlink" href="#setup-simulation-environment" title="Link to this heading"></a></h2>
-<p>We define a LEO orbit and introduce a $J_2$ disturbance to trigger the perturbative integrator loops on both solvers.</p>
+<p>We define a LEO orbit and introduce a <span class="math notranslate nohighlight">\(J_2\)</span> disturbance to trigger the perturbative integrator loops on both solvers.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial Orbit (m, m/s)</span>
@@ -184,7 +192,7 @@ where $q = \frac{\delta\mathbf{r} \cdot (\delta\mathbf{r} - 2\mathbf{r}<em>{ref}
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cowell Final Pos:  [-1310807.66896629 -6060113.86490409 -3226579.61689067] m
-Cowell Execution Time: 0.070965 seconds
+Cowell Execution Time: 0.096331 seconds
 </pre></div>
 </div>
 </div>
@@ -207,7 +215,7 @@ Cowell Execution Time: 0.070965 seconds
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Encke Final Pos:  [-1311079.24910403 -6060081.37923322 -3226564.18300095] m
-Encke Execution Time: 0.201862 seconds
+Encke Execution Time: 0.337163 seconds
 </pre></div>
 </div>
 </div>
@@ -229,7 +237,7 @@ Encke Execution Time: 0.201862 seconds
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final Position Difference: 273.951264 m
-Speed Advantage (Cowell/Encke ratio): 0.35x
+Speed Advantage (Cowell/Encke ratio): 0.29x
 
 Note: Encke is often faster/more accurate over long continuous orbits because it integrates smaller variables, reducing numerical noise limits on large loops.
 </pre></div>

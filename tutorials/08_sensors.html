@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -99,22 +101,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-08-sensor-artifacts-biases">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-08-sensor-artifacts-biases">
 <h1>Tutorial 08: Sensor Artifacts &amp; Biases<a class="headerlink" href="#tutorial-08-sensor-artifacts-biases" title="Link to this heading"></a></h1>
 <p>This tutorial demonstrates how to model sensor noise, biases, which are critical for high-fidelity GNC simulations.</p>
 <section id="sensor-error-models">
 <h2>1. Sensor Error Models<a class="headerlink" href="#sensor-error-models" title="Link to this heading"></a></h2>
 <p>Most sensors suffer from deterministic and stochastic errors. The general measurement model is:
-$$
+<div class="math notranslate nohighlight">
+\[
 y_{meas} = (I + M) S \cdot y_{true} + b + w
-$$
+\]</div>
+
 Where:</p>
 <ul class="simple">
-<li><p>$I$ is the Identity matrix.</p></li>
-<li><p>$M$ is the Misalignment/Soft-Iron matrix.</p></li>
-<li><p>$S$ is the Scale factor error.</p></li>
-<li><p>$b$ is the Bias (Hard-Iron).</p></li>
-<li><p>$w$ is Gaussian/White noise.</p></li>
+<li><p><span class="math notranslate nohighlight">\(I\)</span> is the Identity matrix.</p></li>
+<li><p><span class="math notranslate nohighlight">\(M\)</span> is the Misalignment/Soft-Iron matrix.</p></li>
+<li><p><span class="math notranslate nohighlight">\(S\)</span> is the Scale factor error.</p></li>
+<li><p><span class="math notranslate nohighlight">\(b\)</span> is the Bias (Hard-Iron).</p></li>
+<li><p><span class="math notranslate nohighlight">\(w\)</span> is Gaussian/White noise.</p></li>
 </ul>
 <hr class="docutils" />
 <div class="cell docutils container">

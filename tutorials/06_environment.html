@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -105,7 +107,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-06-environmental-perturbations">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-06-environmental-perturbations">
 <h1>Tutorial 06: Environmental Perturbations<a class="headerlink" href="#tutorial-06-environmental-perturbations" title="Link to this heading"></a></h1>
 <p>This tutorial demonstrates how to model and simulate non-gravitational and third-body environmental perturbations in <code class="docutils literal notranslate"><span class="pre">gnc-toolkit</span></code>.</p>
 <hr class="docutils" />
@@ -114,25 +116,31 @@
 <section id="atmospheric-drag">
 <h3>1. Atmospheric Drag<a class="headerlink" href="#atmospheric-drag" title="Link to this heading"></a></h3>
 <p>The drag acceleration opposes the spacecraft’s velocity relative to the rotating atmosphere:
-$$
-\mathbf{a}<em>{drag} = -\frac{1}{2} \rho v</em>{rel}^2 \frac{C_D A}{m} \hat{\mathbf{v}}_{rel}
-$$
-where $\rho$ is local density, $C_D$ is drag coefficient, $A$ is area, and $m$ is mass.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{a}_{drag} = -\frac{1}{2} \rho v_{rel}^2 \frac{C_D A}{m} \hat{\mathbf{v}}_{rel}
+\]</div>
+
+where <span class="math notranslate nohighlight">\(\rho\)</span> is local density, <span class="math notranslate nohighlight">\(C_D\)</span> is drag coefficient, <span class="math notranslate nohighlight">\(A\)</span> is area, and <span class="math notranslate nohighlight">\(m\)</span> is mass.</p>
 </section>
 <section id="solar-radiation-pressure-srp">
 <h3>2. Solar Radiation Pressure (SRP)<a class="headerlink" href="#solar-radiation-pressure-srp" title="Link to this heading"></a></h3>
 <p>The force exerted by solar photons. It pushes away from the Sun:
-$$
-\mathbf{a}<em>{srp} = - \nu P</em>{sun} C_R \frac{A}{m} \hat{\mathbf{u}}<em>{sun}
-$$
-where $\nu$ is the shadow function (1 in sunlight, 0 in eclipse), $P</em>{sun}$ is radiation pressure at distance, and $C_R$ is reflectivity coefficient.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{a}_{srp} = - \nu P_{sun} C_R \frac{A}{m} \hat{\mathbf{u}}_{sun}
+\]</div>
+
+where <span class="math notranslate nohighlight">\(\nu\)</span> is the shadow function (1 in sunlight, 0 in eclipse), <span class="math notranslate nohighlight">\(P_{sun}\)</span> is radiation pressure at distance, and <span class="math notranslate nohighlight">\(C_R\)</span> is reflectivity coefficient.</p>
 </section>
 <section id="third-body-gravity">
 <h3>3. Third-Body Gravity<a class="headerlink" href="#third-body-gravity" title="Link to this heading"></a></h3>
 <p>Gravitational pull from other celestial bodies (Sun, Moon):
-$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{a}_{3B} = \sum \mu_k \left( \frac{\mathbf{s}_k - \mathbf{r}}{|\mathbf{s}_k - \mathbf{r}|^3} - \frac{\mathbf{s}_k}{|\mathbf{s}_k|^3} \right)
-$$</p>
+\]</div>
+</p>
 <hr class="docutils" />
 <div class="cell docutils container">
 <div class="cell_input docutils container">

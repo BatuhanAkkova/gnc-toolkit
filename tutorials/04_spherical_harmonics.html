@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -52,7 +54,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 04: EGM2008 &amp; Mass Gravity Models</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#theory-prerequisites">Theory Prerequisites</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#two-body-gravity">1. Two-Body Gravity</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#j-2-oblateness">2. $J_2$ Oblateness</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#j-2-oblateness">2. <span class="math notranslate nohighlight">\(J_2\)</span> Oblateness</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#spherical-harmonics-egm2008">3. Spherical Harmonics (EGM2008)</a></li>
 </ul>
 </li>
@@ -104,33 +106,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-04-egm2008-mass-gravity-models">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-04-egm2008-mass-gravity-models">
 <h1>Tutorial 04: EGM2008 &amp; Mass Gravity Models<a class="headerlink" href="#tutorial-04-egm2008-mass-gravity-models" title="Link to this heading"></a></h1>
-<p>This tutorial demonstrates the high-fidelity gravitational mechanics modeled in <code class="docutils literal notranslate"><span class="pre">gnc-toolkit</span></code>, covering Two-Body, $J_2$, and full Spherical Harmonic perturbations (EGM2008).</p>
+<p>This tutorial demonstrates the high-fidelity gravitational mechanics modeled in <code class="docutils literal notranslate"><span class="pre">gnc-toolkit</span></code>, covering Two-Body, <span class="math notranslate nohighlight">\(J_2\)</span>, and full Spherical Harmonic perturbations (EGM2008).</p>
 <hr class="docutils" />
 <section id="theory-prerequisites">
 <h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
 <section id="two-body-gravity">
 <h3>1. Two-Body Gravity<a class="headerlink" href="#two-body-gravity" title="Link to this heading"></a></h3>
 <p>The simplest model assuming Earth is a point mass. Acceleration is along the nadir vector:
-$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{a}_{2B} = -\frac{\mu}{r^3} \mathbf{r}
-$$</p>
+\]</div>
+</p>
 </section>
 <section id="j-2-oblateness">
-<h3>2. $J_2$ Oblateness<a class="headerlink" href="#j-2-oblateness" title="Link to this heading"></a></h3>
-<p>Accounting for the equatorial bulge of the Earth via the dominant zonal harmonic $J_2$:
-$$
+<h3>2. <span class="math notranslate nohighlight">\(J_2\)</span> Oblateness<a class="headerlink" href="#j-2-oblateness" title="Link to this heading"></a></h3>
+<p>Accounting for the equatorial bulge of the Earth via the dominant zonal harmonic <span class="math notranslate nohighlight">\(J_2\)</span>:
+<div class="math notranslate nohighlight">
+\[
 a_{J_2, x} = \frac{3}{2} J_2 \frac{\mu}{r^2} \left(\frac{R_E}{r}\right)^2 \frac{x}{r} \left(5 \frac{z^2}{r^2} - 1\right)
-$$
-Adding this to $\mathbf{a}_{2B}$ introduces <strong>Nodal Precession</strong> and <strong>Apsidal Rotation</strong>.</p>
+\]</div>
+
+Adding this to <span class="math notranslate nohighlight">\(\mathbf{a}_{2B}\)</span> introduces <strong>Nodal Precession</strong> and <strong>Apsidal Rotation</strong>.</p>
 </section>
 <section id="spherical-harmonics-egm2008">
 <h3>3. Spherical Harmonics (EGM2008)<a class="headerlink" href="#spherical-harmonics-egm2008" title="Link to this heading"></a></h3>
-<p>For high-accuracy drag, decay, or orbital maintenance triggers, the Earth’s potential $U$ is expanded into Associated Legendre Polynomials $P_{nm}$:
-$$
+<p>For high-accuracy drag, decay, or orbital maintenance triggers, the Earth’s potential <span class="math notranslate nohighlight">\(U\)</span> is expanded into Associated Legendre Polynomials <span class="math notranslate nohighlight">\(P_{nm}\)</span>:
+<div class="math notranslate nohighlight">
+\[
 U = \frac{\mu}{r} \sum_{n=0}^{N} \left(\frac{R_E}{r}\right)^n \sum_{m=0}^{n} P_{nm}(\sin\phi) \left( C_{nm}\cos(m\lambda) + S_{nm}\sin(m\lambda) \right)
-$$</p>
+\]</div>
+</p>
 <hr class="docutils" />
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -153,7 +161,7 @@ $$</p>
 </section>
 <section id="comparing-gravity-accelerations">
 <h2>1. Comparing Gravity Accelerations<a class="headerlink" href="#comparing-gravity-accelerations" title="Link to this heading"></a></h2>
-<p>Let’s evaluate the difference in acceleration magnitudes at a specific position in Low Earth Orbit (LEO) for Two-Body, $J_2$, and a Degree 10 Spherical Harmonic Model.</p>
+<p>Let’s evaluate the difference in acceleration magnitudes at a specific position in Low Earth Orbit (LEO) for Two-Body, <span class="math notranslate nohighlight">\(J_2\)</span>, and a Degree 10 Spherical Harmonic Model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Spacecraft Position in ECI [m] (Approx 500km altitude)</span>
@@ -196,7 +204,7 @@ Effect of Higher Order (10x10) over J2: 8.420463e+00 m/s^2
 </section>
 <section id="dynamic-impact-orbit-precession">
 <h2>2. Dynamic Impact: Orbit Precession<a class="headerlink" href="#dynamic-impact-orbit-precession" title="Link to this heading"></a></h2>
-<p>The $J_2$ effect causes the right ascension of the ascending node (RAAN) to precess over time. Let’s propagate a short orbit under $J_2$ and see the trajectory.</p>
+<p>The <span class="math notranslate nohighlight">\(J_2\)</span> effect causes the right ascension of the ascending node (RAAN) to precess over time. Let’s propagate a short orbit under <span class="math notranslate nohighlight">\(J_2\)</span> and see the trajectory.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.visualization.orbit</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_orbit_3d</span>

@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -102,7 +104,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-14-indirect-direct-collocation-optimal-control">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-14-indirect-direct-collocation-optimal-control">
 <h1>Tutorial 14: Indirect &amp; Direct Collocation Optimal Control<a class="headerlink" href="#tutorial-14-indirect-direct-collocation-optimal-control" title="Link to this heading"></a></h1>
 <p>This tutorial covers Continuous Thrust Guidance using <strong>Indirect Methods</strong> (Pontryagin’s Minimum Principle) and <strong>Direct Methods</strong> (Direct Collocation) to solve low-thrust trajectory optimization problems.</p>
 <hr class="docutils" />
@@ -110,16 +112,18 @@
 <h2>1. Theory Prerequisite<a class="headerlink" href="#theory-prerequisite" title="Link to this heading"></a></h2>
 <section id="indirect-method-pmp">
 <h3>1.1 Indirect Method (PMP)<a class="headerlink" href="#indirect-method-pmp" title="Link to this heading"></a></h3>
-<p>Formulates the problem by augmenting the state $x$ with costates $\lambda$ and forming the Hamiltonian $H$. Necessary conditions for optimality require solving a <strong>Boundary Value Problem (BVP)</strong>:
-$$\dot{x} = \frac{\partial H}{\partial \lambda}, \quad \dot{\lambda} = -\frac{\partial H}{\partial x}$$
-With boundary conditions for state at $t_0$ and $t_f$.</p>
+<p>Formulates the problem by augmenting the state <span class="math notranslate nohighlight">\(x\)</span> with costates <span class="math notranslate nohighlight">\(\lambda\)</span> and forming the Hamiltonian <span class="math notranslate nohighlight">\(H\)</span>. Necessary conditions for optimality require solving a <strong>Boundary Value Problem (BVP)</strong>:
+<div class="math notranslate nohighlight">
+\[\dot{x} = \frac{\partial H}{\partial \lambda}, \quad \dot{\lambda} = -\frac{\partial H}{\partial x}\]</div>
+
+With boundary conditions for state at <span class="math notranslate nohighlight">\(t_0\)</span> and <span class="math notranslate nohighlight">\(t_f\)</span>.</p>
 </section>
 <section id="direct-collocation">
 <h3>1.2 Direct Collocation<a class="headerlink" href="#direct-collocation" title="Link to this heading"></a></h3>
-<p>Discretizes the trajectory into a series of $N$ nodes. States and controls at nodes are treated as optimization variables. Linear/Quad constraints enforce that the dynamics update rule holds (e.g., Trapezoidal rule).</p>
+<p>Discretizes the trajectory into a series of <span class="math notranslate nohighlight">\(N\)</span> nodes. States and controls at nodes are treated as optimization variables. Linear/Quad constraints enforce that the dynamics update rule holds (e.g., Trapezoidal rule).</p>
 <ul class="simple">
-<li><p><strong>Objective</strong>: Minimize total control effort $\int ||u(t)||^2 dt \approx \sum ||u_i||^2$</p></li>
-<li><p><strong>Constraints</strong>: $\dot{x} = f(x, u)$ enforced via algebraic transcription formulation.</p></li>
+<li><p><strong>Objective</strong>: Minimize total control effort <span class="math notranslate nohighlight">\(\int ||u(t)||^2 dt \approx \sum ||u_i||^2\)</span></p></li>
+<li><p><strong>Constraints</strong>: <span class="math notranslate nohighlight">\(\dot{x} = f(x, u)\)</span> enforced via algebraic transcription formulation.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -141,7 +145,7 @@ With boundary conditions for state at $t_0$ and $t_f$.</p>
 </section>
 <section id="demonstration-indirect-optimal-guidance-bvp">
 <h2>2. Demonstration: Indirect Optimal Guidance (BVP)<a class="headerlink" href="#demonstration-indirect-optimal-guidance-bvp" title="Link to this heading"></a></h2>
-<p>We solve for a continuous thrust maneuver from position $r_0$ to $r_f$ with specified velocities in a given time.</p>
+<p>We solve for a continuous thrust maneuver from position <span class="math notranslate nohighlight">\(r_0\)</span> to <span class="math notranslate nohighlight">\(r_f\)</span> with specified velocities in a given time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span> <span class="o">=</span> <span class="mf">398600.4418</span>

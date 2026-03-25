@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -100,26 +102,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-11-unscented-kalman-filter-ukf">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-11-unscented-kalman-filter-ukf">
 <h1>Tutorial 11: Unscented Kalman Filter (UKF)<a class="headerlink" href="#tutorial-11-unscented-kalman-filter-ukf" title="Link to this heading"></a></h1>
 <p>This tutorial covers the <strong>Unscented Kalman Filter (UKF)</strong> for highly non-linear spacecraft tracking problems.</p>
 <p>While EKFs approximate non-linearities using first-order Taylor series (Jacobians), the UKF uses the <strong>Unscented Transform</strong> to propagate the mean and covariance through non-linear functions directly using a deterministic set of <strong>Sigma Points</strong>.</p>
 <hr class="docutils" />
 <section id="theory-prerequisite-unscented-transform">
 <h2>1. Theory Prerequisite: Unscented Transform<a class="headerlink" href="#theory-prerequisite-unscented-transform" title="Link to this heading"></a></h2>
-<p>Given a state $x \sim \mathcal{N}(\hat{x}, P)$, we generate $2n+1$ sigma points $\mathcal{X}_i$:</p>
+<p>Given a state <span class="math notranslate nohighlight">\(x \sim \mathcal{N}(\hat{x}, P)\)</span>, we generate <span class="math notranslate nohighlight">\(2n+1\)</span> sigma points <span class="math notranslate nohighlight">\(\mathcal{X}_i\)</span>:</p>
 <ol class="arabic simple">
-<li><p>$\mathcal{X}_0 = \hat{x}$</p></li>
-<li><p>$\mathcal{X}_i = \hat{x} + (\sqrt{(n+\lambda) P})_i$</p></li>
-<li><p>$\mathcal{X}_{i+n} = \hat{x} - (\sqrt{(n+\lambda) P})_i$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{X}_0 = \hat{x}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{X}_i = \hat{x} + (\sqrt{(n+\lambda) P})_i\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{X}_{i+n} = \hat{x} - (\sqrt{(n+\lambda) P})_i\)</span></p></li>
 </ol>
-<p>Where $\lambda$ is a scaling parameter. These points are propagated through the non-linear function $f(x)$ or $h(x)$.</p>
+<p>Where <span class="math notranslate nohighlight">\(\lambda\)</span> is a scaling parameter. These points are propagated through the non-linear function <span class="math notranslate nohighlight">\(f(x)\)</span> or <span class="math notranslate nohighlight">\(h(x)\)</span>.</p>
 <section id="advantage-over-ekf">
 <h3>Advantage over EKF<a class="headerlink" href="#advantage-over-ekf" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p><strong>No Jacobians required</strong>: Extremely useful for complex/discrete functions.</p></li>
 <li><p><strong>Higher accuracy</strong>: Captures mean and covariance to the 2nd order of Taylor series (EKF is 1st order).</p></li>
-<li><p><strong>Stable Square-Root (SR-UKF)</strong>: Maintains is the Cholesky factor $S$ of $P$ ($P = S S^T$) ensuring positive-definiteness throughout execution.</p></li>
+<li><p><strong>Stable Square-Root (SR-UKF)</strong>: Maintains is the Cholesky factor <span class="math notranslate nohighlight">\(S\)</span> of <span class="math notranslate nohighlight">\(P\)</span> (<span class="math notranslate nohighlight">\(P = S S^T\)</span>) ensuring positive-definiteness throughout execution.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -133,15 +135,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.ukf</span><span class="w"> </span><span class="kn">import</span> <span class="n">UKF</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
 </pre></div>
 </div>
 </div>
@@ -289,7 +283,7 @@
 </div>
 <blockquote>
 <div><p>[!NOTE]
-<strong>UKF Angle-Only Performance</strong>: Coordinate tracking for bearing-only state structures develops settle lag at extended durations ($P0	ext{s}$). Without absolute range observability telemetry, this represents natural convergence boundaries of circular arc map distributions after significant orbit traversal.</p>
+<strong>UKF Angle-Only Performance</strong>: Coordinate tracking for bearing-only state structures develops settle lag at extended durations (<span class="math notranslate nohighlight">\(P0	ext{s}\)</span>). Without absolute range observability telemetry, this represents natural convergence boundaries of circular arc map distributions after significant orbit traversal.</p>
 </div></blockquote>
 </section>
 </section>

@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -103,35 +105,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-10-multiplicative-extended-kalman-filter-mekf">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-10-multiplicative-extended-kalman-filter-mekf">
 <h1>Tutorial 10: Multiplicative Extended Kalman Filter (MEKF)<a class="headerlink" href="#tutorial-10-multiplicative-extended-kalman-filter-mekf" title="Link to this heading"></a></h1>
 <p>This tutorial demonstrates the <strong>Multiplicative Extended Kalman Filter (MEKF)</strong> for spacecraft attitude estimation.</p>
-<p>Unlike position vectors, quaternions live on a hypersphere ($S^3$) and have unit-norm constraints. Adding states linearly breaks this norm. MEKF solves this by using a <strong>multiplicative error state</strong> representation.</p>
+<p>Unlike position vectors, quaternions live on a hypersphere (<span class="math notranslate nohighlight">\(S^3\)</span>) and have unit-norm constraints. Adding states linearly breaks this norm. MEKF solves this by using a <strong>multiplicative error state</strong> representation.</p>
 <hr class="docutils" />
 <section id="theory-prerequisite-mekf-formulation">
 <h2>1. Theory Prerequisite: MEKF Formulation<a class="headerlink" href="#theory-prerequisite-mekf-formulation" title="Link to this heading"></a></h2>
-<p>We represent the true quaternion $q$ as the multiplication of an estimated quaternion $\hat{q}$ and an error quaternion $\delta q$:</p>
-<p>$$q = \hat{q} \otimes \delta q$$</p>
-<p>For small errors, the error quaternion is approximated by an attitude error vector $\delta \vec{\theta} \in \mathbb{R}^3$:</p>
-<p>$$\delta q_{approx} \begin{bmatrix} \frac{1}{2} \delta \vec{\theta} \ 1 \end{bmatrix}$$</p>
+<p>We represent the true quaternion <span class="math notranslate nohighlight">\(q\)</span> as the multiplication of an estimated quaternion <span class="math notranslate nohighlight">\(\hat{q}\)</span> and an error quaternion <span class="math notranslate nohighlight">\(\delta q\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[q = \hat{q} \otimes \delta q\]</div>
+<p>For small errors, the error quaternion is approximated by an attitude error vector <span class="math notranslate nohighlight">\(\delta \vec{\theta} \in \mathbb{R}^3\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\delta q_{approx} \begin{bmatrix} \frac{1}{2} \delta \vec{\theta} \\ 1 \end{bmatrix}\end{split}\]</div>
 <section id="state-and-error-state">
 <h3>State and Error State<a class="headerlink" href="#state-and-error-state" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><strong>Global State</strong> ($7\times1$): $x = [q^T, \vec{\beta}^T]^T$ (Quaternion &amp; Gyro Bias)</p></li>
-<li><p><strong>Error State</strong> ($6\times1$): $\Delta x = [\delta \vec{\theta}^T, \delta \vec{\beta}^T]^T$</p></li>
+<li><p><strong>Global State</strong> (<span class="math notranslate nohighlight">\(7\times1\)</span>): <span class="math notranslate nohighlight">\(x = [q^T, \vec{\beta}^T]^T\)</span> (Quaternion &amp; Gyro Bias)</p></li>
+<li><p><strong>Error State</strong> (<span class="math notranslate nohighlight">\(6\times1\)</span>): <span class="math notranslate nohighlight">\(\Delta x = [\delta \vec{\theta}^T, \delta \vec{\beta}^T]^T\)</span></p></li>
 </ul>
 </section>
 <section id="predict-kinematics-integration">
 <h3>Predict (Kinematics Integration)<a class="headerlink" href="#predict-kinematics-integration" title="Link to this heading"></a></h3>
-<p>$$\dot{\hat{q}} = \frac{1}{2} \hat{q} \otimes \begin{bmatrix} \vec{\omega} \ 0 \end{bmatrix}, \quad \vec{\omega} = \vec{\omega}_{meas} - \hat{\vec{\beta}}$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\dot{\hat{q}} = \frac{1}{2} \hat{q} \otimes \begin{bmatrix} \vec{\omega} \\ 0 \end{bmatrix}, \quad \vec{\omega} = \vec{\omega}_{meas} - \hat{\vec{\beta}}\end{split}\]</div>
 </section>
 <section id="update">
 <h3>Update<a class="headerlink" href="#update" title="Link to this heading"></a></h3>
-<p>Given a reference vector in inertial frame $\vec{v}<em>{I}$ and its body measurement $\vec{v}</em>{B}$:
-$$\hat{\vec{v}}<em>{B} = R(\hat{q})^T \vec{v}</em>{I}$$
-The innovation is $y = \vec{v}<em>{B} - \hat{\vec{v}}</em>{B}$.
+<p>Given a reference vector in inertial frame <span class="math notranslate nohighlight">\(\vec{v}_{I}\)</span> and its body measurement <span class="math notranslate nohighlight">\(\vec{v}_{B}\)</span>:
+<div class="math notranslate nohighlight">
+\[\hat{\vec{v}}_{B} = R(\hat{q})^T \vec{v}_{I}\]</div>
+
+The innovation is <span class="math notranslate nohighlight">\(y = \vec{v}_{B} - \hat{\vec{v}}_{B}\)</span>.
 The Sensitivity Matrix is:
-$$H = [ [\hat{\vec{v}}<em>{B}\times] \quad 0</em>{3\times3} ]$$</p>
+<div class="math notranslate nohighlight">
+\[H = [ [\hat{\vec{v}}_{B}\times] \quad 0_{3\times3} ]\]</div>
+</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>

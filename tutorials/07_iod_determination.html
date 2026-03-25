@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -110,7 +112,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-07-initial-orbit-determination-and-lambert-s-problem">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-07-initial-orbit-determination-and-lambert-s-problem">
 <h1>Tutorial 07: Initial Orbit Determination and Lambert’s Problem<a class="headerlink" href="#tutorial-07-initial-orbit-determination-and-lambert-s-problem" title="Link to this heading"></a></h1>
 <p>This tutorial demonstrates how to determine a spacecraft’s orbit from observations and how to solve for trajectories between two points in space.</p>
 <section id="initial-orbit-determination-iod">
@@ -123,11 +125,13 @@
 </section>
 <section id="theory-prerequisites">
 <h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
-<p>Given three unit vectors $\hat{\rho}_1, \hat{\rho}_2, \hat{\rho}_3$ and observer positions $R_1, R_2, R_3$, the satellite position is:
-$$
+<p>Given three unit vectors <span class="math notranslate nohighlight">\(\hat{\rho}_1, \hat{\rho}_2, \hat{\rho}_3\)</span> and observer positions <span class="math notranslate nohighlight">\(R_1, R_2, R_3\)</span>, the satellite position is:
+<div class="math notranslate nohighlight">
+\[
 r_i = R_i + \rho_i \hat{\rho}_i
-$$
-Gauss solves for the scalar ranges $\rho_i$ by enforcing the coplanarity condition and Keplerian dynamics.</p>
+\]</div>
+
+Gauss solves for the scalar ranges <span class="math notranslate nohighlight">\(\rho_i\)</span> by enforcing the coplanarity condition and Keplerian dynamics.</p>
 <hr class="docutils" />
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -259,10 +263,10 @@ Velocity Error: 0.2275 m/s
 <section id="lambert-s-problem">
 <h2>2. Lambert’s Problem<a class="headerlink" href="#lambert-s-problem" title="Link to this heading"></a></h2>
 <p>Lambert’s problem is the boundary value problem formulation of orbital mechanics:
-Given two position vectors $r_1, r_2$ and a transfer time $\Delta t$, find the velocities $v_1, v_2$ at both positions.</p>
+Given two position vectors <span class="math notranslate nohighlight">\(r_1, r_2\)</span> and a transfer time <span class="math notranslate nohighlight">\(\Delta t\)</span>, find the velocities <span class="math notranslate nohighlight">\(v_1, v_2\)</span> at both positions.</p>
 <section id="application-rendezvous">
 <h3>Application: Rendezvous<a class="headerlink" href="#application-rendezvous" title="Link to this heading"></a></h3>
-<p>It is the workhorse for calculating intercept trajectories and maneuver $\Delta V$.</p>
+<p>It is the workhorse for calculating intercept trajectories and maneuver <span class="math notranslate nohighlight">\(\Delta V\)</span>.</p>
 </section>
 <section id="solving-lambert-transfer">
 <h3>2.1 Solving Lambert Transfer<a class="headerlink" href="#solving-lambert-transfer" title="Link to this heading"></a></h3>

@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,7 +106,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-16-fault-detection-isolation-and-recovery-fdir">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-16-fault-detection-isolation-and-recovery-fdir">
 <h1>Tutorial 16: Fault Detection, Isolation, and Recovery (FDIR)<a class="headerlink" href="#tutorial-16-fault-detection-isolation-and-recovery-fdir" title="Link to this heading"></a></h1>
 <p>This tutorial covers <strong>FDIR</strong> techniques for spacecraft systems. FDIR is critical for autonomy and survival, ensuring the spacecraft can detect failures in sensors or actuators and respond appropriately (e.g., by re-allocating controls or triggering a <strong>Safe Mode</strong>).</p>
 <hr class="docutils" />
@@ -115,26 +117,30 @@
 <p>A <strong>residual</strong> is a signal that is zero (or small) in normal operation and non-zero during a fault.</p>
 <ul class="simple">
 <li><p><strong>Analytical Redundancy</strong>: Comparing outputs of two different sensors/models that relate algebraically.</p></li>
-<li><p><strong>Observer Residuals</strong>: Using an estimator (like a Luenberger Observer) to predict the output $\hat{y}$. Residual $r = y - \hat{y}$.</p></li>
+<li><p><strong>Observer Residuals</strong>: Using an estimator (like a Luenberger Observer) to predict the output <span class="math notranslate nohighlight">\(\hat{y}\)</span>. Residual <span class="math notranslate nohighlight">\(r = y - \hat{y}\)</span>.</p></li>
 </ul>
 </section>
 <section id="parity-space">
 <h3>1.2 Parity Space<a class="headerlink" href="#parity-space" title="Link to this heading"></a></h3>
 <p>For redundant sensors (e.g., 4 gyros for 3 axes):
-$$ y = M x + v + f $$
-where $M$ is the geometry matrix ($p \times n$, $p &gt; n$).
-We find a Parity Matrix $P$ such that $P M = 0$ and $P P^T = I$.</p>
+<div class="math notranslate nohighlight">
+\[ y = M x + v + f \]</div>
+
+where <span class="math notranslate nohighlight">\(M\)</span> is the geometry matrix (<span class="math notranslate nohighlight">\(p \times n\)</span>, <span class="math notranslate nohighlight">\(p &gt; n\)</span>).
+We find a Parity Matrix <span class="math notranslate nohighlight">\(P\)</span> such that <span class="math notranslate nohighlight">\(P M = 0\)</span> and <span class="math notranslate nohighlight">\(P P^T = I\)</span>.</p>
 <ul class="simple">
-<li><p><strong>Parity Vector</strong>: $p_{vec} = P y$</p></li>
-<li><p><strong>Detection</strong>: $|p_{vec}| &gt; \text{threshold}$</p></li>
-<li><p><strong>Isolation</strong>: The column of $P$ that aligns best with $p_{vec}$ identifies the faulty sensor.</p></li>
+<li><p><strong>Parity Vector</strong>: <span class="math notranslate nohighlight">\(p_{vec} = P y\)</span></p></li>
+<li><p><strong>Detection</strong>: <span class="math notranslate nohighlight">\(\|p_{vec}\| &gt; \text{threshold}\)</span></p></li>
+<li><p><strong>Isolation</strong>: The column of <span class="math notranslate nohighlight">\(P\)</span> that aligns best with <span class="math notranslate nohighlight">\(p_{vec}\)</span> identifies the faulty sensor.</p></li>
 </ul>
 </section>
 <section id="actuator-accommodation">
 <h3>1.3 Actuator Accommodation<a class="headerlink" href="#actuator-accommodation" title="Link to this heading"></a></h3>
-<p>Control allocation: $\tau = B u$. We find $u$ to minimize $u^T W u$:
-$$ u = W^{-1} B^T (B W^{-1} B^T)^{-1} \tau $$
-If actuator $i$ fails, we set its weight $W_{ii} \to \infty$ (or very large), forcing the allocator to use the remaining healthy actuators.</p>
+<p>Control allocation: <span class="math notranslate nohighlight">\(\tau = B u\)</span>. We find <span class="math notranslate nohighlight">\(u\)</span> to minimize <span class="math notranslate nohighlight">\(u^T W u\)</span>:
+<div class="math notranslate nohighlight">
+\[ u = W^{-1} B^T (B W^{-1} B^T)^{-1} \tau \]</div>
+
+If actuator <span class="math notranslate nohighlight">\(i\)</span> fails, we set its weight <span class="math notranslate nohighlight">\(W_{ii} \to \infty\)</span> (or very large), forcing the allocator to use the remaining healthy actuators.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>

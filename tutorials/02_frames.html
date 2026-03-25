@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -103,7 +105,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-02-coordinate-systems-frame-transformations">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-02-coordinate-systems-frame-transformations">
 <h1>Tutorial 02: Coordinate Systems &amp; Frame Transformations<a class="headerlink" href="#tutorial-02-coordinate-systems-frame-transformations" title="Link to this heading"></a></h1>
 <p>This tutorial covers conversions between common spacecraft coordinate frames using the <code class="docutils literal notranslate"><span class="pre">gnc_toolkit.utils.frame_conversion</span></code> module.</p>
 <hr class="docutils" />
@@ -112,24 +114,28 @@
 <section id="earth-centered-inertial-eci-vs-earth-centered-fixed-ecef">
 <h3>1. Earth-Centered Inertial (ECI) vs Earth-Centered Fixed (ECEF)<a class="headerlink" href="#earth-centered-inertial-eci-vs-earth-centered-fixed-ecef" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><strong>ECI ($I$)</strong>: Inertial frame originating at Earth’s center. X-axis points to Vernal Equinox ($\Upsilon$).</p></li>
-<li><p><strong>ECEF ($E$)</strong>: Rotates with the Earth. X-axis points to Prime Meridian.</p></li>
+<li><p><strong>ECI (<span class="math notranslate nohighlight">\(I\)</span>)</strong>: Inertial frame originating at Earth’s center. X-axis points to Vernal Equinox (<span class="math notranslate nohighlight">\(\Upsilon\)</span>).</p></li>
+<li><p><strong>ECEF (<span class="math notranslate nohighlight">\(E\)</span>)</strong>: Rotates with the Earth. X-axis points to Prime Meridian.</p></li>
 </ul>
 <p>The transformation from ECI to ECEF is a rotation about the Z-axis by the <strong>Greenwich Mean Sidereal Time (GMST)</strong>:
-$$
+<div class="math notranslate nohighlight">
+\[
 R^{I \to E} = R_z(\theta_{GMST})
-$$
-$$
+\]</div>
+
+<div class="math notranslate nohighlight">
+\[
 r_{ECEF} = R^{I \to E} r_{ECI}
-$$</p>
+\]</div>
+</p>
 </section>
 <section id="local-vertical-local-horizontal-lvlh">
 <h3>2. Local-Vertical Local-Horizontal (LVLH)<a class="headerlink" href="#local-vertical-local-horizontal-lvlh" title="Link to this heading"></a></h3>
 <p>The LVLH frame is a satellite-centered frame useful for attitude determination and relative navigation.</p>
 <ul class="simple">
-<li><p><strong>$\hat{z}_{LVLH}$ (Nadir)</strong>: $-\frac{r}{|r|}$ (Points towards Earth center)</p></li>
-<li><p><strong>$\hat{y}_{LVLH}$ (Orbit Normal)</strong>: $-\frac{h}{|h|}$ where $h = r \times v$ is angular momentum</p></li>
-<li><p><strong>$\hat{x}_{LVLH}$</strong>: $\hat{y}<em>{LVLH} \times \hat{z}</em>{LVLH}$ (Completes right-handed system)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\hat{z}_{LVLH}\)</span> (Nadir)</strong>: <span class="math notranslate nohighlight">\(-\frac{r}{|r|}\)</span> (Points towards Earth center)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\hat{y}_{LVLH}\)</span> (Orbit Normal)</strong>: <span class="math notranslate nohighlight">\(-\frac{h}{|h|}\)</span> where <span class="math notranslate nohighlight">\(h = r \times v\)</span> is angular momentum</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\hat{x}_{LVLH}\)</span></strong>: <span class="math notranslate nohighlight">\(\hat{y}_{LVLH} \times \hat{z}_{LVLH}\)</span> (Completes right-handed system)</p></li>
 </ul>
 <hr class="docutils" />
 <div class="cell docutils container">

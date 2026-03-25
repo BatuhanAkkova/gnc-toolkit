@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -105,7 +107,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-12-analytical-orbital-maneuvers">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-12-analytical-orbital-maneuvers">
 <h1>Tutorial 12: Analytical Orbital Maneuvers<a class="headerlink" href="#tutorial-12-analytical-orbital-maneuvers" title="Link to this heading"></a></h1>
 <p>This tutorial covers standard impulsive orbital maneuvers using analytical formulations from circular to circular/elliptical orbits.</p>
 <hr class="docutils" />
@@ -115,19 +117,19 @@
 <h3>1.1 Hohmann Transfer<a class="headerlink" href="#hohmann-transfer" title="Link to this heading"></a></h3>
 <p>A two-impulse maneuver that moves a spacecraft between two coplanar circular orbits of different radii using an elliptical transfer orbit.</p>
 <ul class="simple">
-<li><p><strong>Semi-major axis</strong>: $a_{\text{trans}} = (r_1 + r_2) / 2$</p></li>
-<li><p><strong>First Burn (Perigee)</strong>: $\Delta V_1 = | v_{\text{trans, p}} - v_{c1} |$</p></li>
-<li><p><strong>Second Burn (Apogee)</strong>: $\Delta V_2 = | v_{c2} - v_{\text{trans, a}} |$</p></li>
-<li><p><strong>Total Delta-V</strong>: $\Delta V_{\text{tot}} = \Delta V_1 + \Delta V_2$</p></li>
+<li><p><strong>Semi-major axis</strong>: <span class="math notranslate nohighlight">\(a_{\text{trans}} = (r_1 + r_2) / 2\)</span></p></li>
+<li><p><strong>First Burn (Perigee)</strong>: <span class="math notranslate nohighlight">\(\Delta V_1 = | v_{\text{trans, p}} - v_{c1} |\)</span></p></li>
+<li><p><strong>Second Burn (Apogee)</strong>: <span class="math notranslate nohighlight">\(\Delta V_2 = | v_{c2} - v_{\text{trans, a}} |\)</span></p></li>
+<li><p><strong>Total Delta-V</strong>: <span class="math notranslate nohighlight">\(\Delta V_{\text{tot}} = \Delta V_1 + \Delta V_2\)</span></p></li>
 </ul>
 </section>
 <section id="bi-elliptic-transfer">
 <h3>1.2 Bi-Elliptic Transfer<a class="headerlink" href="#bi-elliptic-transfer" title="Link to this heading"></a></h3>
-<p>A three-impulse maneuver that can be more fuel-efficient than a Hohmann transfer when the ratio of the final radius to the initial radius ($r_2 / r_1$) is greater than <strong>15.58</strong>.</p>
+<p>A three-impulse maneuver that can be more fuel-efficient than a Hohmann transfer when the ratio of the final radius to the initial radius (<span class="math notranslate nohighlight">\(r_2 / r_1\)</span>) is greater than <strong>15.58</strong>.</p>
 <ul class="simple">
-<li><p><strong>Step 1</strong>: Propel to intermediate apogee $r_b &gt; r_2$.</p></li>
-<li><p><strong>Step 2</strong>: Circularize/raise perigee at $r_b$ to target $r_2$.</p></li>
-<li><p><strong>Step 3</strong>: De-circularize at $r_2$ (retrograde) from $r_b$ transfer to circular $r_2$ (Wait, standard bi-elliptic usually raises perigee or apogee. The toolkit splits it into $r_1 \rightarrow r_b \rightarrow r_2$).</p></li>
+<li><p><strong>Step 1</strong>: Propel to intermediate apogee <span class="math notranslate nohighlight">\(r_b &gt; r_2\)</span>.</p></li>
+<li><p><strong>Step 2</strong>: Circularize/raise perigee at <span class="math notranslate nohighlight">\(r_b\)</span> to target <span class="math notranslate nohighlight">\(r_2\)</span>.</p></li>
+<li><p><strong>Step 3</strong>: De-circularize at <span class="math notranslate nohighlight">\(r_2\)</span> (retrograde) from <span class="math notranslate nohighlight">\(r_b\)</span> transfer to circular <span class="math notranslate nohighlight">\(r_2\)</span> (Wait, standard bi-elliptic usually raises perigee or apogee. The toolkit splits it into <span class="math notranslate nohighlight">\(r_1 \rightarrow r_b \rightarrow r_2\)</span>).</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -207,7 +209,7 @@ Transfer Time: 25.78 hours
 </div>
 <section id="efficiency-threshold-comparison">
 <h3>2.1 Efficiency Threshold Comparison<a class="headerlink" href="#efficiency-threshold-comparison" title="Link to this heading"></a></h3>
-<p>Bi-elliptic is better for large radius ratios ($r_2 / r_1 &gt; 15.58$). Let’s plot the total Delta-V vs Radius Ratio.</p>
+<p>Bi-elliptic is better for large radius ratios (<span class="math notranslate nohighlight">\(r_2 / r_1 &gt; 15.58\)</span>). Let’s plot the total Delta-V vs Radius Ratio.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_ratios</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>

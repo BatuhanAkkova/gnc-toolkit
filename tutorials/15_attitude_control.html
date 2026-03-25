@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -102,7 +104,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-15-reaction-wheel-magnetorquer-slew-control">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-15-reaction-wheel-magnetorquer-slew-control">
 <h1>Tutorial 15: Reaction Wheel &amp; Magnetorquer Slew Control<a class="headerlink" href="#tutorial-15-reaction-wheel-magnetorquer-slew-control" title="Link to this heading"></a></h1>
 <p>This tutorial covers Attitude Control strategies for spacecraft detumbling and precise attitude slewing using <strong>B-Dot controllers</strong> for Magnetorquers and <strong>PID controllers</strong> for Reaction Wheels.</p>
 <hr class="docutils" />
@@ -110,10 +112,10 @@
 <h2>1. Theory Prerequisite<a class="headerlink" href="#theory-prerequisite" title="Link to this heading"></a></h2>
 <section id="b-dot-detumbling">
 <h3>1.1 B-Dot Detumbling<a class="headerlink" href="#b-dot-detumbling" title="Link to this heading"></a></h3>
-<p>When a spacecraft is tumbling tipsy after release, Magnetorquers (MGT) can interact with the Earth’s magnetic field $B$ to generate damping torque.</p>
+<p>When a spacecraft is tumbling tipsy after release, Magnetorquers (MGT) can interact with the Earth’s magnetic field <span class="math notranslate nohighlight">\(B\)</span> to generate damping torque.</p>
 <ul class="simple">
-<li><p><strong>Control Law</strong>: Dipole Moment $m = -K \dot{B}$</p></li>
-<li><p><strong>Torque Produced</strong>: $T = m \times B$</p></li>
+<li><p><strong>Control Law</strong>: Dipole Moment <span class="math notranslate nohighlight">\(m = -K \dot{B}\)</span></p></li>
+<li><p><strong>Torque Produced</strong>: <span class="math notranslate nohighlight">\(T = m \times B\)</span></p></li>
 <li><p><strong>Effect</strong>: Slows down the rotation rate without requiring reaction wheels.</p></li>
 </ul>
 </section>
@@ -122,7 +124,7 @@
 <p>Once detumbled, precise re-orientation requires Reaction Wheels (RW).</p>
 <ul class="simple">
 <li><p><strong>Input</strong>: Angular error (e.g., from quaternions)</p></li>
-<li><p><strong>Action</strong>: Controller $u = K_p e + K_i \int e dt + K_d \dot{e}$</p></li>
+<li><p><strong>Action</strong>: Controller <span class="math notranslate nohighlight">\(u = K_p e + K_i \int e dt + K_d \dot{e}\)</span></p></li>
 <li><p><strong>Output</strong>: Desired momentum exchange causing rotational acceleration opposite to rigid body.</p></li>
 </ul>
 <div class="cell docutils container">

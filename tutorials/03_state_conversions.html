@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -103,7 +105,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-03-state-vectors-orbital-elements">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-03-state-vectors-orbital-elements">
 <h1>Tutorial 03: State Vectors &amp; Orbital Elements<a class="headerlink" href="#tutorial-03-state-vectors-orbital-elements" title="Link to this heading"></a></h1>
 <p>This tutorial covers conversions between Cartesian State Vectors (Position, Velocity) and various orbital element representations.</p>
 <hr class="docutils" />
@@ -113,24 +115,24 @@
 <h3>1. Classical Orbital Elements (COE)<a class="headerlink" href="#classical-orbital-elements-coe" title="Link to this heading"></a></h3>
 <p>A set of 6 parameters uniquely describing an orbit:</p>
 <ul class="simple">
-<li><p><strong>$a$</strong>: Semi-major axis (Size)</p></li>
-<li><p><strong>$e$</strong>: Eccentricity (Shape)</p></li>
-<li><p><strong>$i$</strong>: Inclination (Tilt)</p></li>
-<li><p><strong>$\Omega$ (RAAN)</strong>: Right Ascension of Ascending Node (Orientation)</p></li>
-<li><p><strong>$\omega$</strong>: Argument of Perigee (Location of perigee)</p></li>
-<li><p><strong>$\nu$</strong>: True Anomaly (Current position along orbit)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(a\)</span></strong>: Semi-major axis (Size)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(e\)</span></strong>: Eccentricity (Shape)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(i\)</span></strong>: Inclination (Tilt)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\Omega\)</span> (RAAN)</strong>: Right Ascension of Ascending Node (Orientation)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\omega\)</span></strong>: Argument of Perigee (Location of perigee)</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\nu\)</span></strong>: True Anomaly (Current position along orbit)</p></li>
 </ul>
 </section>
 <section id="equinoctial-elements">
 <h3>2. Equinoctial elements<a class="headerlink" href="#equinoctial-elements" title="Link to this heading"></a></h3>
-<p>Non-singular for circular ($e=0$) and equatorial ($i=0$) orbits.</p>
+<p>Non-singular for circular (<span class="math notranslate nohighlight">\(e=0\)</span>) and equatorial (<span class="math notranslate nohighlight">\(i=0\)</span>) orbits.</p>
 <ul class="simple">
-<li><p>$a$: Semi-major axis</p></li>
-<li><p>$h = e \sin(\Omega + \omega)$</p></li>
-<li><p>$k = e \cos(\Omega + \omega)$</p></li>
-<li><p>$p = \tan(i/2) \sin(\Omega)$</p></li>
-<li><p>$q = \tan(i/2) \cos(\Omega)$</p></li>
-<li><p>$\lambda_M = \Omega + \omega + M$ (Mean longitude)</p></li>
+<li><p><span class="math notranslate nohighlight">\(a\)</span>: Semi-major axis</p></li>
+<li><p><span class="math notranslate nohighlight">\(h = e \sin(\Omega + \omega)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(k = e \cos(\Omega + \omega)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p = \tan(i/2) \sin(\Omega)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(q = \tan(i/2) \cos(\Omega)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda_M = \Omega + \omega + M\)</span> (Mean longitude)</p></li>
 </ul>
 <hr class="docutils" />
 <div class="cell docutils container">

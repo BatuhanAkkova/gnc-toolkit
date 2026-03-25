@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -103,7 +105,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-13-rendezvous-cw-equation-tracking">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-13-rendezvous-cw-equation-tracking">
 <h1>Tutorial 13: Rendezvous &amp; CW Equation Tracking<a class="headerlink" href="#tutorial-13-rendezvous-cw-equation-tracking" title="Link to this heading"></a></h1>
 <p>This tutorial covers <strong>Relative Orbital Mechanics</strong> and relative targeting using the Clohessy-Wiltshire (CW) equations and absolute targeting via Lambert’s problem.</p>
 <hr class="docutils" />
@@ -115,17 +117,17 @@
 <ul class="simple">
 <li><p><strong>Frame</strong>: Local-Vertical Local-Horizontal (LVLH)</p>
 <ul>
-<li><p>$x$: Radial (Away from center)</p></li>
-<li><p>$y$: Along-track (Velocity direction)</p></li>
-<li><p>$z$: Cross-track (Angular momentum)</p></li>
+<li><p><span class="math notranslate nohighlight">\(x\)</span>: Radial (Away from center)</p></li>
+<li><p><span class="math notranslate nohighlight">\(y\)</span>: Along-track (Velocity direction)</p></li>
+<li><p><span class="math notranslate nohighlight">\(z\)</span>: Cross-track (Angular momentum)</p></li>
 </ul>
 </li>
 </ul>
-<p>State yields analytical equations of motion when relative distance is $r \ll r_{target}$.</p>
+<p>State yields analytical equations of motion when relative distance is <span class="math notranslate nohighlight">\(r \ll r_{target}\)</span>.</p>
 </section>
 <section id="lambert-s-problem">
 <h3>1.2 Lambert’s Problem<a class="headerlink" href="#lambert-s-problem" title="Link to this heading"></a></h3>
-<p>Given initial position $r_1$, final position $r_2$, and a time-of-flight $\Delta t$, determine the initial velocity $v_1$ and final velocity $v_2$ required to connect the two points under Keplerian dynamics.</p>
+<p>Given initial position <span class="math notranslate nohighlight">\(r_1\)</span>, final position <span class="math notranslate nohighlight">\(r_2\)</span>, and a time-of-flight <span class="math notranslate nohighlight">\(\Delta t\)</span>, determine the initial velocity <span class="math notranslate nohighlight">\(v_1\)</span> and final velocity <span class="math notranslate nohighlight">\(v_2\)</span> required to connect the two points under Keplerian dynamics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -182,7 +184,7 @@
 </section>
 <section id="cw-targeting-rendezvous">
 <h2>3. CW Targeting (Rendezvous)<a class="headerlink" href="#cw-targeting-rendezvous" title="Link to this heading"></a></h2>
-<p>Now we calculate an impulse to rendezvous with the target ($r_{target} = [0, 0, 0]$) in 30 minutes.</p>
+<p>Now we calculate an impulse to rendezvous with the target (<span class="math notranslate nohighlight">\(r_{target} = [0, 0, 0]\)</span>) in 30 minutes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_transfer</span> <span class="o">=</span> <span class="mf">1800.0</span>  <span class="c1"># 30 minutes</span>

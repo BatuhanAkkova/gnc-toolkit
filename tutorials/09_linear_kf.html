@@ -17,6 +17,8 @@
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["\\(", "\\)"], ["$", "$"]], "displayMath": [["\\[", "\\]"], ["$$", "$$"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,7 +106,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-09-linear-kalman-filter-and-ekf-setup">
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-09-linear-kalman-filter-and-ekf-setup">
 <h1>Tutorial 09: Linear Kalman Filter and EKF Setup<a class="headerlink" href="#tutorial-09-linear-kalman-filter-and-ekf-setup" title="Link to this heading"></a></h1>
 <p>This tutorial covers the implementation and setup of <strong>Linear Kalman Filters (LKF)</strong> and <strong>Extended Kalman Filters (EKF)</strong> for spacecraft navigation and tracking.</p>
 <p>We will demonstrate:</p>
@@ -115,32 +117,34 @@
 <hr class="docutils" />
 <section id="theory-prerequisite-linear-kalman-filter">
 <h2>1. Theory Prerequisite: Linear Kalman Filter<a class="headerlink" href="#theory-prerequisite-linear-kalman-filter" title="Link to this heading"></a></h2>
-<p>The Linear Kalman Filter estimates the state $x \in \mathbb{R}^n$ of a discrete-time process governed by the linear stochastic difference equation:</p>
-<p>$$x_k = F x_{k-1} + B u_{k-1} + w_{k-1}$$</p>
-<p>with a measurement $z \in \mathbb{R}^m$:</p>
-<p>$$z_k = H x_k + v_k$$</p>
+<p>The Linear Kalman Filter estimates the state <span class="math notranslate nohighlight">\(x \in \mathbb{R}^n\)</span> of a discrete-time process governed by the linear stochastic difference equation:</p>
+<div class="math notranslate nohighlight">
+\[x_k = F x_{k-1} + B u_{k-1} + w_{k-1}\]</div>
+<p>with a measurement <span class="math notranslate nohighlight">\(z \in \mathbb{R}^m\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[z_k = H x_k + v_k\]</div>
 <p>Where:</p>
 <ul class="simple">
-<li><p>$F$: State transition matrix</p></li>
-<li><p>$B$: Control input matrix</p></li>
-<li><p>$H$: Measurement matrix</p></li>
-<li><p>$w \sim \mathcal{N}(0, Q)$: Process Noise</p></li>
-<li><p>$v \sim \mathcal{N}(0, R)$: Measurement Noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(F\)</span>: State transition matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(B\)</span>: Control input matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(H\)</span>: Measurement matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(w \sim \mathcal{N}(0, Q)\)</span>: Process Noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(v \sim \mathcal{N}(0, R)\)</span>: Measurement Noise</p></li>
 </ul>
 <section id="predict-update-cycles">
 <h3>Predict/Update Cycles<a class="headerlink" href="#predict-update-cycles" title="Link to this heading"></a></h3>
 <ol class="arabic simple">
 <li><p><strong>Predict</strong>:</p>
 <ul class="simple">
-<li><p>$\hat{x}<em>{k|k-1} = F \hat{x}</em>{k-1|k-1} + B u_{k-1}$</p></li>
-<li><p>$P_{k|k-1} = F P_{k-1|k-1} F^T + Q$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{x}_{k|k-1} = F \hat{x}_{k-1|k-1} + B u_{k-1}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(P_{k|k-1} = F P_{k-1|k-1} F^T + Q\)</span></p></li>
 </ul>
 </li>
 <li><p><strong>Update</strong>:</p>
 <ul class="simple">
-<li><p>$K_k = P_{k|k-1} H^T (H P_{k|k-1} H^T + R)^{-1}$</p></li>
-<li><p>$\hat{x}<em>{k|k} = \hat{x}</em>{k|k-1} + K_k (z_k - H \hat{x}_{k|k-1})$</p></li>
-<li><p>$P_{k|k} = (I - K_k H) P_{k|k-1}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(K_k = P_{k|k-1} H^T (H P_{k|k-1} H^T + R)^{-1}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{x}_{k|k} = \hat{x}_{k|k-1} + K_k (z_k - H \hat{x}_{k|k-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(P_{k|k} = (I - K_k H) P_{k|k-1}\)</span></p></li>
 </ul>
 </li>
 </ol>
@@ -157,15 +161,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.kf</span><span class="w"> </span><span class="kn">import</span> <span class="n">KF</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.kalman_filters.ekf</span><span class="w"> </span><span class="kn">import</span> <span class="n">EKF</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imports successful.
 </pre></div>
 </div>
 </div>
@@ -269,7 +265,7 @@
 </div>
 <blockquote>
 <div><p>[!NOTE]
-<strong>Linear KF Performance</strong>: Brief, occasional 1-step exceedances of the $3\sigma$ bounds followed by automatic recovery are normal statistical variances for stochastic filters. $3\sigma$ encompasses $99.73%$ of cases; for 100-step simulations, sparse failures are theoretically consistent with normal noise distribution.</p>
+<strong>Linear KF Performance</strong>: Brief, occasional 1-step exceedances of the <span class="math notranslate nohighlight">\(3\sigma\)</span> bounds followed by automatic recovery are normal statistical variances for stochastic filters. <span class="math notranslate nohighlight">\(3\sigma\)</span> encompasses <span class="math notranslate nohighlight">\(99.73\%\)</span> of cases; for 100-step simulations, sparse failures are theoretically consistent with normal noise distribution.</p>
 </div></blockquote>
 </section>
 </section>
@@ -277,12 +273,14 @@
 <section id="theory-prerequisite-extended-kalman-filter">
 <h2>2. Theory Prerequisite: Extended Kalman Filter<a class="headerlink" href="#theory-prerequisite-extended-kalman-filter" title="Link to this heading"></a></h2>
 <p>For non-linear systems:</p>
-<p>$$x_k = f(x_{k-1}, u_{k-1}) + w_{k-1}$$
-$$z_k = h(x_k) + v_k$$</p>
+<div class="math notranslate nohighlight">
+\[x_k = f(x_{k-1}, u_{k-1}) + w_{k-1}\]</div>
+<div class="math notranslate nohighlight">
+\[z_k = h(x_k) + v_k\]</div>
 <p>We linearize about the current estimate using Taylor series expansion:</p>
 <ul class="simple">
-<li><p><strong>Dynamics Jacobian</strong>: $F_{k-1} = \frac{\partial f}{\partial x}\Big|<em>{\hat{x}</em>{k-1|k-1}}$</p></li>
-<li><p><strong>Measurement Jacobian</strong>: $H_k = \frac{\partial h}{\partial x}\Big|<em>{\hat{x}</em>{k|k-1}}$</p></li>
+<li><p><strong>Dynamics Jacobian</strong>: <span class="math notranslate nohighlight">\(F_{k-1} = \frac{\partial f}{\partial x}\Big|_{\hat{x}_{k-1|k-1}}\)</span></p></li>
+<li><p><strong>Measurement Jacobian</strong>: <span class="math notranslate nohighlight">\(H_k = \frac{\partial h}{\partial x}\Big|_{\hat{x}_{k|k-1}}\)</span></p></li>
 </ul>
 <p>The filter cycles proceed identically to the linear case, but use the Jacobian matrices for covariance propagation and the non-linear functions for predicting the state and measurement residuals.</p>
 <section id="demonstration-3d-relative-navigation-with-range-only-measurement">
@@ -433,7 +431,7 @@ $$z_k = h(x_k) + v_k$$</p>
 </div>
 <blockquote>
 <div><p>[!IMPORTANT]
-<strong>EKF Range-Only (3D)</strong>: Out-of-plane position $r_z$ is decoupled in Clohessy-Wiltshire state equations and range sensitivity is extremely low ($\approx r_z / \text{range}$ using single beacons). Expanding initial covariance state representations avoids overconfident settle lag causing boundary escapes.</p>
+<strong>EKF Range-Only (3D)</strong>: Out-of-plane position <span class="math notranslate nohighlight">\(r_z\)</span> is decoupled in Clohessy-Wiltshire state equations and range sensitivity is extremely low (<span class="math notranslate nohighlight">\(\approx r_z / \text{range}\)</span> using single beacons). Expanding initial covariance state representations avoids overconfident settle lag causing boundary escapes.</p>
 </div></blockquote>
 </section>
 </section>

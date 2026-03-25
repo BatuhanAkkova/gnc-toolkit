@@ -19,7 +19,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 06: Environmental Perturbations" href="06_environment.html" />
+    <link rel="prev" title="Tutorial 04: EGM2008 &amp; Mass Gravity Models" href="04_spherical_harmonics.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,8 +44,38 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_introduction.html">Tutorial 01: Introduction to GNC Toolkit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_frames.html">Tutorial 02: Coordinate Systems &amp; Frame Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_state_conversions.html">Tutorial 03: State Vectors &amp; Orbital Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_spherical_harmonics.html">Tutorial 04: EGM2008 &amp; Mass Gravity Models</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 05: Comparison: Cowell vs Encke</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory-prerequisites">Theory Prerequisites</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cowell-s-method">1. Cowell’s Method</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#encke-s-method">2. Encke’s Method</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-simulation-environment">1. Setup Simulation Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cowell-propagation-benchmarking">2. Cowell Propagation Benchmarking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#encke-propagation-benchmarking">3. Encke Propagation Benchmarking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comparison-summary">4. Comparison Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="06_environment.html">Tutorial 06: Environmental Perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_iod_determination.html">Tutorial 07: Initial Orbit Determination and Lambert’s Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08_sensors.html">Tutorial 08: Sensor Artifacts &amp; Biases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09_linear_kf.html">Tutorial 09: Linear Kalman Filter and EKF Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_mekf.html">Tutorial 10: Multiplicative Extended Kalman Filter (MEKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_ukf.html">Tutorial 11: Unscented Kalman Filter (UKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_orbital_maneuvers.html">Tutorial 12: Analytical Orbital Maneuvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_rendezvous.html">Tutorial 13: Rendezvous &amp; CW Equation Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="14_optimal_control.html">Tutorial 14: Indirect &amp; Direct Collocation Optimal Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="15_attitude_control.html">Tutorial 15: Reaction Wheel &amp; Magnetorquer Slew Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="16_fdir.html">Tutorial 16: Fault Detection, Isolation, and Recovery (FDIR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="17_e2e_sim.html">Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
 </ul>
 
@@ -61,6 +93,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
       <li class="breadcrumb-item active">Tutorial 05: Comparison: Cowell vs Encke</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorials/05_orbital_propagators.ipynb.txt" rel="nofollow"> View page source</a>
@@ -151,7 +184,7 @@ where $q = \frac{\delta\mathbf{r} \cdot (\delta\mathbf{r} - 2\mathbf{r}<em>{ref}
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cowell Final Pos:  [-1310807.66896629 -6060113.86490409 -3226579.61689067] m
-Cowell Execution Time: 0.075907 seconds
+Cowell Execution Time: 0.070965 seconds
 </pre></div>
 </div>
 </div>
@@ -174,7 +207,7 @@ Cowell Execution Time: 0.075907 seconds
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Encke Final Pos:  [-1311079.24910403 -6060081.37923322 -3226564.18300095] m
-Encke Execution Time: 0.241742 seconds
+Encke Execution Time: 0.201862 seconds
 </pre></div>
 </div>
 </div>
@@ -196,7 +229,7 @@ Encke Execution Time: 0.241742 seconds
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final Position Difference: 273.951264 m
-Speed Advantage (Cowell/Encke ratio): 0.31x
+Speed Advantage (Cowell/Encke ratio): 0.35x
 
 Note: Encke is often faster/more accurate over long continuous orbits because it integrates smaller variables, reducing numerical noise limits on large loops.
 </pre></div>
@@ -209,7 +242,10 @@ Note: Encke is often faster/more accurate over long continuous orbits because it
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="04_spherical_harmonics.html" class="btn btn-neutral float-left" title="Tutorial 04: EGM2008 &amp; Mass Gravity Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="06_environment.html" class="btn btn-neutral float-right" title="Tutorial 06: Environmental Perturbations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

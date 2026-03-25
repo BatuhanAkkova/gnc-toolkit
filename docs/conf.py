@@ -25,21 +25,38 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
     'myst_nb',
-]  
+]
 
-# The theme to use for HTML and HTML Help pages (see Sphinx docs for all options).
-html_theme = 'sphinx_rtd_theme'
+myst_enable_extensions = [
+    "dollarmath",
+    "amsmath",
+    "deflist",
+    "html_image",
+    "colon_fence",
+]
 
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+# MyST-NB settings
+nb_execution_mode = "off"
+myst_dmath_double_inline = True
+
+# MathJax configuration
+mathjax3_config = {
+    'tex': {
+        'inlineMath': [['\\(', '\\)'], ['$', '$']],
+        'displayMath': [['\\[', '\\]'], ['$$', '$$']],
+    }
+}
 
 # The master toctree document.
 master_doc = 'index'
 
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML pages.
-theme = "sphinx_rtd_theme"
+html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

@@ -9,8 +9,7 @@
 | PyPI release workflow | ✅ | |
 | Conda-forge recipe | ✅ | |
 | Docker image for reproducibility | ✅ | |
-| MATLAB / Octave compatibility layer | ⬜ | Wider community reach |
-| C extension / Cython acceleration | ⬜ | HPC use-cases |
+| C extension / Cython acceleration | ⬜ | |
 
 ### 11.4 Code Quality
 | Feature | Status | Notes |

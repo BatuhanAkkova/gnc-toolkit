@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial 01: Introduction to GNC Toolkit &mdash; gnc-toolkit  documentation</title>
+  <title>Tutorial 01: Introduction to OpenGNC &mdash; OpenGNC  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -40,7 +40,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            gnc-toolkit
+            OpenGNC
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,7 +53,7 @@
               <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 01: Introduction to GNC Toolkit</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 01: Introduction to OpenGNC</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#theory-prerequisites">Theory Prerequisites</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#quaternion-attitude-representation">Quaternion Attitude Representation</a></li>
 </ul>
@@ -79,7 +79,7 @@
 <li class="toctree-l2"><a class="reference internal" href="17_e2e_sim.html">Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">gnc_toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">opengnc</a></li>
 </ul>
 
         </div>
@@ -88,7 +88,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">gnc-toolkit</a>
+          <a href="../index.html">OpenGNC</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -97,7 +97,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
-      <li class="breadcrumb-item active">Tutorial 01: Introduction to GNC Toolkit</li>
+      <li class="breadcrumb-item active">Tutorial 01: Introduction to OpenGNC</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorials/01_introduction.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -107,9 +107,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial-01-introduction-to-gnc-toolkit">
-<h1>Tutorial 01: Introduction to GNC Toolkit<a class="headerlink" href="#tutorial-01-introduction-to-gnc-toolkit" title="Link to this heading"></a></h1>
-<p>Welcome to the <strong>GNC Toolkit</strong>, a comprehensive Python library designed for spacecraft Guidance, Navigation, and Control (GNC) simulation and analysis.</p>
+  <section id="tutorial-01-introduction-to-opengnc">
+<h1>Tutorial 01: Introduction to OpenGNC<a class="headerlink" href="#tutorial-01-introduction-to-opengnc" title="Link to this heading"></a></h1>
+<p>Welcome to the <strong>OpenGNC</strong>, a comprehensive Python library designed for spacecraft Guidance, Navigation, and Control (GNC) simulation and analysis.</p>
 <section id="theory-prerequisites">
 <h2>Theory Prerequisites<a class="headerlink" href="#theory-prerequisites" title="Link to this heading"></a></h2>
 <section id="quaternion-attitude-representation">
@@ -132,7 +132,7 @@ where <span class="math notranslate nohighlight">\(\otimes\)</span> denotes quat
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_rot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.utils.quat_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">axis_angle_to_quat</span><span class="p">,</span> <span class="n">quat_rot</span>
 
 <span class="c1"># 1. Define rotation axis and angle</span>
 <span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span> <span class="c1"># Rotation about Z-axis</span>
@@ -145,7 +145,7 @@ where <span class="math notranslate nohighlight">\(\otimes\)</span> denotes quat
 <span class="c1"># 3. Set a vector to rotate</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>      <span class="c1"># Vector along X-axis</span>
 
-<span class="c1"># 4. Rotate vector using GNC Toolkit</span>
+<span class="c1"># 4. Rotate vector using OpenGNC</span>
 <span class="n">v_rot</span> <span class="o">=</span> <span class="n">quat_rot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Original vector: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rotated vector after 45 deg Z-rotation: </span><span class="si">{</span><span class="n">v_rot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>

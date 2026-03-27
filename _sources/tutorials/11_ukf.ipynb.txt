@@ -49,7 +49,7 @@
       "source": [
         "import numpy as np\n",
         "import matplotlib.pyplot as plt\n",
-        "from gnc_toolkit.kalman_filters.ukf import UKF\n",
+        "from opengnc.kalman_filters.ukf import UKF\n",
         "\n",
         "np.random.seed(42)\n",
         "print(\"Imports successful.\")"
@@ -257,3 +257,7 @@
   "nbformat": 4,
   "nbformat_minor": 4
 }
+
+
+
+

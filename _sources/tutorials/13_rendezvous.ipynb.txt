@@ -47,7 +47,7 @@
       "source": [
         "import numpy as np\n",
         "import matplotlib.pyplot as plt\n",
-        "from gnc_toolkit.guidance.rendezvous import cw_equations, cw_targeting, solve_lambert\n",
+        "from opengnc.guidance.rendezvous import cw_equations, cw_targeting, solve_lambert\n",
         "\n",
         "print(\"Imports successful.\")"
       ]
@@ -237,3 +237,7 @@
   "nbformat": 4,
   "nbformat_minor": 4
 }
+
+
+
+

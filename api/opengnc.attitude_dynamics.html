@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>opengnc.attitude_dynamics package &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="opengnc.classical_control package" href="opengnc.classical_control.html" />
+    <link rel="prev" title="opengnc.attitude_determination package" href="opengnc.attitude_determination.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">opengnc</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="opengnc.html">opengnc package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="opengnc.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="opengnc.actuators.html">opengnc.actuators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.attitude_determination.html">opengnc.attitude_determination package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">opengnc.attitude_dynamics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.classical_control.html">opengnc.classical_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.disturbances.html">opengnc.disturbances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.environment.html">opengnc.environment package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.fdir.html">opengnc.fdir package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.guidance.html">opengnc.guidance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.integrators.html">opengnc.integrators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.kalman_filters.html">opengnc.kalman_filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.mission_design.html">opengnc.mission_design package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.navigation.html">opengnc.navigation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.optimal_control.html">opengnc.optimal_control package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.propagators.html">opengnc.propagators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.sensors.html">opengnc.sensors package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.simulation.html">opengnc.simulation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.ssa.html">opengnc.ssa package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.utils.html">opengnc.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="opengnc.visualization.html">opengnc.visualization package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="opengnc.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="opengnc.html#module-opengnc.edl">opengnc.edl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="opengnc.html#module-opengnc">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">opengnc</a></li>
+          <li class="breadcrumb-item"><a href="opengnc.html">opengnc package</a></li>
+      <li class="breadcrumb-item active">opengnc.attitude_dynamics package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/opengnc.attitude_dynamics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="opengnc-attitude-dynamics-package">
+<h1>opengnc.attitude_dynamics package<a class="headerlink" href="#opengnc-attitude-dynamics-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-opengnc.attitude_dynamics.flexible_body">
+<span id="opengnc-attitude-dynamics-flexible-body-module"></span><h2>opengnc.attitude_dynamics.flexible_body module<a class="headerlink" href="#module-opengnc.attitude_dynamics.flexible_body" title="Link to this heading"></a></h2>
+<p>Flexible body dynamics propagation and coupling models.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="opengnc.attitude_dynamics.flexible_body.coupled_flexible_rigid_dynamics">
+<span class="sig-prename descclassname"><span class="pre">opengnc.attitude_dynamics.flexible_body.</span></span><span class="sig-name descname"><span class="pre">coupled_flexible_rigid_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_rigid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_freqs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping_ratios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_influence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/attitude_dynamics/flexible_body.html#coupled_flexible_rigid_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.attitude_dynamics.flexible_body.coupled_flexible_rigid_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Compute coupled rigid-flexible body dynamics.</p>
+<p>Augmented System Projection:
+$begin{bmatrix} mathbf{J} &amp; mathbf{Phi}^T \ mathbf{Phi} &amp; mathbf{I} end{bmatrix} begin{bmatrix} dot{omega} \ ddot{eta} end{bmatrix} = begin{bmatrix} tau - omega times (mathbf{J} omega) \ -2zetaomega_ndot{eta} - omega_n^2eta end{bmatrix}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J_rigid</strong> (<em>np.ndarray</em>) – Rigid inertia tensor (3, 3) ($kg cdot m^2$).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity (3,) (rad/s).</p></li>
+<li><p><strong>torque</strong> (<em>np.ndarray</em>) – External torque (3,) (Nm).</p></li>
+<li><p><strong>eta</strong> (<em>np.ndarray</em>) – Modal displacements (n_modes,).</p></li>
+<li><p><strong>eta_dot</strong> (<em>np.ndarray</em>) – Modal velocities (n_modes,).</p></li>
+<li><p><strong>natural_freqs</strong> (<em>np.ndarray</em>) – Natural frequencies (n_modes,) (rad/s).</p></li>
+<li><p><strong>damping_ratios</strong> (<em>np.ndarray</em>) – Damping ratios (n_modes,).</p></li>
+<li><p><strong>modal_influence</strong> (<em>np.ndarray</em>) – Influence matrix (n_modes, 3).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(omega_dot, eta_ddot).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="opengnc.attitude_dynamics.flexible_body.flexible_body_dynamics">
+<span class="sig-prename descclassname"><span class="pre">opengnc.attitude_dynamics.flexible_body.</span></span><span class="sig-name descname"><span class="pre">flexible_body_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_freqs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping_ratios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_influence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/attitude_dynamics/flexible_body.html#flexible_body_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.attitude_dynamics.flexible_body.flexible_body_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Compute modal acceleration $ddot{eta}$.</p>
+<p>Modal Equation:
+$ddot{eta}_i + 2zeta_iomega_{n,i}dot{eta}_i + omega_{n,i}^2eta_i = mathbf{Phi}_i cdot dot{omega}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eta</strong> (<em>np.ndarray</em>) – Modal displacements (n_modes,).</p></li>
+<li><p><strong>eta_dot</strong> (<em>np.ndarray</em>) – Modal velocities (n_modes,).</p></li>
+<li><p><strong>omega_dot</strong> (<em>np.ndarray</em>) – Rigid body angular acceleration (3,) (rad/s$^2$).</p></li>
+<li><p><strong>natural_freqs</strong> (<em>np.ndarray</em>) – Natural frequencies $omega_{n,i}$ (n_modes,) (rad/s).</p></li>
+<li><p><strong>damping_ratios</strong> (<em>np.ndarray</em>) – Damping ratios $zeta_i$ (n_modes,).</p></li>
+<li><p><strong>modal_influence</strong> (<em>np.ndarray</em>) – Influence matrix $mathbf{Phi}$ (n_modes, 3).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Modal acceleration $ddot{eta}$ (n_modes,) (rad/s$^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-opengnc.attitude_dynamics.fuel_slosh">
+<span id="opengnc-attitude-dynamics-fuel-slosh-module"></span><h2>opengnc.attitude_dynamics.fuel_slosh module<a class="headerlink" href="#module-opengnc.attitude_dynamics.fuel_slosh" title="Link to this heading"></a></h2>
+<p>Fuel slosh dynamics using equivalent pendulum models.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="opengnc.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics">
+<span class="sig-prename descclassname"><span class="pre">opengnc.attitude_dynamics.fuel_slosh.</span></span><span class="sig-name descname"><span class="pre">fuel_slosh_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_equiv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/opengnc/attitude_dynamics/fuel_slosh.html#fuel_slosh_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Compute slosh pendulum angular acceleration $ddot{theta}$.</p>
+<p>The pendulum is subject to base acceleration:
+$mathbf{a}_{base} = mathbf{g}_{eq} - dot{omega} times mathbf{r}_b - omega times (omega times mathbf{r}_b)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<em>float</em>) – Pendulum angle (rad).</p></li>
+<li><p><strong>theta_dot</strong> (<em>float</em>) – Pendulum rate (rad/s).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Spacecraft angular velocity (3,) (rad/s).</p></li>
+<li><p><strong>omega_dot</strong> (<em>np.ndarray</em>) – Spacecraft angular acceleration (3,) (rad/s$^2$).</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – Pendulum length (m).</p></li>
+<li><p><strong>r_base</strong> (<em>np.ndarray</em>) – Pivot location relative to spacecraft CM (3,) (m).</p></li>
+<li><p><strong>g_equiv</strong> (<em>np.ndarray</em>) – Effective gravity/acceleration vector (3,) (m/s$^2$).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pendulum acceleration $ddot{theta}$ (rad/s$^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="opengnc.attitude_dynamics.fuel_slosh.fuel_slosh_torque">
+<span class="sig-prename descclassname"><span class="pre">opengnc.attitude_dynamics.fuel_slosh.</span></span><span class="sig-name descname"><span class="pre">fuel_slosh_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_ddot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/attitude_dynamics/fuel_slosh.html#fuel_slosh_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.attitude_dynamics.fuel_slosh.fuel_slosh_torque" title="Link to this definition"></a></dt>
+<dd><p>Compute reaction torque from slosh bob.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m_p</strong> (<em>float</em>) – Slosh mass (kg).</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – Pendulum length (m).</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – Pendulum angle (rad).</p></li>
+<li><p><strong>theta_dot</strong> (<em>float</em>) – Pendulum rate (rad/s).</p></li>
+<li><p><strong>theta_ddot</strong> (<em>float</em>) – Pendulum acceleration (rad/s$^2$).</p></li>
+<li><p><strong>r_base</strong> (<em>np.ndarray</em>) – Pivot location (3,) (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reaction torque vector (3,) (Nm).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-opengnc.attitude_dynamics.rigid_body">
+<span id="opengnc-attitude-dynamics-rigid-body-module"></span><h2>opengnc.attitude_dynamics.rigid_body module<a class="headerlink" href="#module-opengnc.attitude_dynamics.rigid_body" title="Link to this heading"></a></h2>
+<p>Rigid body Attitude dynamics based on Euler’s equations of motion.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="opengnc.attitude_dynamics.rigid_body.euler_equations">
+<span class="sig-prename descclassname"><span class="pre">opengnc.attitude_dynamics.rigid_body.</span></span><span class="sig-name descname"><span class="pre">euler_equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/attitude_dynamics/rigid_body.html#euler_equations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.attitude_dynamics.rigid_body.euler_equations" title="Link to this definition"></a></dt>
+<dd><p>Compute rigid body angular acceleration via Euler’s equations.</p>
+<p>Equation of Motion:
+$mathbf{J} dot{omega} + mathbf{omega} times (mathbf{J} omega) = mathbf{tau}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J</strong> (<em>np.ndarray</em>) – Inertia tensor ($3 times 3$) ($kg cdot m^2$).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity vector (3,) (rad/s).</p></li>
+<li><p><strong>torque</strong> (<em>np.ndarray</em>) – Net external torque vector (3,) (Nm).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Angular acceleration $dot{omega}$ (3,) (rad/s$^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If input dimensions are invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-opengnc.attitude_dynamics.variable_inertia">
+<span id="opengnc-attitude-dynamics-variable-inertia-module"></span><h2>opengnc.attitude_dynamics.variable_inertia module<a class="headerlink" href="#module-opengnc.attitude_dynamics.variable_inertia" title="Link to this heading"></a></h2>
+<p>Attitude dynamics with time-varying inertia tensors.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="opengnc.attitude_dynamics.variable_inertia.mass_depletion_J_dot">
+<span class="sig-prename descclassname"><span class="pre">opengnc.attitude_dynamics.variable_inertia.</span></span><span class="sig-name descname"><span class="pre">mass_depletion_J_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_nominal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_initial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm_dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/attitude_dynamics/variable_inertia.html#mass_depletion_J_dot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.attitude_dynamics.variable_inertia.mass_depletion_J_dot" title="Link to this definition"></a></dt>
+<dd><p>Model $dot{mathbf{J}}$ due to point-mass depletion.</p>
+<p>$dot{mathbf{J}} = dot{m} [ (mathbf{r}^T mathbf{r}) mathbf{I} - mathbf{r} mathbf{r}^T ]$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J_nominal</strong> (<em>np.ndarray</em>) – Nominal system inertia (3, 3).</p></li>
+<li><p><strong>m_initial</strong> (<em>float</em>) – Initial segment mass (kg).</p></li>
+<li><p><strong>dm_dt</strong> (<em>float</em>) – Mass flow rate (kg/s). Negative for depletion.</p></li>
+<li><p><strong>r_point</strong> (<em>np.ndarray</em>) – Position of mass segment relative to system CM (3,) (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Inertia derivative $dot{mathbf{J}}$ (3, 3) ($kg cdot m^2 / s$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="opengnc.attitude_dynamics.variable_inertia.variable_inertia_euler_equations">
+<span class="sig-prename descclassname"><span class="pre">opengnc.attitude_dynamics.variable_inertia.</span></span><span class="sig-name descname"><span class="pre">variable_inertia_euler_equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/attitude_dynamics/variable_inertia.html#variable_inertia_euler_equations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.attitude_dynamics.variable_inertia.variable_inertia_euler_equations" title="Link to this definition"></a></dt>
+<dd><p>Compute $dot{omega}$ for a body with time-varying inertia.</p>
+<p>Equation of Motion:
+$mathbf{J} dot{omega} + dot{mathbf{J}} omega + omega times (mathbf{J} omega) = mathbf{tau}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J</strong> (<em>np.ndarray</em>) – Current inertia tensor ($3 times 3$) ($kg cdot m^2$).</p></li>
+<li><p><strong>J_dot</strong> (<em>np.ndarray</em>) – Inertia derivative ($3 times 3$) ($kg cdot m^2 / s$).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity (3,) (rad/s).</p></li>
+<li><p><strong>torque</strong> (<em>np.ndarray</em>) – External torque (3,) (Nm).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Angular acceleration $dot{omega}$ (3,) (rad/s$^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-opengnc.attitude_dynamics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-opengnc.attitude_dynamics" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="opengnc.attitude_determination.html" class="btn btn-neutral float-left" title="opengnc.attitude_determination package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="opengnc.classical_control.html" class="btn btn-neutral float-right" title="opengnc.classical_control package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+opengnc package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   opengnc.actuators
+   opengnc.attitude_determination
+   opengnc.attitude_dynamics
+   opengnc.classical_control
+   opengnc.disturbances
+   opengnc.environment
+   opengnc.fdir
+   opengnc.guidance
+   opengnc.integrators
+   opengnc.kalman_filters
+   opengnc.mission_design
+   opengnc.navigation
+   opengnc.optimal_control
+   opengnc.propagators
+   opengnc.sensors
+   opengnc.simulation
+   opengnc.ssa
+   opengnc.utils
+   opengnc.visualization
+
+Submodules
+----------
+
+opengnc.edl module
+------------------
+
+.. automodule:: opengnc.edl
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc
+   :members:
+   :show-inheritance:
+   :undoc-members:

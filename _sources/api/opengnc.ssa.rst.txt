@@ -1,0 +1,45 @@
+opengnc.ssa package
+===================
+
+Submodules
+----------
+
+opengnc.ssa.conjunction module
+------------------------------
+
+.. automodule:: opengnc.ssa.conjunction
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.ssa.maneuver module
+---------------------------
+
+.. automodule:: opengnc.ssa.maneuver
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.ssa.tle\_interface module
+---------------------------------
+
+.. automodule:: opengnc.ssa.tle_interface
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.ssa.tracking module
+---------------------------
+
+.. automodule:: opengnc.ssa.tracking
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.ssa
+   :members:
+   :show-inheritance:
+   :undoc-members:

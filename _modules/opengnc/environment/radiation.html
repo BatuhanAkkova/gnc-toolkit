@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>opengnc.environment.radiation &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">opengnc.environment.radiation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for opengnc.environment.radiation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Radiation environment models for TID and SEU rates estimation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="RadiationModel">
+<a class="viewcode-back" href="../../../api/opengnc.environment.html#opengnc.environment.radiation.RadiationModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RadiationModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parametric Space Radiation Environment Models.</span>
+
+<span class="sd">    Estimates Total Ionizing Dose (TID) and Single Event Upset (SEU) rates</span>
+<span class="sd">    for spacecraft electronic components in Low Earth Orbit (LEO).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize radiation model.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="RadiationModel.estimate_tid">
+<a class="viewcode-back" href="../../../api/opengnc.environment.html#opengnc.environment.radiation.RadiationModel.estimate_tid">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_tid</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">altitude_km</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">inclination_deg</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">duration_days</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimate cumulative Total Ionizing Dose (TID).</span>
+
+<span class="sd">        Uses a parametric fit for LEO orbits assuming 2.5 mm Aluminum shielding.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        altitude_km : float</span>
+<span class="sd">            Orbit altitude (km).</span>
+<span class="sd">        inclination_deg : float</span>
+<span class="sd">            Orbit inclination (deg).</span>
+<span class="sd">        duration_days : float</span>
+<span class="sd">            Mission duration (days).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Estimated TID in kRad(Si).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Base rate (400km)</span>
+        <span class="n">base_rate</span> <span class="o">=</span> <span class="mf">1.0e-4</span>
+        <span class="c1"># Altitude scaling (Van Allen belt proxy)</span>
+        <span class="n">alt_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">altitude_km</span><span class="p">)</span> <span class="o">-</span> <span class="mf">400.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">500.0</span><span class="p">)</span>
+        <span class="c1"># Inclination scaling (SAA/Poles)</span>
+        <span class="n">inc_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">inclination_deg</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_rate</span> <span class="o">*</span> <span class="n">alt_factor</span> <span class="o">*</span> <span class="n">inc_factor</span> <span class="o">*</span> <span class="n">duration_days</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RadiationModel.estimate_seu_rate">
+<a class="viewcode-back" href="../../../api/opengnc.environment.html#opengnc.environment.radiation.RadiationModel.estimate_seu_rate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_seu_rate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">altitude_km</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">device_cross_section</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimate Single Event Upset (SEU) rate from proton flux.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        altitude_km : float</span>
+<span class="sd">            Orbit altitude (km).</span>
+<span class="sd">        device_cross_section : float, optional</span>
+<span class="sd">            Device sensitive area ($cm^2/bit$). Default 1e-12.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Estimated SEUs per bit-day.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Proton flux proxy (&gt; 10 MeV)</span>
+        <span class="n">flux_p</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">altitude_km</span><span class="p">)</span> <span class="o">-</span> <span class="mf">400.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">600.0</span><span class="p">)</span>
+        <span class="c1"># 86400 s/day</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="n">flux_p</span> <span class="o">*</span> <span class="n">device_cross_section</span> <span class="o">*</span> <span class="mf">86400.0</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span></div>
+</div>
+
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

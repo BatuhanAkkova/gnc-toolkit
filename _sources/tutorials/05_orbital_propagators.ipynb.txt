@@ -6,7 +6,7 @@
    "source": [
     "# Tutorial 05: Comparison: Cowell vs Encke\n",
     "\n",
-    "This tutorial compares absolute numerical integration (**Cowell's Method**) and perturbative numerical integration (**Encke's Method**) within `gnc-toolkit`."
+    "This tutorial compares absolute numerical integration (**Cowell's Method**) and perturbative numerical integration (**Encke's Method**) within `OpenGNC`."
    ]
   },
   {
@@ -49,10 +49,10 @@
    "source": [
     "import numpy as np\n",
     "import time\n",
-    "from gnc_toolkit.propagators.cowell import CowellPropagator\n",
-    "from gnc_toolkit.propagators.encke import EnckePropagator\n",
-    "from gnc_toolkit.disturbances.gravity import J2Gravity, TwoBodyGravity\n",
-    "from gnc_toolkit.integrators.rk4 import RK4\n",
+    "from opengnc.propagators.cowell import CowellPropagator\n",
+    "from opengnc.propagators.encke import EnckePropagator\n",
+    "from opengnc.disturbances.gravity import J2Gravity, TwoBodyGravity\n",
+    "from opengnc.integrators.rk4 import RK4\n",
     "\n",
     "print(\"Propagator modules loaded.\")"
    ]
@@ -204,3 +204,7 @@
  "nbformat": 4,
  "nbformat_minor": 4
 }
+
+
+
+

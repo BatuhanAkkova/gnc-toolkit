@@ -1,0 +1,133 @@
+opengnc.optimal\_control package
+================================
+
+Submodules
+----------
+
+opengnc.optimal\_control.adaptive\_control module
+-------------------------------------------------
+
+.. automodule:: opengnc.optimal_control.adaptive_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.backstepping\_control module
+-----------------------------------------------------
+
+.. automodule:: opengnc.optimal_control.backstepping_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.feedback\_linearization module
+-------------------------------------------------------
+
+.. automodule:: opengnc.optimal_control.feedback_linearization
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.finite\_horizon\_lqr module
+----------------------------------------------------
+
+.. automodule:: opengnc.optimal_control.finite_horizon_lqr
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.geometric\_control module
+--------------------------------------------------
+
+.. automodule:: opengnc.optimal_control.geometric_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.h2\_control module
+-------------------------------------------
+
+.. automodule:: opengnc.optimal_control.h2_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.h\_infinity module
+-------------------------------------------
+
+.. automodule:: opengnc.optimal_control.h_infinity
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.indi\_control module
+---------------------------------------------
+
+.. automodule:: opengnc.optimal_control.indi_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.lqe module
+-----------------------------------
+
+.. automodule:: opengnc.optimal_control.lqe
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.lqg module
+-----------------------------------
+
+.. automodule:: opengnc.optimal_control.lqg
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.lqr module
+-----------------------------------
+
+.. automodule:: opengnc.optimal_control.lqr
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.mpc module
+-----------------------------------
+
+.. automodule:: opengnc.optimal_control.mpc
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.mpc\_casadi module
+-------------------------------------------
+
+.. automodule:: opengnc.optimal_control.mpc_casadi
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.passivity\_control module
+--------------------------------------------------
+
+.. automodule:: opengnc.optimal_control.passivity_control
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.optimal\_control.sliding\_mode module
+---------------------------------------------
+
+.. automodule:: opengnc.optimal_control.sliding_mode
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.optimal_control
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,77 @@
+opengnc.environment package
+===========================
+
+Submodules
+----------
+
+opengnc.environment.density module
+----------------------------------
+
+.. automodule:: opengnc.environment.density
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.environment.mag\_field module
+-------------------------------------
+
+.. automodule:: opengnc.environment.mag_field
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.environment.moon module
+-------------------------------
+
+.. automodule:: opengnc.environment.moon
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.environment.radiation module
+------------------------------------
+
+.. automodule:: opengnc.environment.radiation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.environment.solar module
+--------------------------------
+
+.. automodule:: opengnc.environment.solar
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.environment.space\_weather module
+-----------------------------------------
+
+.. automodule:: opengnc.environment.space_weather
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.environment.thermal module
+----------------------------------
+
+.. automodule:: opengnc.environment.thermal
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.environment.wind module
+-------------------------------
+
+.. automodule:: opengnc.environment.wind
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.environment
+   :members:
+   :show-inheritance:
+   :undoc-members:

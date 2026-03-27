@@ -45,7 +45,7 @@
       "source": [
         "import numpy as np\n",
         "import matplotlib.pyplot as plt\n",
-        "from gnc_toolkit.guidance.continuous_thrust import indirect_optimal_guidance, direct_collocation_guidance\n",
+        "from opengnc.guidance.continuous_thrust import indirect_optimal_guidance, direct_collocation_guidance\n",
         "\n",
         "print(\"Imports successful.\")"
       ]
@@ -191,3 +191,7 @@
   "nbformat": 4,
   "nbformat_minor": 4
 }
+
+
+
+

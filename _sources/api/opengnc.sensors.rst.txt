@@ -1,0 +1,117 @@
+opengnc.sensors package
+=======================
+
+Submodules
+----------
+
+opengnc.sensors.altimeter module
+--------------------------------
+
+.. automodule:: opengnc.sensors.altimeter
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.camera module
+-----------------------------
+
+.. automodule:: opengnc.sensors.camera
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.gnss\_receiver module
+-------------------------------------
+
+.. automodule:: opengnc.sensors.gnss_receiver
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.gyroscope module
+--------------------------------
+
+.. automodule:: opengnc.sensors.gyroscope
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.horizon\_sensor module
+--------------------------------------
+
+.. automodule:: opengnc.sensors.horizon_sensor
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.imu module
+--------------------------
+
+.. automodule:: opengnc.sensors.imu
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.lidar module
+----------------------------
+
+.. automodule:: opengnc.sensors.lidar
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.magnetometer module
+-----------------------------------
+
+.. automodule:: opengnc.sensors.magnetometer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.sensor module
+-----------------------------
+
+.. automodule:: opengnc.sensors.sensor
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.star\_catalog module
+------------------------------------
+
+.. automodule:: opengnc.sensors.star_catalog
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.star\_tracker module
+------------------------------------
+
+.. automodule:: opengnc.sensors.star_tracker
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.sun\_sensor module
+----------------------------------
+
+.. automodule:: opengnc.sensors.sun_sensor
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.sensors.sun\_sensor\_array module
+-----------------------------------------
+
+.. automodule:: opengnc.sensors.sun_sensor_array
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.sensors
+   :members:
+   :show-inheritance:
+   :undoc-members:

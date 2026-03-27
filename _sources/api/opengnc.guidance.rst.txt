@@ -1,0 +1,61 @@
+opengnc.guidance package
+========================
+
+Submodules
+----------
+
+opengnc.guidance.attitude\_guidance module
+------------------------------------------
+
+.. automodule:: opengnc.guidance.attitude_guidance
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.guidance.continuous\_thrust module
+------------------------------------------
+
+.. automodule:: opengnc.guidance.continuous_thrust
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.guidance.formation\_flying module
+-----------------------------------------
+
+.. automodule:: opengnc.guidance.formation_flying
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.guidance.maneuvers module
+---------------------------------
+
+.. automodule:: opengnc.guidance.maneuvers
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.guidance.porkchop module
+--------------------------------
+
+.. automodule:: opengnc.guidance.porkchop
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.guidance.rendezvous module
+----------------------------------
+
+.. automodule:: opengnc.guidance.rendezvous
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.guidance
+   :members:
+   :show-inheritance:
+   :undoc-members:

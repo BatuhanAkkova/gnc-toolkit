@@ -1,0 +1,109 @@
+opengnc.kalman\_filters package
+===============================
+
+Submodules
+----------
+
+opengnc.kalman\_filters.akf module
+----------------------------------
+
+.. automodule:: opengnc.kalman_filters.akf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.ckf module
+----------------------------------
+
+.. automodule:: opengnc.kalman_filters.ckf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.ekf module
+----------------------------------
+
+.. automodule:: opengnc.kalman_filters.ekf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.enkf module
+-----------------------------------
+
+.. automodule:: opengnc.kalman_filters.enkf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.fixed\_interval\_smoother module
+--------------------------------------------------------
+
+.. automodule:: opengnc.kalman_filters.fixed_interval_smoother
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.imm module
+----------------------------------
+
+.. automodule:: opengnc.kalman_filters.imm
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.kf module
+---------------------------------
+
+.. automodule:: opengnc.kalman_filters.kf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.mekf module
+-----------------------------------
+
+.. automodule:: opengnc.kalman_filters.mekf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.pf module
+---------------------------------
+
+.. automodule:: opengnc.kalman_filters.pf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.rts\_smoother module
+--------------------------------------------
+
+.. automodule:: opengnc.kalman_filters.rts_smoother
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.sr\_ukf module
+--------------------------------------
+
+.. automodule:: opengnc.kalman_filters.sr_ukf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.kalman\_filters.ukf module
+----------------------------------
+
+.. automodule:: opengnc.kalman_filters.ukf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.kalman_filters
+   :members:
+   :show-inheritance:
+   :undoc-members:

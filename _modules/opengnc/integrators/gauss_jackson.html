@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>opengnc.integrators.gauss_jackson &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">opengnc.integrators.gauss_jackson</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for opengnc.integrators.gauss_jackson</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Gauss-Jackson 8th order predictor-corrector integrator for second-order ODEs.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.rk4</span><span class="w"> </span><span class="kn">import</span> <span class="n">RK4</span>
+
+
+<div class="viewcode-block" id="GaussJacksonIntegrator">
+<a class="viewcode-back" href="../../../api/opengnc.integrators.html#opengnc.integrators.gauss_jackson.GaussJacksonIntegrator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GaussJacksonIntegrator</span><span class="p">(</span><span class="n">Integrator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gauss-Jackson 8th order Integrator (Predictor-Corrector Summed Form).</span>
+<span class="sd">    Specifically for second-order ODEs: dy/dt = [v, a].</span>
+<span class="sd">    Assumes state y = [r, v] where r, v are 3D vectors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Predictor Coefficients (Position) - Full series from index 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">19</span> <span class="o">/</span> <span class="mi">240</span><span class="p">,</span>
+                <span class="mi">3</span> <span class="o">/</span> <span class="mi">40</span><span class="p">,</span>
+                <span class="mi">863</span> <span class="o">/</span> <span class="mi">12096</span><span class="p">,</span>
+                <span class="mi">275</span> <span class="o">/</span> <span class="mi">4032</span><span class="p">,</span>
+                <span class="mi">33953</span> <span class="o">/</span> <span class="mi">518400</span><span class="p">,</span>
+                <span class="mi">8183</span> <span class="o">/</span> <span class="mi">129600</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Predictor Coefficients (Velocity)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">5</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">3</span> <span class="o">/</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="mi">251</span> <span class="o">/</span> <span class="mi">720</span><span class="p">,</span>
+                <span class="mi">95</span> <span class="o">/</span> <span class="mi">288</span><span class="p">,</span>
+                <span class="mi">19087</span> <span class="o">/</span> <span class="mi">60480</span><span class="p">,</span>
+                <span class="mi">5257</span> <span class="o">/</span> <span class="mi">17280</span><span class="p">,</span>
+                <span class="mi">1070017</span> <span class="o">/</span> <span class="mi">3628800</span><span class="p">,</span>
+                <span class="mi">25713</span> <span class="o">/</span> <span class="mi">89600</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Corrector Coefficients (Position)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">240</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">240</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">221</span> <span class="o">/</span> <span class="mi">60480</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">19</span> <span class="o">/</span> <span class="mi">6048</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">9829</span> <span class="o">/</span> <span class="mi">3628800</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">407</span> <span class="o">/</span> <span class="mi">172800</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Corrector Coefficients (Velocity)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">24</span><span class="p">,</span>
+                <span class="mi">19</span> <span class="o">/</span> <span class="mi">720</span><span class="p">,</span>
+                <span class="mi">3</span> <span class="o">/</span> <span class="mi">160</span><span class="p">,</span>
+                <span class="mi">863</span> <span class="o">/</span> <span class="mi">60480</span><span class="p">,</span>
+                <span class="mi">275</span> <span class="o">/</span> <span class="mi">24192</span><span class="p">,</span>
+                <span class="mi">33953</span> <span class="o">/</span> <span class="mi">3628800</span><span class="p">,</span>
+                <span class="mi">8183</span> <span class="o">/</span> <span class="mi">1036800</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calc_differences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate backward differences \nabla^j a_n.</span>
+<span class="sd">        history is a list of N elements [a_0, a_1, ..., a_n] where index -1 is current.</span>
+<span class="sd">        Returns array of differences at current step: [a_n, \nabla a_n, \nabla^2 a_n, ...]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">history</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">diff</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># \nabla^0 a_n = a_n</span>
+
+        <span class="n">current_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+            <span class="n">current_diff</span> <span class="o">=</span> <span class="n">current_diff</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">current_diff</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">diff</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">current_diff</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">diff</span>
+
+<div class="viewcode-block" id="GaussJacksonIntegrator.integrate">
+<a class="viewcode-back" href="../../../api/opengnc.integrators.html#opengnc.integrators.gauss_jackson.GaussJacksonIntegrator.integrate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">t_span</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">y0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integrate over a time span using Gauss-Jackson 8th order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span> <span class="o">=</span> <span class="n">t_span</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">dt</span>
+
+        <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span><span class="p">):</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span>
+
+        <span class="n">t_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">t0</span><span class="p">]</span>
+        <span class="n">y_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
+
+        <span class="c1"># Initialize with single-step method (RK4)</span>
+        <span class="n">rk4</span> <span class="o">=</span> <span class="n">RK4</span><span class="p">()</span>
+
+        <span class="n">history_r</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="n">history_v</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:]]</span>
+        <span class="c1"># Calculate initial acceleration</span>
+        <span class="n">dy0</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">history_a</span> <span class="o">=</span> <span class="p">[</span><span class="n">dy0</span><span class="p">[</span><span class="mi">3</span><span class="p">:]]</span>
+
+        <span class="n">curr_t</span> <span class="o">=</span> <span class="n">t0</span>
+        <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># We need 8 points (n=0 to 7)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+            <span class="n">curr_y</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rk4</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+            <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
+            <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+
+            <span class="n">history_r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">history_v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">)</span>
+            <span class="n">history_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dy</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+
+        <span class="c1"># Compute Back Differences at step 7</span>
+        <span class="n">diffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc_differences</span><span class="p">(</span><span class="n">history_a</span><span class="p">)</span>
+
+        <span class="c1"># Initialize Sum Variables S1, S2 at step 7</span>
+        <span class="n">sum_c_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">sum_c_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+            <span class="n">sum_c_vel</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_vel</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">sum_c_pos</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_pos</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+        <span class="n">S1</span> <span class="o">=</span> <span class="n">history_v</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">h</span> <span class="o">-</span> <span class="n">sum_c_vel</span>
+        <span class="n">S2</span> <span class="o">=</span> <span class="n">history_r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">sum_c_pos</span>
+
+        <span class="n">curr_t</span> <span class="o">=</span> <span class="n">t_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG INIT: S1=</span><span class="si">{</span><span class="n">S1</span><span class="si">}</span><span class="s2">, S2=</span><span class="si">{</span><span class="n">S2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Propagation Loop from step 8 onwards</span>
+        <span class="n">step_count</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="k">while</span> <span class="n">curr_t</span> <span class="o">&lt;</span> <span class="n">tf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr_t</span> <span class="o">+</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">tf</span><span class="p">:</span>
+                <span class="n">h_last</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">curr_t</span>
+                <span class="n">curr_y</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rk4</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">,</span> <span class="n">h_last</span><span class="p">)</span>
+                <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
+                <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="c1"># Predictor step for step n+1</span>
+            <span class="n">diffs_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc_differences</span><span class="p">(</span><span class="n">history_a</span><span class="p">)</span>
+
+            <span class="n">sum_p_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">sum_p_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">sum_p_vel</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_vel</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_n</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">sum_p_pos</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_pos</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_n</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+            <span class="n">v_p</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">S1</span> <span class="o">+</span> <span class="n">sum_p_vel</span><span class="p">)</span>
+            <span class="n">r_p</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">S2</span> <span class="o">+</span> <span class="n">S1</span> <span class="o">+</span> <span class="n">sum_p_pos</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">step_count</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STEP </span><span class="si">{</span><span class="n">step_count</span><span class="si">}</span><span class="s2"> PREDICTOR:&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  r_p: </span><span class="si">{</span><span class="n">r_p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  v_p: </span><span class="si">{</span><span class="n">v_p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Evaluate Accelerations</span>
+            <span class="n">y_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_p</span><span class="p">,</span> <span class="n">v_p</span><span class="p">])</span>
+            <span class="n">next_t</span> <span class="o">=</span> <span class="n">curr_t</span> <span class="o">+</span> <span class="n">h</span>
+            <span class="n">dy_p</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_p</span><span class="p">)</span>
+            <span class="n">a_p</span> <span class="o">=</span> <span class="n">dy_p</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+
+            <span class="c1"># Corrector Step</span>
+            <span class="n">n_iter</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="n">v_c</span> <span class="o">=</span> <span class="n">v_p</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">r_c</span> <span class="o">=</span> <span class="n">r_p</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">a_c_iter</span> <span class="o">=</span> <span class="n">a_p</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">):</span>
+                <span class="c1"># Update history with latest acceleration estimate</span>
+                <span class="n">temp_history_a</span> <span class="o">=</span> <span class="n">history_a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">a_c_iter</span><span class="p">]</span>
+                <span class="n">diffs_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc_differences</span><span class="p">(</span><span class="n">temp_history_a</span><span class="p">)</span>
+
+                <span class="n">S1_next</span> <span class="o">=</span> <span class="n">S1</span> <span class="o">+</span> <span class="n">a_c_iter</span>
+                <span class="n">S2_next</span> <span class="o">=</span> <span class="n">S2</span> <span class="o">+</span> <span class="n">S1_next</span>
+
+                <span class="n">sum_c_vel_next</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">sum_c_pos_next</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                    <span class="n">sum_c_vel_next</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_vel</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_next</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">sum_c_pos_next</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_pos</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">diffs_next</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+                <span class="n">v_c</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">S1_next</span> <span class="o">+</span> <span class="n">sum_c_vel_next</span><span class="p">)</span>
+                <span class="n">r_c</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">S2_next</span> <span class="o">+</span> <span class="n">sum_c_pos_next</span><span class="p">)</span>
+
+                <span class="c1"># Evaluate acceleration with corrected state</span>
+                <span class="n">y_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_c</span><span class="p">,</span> <span class="n">v_c</span><span class="p">])</span>
+                <span class="n">dy_c</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_c</span><span class="p">)</span>
+                <span class="n">a_c_iter</span> <span class="o">=</span> <span class="n">dy_c</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+
+            <span class="n">a_c</span> <span class="o">=</span> <span class="n">a_c_iter</span>
+
+            <span class="k">if</span> <span class="n">step_count</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STEP </span><span class="si">{</span><span class="n">step_count</span><span class="si">}</span><span class="s2"> CORRECTOR:&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  r_c: </span><span class="si">{</span><span class="n">r_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  v_c: </span><span class="si">{</span><span class="n">v_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  a_c: </span><span class="si">{</span><span class="n">a_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Final update of sums</span>
+            <span class="n">S1</span> <span class="o">=</span> <span class="n">S1</span> <span class="o">+</span> <span class="n">a_c</span>
+            <span class="n">S2</span> <span class="o">=</span> <span class="n">S2</span> <span class="o">+</span> <span class="n">S1</span>
+
+            <span class="c1"># Update history_a</span>
+            <span class="n">history_a</span> <span class="o">=</span> <span class="n">history_a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">a_c</span><span class="p">]</span>
+
+            <span class="n">curr_t</span> <span class="o">=</span> <span class="n">next_t</span>
+            <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y_c</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
+            <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+
+            <span class="n">step_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Convert back to arrays to maintain interface consistency</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t_values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_values</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GaussJacksonIntegrator.step">
+<a class="viewcode-back" href="../../../api/opengnc.integrators.html#opengnc.integrators.gauss_jackson.GaussJacksonIntegrator.step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Single step interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Gauss-Jackson requires historical states. Use integrate method.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

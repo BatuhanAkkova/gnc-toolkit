@@ -1,0 +1,45 @@
+opengnc.classical\_control package
+==================================
+
+Submodules
+----------
+
+opengnc.classical\_control.bdot module
+--------------------------------------
+
+.. automodule:: opengnc.classical_control.bdot
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.classical\_control.momentum\_dumping module
+---------------------------------------------------
+
+.. automodule:: opengnc.classical_control.momentum_dumping
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.classical\_control.pid module
+-------------------------------------
+
+.. automodule:: opengnc.classical_control.pid
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.classical\_control.rate\_damping module
+-----------------------------------------------
+
+.. automodule:: opengnc.classical_control.rate_damping
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.classical_control
+   :members:
+   :show-inheritance:
+   :undoc-members:

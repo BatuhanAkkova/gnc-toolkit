@@ -1,0 +1,45 @@
+opengnc.attitude\_dynamics package
+==================================
+
+Submodules
+----------
+
+opengnc.attitude\_dynamics.flexible\_body module
+------------------------------------------------
+
+.. automodule:: opengnc.attitude_dynamics.flexible_body
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.attitude\_dynamics.fuel\_slosh module
+---------------------------------------------
+
+.. automodule:: opengnc.attitude_dynamics.fuel_slosh
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.attitude\_dynamics.rigid\_body module
+---------------------------------------------
+
+.. automodule:: opengnc.attitude_dynamics.rigid_body
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.attitude\_dynamics.variable\_inertia module
+---------------------------------------------------
+
+.. automodule:: opengnc.attitude_dynamics.variable_inertia
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.attitude_dynamics
+   :members:
+   :show-inheritance:
+   :undoc-members:

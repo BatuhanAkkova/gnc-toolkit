@@ -1,0 +1,53 @@
+opengnc.propagators package
+===========================
+
+Submodules
+----------
+
+opengnc.propagators.base module
+-------------------------------
+
+.. automodule:: opengnc.propagators.base
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.propagators.cowell module
+---------------------------------
+
+.. automodule:: opengnc.propagators.cowell
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.propagators.encke module
+--------------------------------
+
+.. automodule:: opengnc.propagators.encke
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.propagators.kepler module
+---------------------------------
+
+.. automodule:: opengnc.propagators.kepler
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.propagators.sgp4\_propagator module
+-------------------------------------------
+
+.. automodule:: opengnc.propagators.sgp4_propagator
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.propagators
+   :members:
+   :show-inheritance:
+   :undoc-members:

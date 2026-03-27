@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>opengnc.classical_control.pid &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">opengnc.classical_control.pid</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for opengnc.classical_control.pid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Generic PID controller implementation with anti-windup logic.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+
+
+<div class="viewcode-block" id="PID">
+<a class="viewcode-back" href="../../../api/opengnc.classical_control.html#opengnc.classical_control.pid.PID">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PID</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic PID controller with anti-windup.</span>
+
+<span class="sd">    Control Law:</span>
+<span class="sd">    $u(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de(t)}{dt}$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kp : float</span>
+<span class="sd">        Proportional gain.</span>
+<span class="sd">    ki : float</span>
+<span class="sd">        Integral gain.</span>
+<span class="sd">    kd : float</span>
+<span class="sd">        Derivative gain.</span>
+<span class="sd">    output_limits : tuple[float, float] | None, optional</span>
+<span class="sd">        (min, max) saturation limits.</span>
+<span class="sd">    anti_windup_method : str, optional</span>
+<span class="sd">        Method (e.g., &quot;clamping&quot;). Default &quot;clamping&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">kp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">ki</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">kd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">output_limits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">anti_windup_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;clamping&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the PID controller instance.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kp</span> <span class="o">=</span> <span class="n">kp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ki</span> <span class="o">=</span> <span class="n">ki</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kd</span> <span class="o">=</span> <span class="n">kd</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_limits</span> <span class="o">=</span> <span class="n">output_limits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anti_windup_method</span> <span class="o">=</span> <span class="n">anti_windup_method</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_error</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PID.reset">
+<a class="viewcode-back" href="../../../api/opengnc.classical_control.html#opengnc.classical_control.pid.PID.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the internal integrator and error states to zero.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_error</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+
+<div class="viewcode-block" id="PID.update">
+<a class="viewcode-back" href="../../../api/opengnc.classical_control.html#opengnc.classical_control.pid.PID.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the PID control calculation for a single time step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        error : float</span>
+<span class="sd">            The current error signal (setpoint - measured).</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Time step since the last update (s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The computed control output signal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Proportional term</span>
+        <span class="n">p_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kp</span> <span class="o">*</span> <span class="n">error</span>
+
+        <span class="c1"># Integral term calculation (tentative)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span> <span class="o">+=</span> <span class="n">error</span> <span class="o">*</span> <span class="n">dt</span>
+        <span class="n">i_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ki</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span>
+
+        <span class="c1"># Derivative term using backward difference</span>
+        <span class="n">derivative</span> <span class="o">=</span> <span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_error</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span>
+        <span class="n">d_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kd</span> <span class="o">*</span> <span class="n">derivative</span>
+
+        <span class="c1"># Calculate raw output</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">p_term</span> <span class="o">+</span> <span class="n">i_term</span> <span class="o">+</span> <span class="n">d_term</span>
+
+        <span class="c1"># Apply output limits and anti-windup</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_limits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_limit</span><span class="p">,</span> <span class="n">max_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_limits</span>
+
+            <span class="c1"># Saturation check</span>
+            <span class="k">if</span> <span class="n">output</span> <span class="o">&gt;</span> <span class="n">max_limit</span><span class="p">:</span>
+                <span class="n">output_clamped</span> <span class="o">=</span> <span class="n">max_limit</span>
+            <span class="k">elif</span> <span class="n">output</span> <span class="o">&lt;</span> <span class="n">min_limit</span><span class="p">:</span>
+                <span class="n">output_clamped</span> <span class="o">=</span> <span class="n">min_limit</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_clamped</span> <span class="o">=</span> <span class="n">output</span>
+
+            <span class="c1"># Anti-windup (Clamping method)</span>
+            <span class="c1"># If the output is saturated AND the error has the same sign as the</span>
+            <span class="c1"># control signal (driving it further into saturation), stop integrating.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">anti_windup_method</span> <span class="o">==</span> <span class="s2">&quot;clamping&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="o">!=</span> <span class="n">output_clamped</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">output</span> <span class="o">&gt;</span> <span class="n">max_limit</span> <span class="ow">and</span> <span class="n">error</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">output</span> <span class="o">&lt;</span> <span class="n">min_limit</span> <span class="ow">and</span> <span class="n">error</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+                        <span class="c1"># Revert the integration step</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span> <span class="o">-=</span> <span class="n">error</span> <span class="o">*</span> <span class="n">dt</span>
+
+            <span class="n">output</span> <span class="o">=</span> <span class="n">output_clamped</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_error</span> <span class="o">=</span> <span class="n">error</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+</div>
+
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

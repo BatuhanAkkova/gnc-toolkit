@@ -36,8 +36,8 @@
    "source": [
     "import numpy as np\n",
     "import matplotlib.pyplot as plt\n",
-    "from gnc_toolkit.simulation.simulator import MissionSimulator\n",
-    "from gnc_toolkit.simulation.logging import SimulationLogger\n",
+    "from opengnc.simulation.simulator import MissionSimulator\n",
+    "from opengnc.simulation.logging import SimulationLogger\n",
     "\n",
     "print(\"Imports successful.\")"
    ]
@@ -283,3 +283,7 @@
  "nbformat": 4,
  "nbformat_minor": 4
 }
+
+
+
+

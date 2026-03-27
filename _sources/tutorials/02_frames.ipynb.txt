@@ -6,7 +6,7 @@
    "source": [
     "# Tutorial 02: Coordinate Systems & Frame Transformations\n",
     "\n",
-    "This tutorial covers conversions between common spacecraft coordinate frames using the `gnc_toolkit.utils.frame_conversion` module.\n",
+    "This tutorial covers conversions between common spacecraft coordinate frames using the `opengnc.utils.frame_conversion` module.\n",
     "\n",
     "--- \n",
     "## Theory Prerequisites\n",
@@ -47,8 +47,8 @@
    ],
    "source": [
     "import numpy as np\n",
-    "from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, llh2ecef\n",
-    "from gnc_toolkit.utils.time_utils import calc_gmst\n",
+    "from opengnc.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, llh2ecef\n",
+    "from opengnc.utils.time_utils import calc_gmst\n",
     "\n",
     "print(\"Imports successful.\")"
    ]
@@ -198,3 +198,7 @@
  "nbformat": 4,
  "nbformat_minor": 4
 }
+
+
+
+

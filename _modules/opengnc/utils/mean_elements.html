@@ -1,0 +1,219 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>opengnc.utils.mean_elements &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">opengnc.utils.mean_elements</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for opengnc.utils.mean_elements</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Mean element conversions and secular perturbation rates (e.g., J2 secular theory).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="osculating2mean">
+<a class="viewcode-back" href="../../../api/opengnc.utils.html#opengnc.utils.mean_elements.osculating2mean">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">osculating2mean</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ecc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">incl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">raan</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">argp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">m_anom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">j2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.08262668e-3</span><span class="p">,</span>
+    <span class="n">re</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6378137.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert osculating Keplerian elements to mean elements using J2 secular theory.</span>
+
+<span class="sd">    This implements the secular mapping (ignoring short/long period terms). </span>
+<span class="sd">    Mean elements are essential for long-term orbit propagation and mission planning.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : float</span>
+<span class="sd">        Osculating semi-major axis (m).</span>
+<span class="sd">    ecc : float</span>
+<span class="sd">        Osculating eccentricity.</span>
+<span class="sd">    incl : float</span>
+<span class="sd">        Osculating inclination (rad).</span>
+<span class="sd">    raan : float</span>
+<span class="sd">        Osculating RAAN (rad).</span>
+<span class="sd">    argp : float</span>
+<span class="sd">        Osculating Argument of Perigee (rad).</span>
+<span class="sd">    m_anom : float</span>
+<span class="sd">        Osculating Mean Anomaly (rad).</span>
+<span class="sd">    j2 : float, optional</span>
+<span class="sd">        J2 perturbation coefficient. Default is Earth.</span>
+<span class="sd">    re : float, optional</span>
+<span class="sd">        Planet Equatorial Radius (m). Default is Earth.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[float, float, float, float, float, float]</span>
+<span class="sd">        Mean elements (a_m, e_m, i_m, raan_m, argp_m, M_m).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># First-order secular theory keeps a, e, i constant.</span>
+    <span class="c1"># Periodic terms must be subtracted for a full osculating-to-mean mapping.</span>
+    <span class="c1"># Current implementation serves as a placeholder for secular-only models.</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">m_anom</span></div>
+
+
+
+<div class="viewcode-block" id="get_j2_secular_rates">
+<a class="viewcode-back" href="../../../api/opengnc.utils.html#opengnc.utils.mean_elements.get_j2_secular_rates">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_j2_secular_rates</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ecc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">incl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">j2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.08262668e-3</span><span class="p">,</span>
+    <span class="n">re</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6378137.0</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">398600.4415e9</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate high-precision secular rates due to J2 oblateness.</span>
+
+<span class="sd">    Computes $\dot{\Omega}$, $\dot{\omega}$, and the mean motion correction $\dot{M}$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : float</span>
+<span class="sd">        Semi-major axis (m).</span>
+<span class="sd">    ecc : float</span>
+<span class="sd">        Eccentricity.</span>
+<span class="sd">    incl : float</span>
+<span class="sd">        Inclination (rad).</span>
+<span class="sd">    j2 : float, optional</span>
+<span class="sd">        J2 perturbation coefficient.</span>
+<span class="sd">    re : float, optional</span>
+<span class="sd">        Equatorial radius (m).</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Gravitational parameter ($m^3/s^2$).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[float, float, float]</span>
+<span class="sd">        (raan_dot, argp_dot, m_dot) in rad/s.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ecc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">n0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">a</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">j2_coeff</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">n0</span> <span class="o">*</span> <span class="n">j2</span> <span class="o">*</span> <span class="p">(</span><span class="n">re</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="c1"># 1. RAAN rate (Regression of Nodes)</span>
+    <span class="n">raan_dot</span> <span class="o">=</span> <span class="o">-</span><span class="n">j2_coeff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">incl</span><span class="p">)</span>
+
+    <span class="c1"># 2. Argument of Perigee rate (Apsidal Rotation)</span>
+    <span class="n">argp_dot</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">j2_coeff</span> <span class="o">*</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">-</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">incl</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># 3. Mean Anomaly rate (Mean Motion Correction)</span>
+    <span class="n">m_dot</span> <span class="o">=</span> <span class="n">n0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">j2_coeff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ecc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">-</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">incl</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">raan_dot</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">argp_dot</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">m_dot</span><span class="p">)</span></div>
+
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

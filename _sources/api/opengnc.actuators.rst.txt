@@ -1,0 +1,77 @@
+opengnc.actuators package
+=========================
+
+Submodules
+----------
+
+opengnc.actuators.actuator module
+---------------------------------
+
+.. automodule:: opengnc.actuators.actuator
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.actuators.allocation module
+-----------------------------------
+
+.. automodule:: opengnc.actuators.allocation
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.actuators.cmg module
+----------------------------
+
+.. automodule:: opengnc.actuators.cmg
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.actuators.magnetorquer module
+-------------------------------------
+
+.. automodule:: opengnc.actuators.magnetorquer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.actuators.reaction\_wheel module
+----------------------------------------
+
+.. automodule:: opengnc.actuators.reaction_wheel
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.actuators.solar\_sail module
+------------------------------------
+
+.. automodule:: opengnc.actuators.solar_sail
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.actuators.thruster module
+---------------------------------
+
+.. automodule:: opengnc.actuators.thruster
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.actuators.vscmg module
+------------------------------
+
+.. automodule:: opengnc.actuators.vscmg
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.actuators
+   :members:
+   :show-inheritance:
+   :undoc-members:

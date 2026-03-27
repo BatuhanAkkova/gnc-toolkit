@@ -1,0 +1,77 @@
+opengnc.integrators package
+===========================
+
+Submodules
+----------
+
+opengnc.integrators.ab\_moulton module
+--------------------------------------
+
+.. automodule:: opengnc.integrators.ab_moulton
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.integrators.dop853\_coeffs module
+-----------------------------------------
+
+.. automodule:: opengnc.integrators.dop853_coeffs
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.integrators.gauss\_jackson module
+-----------------------------------------
+
+.. automodule:: opengnc.integrators.gauss_jackson
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.integrators.integrator module
+-------------------------------------
+
+.. automodule:: opengnc.integrators.integrator
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.integrators.rk4 module
+------------------------------
+
+.. automodule:: opengnc.integrators.rk4
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.integrators.rk45 module
+-------------------------------
+
+.. automodule:: opengnc.integrators.rk45
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.integrators.rk853 module
+--------------------------------
+
+.. automodule:: opengnc.integrators.rk853
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.integrators.symplectic module
+-------------------------------------
+
+.. automodule:: opengnc.integrators.symplectic
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: opengnc.integrators
+   :members:
+   :show-inheritance:
+   :undoc-members:

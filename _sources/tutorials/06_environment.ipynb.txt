@@ -6,7 +6,7 @@
    "source": [
     "# Tutorial 06: Environmental Perturbations\n",
     "\n",
-    "This tutorial demonstrates how to model and simulate non-gravitational and third-body environmental perturbations in `gnc-toolkit`."
+    "This tutorial demonstrates how to model and simulate non-gravitational and third-body environmental perturbations in `OpenGNC`."
    ]
   },
   {
@@ -55,11 +55,11 @@
    "source": [
     "import numpy as np\n",
     "import matplotlib.pyplot as plt\n",
-    "from gnc_toolkit.disturbances.drag import LumpedDrag\n",
-    "from gnc_toolkit.environment.density import HarrisPriester\n",
-    "from gnc_toolkit.disturbances.srp import Canonball\n",
-    "from gnc_toolkit.disturbances.gravity import ThirdBodyGravity, TwoBodyGravity\n",
-    "from gnc_toolkit.propagators.cowell import CowellPropagator\n",
+    "from opengnc.disturbances.drag import LumpedDrag\n",
+    "from opengnc.environment.density import HarrisPriester\n",
+    "from opengnc.disturbances.srp import Canonball\n",
+    "from opengnc.disturbances.gravity import ThirdBodyGravity, TwoBodyGravity\n",
+    "from opengnc.propagators.cowell import CowellPropagator\n",
     "\n",
     "print(\"Environment modules loaded.\")"
    ]
@@ -239,3 +239,7 @@
  "nbformat": 4,
  "nbformat_minor": 4
 }
+
+
+
+

@@ -74,6 +74,8 @@ def test_ekf_nonlinear_tracking():
     assert error < 0.5
 
 def test_mekf_attitude_tracking():
+    # Set seed for determinism in random sensor noise
+    np.random.seed(42)
     dt = 0.1
     omega_body = np.array([0.1, 0.05, 0.2]) # Constant body rate
     z_ref_inertial = np.array([1.0, 0.0, 0.0])
@@ -83,13 +85,14 @@ def test_mekf_attitude_tracking():
     mekf = MEKF(q_init=q0, beta_init=beta0)
     
     mekf.Q = np.eye(6) * 0.0001
-    mekf.R = np.eye(3) * 0.01
+    mekf.R = np.eye(3) * 0.001 # Robust tuning for sensor std=0.01
     
     q_true = q0.copy()
     
     sun_sensor = SunSensor(noise_std=0.01)
     
-    for _ in range(50):
+    # Run for 100 steps to allow bias convergence
+    for _ in range(100):
         dq_true = axis_angle_to_quat(omega_body * dt)
         q_true = quat_normalize(quat_mult(q_true, dq_true))
         

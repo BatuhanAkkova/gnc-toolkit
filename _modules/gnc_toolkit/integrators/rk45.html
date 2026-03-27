@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.integrators.rk45 &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.integrators.rk45</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.integrators.rk45</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Adaptive-step Runge-Kutta-Fehlberg 4(5) integrator.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
+
+
+<div class="viewcode-block" id="RK45">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk45.RK45">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RK45</span><span class="p">(</span><span class="n">Integrator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Runge-Kutta-Fehlberg 4(5) Adaptive Variable Step Integrator.</span>
+
+<span class="sd">    Implements the Fehlberg embedded method that calculates both a 4th and </span>
+<span class="sd">    5th order solution at each step to estimate local truncation error.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rtol : float, optional</span>
+<span class="sd">        Relative error tolerance. Default 1e-6.</span>
+<span class="sd">    atol : float, optional</span>
+<span class="sd">        Absolute error tolerance. Default 1e-9.</span>
+<span class="sd">    safety_factor : float, optional</span>
+<span class="sd">        Safety multiplier for step-size prediction. Default 0.9.</span>
+<span class="sd">    min_factor : float, optional</span>
+<span class="sd">        Minimum step-size reduction ratio. Default 0.2.</span>
+<span class="sd">    max_factor : float, optional</span>
+<span class="sd">        Maximum step-size expansion ratio. Default 10.0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rtol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
+        <span class="n">atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span><span class="p">,</span>
+        <span class="n">safety_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">min_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">max_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize RK45 coefficients and tolerances.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rtol</span> <span class="o">=</span> <span class="n">rtol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atol</span> <span class="o">=</span> <span class="n">atol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">safety_factor</span> <span class="o">=</span> <span class="n">safety_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_factor</span> <span class="o">=</span> <span class="n">min_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_factor</span> <span class="o">=</span> <span class="n">max_factor</span>
+
+        <span class="c1"># Fehlberg Tableau Coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span> <span class="o">/</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[],</span>
+            <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">32</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1932</span> <span class="o">/</span> <span class="mi">2197</span><span class="p">,</span> <span class="o">-</span><span class="mi">7200</span> <span class="o">/</span> <span class="mi">2197</span><span class="p">,</span> <span class="mi">7296</span> <span class="o">/</span> <span class="mi">2197</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">439</span> <span class="o">/</span> <span class="mi">216</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3680</span> <span class="o">/</span> <span class="mi">513</span><span class="p">,</span> <span class="o">-</span><span class="mi">845</span> <span class="o">/</span> <span class="mi">4104</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">8</span> <span class="o">/</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3544</span> <span class="o">/</span> <span class="mi">2565</span><span class="p">,</span> <span class="mi">1859</span> <span class="o">/</span> <span class="mi">4104</span><span class="p">,</span> <span class="o">-</span><span class="mi">11</span> <span class="o">/</span> <span class="mi">40</span><span class="p">],</span>
+        <span class="p">]</span>
+
+        <span class="c1"># y: 4-th order weights, z: 5-th order weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span> <span class="o">/</span> <span class="mi">216</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1408</span> <span class="o">/</span> <span class="mi">2565</span><span class="p">,</span> <span class="mi">2197</span> <span class="o">/</span> <span class="mi">4104</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">16</span> <span class="o">/</span> <span class="mi">135</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6656</span> <span class="o">/</span> <span class="mi">12825</span><span class="p">,</span> <span class="mi">28561</span> <span class="o">/</span> <span class="mi">56430</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span> <span class="o">/</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">55</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b5</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">b4</span>  <span class="c1"># Error estimation coefficients</span>
+
+<div class="viewcode-block" id="RK45.step">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk45.RK45.step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform a single adaptive RK45 step with error control.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f : Callable</span>
+<span class="sd">            Derivative function.</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Current time $t_n$ (s).</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Current state.</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Trial time step size (s).</span>
+<span class="sd">        **kwargs : Any</span>
+<span class="sd">            Additional parameters for $f$.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndarray, float, float]</span>
+<span class="sd">            (y_next, t_next, dt_new).</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            If convergence fails and step size falls below epsilon.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dt_current</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="n">y_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># 1. Evaluate Stages</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+                <span class="n">sum_ak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y_val</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                    <span class="n">sum_ak</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">k</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">dt_current</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">+</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="n">sum_ak</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span>
+
+            <span class="n">k_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+            <span class="c1"># 2. Estimate solutions and error</span>
+            <span class="n">y_next</span> <span class="o">=</span> <span class="n">y_val</span> <span class="o">+</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b5</span> <span class="o">@</span> <span class="n">k_arr</span><span class="p">)</span>
+            <span class="n">error_est</span> <span class="o">=</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">@</span> <span class="n">k_arr</span><span class="p">)</span>
+
+            <span class="c1"># 3. Compute error ratio</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atol</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rtol</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_val</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_next</span><span class="p">))</span>
+            <span class="n">error_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error_est</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">error_ratio</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="c1"># Acceptance</span>
+                <span class="n">t_next</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">dt_current</span>
+
+                <span class="c1"># Predict next optimal step size</span>
+                <span class="k">if</span> <span class="n">error_ratio</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+                    <span class="n">dt_new</span> <span class="o">=</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_factor</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">dt_new</span> <span class="o">=</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">error_ratio</span><span class="o">**-</span><span class="mf">0.2</span><span class="p">)</span>
+
+                <span class="n">dt_new</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">dt_current</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_factor</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">dt_new</span><span class="p">,</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_factor</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">y_next</span><span class="p">,</span> <span class="n">t_next</span><span class="p">,</span> <span class="n">dt_new</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Rejection</span>
+                <span class="n">dt_current</span> <span class="o">=</span> <span class="n">dt_current</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">error_ratio</span><span class="o">**-</span><span class="mf">0.25</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dt_current</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RK45: Step size underflow at t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RK45.integrate">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.rk45.RK45.integrate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">integrate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">t_span</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">y0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integrate over span with adaptive stepping.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f : Callable</span>
+<span class="sd">            Derivative function.</span>
+<span class="sd">        t_span : tuple[float, float]</span>
+<span class="sd">            (t0, tf) (s).</span>
+<span class="sd">        y0 : np.ndarray</span>
+<span class="sd">            Initial state.</span>
+<span class="sd">        dt : float, optional</span>
+<span class="sd">            Initial trial step.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">            (t_values, y_values).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_span</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_span</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">100.0</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

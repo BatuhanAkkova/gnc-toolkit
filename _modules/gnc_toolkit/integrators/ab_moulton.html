@@ -1,0 +1,228 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gnc_toolkit.integrators.ab_moulton &mdash; gnc-toolkit  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gnc-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">gnc_toolkit</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gnc-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gnc_toolkit.integrators.ab_moulton</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gnc_toolkit.integrators.ab_moulton</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Adams-Bashforth-Moulton 8th order predictor-corrector integrator.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.rk4</span><span class="w"> </span><span class="kn">import</span> <span class="n">RK4</span>
+
+
+<div class="viewcode-block" id="AdamsBashforthMoultonIntegrator">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdamsBashforthMoultonIntegrator</span><span class="p">(</span><span class="n">Integrator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adams-Bashforth-Moulton 8th order Integrator (Predictor-Corrector Ordinate Form).</span>
+<span class="sd">    Treats the ODE system as a first-order system: dy/dt = f(t, y).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Predictor Coefficients (Denominator 120960)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_coeffs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">434241</span><span class="p">,</span> <span class="o">-</span><span class="mi">1152169</span><span class="p">,</span> <span class="mi">2183877</span><span class="p">,</span> <span class="o">-</span><span class="mi">2664477</span><span class="p">,</span> <span class="mi">2102243</span><span class="p">,</span> <span class="o">-</span><span class="mi">1041723</span><span class="p">,</span> <span class="mi">295767</span><span class="p">,</span> <span class="o">-</span><span class="mi">36799</span><span class="p">])</span>
+            <span class="o">/</span> <span class="mi">120960</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Corrector Coefficients (Denominator 120960)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_coeffs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">36799</span><span class="p">,</span> <span class="mi">139849</span><span class="p">,</span> <span class="o">-</span><span class="mi">121797</span><span class="p">,</span> <span class="mi">123133</span><span class="p">,</span> <span class="o">-</span><span class="mi">88547</span><span class="p">,</span> <span class="mi">41499</span><span class="p">,</span> <span class="o">-</span><span class="mi">11351</span><span class="p">,</span> <span class="mi">1375</span><span class="p">])</span> <span class="o">/</span> <span class="mi">120960</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="AdamsBashforthMoultonIntegrator.integrate">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.integrate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">t_span</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">y0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integrate over a time span using Adams-Bashforth-Moulton 8th order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span> <span class="o">=</span> <span class="n">t_span</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">dt</span>
+
+        <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span><span class="p">):</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span>
+
+        <span class="n">t_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">t0</span><span class="p">]</span>
+        <span class="n">y_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
+
+        <span class="c1"># Initialize with RK4 to fill 8 initial points of derivatives</span>
+        <span class="n">rk4</span> <span class="o">=</span> <span class="n">RK4</span><span class="p">()</span>
+
+        <span class="n">history_dy</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># History of state derivatives: dy/dt = f(t, y)</span>
+        <span class="n">curr_t</span> <span class="o">=</span> <span class="n">t0</span>
+        <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Initial derivative</span>
+        <span class="n">history_dy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">))</span>
+
+        <span class="c1"># Fill first 7 steps with RK4 (total 8 points including initial)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+            <span class="n">curr_y</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rk4</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+            <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
+            <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+            <span class="n">history_dy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">))</span>
+
+        <span class="c1"># Propagation Loop from step 8 onwards</span>
+        <span class="k">while</span> <span class="n">curr_t</span> <span class="o">&lt;</span> <span class="n">tf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr_t</span> <span class="o">+</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">tf</span><span class="p">:</span>
+                <span class="n">h_last</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">curr_t</span>
+                <span class="n">curr_y</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rk4</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">curr_t</span><span class="p">,</span> <span class="n">curr_y</span><span class="p">,</span> <span class="n">h_last</span><span class="p">)</span>
+                <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
+                <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="c1"># Predictor Step: y^{p}_{n+1} = y_n + h * sum(p_j * dy_{n-j})</span>
+            <span class="n">sum_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">sum_p</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_coeffs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">history_dy</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+            <span class="n">y_p</span> <span class="o">=</span> <span class="n">curr_y</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sum_p</span>
+            <span class="n">next_t</span> <span class="o">=</span> <span class="n">curr_t</span> <span class="o">+</span> <span class="n">h</span>
+            <span class="n">dy_p</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_p</span><span class="p">)</span>  <span class="c1"># Evaluate predicted derivative</span>
+
+            <span class="c1"># Corrector Step: y_{n+1} = y_n + h * sum(c_j * dy_{n+1-j})</span>
+            <span class="n">temp_history_dy</span> <span class="o">=</span> <span class="n">history_dy</span> <span class="o">+</span> <span class="p">[</span><span class="n">dy_p</span><span class="p">]</span>
+            <span class="n">sum_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">sum_c</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_coeffs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">temp_history_dy</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+            <span class="n">y_c</span> <span class="o">=</span> <span class="n">curr_y</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sum_c</span>
+            <span class="n">dy_c</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">next_t</span><span class="p">,</span> <span class="n">y_c</span><span class="p">)</span>  <span class="c1"># Evaluate corrected derivative</span>
+
+            <span class="c1"># Update step</span>
+            <span class="n">curr_y</span> <span class="o">=</span> <span class="n">y_c</span>
+            <span class="n">curr_t</span> <span class="o">=</span> <span class="n">next_t</span>
+
+            <span class="c1"># Append correct derivative with latest states</span>
+            <span class="n">history_dy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dy_c</span><span class="p">)</span>
+            <span class="c1"># Maintain 8 items history</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">history_dy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="n">history_dy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_t</span><span class="p">)</span>
+            <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t_values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_values</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AdamsBashforthMoultonIntegrator.step">
+<a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.ab_moulton.AdamsBashforthMoultonIntegrator.step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Single step interface (not recommended for multi-step integrators).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Adams-Bashforth-Moulton requires historical states. Use integrate method.&quot;</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

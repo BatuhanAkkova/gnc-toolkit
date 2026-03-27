@@ -85,64 +85,84 @@
 
 <div class="viewcode-block" id="fixed_interval_smoother">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fixed_interval_smoother</span><span class="p">(</span><span class="n">Xs_f</span><span class="p">,</span> <span class="n">Ps_f</span><span class="p">,</span> <span class="n">Fs</span><span class="p">,</span> <span class="n">Qs</span><span class="p">,</span> <span class="n">Zs</span><span class="p">,</span> <span class="n">Hs</span><span class="p">,</span> <span class="n">Rs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fixed_interval_smoother</span><span class="p">(</span>
+    <span class="n">x_forward</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">p_forward</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">f_mats</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">q_mats</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">z_meas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">h_mats</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">r_mats</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fixed-Interval Smoother (Two-Filter / Fraser-Potter approach).</span>
-<span class="sd">    Combines a forward Kalman filter with a backward information filter.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        Xs_f (list of np.ndarray): Forward filtered states x_{k|k}.</span>
-<span class="sd">        Ps_f (list of np.ndarray): Forward filtered covariances P_{k|k}.</span>
-<span class="sd">        Fs (list of np.ndarray): State transition matrices F_k (from k to k+1).</span>
-<span class="sd">        Qs (list of np.ndarray): Process noise covariances Q_k.</span>
-<span class="sd">        Zs (list of np.ndarray): Measurements z_k.</span>
-<span class="sd">        Hs (list of np.ndarray): Measurement matrices H_k.</span>
-<span class="sd">        Rs (list of np.ndarray): Measurement noise covariances R_k.</span>
+<span class="sd">    Combines a forward-running Kalman filter with a backward-running information</span>
+<span class="sd">    filter to produce the optimal estimate at every point in a fixed interval.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_forward : list of np.ndarray</span>
+<span class="sd">        Forward filtered states $x_{k|k}$. Length N.</span>
+<span class="sd">    p_forward : list of np.ndarray</span>
+<span class="sd">        Forward filtered covariances $P_{k|k}$. Length N.</span>
+<span class="sd">    f_mats : list of np.ndarray</span>
+<span class="sd">        State transition matrices $F_k$ (from $k$ to $k+1$). Length N-1.</span>
+<span class="sd">    q_mats : list of np.ndarray</span>
+<span class="sd">        Process noise covariances $Q_k$ (from $k$ to $k+1$). Length N-1.</span>
+<span class="sd">    z_meas : list of np.ndarray</span>
+<span class="sd">        Measurements $z_k$. Length N.</span>
+<span class="sd">    h_mats : list of np.ndarray</span>
+<span class="sd">        Measurement matrices $H_k$. Length N.</span>
+<span class="sd">    r_mats : list of np.ndarray</span>
+<span class="sd">        Measurement noise covariances $R_k$. Length N.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        X_smooth (np.ndarray): Smoothed states.</span>
-<span class="sd">        P_smooth (np.ndarray): Smoothed covariances.</span>
+<span class="sd">    x_smooth : np.ndarray</span>
+<span class="sd">        Smoothed states.</span>
+<span class="sd">    p_smooth : np.ndarray</span>
+<span class="sd">        Smoothed covariances.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">num_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xs_f</span><span class="p">)</span>
-    <span class="n">dim_x</span> <span class="o">=</span> <span class="n">Xs_f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_forward</span><span class="p">)</span>
+    <span class="n">dim_x</span> <span class="o">=</span> <span class="n">x_forward</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="c1"># Backward Information Filter</span>
     <span class="c1"># y_b: information state (Y * x)</span>
     <span class="c1"># Y_b: information matrix (inv(P))</span>
-    <span class="n">y_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
-    <span class="n">Y_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
+    <span class="n">y_info</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
+    <span class="n">y_mat_info</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
 
     <span class="c1"># Backward pass</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Update with measurement at k+1</span>
-        <span class="n">H</span> <span class="o">=</span> <span class="n">Hs</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">R_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Rs</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">h_mat</span> <span class="o">=</span> <span class="n">h_mats</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">r_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">r_mats</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
 
         <span class="c1"># Information update</span>
-        <span class="n">Y_hat</span> <span class="o">=</span> <span class="n">Y_b</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_inv</span> <span class="o">@</span> <span class="n">H</span>
-        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">y_b</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">R_inv</span> <span class="o">@</span> <span class="n">Zs</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">y_hat_mat</span> <span class="o">=</span> <span class="n">y_mat_info</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">h_mat</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">r_inv</span> <span class="o">@</span> <span class="n">h_mat</span>
+        <span class="n">y_hat_vec</span> <span class="o">=</span> <span class="n">y_info</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">h_mat</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">r_inv</span> <span class="o">@</span> <span class="n">z_meas</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># Backward predict to k</span>
-        <span class="n">F</span> <span class="o">=</span> <span class="n">Fs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-        <span class="n">Q</span> <span class="o">=</span> <span class="n">Qs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">f_mat</span> <span class="o">=</span> <span class="n">f_mats</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">q_mat</span> <span class="o">=</span> <span class="n">q_mats</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
         <span class="c1"># Backward prediction (Information form)</span>
-        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">+</span> <span class="n">Y_hat</span> <span class="o">@</span> <span class="n">Q</span><span class="p">)</span>
-        <span class="n">Y_b</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Y_hat</span> <span class="o">@</span> <span class="n">tmp</span> <span class="o">@</span> <span class="n">F</span>
-        <span class="n">y_b</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">tmp</span> <span class="o">@</span> <span class="n">y_hat</span>
+        <span class="n">eye_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)</span>
+        <span class="n">tmp_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">eye_x</span> <span class="o">+</span> <span class="n">y_hat_mat</span> <span class="o">@</span> <span class="n">q_mat</span><span class="p">)</span>
+        <span class="n">y_mat_info</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_mat</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y_hat_mat</span> <span class="o">@</span> <span class="n">tmp_inv</span> <span class="o">@</span> <span class="n">f_mat</span>
+        <span class="n">y_info</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_mat</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">tmp_inv</span> <span class="o">@</span> <span class="n">y_hat_vec</span>
 
     <span class="c1"># Combine Forward and Backward</span>
-    <span class="n">X_smooth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
-    <span class="n">P_smooth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
+    <span class="n">x_smoothed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
+    <span class="n">p_smoothed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
-        <span class="n">P_f_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Ps_f</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-        <span class="n">P_smooth</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">P_f_inv</span> <span class="o">+</span> <span class="n">Y_b</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-        <span class="n">X_smooth</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">P_smooth</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">@</span> <span class="p">(</span><span class="n">P_f_inv</span> <span class="o">@</span> <span class="n">Xs_f</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">y_b</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">p_f_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">p_forward</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">p_smoothed</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">p_f_inv</span> <span class="o">+</span> <span class="n">y_mat_info</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">x_smoothed</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_smoothed</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">@</span> <span class="p">(</span><span class="n">p_f_inv</span> <span class="o">@</span> <span class="n">x_forward</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">y_info</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 
-    <span class="k">return</span> <span class="n">X_smooth</span><span class="p">,</span> <span class="n">P_smooth</span></div>
+    <span class="k">return</span> <span class="n">x_smoothed</span><span class="p">,</span> <span class="n">p_smoothed</span></div>
 
 </pre></div>
 

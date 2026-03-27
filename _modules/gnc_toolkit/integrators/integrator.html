@@ -81,6 +81,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -88,64 +90,98 @@
 <div class="viewcode-block" id="Integrator">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Integrator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Abstract base class for numerical integrators.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for numerical ODE integrators.</span>
+
+<span class="sd">    Provides a common interface for fixed-step and variable-step numerical </span>
+<span class="sd">    integration of first-order differential equations $\dot{y} = f(t, y)$.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Integrator.step">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator.step">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform a single integration step.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            f: Function callable f(t, y, **kwargs) -&gt; dy/dt</span>
-<span class="sd">            t: Current time</span>
-<span class="sd">            y: Current state vector</span>
-<span class="sd">            dt: Time step info (can be a float for fixed step or tuple for adaptive)</span>
-<span class="sd">            **kwargs: Additional arguments to pass to f</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f : Callable</span>
+<span class="sd">            Derivative function $f(t, y, \dots) \to \dot{y}$.</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Current time $t_n$ (s).</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Current state $y_n$.</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            User-requested time step size $h$ (s).</span>
+<span class="sd">        **kwargs : Any</span>
+<span class="sd">            Additional arguments for $f$.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            y_next: State at t + dt</span>
-<span class="sd">            t_next: Time at t + dt</span>
-<span class="sd">            dt_next: Suggested next time step (for variable step methods), or dt used</span>
+<span class="sd">        tuple[np.ndarray, float, float]</span>
+<span class="sd">            (y_next, t_next, dt_suggested).</span>
+<span class="sd">            - y_next: State at $t_n + dt$.</span>
+<span class="sd">            - t_next: Final time $t_n + dt$ (s).</span>
+<span class="sd">            - dt_suggested: Recommended next step size (s).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="Integrator.integrate">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator.integrate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Integrate over a time span.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">integrate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">t_span</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">y0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integrate the differential equation over a specified time interval.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            f: Function callable f(t, y, **kwargs) -&gt; dy/dt</span>
-<span class="sd">            t_span: Tuple (t0, tf)</span>
-<span class="sd">            y0: Initial state vector</span>
-<span class="sd">            dt: Initial time step</span>
-<span class="sd">            **kwargs: Additional arguments to pass to f</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f : Callable</span>
+<span class="sd">            Derivative function $f(t, y, \dots)$.</span>
+<span class="sd">        t_span : tuple[float, float]</span>
+<span class="sd">            Interval of integration $(t_{start}, t_{final})$ (s).</span>
+<span class="sd">        y0 : np.ndarray</span>
+<span class="sd">            Initial state vector.</span>
+<span class="sd">        dt : float, optional</span>
+<span class="sd">            Initial time step size (s). Default 0.01.</span>
+<span class="sd">        **kwargs : Any</span>
+<span class="sd">            Additional arguments for $f$.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            t_values: Array of time points</span>
-<span class="sd">            y_values: Array of state vectors</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">            (t_values, y_values) for documentation and plotting.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span> <span class="o">=</span> <span class="n">t_span</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">t0</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="n">t_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
         <span class="n">y_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
 
-        <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">tf</span><span class="p">:</span>
-            <span class="c1"># Adjust last step to land exactly on tf</span>
-            <span class="k">if</span> <span class="n">t</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="n">tf</span><span class="p">:</span>
-                <span class="n">dt</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">t</span>
+        <span class="n">curr_dt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
 
-            <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># Integration loop</span>
+        <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">tf</span><span class="p">:</span>
+            <span class="c1"># Adjust step to hit end-time exactly</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">+</span> <span class="n">curr_dt</span> <span class="o">&gt;</span> <span class="n">tf</span><span class="p">:</span>
+                <span class="n">curr_dt</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">t</span>
+
+            <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">curr_dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">curr_dt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
             <span class="n">t_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
             <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>

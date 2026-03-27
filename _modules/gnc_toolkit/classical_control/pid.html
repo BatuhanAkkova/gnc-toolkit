@@ -81,14 +81,29 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
+
+
 <div class="viewcode-block" id="PID">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.pid.PID">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PID</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A generic PID controller with anti-windup logic.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic PID controller with anti-windup.</span>
 
-<span class="sd">    The controller output is calculated as:</span>
-<span class="sd">    u(t) = Kp * e(t) + Ki * integral(e(t)) + Kd * derivative(e(t))</span>
+<span class="sd">    Control Law:</span>
+<span class="sd">    $u(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de(t)}{dt}$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kp : float</span>
+<span class="sd">        Proportional gain.</span>
+<span class="sd">    ki : float</span>
+<span class="sd">        Integral gain.</span>
+<span class="sd">    kd : float</span>
+<span class="sd">        Derivative gain.</span>
+<span class="sd">    output_limits : tuple[float, float] | None, optional</span>
+<span class="sd">        (min, max) saturation limits.</span>
+<span class="sd">    anti_windup_method : str, optional</span>
+<span class="sd">        Method (e.g., &quot;clamping&quot;). Default &quot;clamping&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -98,17 +113,8 @@
         <span class="n">kd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">output_limits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">anti_windup_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;clamping&quot;</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the PID controller.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            kp: Proportional gain</span>
-<span class="sd">            ki: Integral gain</span>
-<span class="sd">            kd: Derivative gain</span>
-<span class="sd">            output_limits: Optional tuple (min, max) for output saturation</span>
-<span class="sd">            anti_windup_method: Method for anti-windup. Currently supports &quot;clamping&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the PID controller instance.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kp</span> <span class="o">=</span> <span class="n">kp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ki</span> <span class="o">=</span> <span class="n">ki</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kd</span> <span class="o">=</span> <span class="n">kd</span>
@@ -121,8 +127,8 @@
 
 <div class="viewcode-block" id="PID.reset">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.pid.PID.reset">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the internal state of the controller.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the internal integrator and error states to zero.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_error</span> <span class="o">=</span> <span class="mf">0.0</span></div>
 
@@ -131,15 +137,19 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.pid.PID.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the PID controller.</span>
+<span class="sd">        Update the PID control calculation for a single time step.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            error: The current error signal (setpoint - measured)</span>
-<span class="sd">            dt: Time step in seconds</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        error : float</span>
+<span class="sd">            The current error signal (setpoint - measured).</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Time step since the last update (s).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Control output</span>
+<span class="sd">        float</span>
+<span class="sd">            The computed control output signal.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
@@ -151,7 +161,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span> <span class="o">+=</span> <span class="n">error</span> <span class="o">*</span> <span class="n">dt</span>
         <span class="n">i_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ki</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span>
 
-        <span class="c1"># Derivative term</span>
+        <span class="c1"># Derivative term using backward difference</span>
         <span class="n">derivative</span> <span class="o">=</span> <span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_error</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span>
         <span class="n">d_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kd</span> <span class="o">*</span> <span class="n">derivative</span>
 
@@ -162,6 +172,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_limits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_limit</span><span class="p">,</span> <span class="n">max_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_limits</span>
 
+            <span class="c1"># Saturation check</span>
             <span class="k">if</span> <span class="n">output</span> <span class="o">&gt;</span> <span class="n">max_limit</span><span class="p">:</span>
                 <span class="n">output_clamped</span> <span class="o">=</span> <span class="n">max_limit</span>
             <span class="k">elif</span> <span class="n">output</span> <span class="o">&lt;</span> <span class="n">min_limit</span><span class="p">:</span>
@@ -169,14 +180,13 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">output_clamped</span> <span class="o">=</span> <span class="n">output</span>
 
-            <span class="c1"># Anti-windup (Clamping)</span>
-            <span class="c1"># If output is saturated and error is driving it further into saturation,</span>
-            <span class="c1"># stop integrating.</span>
+            <span class="c1"># Anti-windup (Clamping method)</span>
+            <span class="c1"># If the output is saturated AND the error has the same sign as the</span>
+            <span class="c1"># control signal (driving it further into saturation), stop integrating.</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">anti_windup_method</span> <span class="o">==</span> <span class="s2">&quot;clamping&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">output</span> <span class="o">!=</span> <span class="n">output_clamped</span><span class="p">:</span>
-                    <span class="c1"># Classic clamping:</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">output</span> <span class="o">&gt;</span> <span class="n">max_limit</span> <span class="ow">and</span> <span class="n">error</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">output</span> <span class="o">&lt;</span> <span class="n">min_limit</span> <span class="ow">and</span> <span class="n">error</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
-                        <span class="c1"># Revert integration</span>
+                        <span class="c1"># Revert the integration step</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">integral_error</span> <span class="o">-=</span> <span class="n">error</span> <span class="o">*</span> <span class="n">dt</span>
 
             <span class="n">output</span> <span class="o">=</span> <span class="n">output_clamped</span>

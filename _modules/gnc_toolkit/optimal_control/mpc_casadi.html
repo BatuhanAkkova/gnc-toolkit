@@ -80,6 +80,8 @@
 <span class="sd">Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">casadi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ca</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -88,44 +90,53 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CasadiNMPC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Production-grade Nonlinear Model Predictive Controller (NMPC) using CasADi.</span>
+<span class="sd">    High-performance Nonlinear Model Predictive Controller (NMPC) using CasADi.</span>
 
-<span class="sd">    Optimizes a finite horizon cost function subject to nonlinear dynamics and constraints.</span>
-<span class="sd">    Uses Multiple Shooting formulation for numerical stability and faster convergence.</span>
+<span class="sd">    Optimizes a finite-horizon cost function subject to nonlinear dynamics and</span>
+<span class="sd">    algebraic constraints using a Multiple Shooting formulation for numerical</span>
+<span class="sd">    stability and parallelism.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nx : int</span>
+<span class="sd">        State dimension.</span>
+<span class="sd">    nu : int</span>
+<span class="sd">        Input dimension.</span>
+<span class="sd">    horizon : int</span>
+<span class="sd">        Prediction horizon N.</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Time step (s).</span>
+<span class="sd">    dynamics_func : Callable[[ca.MX, ca.MX], ca.MX]</span>
+<span class="sd">        System dynamics $f(x, u)$. Returns $x_{next}$ if discrete, else $dx/dt$.</span>
+<span class="sd">    cost_func : Callable[[ca.MX, ca.MX], ca.MX]</span>
+<span class="sd">        Stage cost function $L(x, u)$.</span>
+<span class="sd">    terminal_cost_func : Callable[[ca.MX], ca.MX]</span>
+<span class="sd">        Terminal cost function $V(x)$.</span>
+<span class="sd">    u_min, u_max : float or np.ndarray, optional</span>
+<span class="sd">        Control input constraints.</span>
+<span class="sd">    x_min, x_max : float or np.ndarray, optional</span>
+<span class="sd">        State trajectory constraints.</span>
+<span class="sd">    discrete : bool, optional</span>
+<span class="sd">        If True, the dynamics function is assumed discrete. If False, RK4</span>
+<span class="sd">        integration is performed internally. Default is False.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">nx</span><span class="p">,</span>
-        <span class="n">nu</span><span class="p">,</span>
-        <span class="n">horizon</span><span class="p">,</span>
-        <span class="n">dt</span><span class="p">,</span>
-        <span class="n">dynamics_func</span><span class="p">,</span>
-        <span class="n">cost_func</span><span class="p">,</span>
-        <span class="n">terminal_cost_func</span><span class="p">,</span>
-        <span class="n">u_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">u_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">x_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">x_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">discrete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the Casadi NMPC.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            nx (int): State dimension.</span>
-<span class="sd">            nu (int): Input dimension.</span>
-<span class="sd">            horizon (int): Prediction horizon N.</span>
-<span class="sd">            dt (float): Time step.</span>
-<span class="sd">            dynamics_func (callable): Function f(x, u) -&gt; x_next (if discrete) or dx/dt (if continuous).</span>
-<span class="sd">            cost_func (callable): Function L(x, u) -&gt; scalar cost.</span>
-<span class="sd">            terminal_cost_func (callable): Function V(x) -&gt; scalar terminal cost.</span>
-<span class="sd">            u_min (float/array): Minimum control input.</span>
-<span class="sd">            u_max (float/array): Maximum control input.</span>
-<span class="sd">            x_min (float/array): Minimum state bounds.</span>
-<span class="sd">            x_max (float/array): Maximum state bounds.</span>
-<span class="sd">            discrete (bool): If True, dynamics_func returns x_next. If False, returns dx/dt and RK4 integration is used.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">nu</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dynamics_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">,</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">],</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">],</span>
+        <span class="n">cost_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">,</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">],</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">],</span>
+        <span class="n">terminal_cost_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">],</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">],</span>
+        <span class="n">u_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">u_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">x_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">x_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">discrete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize and formulate the CasADi NLP problem.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nu</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">horizon</span><span class="p">)</span>
@@ -142,8 +153,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_setup_solver</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bound</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">default_val</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to convert bounds to continuous array of correct dimension.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">default_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to convert scalar or array bounds to full-dimension arrays.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">bound</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">default_val</span><span class="p">)</span>
         <span class="n">bound_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
@@ -153,128 +164,101 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bound dimension mismatch. Expected </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bound_arr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">bound_arr</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_rk4_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runge-Kutta 4th order integration step for continuous systems.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rk4_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform a 4th-order Runge-Kutta integration step.&quot;&quot;&quot;</span>
         <span class="n">k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
         <span class="n">k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">k1</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
         <span class="n">k3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">k2</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
         <span class="n">k4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="n">k3</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">k2</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">k3</span> <span class="o">+</span> <span class="n">k4</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_solver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formulate the Multiple Shooting NLP and create solver.&quot;&quot;&quot;</span>
-        <span class="c1"># Symbolic variables</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># State trajectory</span>
-        <span class="n">U</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>  <span class="c1"># Control trajectory</span>
-        <span class="n">X0</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s2">&quot;X0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">)</span>  <span class="c1"># Parameter: Initial state</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_solver</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Formulate the NLP and instantiate the IPOPT solver.&quot;&quot;&quot;</span>
+        <span class="c1"># Symbolic decision variables</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># State variables</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>       <span class="c1"># Control variables</span>
+        <span class="n">X0</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s2">&quot;X0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">)</span>             <span class="c1"># Initial state parameter</span>
 
-        <span class="c1"># Objective and Constraints</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Inequality/Equality constraints</span>
-
-        <span class="c1"># Multiple Shooting Equality Constraints</span>
-        <span class="c1"># X[:,0] = X0</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">X0</span><span class="p">)</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Constraints (Multiple Shooting)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">X0</span><span class="p">)</span>  <span class="c1"># Initial condition constraint</span>
 
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
-            <span class="c1"># Stage cost</span>
-            <span class="n">obj</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">])</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">])</span>
 
-            <span class="c1"># Dynamics propagates X[:,k] -&gt; X_next</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">discrete</span><span class="p">:</span>
-                <span class="n">X_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">X_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rk4_step</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">])</span>
+            <span class="n">x_next_sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rk4_step</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">])</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">discrete</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">])</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_next_sim</span><span class="p">)</span>
 
-            <span class="c1"># Shooting constraint: X[:,k+1] must equal propagated X_next</span>
-            <span class="n">g</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">X_next</span><span class="p">)</span>
+        <span class="n">cost</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">])</span>
 
-        <span class="c1"># Terminal cost</span>
-        <span class="n">obj</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">])</span>
+        <span class="c1"># Formulate decision vector and symbolic NLP</span>
+        <span class="n">v_decision</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">vertcat</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ca</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">g_constraints</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">vertcat</span><span class="p">(</span><span class="o">*</span><span class="n">g</span><span class="p">)</span>
+        <span class="n">nlp</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">v_decision</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">cost</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="n">g_constraints</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">X0</span><span class="p">}</span>
 
-        <span class="c1"># State constraints setup</span>
-        <span class="c1"># For State constraints inside g, we need to enforce bounds on X directly or via g</span>
-        <span class="c1"># For multiple shooting, X is a variable, so we set bounds on X directly in variable bounds.</span>
-        <span class="c1"># So g only contains dynamic equality constraints.</span>
-
-        <span class="c1"># Flatten variables for solver</span>
-        <span class="c1"># vars = [X_0, X_1, ..., X_N, U_0, ..., U_{N-1}]</span>
-        <span class="n">V_vars</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">vertcat</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ca</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">g_vars</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">vertcat</span><span class="p">(</span><span class="o">*</span><span class="n">g</span><span class="p">)</span>
-
-        <span class="c1"># NLP formulation</span>
-        <span class="n">nlp</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">V_vars</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="n">g_vars</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">X0</span><span class="p">}</span>
-
-        <span class="c1"># Solver options</span>
-        <span class="n">opts</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ipopt.print_level&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;print_time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ipopt.tol&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">&quot;ipopt.max_iter&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+        <span class="c1"># Solver configuration (IPOPT)</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ipopt.print_level&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;print_time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;ipopt.tol&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>
+            <span class="s2">&quot;ipopt.max_iter&quot;</span><span class="p">:</span> <span class="mi">150</span>
+        <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">ca</span><span class="o">.</span><span class="n">nlpsol</span><span class="p">(</span><span class="s2">&quot;solver&quot;</span><span class="p">,</span> <span class="s2">&quot;ipopt&quot;</span><span class="p">,</span> <span class="n">nlp</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span>
 
-        <span class="c1"># Setup variable bounds lists</span>
+        <span class="c1"># Build concatenated bound vectors for X and U</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lbx</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ubx</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Bounds on X (States)</span>
-        <span class="c1"># For Multiple shooting, we bound ALL states X_0 to X_N</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lbx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_min</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ubx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_max</span><span class="p">)</span>
-
-        <span class="c1"># Bounds on U (Controls)</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lbx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_min</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ubx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_max</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">lbx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbx</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ubx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ubx</span><span class="p">)</span>
-
-        <span class="c1"># Bounds on g (Dynamics constraints)</span>
-        <span class="c1"># All equal to 0 for shooting constraints</span>
-        <span class="c1"># g contains: X_0 - X0 (nx), X_1 - X_next_0 (nx), ..., X_N - X_next_{N-1} (nx)</span>
-        <span class="c1"># Total size: nx * (N + 1)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lbg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ubg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
 <div class="viewcode-block" id="CasadiNMPC.solve">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.mpc_casadi.CasadiNMPC.solve">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">u_guess</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">u_guess</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Solve the NMPC optimization problem.</span>
+<span class="sd">        Solve the NMPC problem for the given initial state.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            x0 (np.ndarray): Initial state.</span>
-<span class="sd">            u_guess (np.ndarray, optional): Initial guess for control inputs [N, nu].</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x0 : np.ndarray</span>
+<span class="sd">            Current system state (nx,).</span>
+<span class="sd">        u_guess : np.ndarray, optional</span>
+<span class="sd">            Initial guess for control trajectory (N, nu).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.ndarray: Optimal control sequence [N, nu].</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Optimal control trajectory (N, nu).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">x_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-        <span class="c1"># Initial guess for solver variables</span>
-        <span class="c1"># Set X values to x0, U to u_guess or 0</span>
-        <span class="n">x_guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="c1"># Warm start guess</span>
+        <span class="n">x_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">x_init</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">u_guess</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">u_guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">u_guess</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">u_guess</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">:</span>
-                <span class="n">u_guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>
+            <span class="n">u_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">u_guess</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">u_start</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">:</span>
+                <span class="c1"># Resize to match solver expectation if possible, or repeat</span>
+                <span class="n">u_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">u_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">u_guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>
+            <span class="n">u_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>
+        <span class="n">v_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x_start</span><span class="p">,</span> <span class="n">u_start</span><span class="p">])</span>
 
-        <span class="n">v_guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x_guess</span><span class="p">,</span> <span class="n">u_guess</span><span class="p">])</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">(</span>
+            <span class="n">x0</span><span class="o">=</span><span class="n">v_start</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">x_init</span><span class="p">,</span> <span class="n">lbx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lbx</span><span class="p">,</span> <span class="n">ubx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ubx</span><span class="p">,</span> <span class="n">lbg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lbg</span><span class="p">,</span> <span class="n">ubg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ubg</span>
+        <span class="p">)</span>
 
-        <span class="c1"># Call solver</span>
-        <span class="n">sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">(</span><span class="n">x0</span><span class="o">=</span><span class="n">v_guess</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">lbx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lbx</span><span class="p">,</span> <span class="n">ubx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ubx</span><span class="p">,</span> <span class="n">lbg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lbg</span><span class="p">,</span> <span class="n">ubg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ubg</span><span class="p">)</span>
-
-        <span class="c1"># Extract solution</span>
         <span class="n">v_opt</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">full</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-
-        <span class="c1"># State optimal (skip X0 ... X_N)</span>
-        <span class="c1"># States are from index 0 to nx*(N+1)</span>
-        <span class="c1"># Controls are from nx*(N+1) to end</span>
-        <span class="n">u_opt_flat</span> <span class="o">=</span> <span class="n">v_opt</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">:]</span>
-        <span class="n">u_opt</span> <span class="o">=</span> <span class="n">u_opt_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">))</span>
-
-        <span class="k">return</span> <span class="n">u_opt</span></div>
+        <span class="c1"># Extract controls (located after all state variables in decision vector)</span>
+        <span class="n">u_opt_flat</span> <span class="o">=</span> <span class="n">v_opt</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):]</span>
+        <span class="k">return</span> <span class="n">u_opt_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

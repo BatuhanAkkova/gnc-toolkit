@@ -87,90 +87,88 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.moon.Moon">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Moon</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Simplified Lunar Ephemeris Model.</span>
-<span class="sd">    Based on low-precision formulas (e.g., Vallado).</span>
+<span class="sd">    Lunar Ephemeris Model (Vallado 3.5).</span>
+
+<span class="sd">    Provides the Moon&#39;s position vector in the Earth-Centered Inertial (ECI)</span>
+<span class="sd">    frame.</span>
+
+<span class="sd">    Calculation (Fundamental Arguments):</span>
+<span class="sd">    $L$ = Mean longitude, $M&#39;$ = Moon mean anomaly, $M$ = Sun mean anomaly, </span>
+<span class="sd">    $D$ = Mean elongation, $u$ = Mean latitude.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mu_moon</span> <span class="o">=</span> <span class="mf">4902.800066e9</span>  <span class="c1"># m^3/s^2</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize lunar constants.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_moon</span> <span class="o">=</span> <span class="mf">4902.800066e9</span>  <span class="c1"># Lunar gravitational parameter (m^3/s^2)</span>
 
 <div class="viewcode-block" id="Moon.calculate_moon_eci">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.moon.Moon.calculate_moon_eci">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_moon_eci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jd</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_moon_eci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculates Moon vector in ECI frame.</span>
+<span class="sd">        Calculate Moon vector in ECI.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            jd (float): Julian Date</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date (UT1).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.ndarray: Moon position vector in ECI frame [m]</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Moon position vector $[x, y, z]$ (m).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">T</span> <span class="o">=</span> <span class="p">(</span><span class="n">jd</span> <span class="o">-</span> <span class="mf">2451545.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">36525.0</span>  <span class="c1"># Julian centuries since J2000</span>
+        <span class="c1"># 1. Julian centuries since J2000</span>
+        <span class="n">t_cen</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">jd</span><span class="p">)</span> <span class="o">-</span> <span class="mf">2451545.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">36525.0</span>
 
-        <span class="c1"># Mean longitude of the Moon [deg]</span>
-        <span class="n">lam_m</span> <span class="o">=</span> <span class="mf">218.316</span> <span class="o">+</span> <span class="mf">481267.8813</span> <span class="o">*</span> <span class="n">T</span>
+        <span class="c1"># 2. Mean fundamental arguments [deg]</span>
+        <span class="n">lam_m</span> <span class="o">=</span> <span class="mf">218.316</span> <span class="o">+</span> <span class="mf">481267.8813</span> <span class="o">*</span> <span class="n">t_cen</span>  <span class="c1"># Mean longitude</span>
+        <span class="n">m_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">((</span><span class="mf">134.963</span> <span class="o">+</span> <span class="mf">477198.8676</span> <span class="o">*</span> <span class="n">t_cen</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>    <span class="c1"># Moon mean anomaly</span>
+        <span class="n">d_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">((</span><span class="mf">297.850</span> <span class="o">+</span> <span class="mf">445267.1115</span> <span class="o">*</span> <span class="n">t_cen</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>  <span class="c1"># Moon mean elongation</span>
+        <span class="n">u_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">((</span><span class="mf">93.272</span> <span class="o">+</span> <span class="mf">483202.0175</span> <span class="o">*</span> <span class="n">t_cen</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>   <span class="c1"># Moon mean latitude</span>
 
-        <span class="c1"># Mean anomaly of the Moon [deg]</span>
-        <span class="n">M_m</span> <span class="o">=</span> <span class="mf">134.963</span> <span class="o">+</span> <span class="mf">477198.8676</span> <span class="o">*</span> <span class="n">T</span>
-
-        <span class="c1"># Mean anomaly of the Sun [deg]</span>
-        <span class="n">M_s</span> <span class="o">=</span> <span class="mf">357.529</span> <span class="o">+</span> <span class="mf">35999.0503</span> <span class="o">*</span> <span class="n">T</span>
-
-        <span class="c1"># Mean elongation of the Moon [deg]</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="mf">297.850</span> <span class="o">+</span> <span class="mf">445267.1115</span> <span class="o">*</span> <span class="n">T</span>
-
-        <span class="c1"># Mean latitude of the Moon [deg]</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="mf">93.272</span> <span class="o">+</span> <span class="mf">483202.0175</span> <span class="o">*</span> <span class="n">T</span>
-
-        <span class="c1"># Convert to radians</span>
-        <span class="n">lam_m_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lam_m</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>
-        <span class="n">M_m_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">M_m</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>
-        <span class="n">M_s_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">M_s</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>
-        <span class="n">D_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">D</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>
-        <span class="n">u_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">u</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>
-
-        <span class="c1"># Simplified series (main terms)</span>
+        <span class="c1"># 4. Longitude series (fundamental terms)</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">lam_m</span>
-            <span class="o">+</span> <span class="mf">6.289</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">M_m_rad</span><span class="p">)</span>
-            <span class="o">-</span> <span class="mf">1.274</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">M_m_rad</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.658</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">D_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.214</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M_m_rad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">6.289</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">m_m</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">1.274</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">m_m</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d_rad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.658</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d_rad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.214</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">m_m</span><span class="p">)</span>
         <span class="p">)</span>
+        <span class="c1"># Latitude series</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">5.128</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.280</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u_rad</span> <span class="o">+</span> <span class="n">M_m_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.277</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">M_m_rad</span> <span class="o">-</span> <span class="n">u_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.173</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u_rad</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D_rad</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">parallax</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="mf">0.9508</span>
-            <span class="o">+</span> <span class="mf">0.0518</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">M_m_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.0095</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">M_m_rad</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.0078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">D_rad</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.0028</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M_m_rad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.280</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u_rad</span> <span class="o">+</span> <span class="n">m_m</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.277</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">m_m</span> <span class="o">-</span> <span class="n">u_rad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.173</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u_rad</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d_rad</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="c1"># Distance [km]</span>
-        <span class="n">r_mag</span> <span class="o">=</span> <span class="mf">6378.137</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">parallax</span><span class="p">))</span>
+        <span class="c1"># 5. Parallax (determines distance)</span>
+        <span class="n">hp</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.9508</span>
+            <span class="o">+</span> <span class="mf">0.0518</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">m_m</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.0095</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">m_m</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d_rad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.0078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d_rad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.0028</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">m_m</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 6. Radial distance in km (Mean Earth Radius R_e / sin(hp))</span>
+        <span class="n">r_mag_km</span> <span class="o">=</span> <span class="mf">6378.137</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">hp</span><span class="p">))</span>
 
         <span class="n">lon_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lon</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>
         <span class="n">lat_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat</span> <span class="o">%</span> <span class="mi">360</span><span class="p">)</span>
 
-        <span class="c1"># Convert Ecliptic to Equatorial (Obliquity epsilon ~ 23.439 deg)</span>
-        <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">23.439291</span><span class="p">)</span>
+        <span class="c1"># 7. Convert Ecliptic to ECI (Obliquity eps ~ 23.439 deg)</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">23.439291</span><span class="p">)</span>  <span class="c1"># Obliquity</span>
 
-        <span class="n">x</span> <span class="o">=</span> <span class="n">r_mag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lon_rad</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">r_mag</span> <span class="o">*</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lon_rad</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">r_mag</span> <span class="o">*</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lon_rad</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">r_mag_km</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lon_rad</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">r_mag_km</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lon_rad</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">))</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">r_mag_km</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lon_rad</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1000.0</span>  <span class="c1"># Convert to meters</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1000.0</span>  <span class="c1"># Meters</span></div>
 </div>
 
 </pre></div>

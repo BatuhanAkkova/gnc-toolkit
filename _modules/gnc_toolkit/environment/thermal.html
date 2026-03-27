@@ -87,51 +87,92 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ThermalEnvironment</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Models for external thermal fluxes: Solar, Albedo, and Earth IR.</span>
+<span class="sd">    Spacecraft External Thermal Environment Models.</span>
+
+<span class="sd">    Calculates heat fluxes from direct solar radiation, planetary albedo, and </span>
+<span class="sd">    outgoing longwave radiation (Earth IR).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    albedo_coeff : float, optional</span>
+<span class="sd">        Planetary mean spherical albedo [0, 1]. Default 0.3.</span>
+<span class="sd">    earth_ir : float, optional</span>
+<span class="sd">        Mean outgoing longwave radiation (W/m^2). Default 230.0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">albedo_coeff</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">earth_ir</span><span class="o">=</span><span class="mf">230.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            albedo_coeff (float): Earth&#39;s mean albedo coefficient [0-1]</span>
-<span class="sd">            earth_ir (float): Earth&#39;s mean IR flux [W/m^2]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">albedo_coeff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">earth_ir</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">230.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize thermal constants.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">albedo_coeff</span> <span class="o">=</span> <span class="n">albedo_coeff</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">earth_ir</span> <span class="o">=</span> <span class="n">earth_ir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solar_constant</span> <span class="o">=</span> <span class="mf">1361.0</span>  <span class="c1"># W/m^2 at 1 AU</span>
 
 <div class="viewcode-block" id="ThermalEnvironment.get_solar_flux">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment.get_solar_flux">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_solar_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance_au</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Direct solar flux at distance [W/m^2].&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solar_constant</span> <span class="o">/</span> <span class="p">(</span><span class="n">distance_au</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_solar_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance_au</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate direct solar flux.</span>
+
+<span class="sd">        Equation: $F_{sun} = S / d^2$</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        distance_au : float, optional</span>
+<span class="sd">            Sun-spacecraft distance (AU). Default 1.0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Solar flux ($W/m^2$).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solar_constant</span> <span class="o">/</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">distance_au</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ThermalEnvironment.get_albedo_flux">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment.get_albedo_flux">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_albedo_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_sat</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_albedo_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_sat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate albedo flux on a nadir-facing surface.</span>
-<span class="sd">        Simplified model based on angle between Sat-Sun and Nadir.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">r_sat_norm</span> <span class="o">=</span> <span class="n">r_sat</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_sat</span><span class="p">)</span>
-        <span class="n">r_sun_norm</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_sun</span><span class="p">)</span>
+<span class="sd">        Calculate planet-reflected solar flux (Albedo).</span>
 
-        <span class="n">cos_zeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_sat_norm</span><span class="p">,</span> <span class="n">r_sun_norm</span><span class="p">)</span>
+<span class="sd">        Uses a Lambertian reflection model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_sat : np.ndarray</span>
+<span class="sd">            Satellite ECI position (m).</span>
+<span class="sd">        r_sun : np.ndarray</span>
+<span class="sd">            Sun ECI position (m).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Albedo flux on a nadir-facing surface ($W/m^2$).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_sat</span><span class="p">)</span>
+        <span class="n">rn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_sun</span><span class="p">)</span>
+
+        <span class="n">r_sat_u</span> <span class="o">=</span> <span class="n">rs</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+        <span class="n">r_sun_u</span> <span class="o">=</span> <span class="n">rn</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rn</span><span class="p">)</span>
+
+        <span class="n">cos_zeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_sat_u</span><span class="p">,</span> <span class="n">r_sun_u</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">cos_zeta</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">0.0</span>  <span class="c1"># Night side</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
 
-        <span class="c1"># Simplified Lambertian reflection model</span>
-        <span class="n">flux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solar_constant</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">albedo_coeff</span> <span class="o">*</span> <span class="n">cos_zeta</span>
-        <span class="k">return</span> <span class="n">flux</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solar_constant</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">albedo_coeff</span> <span class="o">*</span> <span class="n">cos_zeta</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ThermalEnvironment.get_earth_ir_flux">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.thermal.ThermalEnvironment.get_earth_ir_flux">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_earth_ir_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Earth IR flux [W/m^2].&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">earth_ir</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_earth_ir_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get standard Earth IR flux.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Planetary IR flux ($W/m^2$).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">earth_ir</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

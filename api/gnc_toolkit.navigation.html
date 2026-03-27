@@ -120,19 +120,35 @@
 <p>Navigation using Line-of-Sight (LOS) measurements (unit vectors).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.angle_only_nav.</span></span><span class="sig-name descname"><span class="pre">AngleOnlyNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.angle_only_nav.</span></span><span class="sig-name descname"><span class="pre">AngleOnlyNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
-<p>Navigation using Line-of-Sight (LOS) measurements (unit vectors).
-Inherits orbital dynamics from OrbitDeterminationEKF.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector">
-<span class="sig-name descname"><span class="pre">update_unit_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos_eci</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation.update_unit_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector" title="Link to this definition"></a></dt>
-<dd><p>Update state using a unit vector measurement to a target.</p>
+<p>Angles-Only Navigation (AON) using Line-of-Sight (LOS) unit vectors.</p>
+<p>Estimates the spacecraft state by tracking unit vectors to known celestial
+or terrestrial targets. Inherits dynamics from <cite>OrbitDeterminationEKF</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_meas</strong> (<em>np.ndarray</em>) – Measured unit vector [ux, uy, uz] in ECI.</p></li>
-<li><p><strong>target_pos_eci</strong> (<em>np.ndarray</em>) – Position of the target being tracked in ECI [m].</p></li>
+<li><p><strong>x_initial</strong> (<em>np.ndarray</em>) – Initial 6D state vector $[mathbf{r}, mathbf{v}]^T$ (m, m/s).</p></li>
+<li><p><strong>p_initial</strong> (<em>np.ndarray</em>) – Initial estimation error covariance ($6times 6$).</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance ($6times 6$).</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance for the unit vector ($3times 3$).</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector">
+<span class="sig-name descname"><span class="pre">update_unit_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation.update_unit_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector" title="Link to this definition"></a></dt>
+<dd><p>Update the state estimate using a measured LOS unit vector $mathbf{u}$.</p>
+<p>Measurement Model:
+$mathbf{z} = frac{mathbf{r}_t - mathbf{r}}{rho} + nu$
+Jacobian:
+$mathbf{H}_r = -frac{1}{rho} (mathbf{I} - mathbf{u}mathbf{u}^T)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_meas</strong> (<em>np.ndarray</em>) – Measured unit vector in ECI frame.</p></li>
+<li><p><strong>target_pos_eci</strong> (<em>np.ndarray</em>) – Known coordinates of the target (m).</p></li>
 </ul>
 </dd>
 </dl>
@@ -146,13 +162,40 @@ Inherits orbital dynamics from OrbitDeterminationEKF.</p>
 <p>Differential Correction using Batch Least Squares for Orbit Determination.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.batch_ls.</span></span><span class="sig-name descname"><span class="pre">BatchLeastSquaresOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_guess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/batch_ls.html#BatchLeastSquaresOD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.batch_ls.</span></span><span class="sig-name descname"><span class="pre">BatchLeastSquaresOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_guess</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/batch_ls.html#BatchLeastSquaresOD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Differential Correction using Batch Least Squares for Orbit Determination.</p>
+<p>Differential Correction via Batch Least Squares for Orbit Determination.</p>
+<p>Iteratively refines the spacecraft state by minimizing weighted residuals
+over a batch of observations.
+Normal Equations: $(mathbf{H}^T mathbf{W} mathbf{H}) Delta mathbf{x} = mathbf{H}^T mathbf{W} mathbf{b}$.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_guess</strong> (<em>np.ndarray</em>) – Initial 6D state guess $[mathbf{r}, mathbf{v}]^T$ (m, m/s).</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$). Default is Earth.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD.solve">
-<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/batch_ls.html#BatchLeastSquaresOD.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD.solve" title="Link to this definition"></a></dt>
-<dd><p>Solve OD using Batch Least Squares.</p>
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/batch_ls.html#BatchLeastSquaresOD.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.batch_ls.BatchLeastSquaresOD.solve" title="Link to this definition"></a></dt>
+<dd><p>Iteratively solve the Batch LS problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>observations</strong> (<em>np.ndarray</em>) – Position observations $[r_x, r_y, r_z]$ (N, 3) (m).</p></li>
+<li><p><strong>times</strong> (<em>np.ndarray</em>) – Observation timestamps (N,) (s).</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum iterations. Default 15.</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Convergence tolerance. Default 1e-6.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimated state vector at $t=0$ (6,).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -163,20 +206,23 @@ Inherits orbital dynamics from OrbitDeterminationEKF.</p>
 <p>Navigation using GNSS (GPS) position and velocity measurements.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.gps_nav.GPSNavigation">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.gps_nav.</span></span><span class="sig-name descname"><span class="pre">GPSNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.gps_nav.</span></span><span class="sig-name descname"><span class="pre">GPSNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
-<p>Navigation using GNSS (GPS) measurements.
-Processes position and velocity updates.</p>
+<p>GNSS-based Navigation using absolute Position and Velocity measurements.</p>
+<p>Processes PVT (Position, Velocity, Time) solutions from a receiver
+to correct the integrated orbital state. Inherits dynamics from
+<cite>OrbitDeterminationEKF</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps">
-<span class="sig-name descname"><span class="pre">update_gps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_gps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation.update_gps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps" title="Link to this definition"></a></dt>
-<dd><p>Update state using GPS measurements.</p>
+<span class="sig-name descname"><span class="pre">update_gps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gps_cov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation.update_gps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps" title="Link to this definition"></a></dt>
+<dd><p>Update state estimate using GNSS Cartesian measurements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_meas</strong> (<em>np.ndarray</em>) – Measured position [x, y, z] in ECI [m].</p></li>
-<li><p><strong>v_meas</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measured velocity [vx, vy, vz] in ECI [m/s].</p></li>
-<li><p><strong>R_gps</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Custom measurement noise covariance.</p></li>
+<li><p><strong>r_meas</strong> (<em>np.ndarray</em>) – Measured ECI position (m).</p></li>
+<li><p><strong>v_meas</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measured ECI velocity (m/s).</p></li>
+<li><p><strong>gps_cov</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Direct measurement covariance matrix.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional parameters (e.g., R_gps).</p></li>
 </ul>
 </dd>
 </dl>
@@ -190,117 +236,127 @@ Processes position and velocity updates.</p>
 <p>Initial Orbit Determination (IOD) methods (Gibbs, Gauss, Laplace).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.gauss_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">gauss_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gauss_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.gauss_iod" title="Link to this definition"></a></dt>
-<dd><p>Gauss method for Initial Orbit Determination (3 line-of-sight vectors).</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">gauss_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gauss_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.gauss_iod" title="Link to this definition"></a></dt>
+<dd><p>Angles-only IOD via Gauss method with iterative refinement.</p>
+<p>Solves for slant ranges using an 8th-order polynomial and performs
+iterative refinement using Herrick-Gibbs for stability.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho_hat1</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
-<li><p><strong>rho_hat2</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
-<li><p><strong>rho_hat3</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
-<li><p><strong>t1</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
-<li><p><strong>t2</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
-<li><p><strong>t3</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
-<li><p><strong>R1</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
-<li><p><strong>R2</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
-<li><p><strong>R3</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>rho_hat1</strong> (<em>np.ndarray</em>) – Line-of-Sight unit vectors in ECI.</p></li>
+<li><p><strong>rho_hat2</strong> (<em>np.ndarray</em>) – Line-of-Sight unit vectors in ECI.</p></li>
+<li><p><strong>rho_hat3</strong> (<em>np.ndarray</em>) – Line-of-Sight unit vectors in ECI.</p></li>
+<li><p><strong>t1</strong> (<em>float</em>) – Observation times (s).</p></li>
+<li><p><strong>t2</strong> (<em>float</em>) – Observation times (s).</p></li>
+<li><p><strong>t3</strong> (<em>float</em>) – Observation times (s).</p></li>
+<li><p><strong>r_obs1</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI (m).</p></li>
+<li><p><strong>r_obs2</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI (m).</p></li>
+<li><p><strong>r_obs3</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI (m).</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>ECI State vector $[r, v]$ at $t_2$ (m, m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[rx, ry, rz, vx, vy, vz] State at t2 [m, m/s]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.gibbs_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.gibbs_iod" title="Link to this definition"></a></dt>
-<dd><p>Gibbs method for Initial Orbit Determination (3 position vectors).
-Used for long-arc observations (separation &gt; 5 degrees).</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Initial Orbit Determination (IOD) via Gibbs method.</p>
+<p>Suitable for three position vectors with angular separation &gt; 5 degrees.
+Formula: $mathbf{v}_2 = sqrt{frac{mu}{N D}} left( frac{mathbf{D} times mathbf{r}_2}{r_2} + mathbf{S} right)$.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
-<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
-<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI position vectors (m) at three distinct times.</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI position vectors (m) at three distinct times.</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – ECI position vectors (m) at three distinct times.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$). Default is Earth.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>v2 (np.ndarray)</strong></p>
+<dd class="field-even"><p>Velocity vector at the second observation time $mathbf{v}_2$ (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Velocity vector at time t2 [m/s]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.herrick_gibbs_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">herrick_gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#herrick_gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.herrick_gibbs_iod" title="Link to this definition"></a></dt>
-<dd><p>Herrick-Gibbs method for IOD (3 position vectors, short arc).
-Used when separation between vectors is small (&lt; 5-10 degrees).</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">herrick_gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt21</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt32</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#herrick_gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.herrick_gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Initial Orbit Determination via Herrick-Gibbs method.</p>
+<p>Best for short-arc observations (angular separation &lt; 5 degrees).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
-<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
-<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
-<li><p><strong>dt21</strong> (<em>float</em>) – t2 - t1</p></li>
-<li><p><strong>dt32</strong> (<em>float</em>) – t3 - t2</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI position vectors (m).</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI position vectors (m).</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – ECI position vectors (m).</p></li>
+<li><p><strong>dt21</strong> (<em>float</em>) – Time interval $t_2 - t_1$ (s).</p></li>
+<li><p><strong>dt32</strong> (<em>float</em>) – Time interval $t_3 - t_2$ (s).</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>v2 (np.ndarray)</strong></p>
+<dd class="field-even"><p>Velocity vector $mathbf{v}_2$ (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Velocity at t2</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.laplace_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">laplace_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.laplace_iod" title="Link to this definition"></a></dt>
-<dd><p>Laplace method for IOD using LOS derivatives at a single epoch.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">laplace_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_ddot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.laplace_iod" title="Link to this definition"></a></dt>
+<dd><p>Orbit determination from line-of-sight derivatives (Laplace method).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho_hat</strong> (<em>np.ndarray</em>) – Unit LOS vector</p></li>
-<li><p><strong>rho_hat_dot</strong> (<em>np.ndarray</em>) – First derivative of unit LOS</p></li>
-<li><p><strong>rho_hat_ddot</strong> (<em>np.ndarray</em>) – Second derivative of unit LOS</p></li>
-<li><p><strong>R</strong> (<em>np.ndarray</em>) – Observer position vector [m]</p></li>
-<li><p><strong>R_dot</strong> (<em>np.ndarray</em>) – Observer velocity vector [m/s]</p></li>
-<li><p><strong>R_ddot</strong> (<em>np.ndarray</em>) – Observer acceleration vector [m/s^2]</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>rho_hat</strong> (<em>np.ndarray</em>) – LOS unit vector and its first/second time derivatives.</p></li>
+<li><p><strong>rho_dot</strong> (<em>np.ndarray</em>) – LOS unit vector and its first/second time derivatives.</p></li>
+<li><p><strong>rho_ddot</strong> (<em>np.ndarray</em>) – LOS unit vector and its first/second time derivatives.</p></li>
+<li><p><strong>r_obs</strong> (<em>np.ndarray</em>) – Observer Cartesian state and acceleration at epoch.</p></li>
+<li><p><strong>v_obs</strong> (<em>np.ndarray</em>) – Observer Cartesian state and acceleration at epoch.</p></li>
+<li><p><strong>a_obs</strong> (<em>np.ndarray</em>) – Observer Cartesian state and acceleration at epoch.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>ECI State vector $[r, v]$ at epoch.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[rx, ry, rz, vx, vy, vz] State vector in ECI [m, m/s]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.iod.laplace_iod_from_observations">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">laplace_iod_from_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod_from_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.laplace_iod_from_observations" title="Link to this definition"></a></dt>
-<dd><p>Helper to perform Laplace IOD from three LOS observations.
-Estimates derivatives using Lagrange interpolation at the middle epoch.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.iod.</span></span><span class="sig-name descname"><span class="pre">laplace_iod_from_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod_from_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.iod.laplace_iod_from_observations" title="Link to this definition"></a></dt>
+<dd><p>Perform Laplace IOD from three standard LOS observations.</p>
+<p>Estimates derivatives using Lagrange interpolation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho_hats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 LOS unit vectors</p></li>
-<li><p><strong>Rs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 Observer position vectors [m]</p></li>
-<li><p><strong>times</strong> (<em>list</em><em> of </em><em>float</em>) – 3 observation timestamps [s]</p></li>
+<li><p><strong>rho_hats</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Three LOS unit vectors.</p></li>
+<li><p><strong>rs_obs</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Three observer position vectors.</p></li>
+<li><p><strong>times</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – Three observation timestamps.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State vector at $t_2$ (6,) (m, m/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -311,31 +367,57 @@ Estimates derivatives using Lagrange interpolation at the middle epoch.</p>
 <p>Extended Kalman Filter for Orbit Determination (OD-EKF).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.orbit_determination.</span></span><span class="sig-name descname"><span class="pre">OrbitDeterminationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.orbit_determination.</span></span><span class="sig-name descname"><span class="pre">OrbitDeterminationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Extended Kalman Filter for Orbit Determination (OD-EKF).
-Estimates position and velocity in ECI frame.</p>
+<p>Extended Kalman Filter for Orbit Determination (OD-EKF).</p>
+<p>Estimates the 6D Cartesian state $mathbf{x} = [mathbf{r}, mathbf{v}]^T$
+in the ECI frame. Supports multi-model dynamics (Two-body, J2) and
+RK4-based state prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state vector $[r_x, r_y, r_z, v_x, v_y, v_z]$ (m, m/s).</p></li>
+<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Initial $6times 6$ estimation error covariance matrix.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance matrix $mathbf{Q} in mathbb{R}^{6times 6}$.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance matrix $mathbf{R} in mathbb{R}^{3times 3}$.</p></li>
+<li><p><strong>use_j2</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include J2 perturbations. Default is True.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
+<li><p><strong>re</strong> (<em>float</em><em>, </em><em>optional</em>) – Earth radius (m).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.covariance">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">covariance</span></span><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.covariance" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">covariance</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.covariance" title="Link to this definition"></a></dt>
+<dd><p>Estimation error covariance matrix $mathbf{P}$.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Perform EKF prediction step.</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform EKF prediction step ($x^-, P^-$).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Step size (s).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.state">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.state" title="Link to this definition"></a></dt>
+<dd><p>Estimated orbit state vector $[r, v]^T$.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.update" title="Link to this definition"></a></dt>
-<dd><p>Perform EKF update step with position measurement.
-z_pos: [x, y, z] measurement in ECI</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update state estimate using position measurement $mathbf{z} = mathbf{r} + nu$.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z_pos</strong> (<em>np.ndarray</em>) – ECI Position measurement (m).</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -346,25 +428,48 @@ z_pos: [x, y, z] measurement in ECI</p>
 <p>EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.relative_nav.</span></span><span class="sig-name descname"><span class="pre">RelativeNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.relative_nav.</span></span><span class="sig-name descname"><span class="pre">RelativeNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_motion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.
-Estimates relative position and velocity [x, y, z, vx, vy, vz].</p>
+<p>Relative Navigation EKF via Clohessy-Wiltshire (Hill) Dynamics.</p>
+<p>Estimates the 6D relative state $delta mathbf{x} = [delta mathbf{r}, delta mathbf{v}]^T$
+in the Hill (RSW) frame. Assumes a circular target orbit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial relative state $[x, y, z, dot{x}, dot{y}, dot{z}]^T$ (m, m/s).</p></li>
+<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Initial estimation covariance ($6times 6$).</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance ($6times 6$).</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance ($3times 3$).</p></li>
+<li><p><strong>mean_motion</strong> (<em>float</em>) – Target mean motion $n = sqrt{mu/a^3}$ (rad/s).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict relative state using CW equations.</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict relative state using the analytical CW transition matrix $Phi(t)$.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Predict step (s).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.state">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd><p>Estimated relative state $[delta mathbf{r}, delta mathbf{v}]^T$.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_rel_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.update" title="Link to this definition"></a></dt>
-<dd><p>Update relative state using relative position measurement.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_rel_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.relative_nav.RelativeNavigationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update estimate using a 3D relative position measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z_rel_pos</strong> (<em>np.ndarray</em>) – Relative position vector in Hill frame (m).</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -375,20 +480,31 @@ Estimates relative position and velocity [x, y, z, vx, vy, vz].</p>
 <p>Lander/Rover surface navigation EKF using landmark tracking.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.surface_nav.</span></span><span class="sig-name descname"><span class="pre">SurfaceNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.surface_nav.</span></span><span class="sig-name descname"><span class="pre">SurfaceNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Basic SLAM-like Surface Navigation EKF.
-Estimates lander/rover position and velocity [x, y, z, vx, vy, vz]
-using measurements to known landmarks.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict state using constant velocity or constant acceleration model.</p>
+<p>Surface Navigation EKF for Landers or Rovers.</p>
+<p>Estimates 6D state $mathbf{x} = [mathbf{r}, mathbf{v}]^T$ in a local
+surface-fixed frame using constant acceleration kinematics and landmark
+observations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dt</strong> (<em>float</em>) – Time step [s].</p></li>
-<li><p><strong>accel</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Constant acceleration input [m/s^2].</p></li>
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state $[x, y, z, v_x, v_y, v_z]^T$ (m, m/s).</p></li>
+<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Initial estimation error covariance ($6times 6$).</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance ($6times 6$).</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance for relative landmark tracking ($3times 3$).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform kinematic state prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation step (s).</p></li>
+<li><p><strong>accel</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – IMU acceleration or commanded thrust (m/s^2).</p></li>
 </ul>
 </dd>
 </dl>
@@ -396,18 +512,20 @@ using measurements to known landmarks.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.state">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd><p>Estimated 6D rover state vector.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.update_landmark">
-<span class="sig-name descname"><span class="pre">update_landmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">landmark_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.update_landmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.update_landmark" title="Link to this definition"></a></dt>
-<dd><p>Update state using observed relative vector to a known landmark.</p>
+<span class="sig-name descname"><span class="pre">update_landmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">landmark_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.update_landmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.surface_nav.SurfaceNavigationEKF.update_landmark" title="Link to this definition"></a></dt>
+<dd><p>Update state using an observed relative vector to a known landmark.</p>
+<p>Measurement model: $mathbf{z} = mathbf{r}_{land} - mathbf{r}_{Rover} + nu$.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>z_obs</strong> (<em>np.ndarray</em>) – Measured relative vector [dx, dy, dz] in local frame.</p></li>
-<li><p><strong>landmark_pos</strong> (<em>np.ndarray</em>) – Known position of the landmark in local frame.</p></li>
+<li><p><strong>z_obs</strong> (<em>np.ndarray</em>) – Measured relative vector (m).</p></li>
+<li><p><strong>landmark_pos</strong> (<em>np.ndarray</em>) – Known coordinates of the landmark (m).</p></li>
 </ul>
 </dd>
 </dl>
@@ -421,15 +539,32 @@ using measurements to known landmarks.</p>
 <p>Terrain-Relative Navigation (TRN) feature matching and localization update.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.terrain_nav.</span></span><span class="sig-name descname"><span class="pre">FeatureMatchingTRN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.terrain_nav.</span></span><span class="sig-name descname"><span class="pre">FeatureMatchingTRN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Terrain-Relative Navigation (TRN) Feature Matcher.</p>
+<p>Correlates observed landmarks (from sensors like LIDAR or cameras) with
+a known map database using efficient nearest-neighbor search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>map_database</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – List of absolute landmark coordinates (m).</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features">
-<span class="sig-name descname"><span class="pre">match_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_features</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN.match_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features" title="Link to this definition"></a></dt>
-<dd><p>Matches observed camera/LIDAR features to the map.</p>
+<span class="sig-name descname"><span class="pre">match_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN.match_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.FeatureMatchingTRN.match_features" title="Link to this definition"></a></dt>
+<dd><p>Match observed features to the global map.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>observed_features</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Landmarks relative to the current vehicle state (m).</p></li>
+<li><p><strong>dist_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Max distance for correlation (m). Default is 10.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pairs of (Map Position, Observed Position).</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of (map_pos, observed_pos)</p>
+<dd class="field-odd"><p>List[Tuple[np.ndarray, np.ndarray]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -438,22 +573,25 @@ using measurements to known landmarks.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.terrain_nav.map_relative_localization_update">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.terrain_nav.</span></span><span class="sig-name descname"><span class="pre">map_relative_localization_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#map_relative_localization_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.map_relative_localization_update" title="Link to this definition"></a></dt>
-<dd><p>EKF measurement update for TRN.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.terrain_nav.</span></span><span class="sig-name descname"><span class="pre">map_relative_localization_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_cov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#map_relative_localization_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.terrain_nav.map_relative_localization_update" title="Link to this definition"></a></dt>
+<dd><p>EKF Measurement Update using TRN feature matches.</p>
+<p>Corrects the global state estimate using residuals between map-known
+landmarks and their estimated positions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>np.ndarray</em>) – State estimate [pos, vel].</p></li>
-<li><p><strong>P</strong> (<em>np.ndarray</em>) – Covariance.</p></li>
-<li><p><strong>matches</strong> (<em>list</em>) – (map_pos, observed_pos) pairs.</p></li>
-<li><p><strong>R</strong> (<em>np.ndarray</em>) – Measurement noise covariance.</p></li>
+<li><p><strong>x_state</strong> (<em>np.ndarray</em>) – Current filter state $[mathbf{r}, …]^T$.</p></li>
+<li><p><strong>p_cov</strong> (<em>np.ndarray</em>) – Estimation covariance matrix.</p></li>
+<li><p><strong>matches</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em>) – Landmark correspondences from <cite>match_features</cite>.</p></li>
+<li><p><strong>r_noise</strong> (<em>np.ndarray</em>) – Sensor noise covariance ($3times 3$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>tuple</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(updated_x, updated_P)</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>updated_x</strong> (<em>np.ndarray</em>) – Updated state estimate.</p></li>
+<li><p><strong>updated_p</strong> (<em>np.ndarray</em>) – Updated covariance matrix.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -463,19 +601,35 @@ using measurements to known landmarks.</p>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gnc_toolkit.navigation" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.AngleOnlyNavigation">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">AngleOnlyNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.AngleOnlyNavigation" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">AngleOnlyNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.AngleOnlyNavigation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
-<p>Navigation using Line-of-Sight (LOS) measurements (unit vectors).
-Inherits orbital dynamics from OrbitDeterminationEKF.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector">
-<span class="sig-name descname"><span class="pre">update_unit_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos_eci</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation.update_unit_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector" title="Link to this definition"></a></dt>
-<dd><p>Update state using a unit vector measurement to a target.</p>
+<p>Angles-Only Navigation (AON) using Line-of-Sight (LOS) unit vectors.</p>
+<p>Estimates the spacecraft state by tracking unit vectors to known celestial
+or terrestrial targets. Inherits dynamics from <cite>OrbitDeterminationEKF</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_meas</strong> (<em>np.ndarray</em>) – Measured unit vector [ux, uy, uz] in ECI.</p></li>
-<li><p><strong>target_pos_eci</strong> (<em>np.ndarray</em>) – Position of the target being tracked in ECI [m].</p></li>
+<li><p><strong>x_initial</strong> (<em>np.ndarray</em>) – Initial 6D state vector $[mathbf{r}, mathbf{v}]^T$ (m, m/s).</p></li>
+<li><p><strong>p_initial</strong> (<em>np.ndarray</em>) – Initial estimation error covariance ($6times 6$).</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance ($6times 6$).</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance for the unit vector ($3times 3$).</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector">
+<span class="sig-name descname"><span class="pre">update_unit_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/angle_only_nav.html#AngleOnlyNavigation.update_unit_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.AngleOnlyNavigation.update_unit_vector" title="Link to this definition"></a></dt>
+<dd><p>Update the state estimate using a measured LOS unit vector $mathbf{u}$.</p>
+<p>Measurement Model:
+$mathbf{z} = frac{mathbf{r}_t - mathbf{r}}{rho} + nu$
+Jacobian:
+$mathbf{H}_r = -frac{1}{rho} (mathbf{I} - mathbf{u}mathbf{u}^T)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_meas</strong> (<em>np.ndarray</em>) – Measured unit vector in ECI frame.</p></li>
+<li><p><strong>target_pos_eci</strong> (<em>np.ndarray</em>) – Known coordinates of the target (m).</p></li>
 </ul>
 </dd>
 </dl>
@@ -485,15 +639,32 @@ Inherits orbital dynamics from OrbitDeterminationEKF.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.FeatureMatchingTRN">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">FeatureMatchingTRN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.FeatureMatchingTRN" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">FeatureMatchingTRN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.FeatureMatchingTRN" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Terrain-Relative Navigation (TRN) Feature Matcher.</p>
+<p>Correlates observed landmarks (from sensors like LIDAR or cameras) with
+a known map database using efficient nearest-neighbor search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>map_database</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – List of absolute landmark coordinates (m).</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.FeatureMatchingTRN.match_features">
-<span class="sig-name descname"><span class="pre">match_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_features</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN.match_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.FeatureMatchingTRN.match_features" title="Link to this definition"></a></dt>
-<dd><p>Matches observed camera/LIDAR features to the map.</p>
+<span class="sig-name descname"><span class="pre">match_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#FeatureMatchingTRN.match_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.FeatureMatchingTRN.match_features" title="Link to this definition"></a></dt>
+<dd><p>Match observed features to the global map.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>observed_features</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Landmarks relative to the current vehicle state (m).</p></li>
+<li><p><strong>dist_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Max distance for correlation (m). Default is 10.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pairs of (Map Position, Observed Position).</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of (map_pos, observed_pos)</p>
+<dd class="field-odd"><p>List[Tuple[np.ndarray, np.ndarray]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -502,20 +673,23 @@ Inherits orbital dynamics from OrbitDeterminationEKF.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.GPSNavigation">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">GPSNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.GPSNavigation" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">GPSNavigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.GPSNavigation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF" title="gnc_toolkit.navigation.orbit_determination.OrbitDeterminationEKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrbitDeterminationEKF</span></code></a></p>
-<p>Navigation using GNSS (GPS) measurements.
-Processes position and velocity updates.</p>
+<p>GNSS-based Navigation using absolute Position and Velocity measurements.</p>
+<p>Processes PVT (Position, Velocity, Time) solutions from a receiver
+to correct the integrated orbital state. Inherits dynamics from
+<cite>OrbitDeterminationEKF</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.GPSNavigation.update_gps">
-<span class="sig-name descname"><span class="pre">update_gps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_gps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation.update_gps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.GPSNavigation.update_gps" title="Link to this definition"></a></dt>
-<dd><p>Update state using GPS measurements.</p>
+<span class="sig-name descname"><span class="pre">update_gps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gps_cov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/gps_nav.html#GPSNavigation.update_gps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.GPSNavigation.update_gps" title="Link to this definition"></a></dt>
+<dd><p>Update state estimate using GNSS Cartesian measurements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_meas</strong> (<em>np.ndarray</em>) – Measured position [x, y, z] in ECI [m].</p></li>
-<li><p><strong>v_meas</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measured velocity [vx, vy, vz] in ECI [m/s].</p></li>
-<li><p><strong>R_gps</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Custom measurement noise covariance.</p></li>
+<li><p><strong>r_meas</strong> (<em>np.ndarray</em>) – Measured ECI position (m).</p></li>
+<li><p><strong>v_meas</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measured ECI velocity (m/s).</p></li>
+<li><p><strong>gps_cov</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Direct measurement covariance matrix.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional parameters (e.g., R_gps).</p></li>
 </ul>
 </dd>
 </dl>
@@ -525,76 +699,136 @@ Processes position and velocity updates.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">OrbitDeterminationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">OrbitDeterminationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_j2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Extended Kalman Filter for Orbit Determination (OD-EKF).
-Estimates position and velocity in ECI frame.</p>
+<p>Extended Kalman Filter for Orbit Determination (OD-EKF).</p>
+<p>Estimates the 6D Cartesian state $mathbf{x} = [mathbf{r}, mathbf{v}]^T$
+in the ECI frame. Supports multi-model dynamics (Two-body, J2) and
+RK4-based state prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state vector $[r_x, r_y, r_z, v_x, v_y, v_z]$ (m, m/s).</p></li>
+<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Initial $6times 6$ estimation error covariance matrix.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance matrix $mathbf{Q} in mathbb{R}^{6times 6}$.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance matrix $mathbf{R} in mathbb{R}^{3times 3}$.</p></li>
+<li><p><strong>use_j2</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include J2 perturbations. Default is True.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
+<li><p><strong>re</strong> (<em>float</em><em>, </em><em>optional</em>) – Earth radius (m).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.covariance">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">covariance</span></span><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.covariance" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">covariance</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.covariance" title="Link to this definition"></a></dt>
+<dd><p>Estimation error covariance matrix $mathbf{P}$.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Perform EKF prediction step.</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform EKF prediction step ($x^-, P^-$).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Step size (s).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.state">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.state" title="Link to this definition"></a></dt>
+<dd><p>Estimated orbit state vector $[r, v]^T$.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.OrbitDeterminationEKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.update" title="Link to this definition"></a></dt>
-<dd><p>Perform EKF update step with position measurement.
-z_pos: [x, y, z] measurement in ECI</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/orbit_determination.html#OrbitDeterminationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.OrbitDeterminationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update state estimate using position measurement $mathbf{z} = mathbf{r} + nu$.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z_pos</strong> (<em>np.ndarray</em>) – ECI Position measurement (m).</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">RelativeNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">RelativeNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_motion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.
-Estimates relative position and velocity [x, y, z, vx, vy, vz].</p>
+<p>Relative Navigation EKF via Clohessy-Wiltshire (Hill) Dynamics.</p>
+<p>Estimates the 6D relative state $delta mathbf{x} = [delta mathbf{r}, delta mathbf{v}]^T$
+in the Hill (RSW) frame. Assumes a circular target orbit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial relative state $[x, y, z, dot{x}, dot{y}, dot{z}]^T$ (m, m/s).</p></li>
+<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Initial estimation covariance ($6times 6$).</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance ($6times 6$).</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance ($3times 3$).</p></li>
+<li><p><strong>mean_motion</strong> (<em>float</em>) – Target mean motion $n = sqrt{mu/a^3}$ (rad/s).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict relative state using CW equations.</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict relative state using the analytical CW transition matrix $Phi(t)$.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Predict step (s).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF.state">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd><p>Estimated relative state $[delta mathbf{r}, delta mathbf{v}]^T$.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.RelativeNavigationEKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_rel_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.update" title="Link to this definition"></a></dt>
-<dd><p>Update relative state using relative position measurement.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_rel_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/relative_nav.html#RelativeNavigationEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.RelativeNavigationEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update estimate using a 3D relative position measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z_rel_pos</strong> (<em>np.ndarray</em>) – Relative position vector in Hill frame (m).</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">SurfaceNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">SurfaceNavigationEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Basic SLAM-like Surface Navigation EKF.
-Estimates lander/rover position and velocity [x, y, z, vx, vy, vz]
-using measurements to known landmarks.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict state using constant velocity or constant acceleration model.</p>
+<p>Surface Navigation EKF for Landers or Rovers.</p>
+<p>Estimates 6D state $mathbf{x} = [mathbf{r}, mathbf{v}]^T$ in a local
+surface-fixed frame using constant acceleration kinematics and landmark
+observations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dt</strong> (<em>float</em>) – Time step [s].</p></li>
-<li><p><strong>accel</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Constant acceleration input [m/s^2].</p></li>
+<li><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial state $[x, y, z, v_x, v_y, v_z]^T$ (m, m/s).</p></li>
+<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Initial estimation error covariance ($6times 6$).</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em>) – Process noise covariance ($6times 6$).</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em>) – Measurement noise covariance for relative landmark tracking ($3times 3$).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform kinematic state prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation step (s).</p></li>
+<li><p><strong>accel</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – IMU acceleration or commanded thrust (m/s^2).</p></li>
 </ul>
 </dd>
 </dl>
@@ -602,18 +836,20 @@ using measurements to known landmarks.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF.state">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.state" title="Link to this definition"></a></dt>
+<dd><p>Estimated 6D rover state vector.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.SurfaceNavigationEKF.update_landmark">
-<span class="sig-name descname"><span class="pre">update_landmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">landmark_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.update_landmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.update_landmark" title="Link to this definition"></a></dt>
-<dd><p>Update state using observed relative vector to a known landmark.</p>
+<span class="sig-name descname"><span class="pre">update_landmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">landmark_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/surface_nav.html#SurfaceNavigationEKF.update_landmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.SurfaceNavigationEKF.update_landmark" title="Link to this definition"></a></dt>
+<dd><p>Update state using an observed relative vector to a known landmark.</p>
+<p>Measurement model: $mathbf{z} = mathbf{r}_{land} - mathbf{r}_{Rover} + nu$.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>z_obs</strong> (<em>np.ndarray</em>) – Measured relative vector [dx, dy, dz] in local frame.</p></li>
-<li><p><strong>landmark_pos</strong> (<em>np.ndarray</em>) – Known position of the landmark in local frame.</p></li>
+<li><p><strong>z_obs</strong> (<em>np.ndarray</em>) – Measured relative vector (m).</p></li>
+<li><p><strong>landmark_pos</strong> (<em>np.ndarray</em>) – Known coordinates of the landmark (m).</p></li>
 </ul>
 </dd>
 </dl>
@@ -623,139 +859,152 @@ using measurements to known landmarks.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.gauss_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">gauss_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gauss_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gauss_iod" title="Link to this definition"></a></dt>
-<dd><p>Gauss method for Initial Orbit Determination (3 line-of-sight vectors).</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">gauss_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gauss_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gauss_iod" title="Link to this definition"></a></dt>
+<dd><p>Angles-only IOD via Gauss method with iterative refinement.</p>
+<p>Solves for slant ranges using an 8th-order polynomial and performs
+iterative refinement using Herrick-Gibbs for stability.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho_hat1</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
-<li><p><strong>rho_hat2</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
-<li><p><strong>rho_hat3</strong> (<em>np.ndarray</em>) – LOS unit vectors</p></li>
-<li><p><strong>t1</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
-<li><p><strong>t2</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
-<li><p><strong>t3</strong> (<em>float</em>) – Observation timestamps [s]</p></li>
-<li><p><strong>R1</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
-<li><p><strong>R2</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
-<li><p><strong>R3</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI [m]</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>rho_hat1</strong> (<em>np.ndarray</em>) – Line-of-Sight unit vectors in ECI.</p></li>
+<li><p><strong>rho_hat2</strong> (<em>np.ndarray</em>) – Line-of-Sight unit vectors in ECI.</p></li>
+<li><p><strong>rho_hat3</strong> (<em>np.ndarray</em>) – Line-of-Sight unit vectors in ECI.</p></li>
+<li><p><strong>t1</strong> (<em>float</em>) – Observation times (s).</p></li>
+<li><p><strong>t2</strong> (<em>float</em>) – Observation times (s).</p></li>
+<li><p><strong>t3</strong> (<em>float</em>) – Observation times (s).</p></li>
+<li><p><strong>r_obs1</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI (m).</p></li>
+<li><p><strong>r_obs2</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI (m).</p></li>
+<li><p><strong>r_obs3</strong> (<em>np.ndarray</em>) – Observer position vectors in ECI (m).</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>ECI State vector $[r, v]$ at $t_2$ (m, m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[rx, ry, rz, vx, vy, vz] State at t2 [m, m/s]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.gibbs_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gibbs_iod" title="Link to this definition"></a></dt>
-<dd><p>Gibbs method for Initial Orbit Determination (3 position vectors).
-Used for long-arc observations (separation &gt; 5 degrees).</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Initial Orbit Determination (IOD) via Gibbs method.</p>
+<p>Suitable for three position vectors with angular separation &gt; 5 degrees.
+Formula: $mathbf{v}_2 = sqrt{frac{mu}{N D}} left( frac{mathbf{D} times mathbf{r}_2}{r_2} + mathbf{S} right)$.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
-<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
-<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Three position vectors in ECI [m]</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI position vectors (m) at three distinct times.</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI position vectors (m) at three distinct times.</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – ECI position vectors (m) at three distinct times.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$). Default is Earth.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>v2 (np.ndarray)</strong></p>
+<dd class="field-even"><p>Velocity vector at the second observation time $mathbf{v}_2$ (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Velocity vector at time t2 [m/s]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.herrick_gibbs_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">herrick_gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#herrick_gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.herrick_gibbs_iod" title="Link to this definition"></a></dt>
-<dd><p>Herrick-Gibbs method for IOD (3 position vectors, short arc).
-Used when separation between vectors is small (&lt; 5-10 degrees).</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">herrick_gibbs_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt21</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt32</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#herrick_gibbs_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.herrick_gibbs_iod" title="Link to this definition"></a></dt>
+<dd><p>Initial Orbit Determination via Herrick-Gibbs method.</p>
+<p>Best for short-arc observations (angular separation &lt; 5 degrees).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
-<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
-<li><p><strong>r3</strong> (<em>np.ndarray</em>) – Position vectors</p></li>
-<li><p><strong>dt21</strong> (<em>float</em>) – t2 - t1</p></li>
-<li><p><strong>dt32</strong> (<em>float</em>) – t3 - t2</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI position vectors (m).</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI position vectors (m).</p></li>
+<li><p><strong>r3</strong> (<em>np.ndarray</em>) – ECI position vectors (m).</p></li>
+<li><p><strong>dt21</strong> (<em>float</em>) – Time interval $t_2 - t_1$ (s).</p></li>
+<li><p><strong>dt32</strong> (<em>float</em>) – Time interval $t_3 - t_2$ (s).</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>v2 (np.ndarray)</strong></p>
+<dd class="field-even"><p>Velocity vector $mathbf{v}_2$ (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Velocity at t2</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.laplace_iod">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">laplace_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_hat_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.laplace_iod" title="Link to this definition"></a></dt>
-<dd><p>Laplace method for IOD using LOS derivatives at a single epoch.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">laplace_iod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_ddot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.laplace_iod" title="Link to this definition"></a></dt>
+<dd><p>Orbit determination from line-of-sight derivatives (Laplace method).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho_hat</strong> (<em>np.ndarray</em>) – Unit LOS vector</p></li>
-<li><p><strong>rho_hat_dot</strong> (<em>np.ndarray</em>) – First derivative of unit LOS</p></li>
-<li><p><strong>rho_hat_ddot</strong> (<em>np.ndarray</em>) – Second derivative of unit LOS</p></li>
-<li><p><strong>R</strong> (<em>np.ndarray</em>) – Observer position vector [m]</p></li>
-<li><p><strong>R_dot</strong> (<em>np.ndarray</em>) – Observer velocity vector [m/s]</p></li>
-<li><p><strong>R_ddot</strong> (<em>np.ndarray</em>) – Observer acceleration vector [m/s^2]</p></li>
-<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter</p></li>
+<li><p><strong>rho_hat</strong> (<em>np.ndarray</em>) – LOS unit vector and its first/second time derivatives.</p></li>
+<li><p><strong>rho_dot</strong> (<em>np.ndarray</em>) – LOS unit vector and its first/second time derivatives.</p></li>
+<li><p><strong>rho_ddot</strong> (<em>np.ndarray</em>) – LOS unit vector and its first/second time derivatives.</p></li>
+<li><p><strong>r_obs</strong> (<em>np.ndarray</em>) – Observer Cartesian state and acceleration at epoch.</p></li>
+<li><p><strong>v_obs</strong> (<em>np.ndarray</em>) – Observer Cartesian state and acceleration at epoch.</p></li>
+<li><p><strong>a_obs</strong> (<em>np.ndarray</em>) – Observer Cartesian state and acceleration at epoch.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>ECI State vector $[r, v]$ at epoch.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[rx, ry, rz, vx, vy, vz] State vector in ECI [m, m/s]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.laplace_iod_from_observations">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">laplace_iod_from_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod_from_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.laplace_iod_from_observations" title="Link to this definition"></a></dt>
-<dd><p>Helper to perform Laplace IOD from three LOS observations.
-Estimates derivatives using Lagrange interpolation at the middle epoch.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">laplace_iod_from_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_hats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441500000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/iod.html#laplace_iod_from_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.laplace_iod_from_observations" title="Link to this definition"></a></dt>
+<dd><p>Perform Laplace IOD from three standard LOS observations.</p>
+<p>Estimates derivatives using Lagrange interpolation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho_hats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 LOS unit vectors</p></li>
-<li><p><strong>Rs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – 3 Observer position vectors [m]</p></li>
-<li><p><strong>times</strong> (<em>list</em><em> of </em><em>float</em>) – 3 observation timestamps [s]</p></li>
+<li><p><strong>rho_hats</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Three LOS unit vectors.</p></li>
+<li><p><strong>rs_obs</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Three observer position vectors.</p></li>
+<li><p><strong>times</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – Three observation timestamps.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State vector at $t_2$ (6,) (m, m/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.navigation.map_relative_localization_update">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">map_relative_localization_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#map_relative_localization_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.map_relative_localization_update" title="Link to this definition"></a></dt>
-<dd><p>EKF measurement update for TRN.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.navigation.</span></span><span class="sig-name descname"><span class="pre">map_relative_localization_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_cov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/navigation/terrain_nav.html#map_relative_localization_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.navigation.map_relative_localization_update" title="Link to this definition"></a></dt>
+<dd><p>EKF Measurement Update using TRN feature matches.</p>
+<p>Corrects the global state estimate using residuals between map-known
+landmarks and their estimated positions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>np.ndarray</em>) – State estimate [pos, vel].</p></li>
-<li><p><strong>P</strong> (<em>np.ndarray</em>) – Covariance.</p></li>
-<li><p><strong>matches</strong> (<em>list</em>) – (map_pos, observed_pos) pairs.</p></li>
-<li><p><strong>R</strong> (<em>np.ndarray</em>) – Measurement noise covariance.</p></li>
+<li><p><strong>x_state</strong> (<em>np.ndarray</em>) – Current filter state $[mathbf{r}, …]^T$.</p></li>
+<li><p><strong>p_cov</strong> (<em>np.ndarray</em>) – Estimation covariance matrix.</p></li>
+<li><p><strong>matches</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em>) – Landmark correspondences from <cite>match_features</cite>.</p></li>
+<li><p><strong>r_noise</strong> (<em>np.ndarray</em>) – Sensor noise covariance ($3times 3$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>tuple</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(updated_x, updated_P)</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>updated_x</strong> (<em>np.ndarray</em>) – Updated state estimate.</p></li>
+<li><p><strong>updated_p</strong> (<em>np.ndarray</em>) – Updated covariance matrix.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>

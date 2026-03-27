@@ -120,23 +120,27 @@
 <p>Davenport’s q-method for optimal attitude determination (Wahba’s problem).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.davenport_q.davenport_q">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.davenport_q.</span></span><span class="sig-name descname"><span class="pre">davenport_q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/davenport_q.html#davenport_q"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.davenport_q.davenport_q" title="Link to this definition"></a></dt>
-<dd><p>Compute the optimal attitude quaternion (Inertial -&gt; Body) using Davenport’s q-method.</p>
-<p>This method solves the Wahba problem by finding the eigenvector corresponding
-to the largest eigenvalue of the Davenport K-matrix.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.davenport_q.</span></span><span class="sig-name descname"><span class="pre">davenport_q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/davenport_q.html#davenport_q"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.davenport_q.davenport_q" title="Link to this definition"></a></dt>
+<dd><p>Solve for the optimal attitude quaternion using Davenport’s q-method.</p>
+<p>The optimal quaternion $mathbf{q}$ is the eigenvector corresponding to the
+maximum eigenvalue $lambda_{max}$ of the Davenport K-matrix:
+$mathbf{K} mathbf{q} = lambda mathbf{q}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>body_vectors</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – List of N vectors measured in body frame. Shape (N, 3).</p></li>
-<li><p><strong>ref_vectors</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – List of N vectors known in reference (inertial) frame. Shape (N, 3).</p></li>
-<li><p><strong>weights</strong> (<em>list</em><em> or </em><em>np.ndarray</em><em>, </em><em>optional</em>) – List of N scalar weights. If None, weights are equal.</p></li>
+<li><p><strong>body_vectors</strong> (<em>np.ndarray</em>) – Measured body vectors (N, 3).</p></li>
+<li><p><strong>ref_vectors</strong> (<em>np.ndarray</em>) – Reference inertial vectors (N, 3).</p></li>
+<li><p><strong>weights</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Weights for observations (N,).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Optimal normalized quaternion $[x, y, z, w]$.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Normalized quaternion [<a class="reference internal" href="gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="gnc_toolkit.kalman_filters.enkf.EnKF.x">x</a>, y, z, w] representing rotation R_BI.</p>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – On dimension mismatch.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -147,25 +151,25 @@ to the largest eigenvalue of the Davenport K-matrix.</p>
 <p>Fast Optimal Attitude Matrix (FOAM) algorithm for attitude determination.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.foam.foam">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.foam.</span></span><span class="sig-name descname"><span class="pre">foam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/foam.html#foam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.foam.foam" title="Link to this definition"></a></dt>
-<dd><p>Compute the optimal attitude matrix (Direction Cosine Matrix) using the FOAM algorithm.</p>
-<p>FOAM (Fast Optimal Attitude Matrix) solves the Wahba problem by directly
-computing the DCM without intermediate quaternion representations.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.foam.</span></span><span class="sig-name descname"><span class="pre">foam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/foam.html#foam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.foam.foam" title="Link to this definition"></a></dt>
+<dd><p>Solve for the optimal attitude matrix using FOAM.</p>
+<p>Directly computes the DCM:
+$mathbf{R}_{BI} = frac{(lambda^2 + |mathbf{B}|_F^2)mathbf{B} + 2lambda text{adj}(mathbf{B})^T - 2mathbf{B} mathbf{B}^T mathbf{B}}{lambda(lambda^2 - |mathbf{B}|_F^2) - 2 det(mathbf{B})}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>body_vectors</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – List of N vectors measured in body frame. Shape (N, 3).</p></li>
-<li><p><strong>ref_vectors</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – List of N vectors known in reference (inertial) frame. Shape (N, 3).</p></li>
-<li><p><strong>weights</strong> (<em>list</em><em> or </em><em>np.ndarray</em><em>, </em><em>optional</em>) – List of N scalar weights. If None, weights are equal.</p></li>
-<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Convergence tolerance for the iterative eigenvalue search.</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of iterations for eigenvalue search.</p></li>
+<li><p><strong>body_vectors</strong> (<em>np.ndarray</em>) – Body measurements (N, 3).</p></li>
+<li><p><strong>ref_vectors</strong> (<em>np.ndarray</em>) – Inertial references (N, 3).</p></li>
+<li><p><strong>weights</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Weights (N,).</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance. Default 1e-12.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Max iterations. Default 20.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong> – v_body = R_BI &#64; v_ref</p>
+<dd class="field-even"><p>Optimal $3 times 3$ DCM $mathbf{R}_{BI}$.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>3x3 Direction Cosine Matrix R_BI (Ref -&gt; Body).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -176,25 +180,30 @@ computing the DCM without intermediate quaternion representations.</p>
 <p>QUEST algorithm for optimal attitude determination (Wahba’s problem).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.quest.quest">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.quest.</span></span><span class="sig-name descname"><span class="pre">quest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/quest.html#quest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.quest.quest" title="Link to this definition"></a></dt>
-<dd><p>Compute the optimal attitude quaternion (Inertial -&gt; Body) using the QUEST algorithm.</p>
-<p>This implementation uses the iterative approach to find the maximum eigenvalue
-of the K-matrix, which is more efficient than full eigenvalue decomposition.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.quest.</span></span><span class="sig-name descname"><span class="pre">quest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/quest.html#quest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.quest.quest" title="Link to this definition"></a></dt>
+<dd><p>Solve for the optimal attitude quaternion using QUEST.</p>
+<p>QUEST (QUaternion ESTimator) minimizes Wahba’s Loss:
+$J(mathbf{R}) = frac{1}{2} sum_{i=1}^N w_i |mathbf{b}_i - mathbf{R} mathbf{r}_i|^2$</p>
+<p>It achieves this by finding the maximum eigenvalue of the K-matrix:
+$mathbf{K} mathbf{q}_{opt} = lambda_{max} mathbf{q}_{opt}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>body_vectors</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – List of N vectors measured in body frame. Shape (N, 3).</p></li>
-<li><p><strong>ref_vectors</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – List of N vectors known in reference (inertial) frame. Shape (N, 3).</p></li>
-<li><p><strong>weights</strong> (<em>list</em><em> or </em><em>np.ndarray</em><em>, </em><em>optional</em>) – List of N scalar weights. If None, weights are equal.</p></li>
-<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Convergence tolerance for the iterative eigenvalue search.</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of iterations for eigenvalue search.</p></li>
+<li><p><strong>body_vectors</strong> (<em>np.ndarray</em>) – Body-frame measurements (N, 3).</p></li>
+<li><p><strong>ref_vectors</strong> (<em>np.ndarray</em>) – Inertial-frame references (N, 3).</p></li>
+<li><p><strong>weights</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Weights for observations (N,).</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Newton convergence tolerance. Default 1e-12.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Max iterations. Default 20.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Hamilton quaternion $[x, y, z, w]$ (Inertial $to$ Body).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Normalized quaternion [<a class="reference internal" href="gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="gnc_toolkit.kalman_filters.enkf.EnKF.x">x</a>, y, z, w] representing rotation R_BI.</p>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – On dimension mismatch.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -205,44 +214,55 @@ of the K-matrix, which is more efficient than full eigenvalue decomposition.</p>
 <p>Recursive QUEST (REQUEST) algorithm for recursive attitude estimation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.request.RequestFilter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.request.</span></span><span class="sig-name descname"><span class="pre">RequestFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#RequestFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.RequestFilter" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.request.</span></span><span class="sig-name descname"><span class="pre">RequestFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#RequestFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.RequestFilter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Implementation of the REcursive QUEST (REQUEST) algorithm.</p>
-<p>REQUEST allows for recursive attitude estimation by updating the K-matrix
-over time, incorporating a fading memory factor.</p>
+<p>Recursive QUEST (REQUEST) filter.</p>
+<p>Enables recursive attitude estimation by updating the Davenport
+K-matrix with a fading memory factor $rho$:
+$mathbf{K}_k = rho mathbf{K}_{k-1} + delta mathbf{K}_k$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>initial_k</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Initial $4 times 4$ K-matrix. Default zero.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.request.RequestFilter.K">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">K</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.RequestFilter.K" title="Link to this definition"></a></dt>
+<dd><p>Alias for the accumulated $4 times 4$ K-matrix.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.request.RequestFilter.get_quaternion">
-<span class="sig-name descname"><span class="pre">get_quaternion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#RequestFilter.get_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.RequestFilter.get_quaternion" title="Link to this definition"></a></dt>
-<dd><p>Extract the optimal quaternion from the current K-matrix.</p>
+<span class="sig-name descname"><span class="pre">get_quaternion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#RequestFilter.get_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.RequestFilter.get_quaternion" title="Link to this definition"></a></dt>
+<dd><p>Extract the optimal normalized quaternion from the current K-matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>np.ndarray</strong></p>
+<dd class="field-odd"><p>Optimal quaternion $[x, y, z, w]$ (Inertial -&gt; Body).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Normalized quaternion [<a class="reference internal" href="gnc_toolkit.kalman_filters.html#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="gnc_toolkit.kalman_filters.enkf.EnKF.x">x</a>, y, z, w].</p>
+<dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.request.RequestFilter.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#RequestFilter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.RequestFilter.update" title="Link to this definition"></a></dt>
-<dd><p>Update the K-matrix with new measurements.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#RequestFilter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.RequestFilter.update" title="Link to this definition"></a></dt>
+<dd><p>Update the accumulated K-matrix with new vector observations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>body_vectors</strong> (<em>np.ndarray</em>) – N vectors in body frame.</p></li>
-<li><p><strong>ref_vectors</strong> (<em>np.ndarray</em>) – N vectors in reference frame.</p></li>
-<li><p><strong>weights</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Weights for each measurement.</p></li>
-<li><p><strong>rho</strong> (<em>float</em>) – Fading memory factor (0 &lt; rho &lt;= 1).
-rho=1 means no fading (accumulative).</p></li>
+<li><p><strong>body_vectors</strong> (<em>np.ndarray</em>) – New measurements in the body frame (N, 3).</p></li>
+<li><p><strong>ref_vectors</strong> (<em>np.ndarray</em>) – Corresponding reference vectors in the inertial frame (N, 3).</p></li>
+<li><p><strong>weights</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Weights for the new measurements. Defaults to $1/N$.</p></li>
+<li><p><strong>rho</strong> (<em>float</em><em>, </em><em>optional</em>) – Fading memory factor $0 &lt; \rho \le 1$. Default is 1.0 (no fading).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>The updated $4\times 4$ K-matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Updated 4x4 K-matrix.</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -251,8 +271,25 @@ rho=1 means no fading (accumulative).</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.request.request">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.request.</span></span><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.request" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.request.</span></span><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/request.html#request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.request.request" title="Link to this definition"></a></dt>
 <dd><p>One-shot REQUEST update helper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body_vectors</strong> (<em>np.ndarray</em>) – New measurements in the body frame (N, 3).</p></li>
+<li><p><strong>ref_vectors</strong> (<em>np.ndarray</em>) – Reference vectors in the inertial frame (N, 3).</p></li>
+<li><p><strong>weights</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Weights for new measurements.</p></li>
+<li><p><strong>initial_k</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Starting K-matrix.</p></li>
+<li><p><strong>rho</strong> (<em>float</em><em>, </em><em>optional</em>) – Fading memory factor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimal quaternion $[x, y, z, w]$.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -261,23 +298,31 @@ rho=1 means no fading (accumulative).</p></li>
 <p>TRIAD algorithm for attitude determination from two vectors.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_determination.triad.triad">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.triad.</span></span><span class="sig-name descname"><span class="pre">triad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_body1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_body2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ref1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ref2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/triad.html#triad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.triad.triad" title="Link to this definition"></a></dt>
-<dd><p>Compute the rotation matrix (Direction Cosine Matrix) from Inertial to Body frame
-using the TRIAD algorithm.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_determination.triad.</span></span><span class="sig-name descname"><span class="pre">triad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_body1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_body2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ref1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_ref2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_determination/triad.html#triad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_determination.triad.triad" title="Link to this definition"></a></dt>
+<dd><p>Compute the DCM from reference to body frame using TRIAD.</p>
+<p>TRIAD (Tri-Axial Attitude Determination) construction:
+- $mathbf{t}_{1b} = mathbf{b}_1$
+- $mathbf{t}_{2b} = frac{mathbf{b}_1 times mathbf{b}_2}{|mathbf{b}_1 times mathbf{b}_2|}$
+- $mathbf{t}_{3b} = mathbf{t}_{1b} times mathbf{t}_{2b}$</p>
+<p>The Direction Cosine Matrix is:
+$mathbf{R}_{BI} = [mathbf{t}_{1b}mathbf{t}_{2b}mathbf{t}_{3b}] [mathbf{t}_{1r}mathbf{t}_{2r}mathbf{t}_{3r}]^T$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>v_body1</strong> (<em>np.ndarray</em>) – First vector measured in body frame (e.g. sun vector).</p></li>
-<li><p><strong>v_body2</strong> (<em>np.ndarray</em>) – Second vector measured in body frame (e.g. mag vector).</p></li>
-<li><p><strong>v_ref1</strong> (<em>np.ndarray</em>) – First vector in reference/inertial frame (corresponding to v_body1).</p></li>
-<li><p><strong>v_ref2</strong> (<em>np.ndarray</em>) – Second vector in reference/inertial frame (corresponding to v_body2).</p></li>
+<li><p><strong>v_body1</strong> (<em>np.ndarray</em>) – Primary body vector (3,).</p></li>
+<li><p><strong>v_body2</strong> (<em>np.ndarray</em>) – Secondary body vector (3,).</p></li>
+<li><p><strong>v_ref1</strong> (<em>np.ndarray</em>) – Primary reference vector (3,).</p></li>
+<li><p><strong>v_ref2</strong> (<em>np.ndarray</em>) – Secondary reference vector (3,).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong> – v_body = R_BI &#64; v_ref</p>
+<dd class="field-even"><p>$3 times 3$ DCM $mathbf{R}_{BI}$ (Reference $to$ Body).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>3x3 Rotation matrix R_BI (Ref -&gt; Body). Puts vectors in Body frame.</p>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If vectors are collinear or zero-length.</p>
 </dd>
 </dl>
 </dd></dl>

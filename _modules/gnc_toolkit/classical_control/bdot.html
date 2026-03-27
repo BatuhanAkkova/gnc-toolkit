@@ -80,76 +80,83 @@
 <span class="sd">B-Dot controller for spacecraft magnetic detumbling.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="BDot">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.bdot.BDot">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BDot</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    B-Dot controller for magnetic detumbling.</span>
 
-<span class="sd">    The control law calculates a magnetic dipole moment &#39;m&#39; to dampen the angular velocity</span>
-<span class="sd">    of the spacecraft.</span>
+<span class="sd">    Control Law:</span>
+<span class="sd">    $\mathbf{m} = -K_{gain} \dot{\mathbf{B}}$</span>
 
-<span class="sd">    Control law: m = -K * B_dot</span>
-<span class="sd">    where B_dot is the time derivative of the magnetic field vector.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gain : float</span>
+<span class="sd">        Feedback gain $K$ ($Am^2 s / T$).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the B-Dot controller.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            gain: The feedback gain K (&gt; 0). [A*m^2 * s / T]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the B-Dot controller.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="o">=</span> <span class="n">gain</span>
 
 <div class="viewcode-block" id="BDot.calculate_control">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.bdot.BDot.calculate_control">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b_dot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate the required magnetic dipole moment based on the rate of change of B-field.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b_dot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the required magnetic dipole moment from the B-field rate.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            b_dot: The time derivative of the magnetic field vector (dB/dt) in Body frame. Shape (3,)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        b_dot : np.ndarray or list</span>
+<span class="sd">            The time derivative of the magnetic field vector ($\dot{B}$) in</span>
+<span class="sd">            the Body frame (3,). Units: [T/s].</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Magnetic dipole moment vector (m) in Body frame. Shape (3,)</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Magnetic dipole moment vector $m$ in Body frame (3,).</span>
+<span class="sd">            Units: $[A \cdot m^2]$.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">b_dot_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b_dot</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-
         <span class="c1"># Standard law: m = -K * B_dot</span>
-        <span class="n">dipole_moment</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="o">*</span> <span class="n">b_dot_vec</span>
-
-        <span class="k">return</span> <span class="n">dipole_moment</span></div>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b_dot</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BDot.calculate_control_discrete">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.classical_control.html#gnc_toolkit.classical_control.bdot.BDot.calculate_control_discrete">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_control_discrete</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">b_field_current</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span> <span class="n">b_field_prev</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">b_field_curr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">b_field_prev</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate control using discrete finite difference of B-field.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate B-Dot control using discrete finite differences.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            b_field_current: Current magnetic field vector measurement (Body frame)</span>
-<span class="sd">            b_field_prev: Previous magnetic field vector measurement (Body frame)</span>
-<span class="sd">            dt: Time step between measurements (seconds)</span>
+<span class="sd">        Useful when only B-field measurements are available instead of explicit rates.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        b_field_curr : np.ndarray or list</span>
+<span class="sd">            Current magnetic field vector measurement (Body frame). Units: [T].</span>
+<span class="sd">        b_field_prev : np.ndarray or list</span>
+<span class="sd">            Previous magnetic field vector measurement (Body frame). Units: [T].</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Time step between measurements (s).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Magnetic dipole moment vector (m) in Body frame.</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Magnetic dipole moment vector $m$ in Body frame (3,).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">b_curr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b_field_current</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-        <span class="n">b_prev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b_field_prev</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-        <span class="n">b_dot_est</span> <span class="o">=</span> <span class="p">(</span><span class="n">b_curr</span> <span class="o">-</span> <span class="n">b_prev</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span>
+        <span class="c1"># Estimate B_dot via backward difference</span>
+        <span class="n">b_dot_est</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b_field_curr</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b_field_prev</span><span class="p">))</span> <span class="o">/</span> <span class="n">dt</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_control</span><span class="p">(</span><span class="n">b_dot_est</span><span class="p">)</span></div>
 </div>
 

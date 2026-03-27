@@ -80,6 +80,8 @@
 <span class="sd">Numerical Cowell Propagator.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..integrators.integrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integrator</span>
@@ -92,39 +94,54 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">CowellPropagator</span><span class="p">(</span><span class="n">Propagator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Numerical Cowell Propagator.</span>
+
 <span class="sd">    Integrates the equations of motion numerically, allowing for perturbations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    integrator : Integrator, optional</span>
+<span class="sd">        Numerical integrator instance. Defaults to RK4.</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Gravitational parameter (m^3/s^2). Default is Earth&#39;s.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">integrator</span><span class="p">:</span> <span class="n">Integrator</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">398600.4418e9</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the Cowell Propagator.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            integrator (Integrator): Numerical integrator instance. Defaults to RK4.</span>
-<span class="sd">            mu (float): Gravitational parameter [m^3/s^2]. Default is Earth.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">integrator</span><span class="p">:</span> <span class="n">Integrator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">398600.4418e9</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">integrator</span> <span class="o">=</span> <span class="n">integrator</span> <span class="k">if</span> <span class="n">integrator</span> <span class="k">else</span> <span class="n">RK4</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span>
 
 <div class="viewcode-block" id="CowellPropagator.propagate">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.cowell.CowellPropagator.propagate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">perturbation_acc_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">perturbation_acc_fn</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Propagates the state using numerical integration.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            r_i (np.ndarray): Initial position vector [km] or [m].</span>
-<span class="sd">            v_i (np.ndarray): Initial velocity vector [km/s] or [m/s].</span>
-<span class="sd">            dt (float): Propagation duration [s].</span>
-<span class="sd">            perturbation_acc_fn (callable, optional): Function that returns perturbation accelerations.</span>
-<span class="sd">                                                      Signature: acc_pert = f(t, r, v)</span>
-<span class="sd">            dt_step (float, optional): Step size for the integrator. Default is dt (single step) or 10s if dt is large.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_i : np.ndarray</span>
+<span class="sd">            Initial position vector (m).</span>
+<span class="sd">        v_i : np.ndarray</span>
+<span class="sd">            Initial velocity vector (m/s).</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Propagation duration (s).</span>
+<span class="sd">        perturbation_acc_fn : callable, optional</span>
+<span class="sd">            Function that returns perturbation accelerations.</span>
+<span class="sd">            Signature: acc_pert = f(t, r, v) -&gt; np.ndarray.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional arguments, e.g., &#39;dt_step&#39; for integration step size.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            tuple: (r_f, v_f) Final position and velocity vectors.</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">            (r_f, v_f).</span>
+<span class="sd">            r_f : Final position vector (m).</span>
+<span class="sd">            v_f : Final velocity vector (m/s).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Define the state vector y = [r, v]</span>
         <span class="n">y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_i</span><span class="p">,</span> <span class="n">v_i</span><span class="p">])</span>
@@ -156,7 +173,7 @@
 
         <span class="c1"># Integrate</span>
         <span class="c1"># We start at t=0 and go to t=dt relative to the epoch of r_i</span>
-        <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+        <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
         <span class="n">t_values</span><span class="p">,</span> <span class="n">y_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrator</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span>
             <span class="n">equations_of_motion</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">step_size</span>
         <span class="p">)</span>

@@ -88,46 +88,71 @@
 <div class="viewcode-block" id="AngleOnlyNavigation">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AngleOnlyNavigation</span><span class="p">(</span><span class="n">OrbitDeterminationEKF</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Navigation using Line-of-Sight (LOS) measurements (unit vectors).</span>
-<span class="sd">    Inherits orbital dynamics from OrbitDeterminationEKF.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Angles-Only Navigation (AON) using Line-of-Sight (LOS) unit vectors.</span>
+
+<span class="sd">    Estimates the spacecraft state by tracking unit vectors to known celestial </span>
+<span class="sd">    or terrestrial targets. Inherits dynamics from `OrbitDeterminationEKF`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_initial : np.ndarray</span>
+<span class="sd">        Initial 6D state vector $[\mathbf{r}, \mathbf{v}]^T$ (m, m/s).</span>
+<span class="sd">    p_initial : np.ndarray</span>
+<span class="sd">        Initial estimation error covariance ($6\times 6$).</span>
+<span class="sd">    q_mat : np.ndarray</span>
+<span class="sd">        Process noise covariance ($6\times 6$).</span>
+<span class="sd">    r_mat : np.ndarray</span>
+<span class="sd">        Measurement noise covariance for the unit vector ($3\times 3$).</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Gravitational parameter ($m^3/s^2$).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AngleOnlyNavigation.update_unit_vector">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.angle_only_nav.AngleOnlyNavigation.update_unit_vector">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_unit_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_meas</span><span class="p">,</span> <span class="n">target_pos_eci</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update state using a unit vector measurement to a target.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_unit_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_meas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">target_pos_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the state estimate using a measured LOS unit vector $\mathbf{u}$.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            u_meas (np.ndarray): Measured unit vector [ux, uy, uz] in ECI.</span>
-<span class="sd">            target_pos_eci (np.ndarray): Position of the target being tracked in ECI [m].</span>
+<span class="sd">        Measurement Model:</span>
+<span class="sd">        $\mathbf{z} = \frac{\mathbf{r}_t - \mathbf{r}}{\rho} + \nu$</span>
+<span class="sd">        Jacobian:</span>
+<span class="sd">        $\mathbf{H}_r = -\frac{1}{\rho} (\mathbf{I} - \mathbf{u}\mathbf{u}^T)$</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        u_meas : np.ndarray</span>
+<span class="sd">            Measured unit vector in ECI frame.</span>
+<span class="sd">        target_pos_eci : np.ndarray</span>
+<span class="sd">            Known coordinates of the target (m).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r_target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">target_pos_eci</span><span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">hx</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">hx</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
-            <span class="n">rel_r</span> <span class="o">=</span> <span class="n">target_pos_eci</span> <span class="o">-</span> <span class="n">r</span>
-            <span class="n">rel_r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel_r</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">rel_r_mag</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+            <span class="n">rel_r</span> <span class="o">=</span> <span class="n">r_target</span> <span class="o">-</span> <span class="n">r</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel_r</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rho</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">rel_r</span> <span class="o">/</span> <span class="n">rel_r_mag</span>
+            <span class="k">return</span> <span class="n">rel_r</span> <span class="o">/</span> <span class="n">rho</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">H_jac</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">h_jac</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
-            <span class="n">rel_r</span> <span class="o">=</span> <span class="n">target_pos_eci</span> <span class="o">-</span> <span class="n">r</span>
-            <span class="n">rel_r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel_r</span><span class="p">)</span>
+            <span class="n">rel_r</span> <span class="o">=</span> <span class="n">r_target</span> <span class="o">-</span> <span class="n">r</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel_r</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">rel_r_mag</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rho</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 
-            <span class="n">u</span> <span class="o">=</span> <span class="n">rel_r</span> <span class="o">/</span> <span class="n">rel_r_mag</span>
-            <span class="n">H_rel</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span> <span class="o">/</span> <span class="n">rel_r_mag</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">rel_r</span> <span class="o">/</span> <span class="n">rho</span>
+            <span class="c1"># Projection matrix (I - uu^T)</span>
+            <span class="n">h_rel</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span> <span class="o">/</span> <span class="n">rho</span>
 
-            <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-            <span class="n">H</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">H_rel</span>
-            <span class="k">return</span> <span class="n">H</span>
+            <span class="n">h_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+            <span class="n">h_mat</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">h_rel</span>
+            <span class="k">return</span> <span class="n">h_mat</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u_meas</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">H_jac</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">u_meas</span><span class="p">),</span> <span class="n">hx</span><span class="p">,</span> <span class="n">h_jac</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

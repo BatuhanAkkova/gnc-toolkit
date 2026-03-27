@@ -120,34 +120,68 @@
 <p>Abstract base class for actuator models.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.actuator.Actuator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.actuator.</span></span><span class="sig-name descname"><span class="pre">Actuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Actuator'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadband</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.actuator.</span></span><span class="sig-name descname"><span class="pre">Actuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Actuator'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadband</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstract base class for all actuators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “Actuator”.</p></li>
+<li><p><strong>saturation</strong> (<em>float</em><em> | </em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>optional</em>) – Max output magnitude (scalar) or (min, max) range.</p></li>
+<li><p><strong>deadband</strong> (<em>float</em><em>, </em><em>optional</em>) – Input values below this magnitude result in zero output.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.actuator.Actuator.apply_deadband">
-<span class="sig-name descname"><span class="pre">apply_deadband</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator.apply_deadband"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator.apply_deadband" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">apply_deadband</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator.apply_deadband"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator.apply_deadband" title="Link to this definition"></a></dt>
 <dd><p>Apply deadband to value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>float</em>) – Commanded value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value after deadband application.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.actuator.Actuator.apply_saturation">
-<span class="sig-name descname"><span class="pre">apply_saturation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator.apply_saturation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator.apply_saturation" title="Link to this definition"></a></dt>
-<dd><p>Apply saturation limits to value.</p>
+<span class="sig-name descname"><span class="pre">apply_saturation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator.apply_saturation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator.apply_saturation" title="Link to this definition"></a></dt>
+<dd><p>Apply saturation limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>np.ndarray</em><em> | </em><em>float</em>) – Signal to saturate.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Saturated signal.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray | float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.actuator.Actuator.command">
-<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator.command" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/actuator.html#Actuator.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.actuator.Actuator.command" title="Link to this definition"></a></dt>
 <dd><p>Calculate the actuator output based on the command signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>signal</strong> – The commanded input (e.g., torque, dipole, voltage).</p></li>
-<li><p><strong>kwargs</strong> – Additional state info (e.g., current speed, environment).</p></li>
+<li><p><strong>signal</strong> (<em>np.ndarray</em><em> | </em><em>float</em>) – The commanded input (e.g., torque, dipole, voltage).</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional state info (e.g., current speed, environment).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The actual output applied to the system.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray | float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -160,22 +194,30 @@
 <p>Control allocation algorithms mapping generalized forces to actuator commands.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.ControlAllocator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">ControlAllocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#ControlAllocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.ControlAllocator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">ControlAllocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#ControlAllocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.ControlAllocator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Abstract base class for control allocation.
-Maps a desired generalized force (force/torque) to actuator commands.</p>
+<p>Abstract base class for control allocation logic.</p>
+<p>Maps desired generalized forces (force/torque) to individual actuator commands.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actuator_matrix</strong> (<em>np.ndarray</em>) – The (m x n) matrix A where Y = A * u.
+m = degrees of freedom (e.g., 3 for torque).
+n = number of actuators.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.ControlAllocator.allocate">
-<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desired_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#ControlAllocator.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.ControlAllocator.allocate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_torque_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#ControlAllocator.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.ControlAllocator.allocate" title="Link to this definition"></a></dt>
+<dd><p>Allocate generalized force/torque to individual actuators.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>desired_output</strong> (<em>np.array</em>) – Desired force/torque (m,).</p>
+<dd class="field-odd"><p><strong>force_torque_cmd</strong> (<em>np.ndarray</em>) – Desired 6-DOF force and torque vector.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>Individual actuator commands.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Actuator commands (n,).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -184,52 +226,81 @@ Maps a desired generalized force (force/torque) to actuator commands.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.NullMotionManager">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">NullMotionManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#NullMotionManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.NullMotionManager" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">NullMotionManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#NullMotionManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.NullMotionManager" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manages null-motion to redistribute actuator states without affecting net output.
-u_net = u_alloc + u_null
+<p>Manages null-motion to redistribute actuator states without affecting net output.</p>
+<p>u_net = u_alloc + u_null
 u_null = (I - A+ * A) * z</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actuator_matrix</strong> (<em>np.ndarray</em>) – The control effectiveness matrix.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.NullMotionManager.apply_null_command">
-<span class="sig-name descname"><span class="pre">apply_null_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_current</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#NullMotionManager.apply_null_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.NullMotionManager.apply_null_command" title="Link to this definition"></a></dt>
-<dd><p>Adds null-motion component to base command.</p>
+<span class="sig-name descname"><span class="pre">apply_null_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#NullMotionManager.apply_null_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.NullMotionManager.apply_null_command" title="Link to this definition"></a></dt>
+<dd><p>Add null-motion component to base command.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_base</strong> (<em>np.array</em>) – Base actuator commands (e.g. from pseudo-inverse).</p></li>
-<li><p><strong>z</strong> (<em>np.array</em>) – Desired secondary goal (e.g. move gimbals away from limits).</p></li>
-<li><p><strong>A_current</strong> (<em>np.array</em>) – Current Jacobian.</p></li>
+<li><p><strong>u_base</strong> (<em>np.ndarray</em>) – Base actuator commands (e.g., from pseudo-inverse).</p></li>
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Desired secondary goal (e.g., move gimbals away from limits).</p></li>
+<li><p><strong>A_current</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Current Jacobian.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Combined actuator command.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.NullMotionManager.get_null_projection">
-<span class="sig-name descname"><span class="pre">get_null_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A_current</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#NullMotionManager.get_null_projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.NullMotionManager.get_null_projection" title="Link to this definition"></a></dt>
-<dd><p>Returns the null-space projection matrix (I - A+ * A).</p>
+<span class="sig-name descname"><span class="pre">get_null_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A_current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#NullMotionManager.get_null_projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.NullMotionManager.get_null_projection" title="Link to this definition"></a></dt>
+<dd><p>Calculate the null-space projection matrix (I - A+ * A).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>A_current</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Current Jacobian/effectiveness matrix.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Null-space projection matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.PseudoInverseAllocator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">PseudoInverseAllocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#PseudoInverseAllocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.PseudoInverseAllocator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">PseudoInverseAllocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">effectiveness_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#PseudoInverseAllocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.PseudoInverseAllocator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.allocation.ControlAllocator" title="gnc_toolkit.actuators.allocation.ControlAllocator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ControlAllocator</span></code></a></p>
-<p>Standard pseudo-inverse allocator: u = A^T * (A * A^T)^-1 * Y.
-Minimizes the L2-norm of the actuator commands (energy optimal).</p>
+<p>Control allocation using the Moore-Penrose pseudo-inverse.</p>
+<p>Suitable for over-determined systems (more actuators than DOFs).
+Minimizes the L2-norm of the actuator commands: u = A^# * f.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>effectiveness_matrix</strong> (<em>np.ndarray</em>) – The (m x n) matrix mapping actuator outputs to forces/torques.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.PseudoInverseAllocator.allocate">
-<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desired_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#PseudoInverseAllocator.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.PseudoInverseAllocator.allocate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_torque_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#PseudoInverseAllocator.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.PseudoInverseAllocator.allocate" title="Link to this definition"></a></dt>
+<dd><p>Perform allocation using pseudo-inverse.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>desired_output</strong> (<em>np.array</em>) – Desired force/torque (m,).</p>
+<dd class="field-odd"><p><strong>force_torque_cmd</strong> (<em>np.ndarray</em>) – Desired force/torque vector.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>Actuator commands vector.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Actuator commands (n,).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -238,20 +309,36 @@ Minimizes the L2-norm of the actuator commands (energy optimal).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.SingularRobustAllocator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">SingularRobustAllocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#SingularRobustAllocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.SingularRobustAllocator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.allocation.</span></span><span class="sig-name descname"><span class="pre">SingularRobustAllocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#SingularRobustAllocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.SingularRobustAllocator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.allocation.ControlAllocator" title="gnc_toolkit.actuators.allocation.ControlAllocator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ControlAllocator</span></code></a></p>
-<p>Singular Robust Inverse (SR-Inverse) for CMGs.
-Adds a regularization term to avoid high gimbal rates near singularities.
-u = A^T * (A * A^T + lambda * I)^-1 * Y</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.SingularRobustAllocator.allocate">
-<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desired_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_current</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#SingularRobustAllocator.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.SingularRobustAllocator.allocate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<p>Singular Robust Inverse (SR-Inverse) allocator for CMGs.</p>
+<p>Adds a regularization term to avoid extremely high actuator rates near singularities.
+u = A^T * (A * A^T + lambda * I)^-1 * Y.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>desired_output</strong> (<em>np.array</em>) – Desired torque.</p></li>
-<li><p><strong>A_current</strong> (<em>np.array</em>) – Current Jacobian matrix if time-varying.</p></li>
+<li><p><strong>actuator_matrix</strong> (<em>np.ndarray</em>) – The control effectiveness matrix.</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>optional</em>) – Threshold for manipulability measure. Default is 0.01.</p></li>
+<li><p><strong>lambda0</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum regularization weight. Default is 0.01.</p></li>
 </ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.actuators.allocation.SingularRobustAllocator.allocate">
+<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desired_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/allocation.html#SingularRobustAllocator.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.allocation.SingularRobustAllocator.allocate" title="Link to this definition"></a></dt>
+<dd><p>Perform SR-Inverse allocation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>desired_output</strong> (<em>np.ndarray</em>) – Desired torque or force.</p></li>
+<li><p><strong>A_current</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Current Jacobian matrix if time-varying. Defaults to self.A.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Actuator rate commands.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,63 +351,72 @@ u = A^T * (A * A^T + lambda * I)^-1 * Y</p>
 <p>Control Moment Gyro (CMG) actuator model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.cmg.ControlMomentGyro">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.cmg.</span></span><span class="sig-name descname"><span class="pre">ControlMomentGyro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wheel_momentum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gimbal_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CMG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_gimbal_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.cmg.</span></span><span class="sig-name descname"><span class="pre">ControlMomentGyro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wheel_momentum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gimbal_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'CMG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_gimbal_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.actuator.Actuator" title="gnc_toolkit.actuators.actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actuator</span></code></a></p>
-<p>Control Moment Gyro (CMG) Actuator.
-Models torque produced by changing the orientation of a constant-speed momentum wheel.</p>
-<blockquote>
-<div><p>Torque = gimbal_rate x momentum</p>
-</div></blockquote>
+<p>Control Moment Gyro (CMG) Actuator.</p>
+<p>Models torque produced by changing the orientation of a constant-speed momentum wheel.
+Torque = gimbal_rate x momentum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wheel_momentum</strong> (<em>float</em>) – Angular momentum magnitude (Nms).</p></li>
+<li><p><strong>gimbal_axis</strong> (<em>np.ndarray</em>) – Unit vector of the gimbal axis (3,).</p></li>
+<li><p><strong>spin_axis_init</strong> (<em>np.ndarray</em>) – Unit vector of the initial spin axis (3,).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “CMG”.</p></li>
+<li><p><strong>max_gimbal_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum gimbal angular velocity (rad/s).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.cmg.ControlMomentGyro.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gimbal_rate_cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro.command" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gimbal_rate_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro.command" title="Link to this definition"></a></dt>
 <dd><p>Calculate torque produced by gimbal rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>gimbal_rate_cmd</strong> (<em>float</em>) – Commanded gimbal rate [rad/s].</p></li>
-<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step [s] to update gimbal angle.</p></li>
+<li><p><strong>gimbal_rate_cmd</strong> (<em>float</em>) – Commanded gimbal rate (rad/s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step (s) to update gimbal angle.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>Torque vector (Nm) (3,).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Torque vector [Nm] (3,).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.cmg.ControlMomentGyro.get_axes">
-<span class="sig-name descname"><span class="pre">get_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro.get_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_axes" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro.get_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_axes" title="Link to this definition"></a></dt>
 <dd><p>Get the current spin and transverse axes for a given gimbal angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Gimbal angle [rad]. If None, uses current.</p>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Gimbal angle (rad). If None, uses current <cite>self.gimbal_angle</cite>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>tuple</strong></p>
+<dd class="field-even"><p>(spin_axis, transverse_axis).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(spin_axis, transverse_axis)</p>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.cmg.ControlMomentGyro.get_torque_jacobian">
-<span class="sig-name descname"><span class="pre">get_torque_jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro.get_torque_jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_torque_jacobian" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_torque_jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/cmg.html#ControlMomentGyro.get_torque_jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_torque_jacobian" title="Link to this definition"></a></dt>
 <dd><p>Returns the Jacobian mapping gimbal rate to torque: T = A * g_rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Angle to evaluate at.</p>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Angle to evaluate at (rad).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>(3, 1) mapping matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(3,1) mapping matrix.</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -333,21 +429,33 @@ Models torque produced by changing the orientation of a constant-speed momentum 
 <p>Magnetorquer actuator model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.magnetorquer.Magnetorquer">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.magnetorquer.</span></span><span class="sig-name descname"><span class="pre">Magnetorquer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MTQ'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/magnetorquer.html#Magnetorquer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.magnetorquer.Magnetorquer" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.magnetorquer.</span></span><span class="sig-name descname"><span class="pre">Magnetorquer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_dipole</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'MTQ'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/magnetorquer.html#Magnetorquer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.magnetorquer.Magnetorquer" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.actuator.Actuator" title="gnc_toolkit.actuators.actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actuator</span></code></a></p>
-<p>Magnetorquer model.</p>
+<p>Magnetorquer Actuator Model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_dipole</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Maximum dipole moment (Am^2). Default None (no saturation).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default “MTQ”.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.magnetorquer.Magnetorquer.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole_cmd</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/magnetorquer.html#Magnetorquer.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.magnetorquer.Magnetorquer.command" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/magnetorquer.html#Magnetorquer.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.magnetorquer.Magnetorquer.command" title="Link to this definition"></a></dt>
+<dd><p>Calculate delivered dipole moment.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dipole_cmd</strong> (<em>float</em>) – Commanded dipole moment [Am^2].</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dipole_cmd</strong> (<em>float</em>) – Commanded dipole moment (Am^2).</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional parameters.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Delivered dipole moment (Am^2).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Delivered dipole moment [Am^2].</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -360,26 +468,41 @@ Models torque produced by changing the orientation of a constant-speed momentum 
 <p>Reaction Wheel (RW) actuator model with friction and momentum limits.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.reaction_wheel.ReactionWheel">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.reaction_wheel.</span></span><span class="sig-name descname"><span class="pre">ReactionWheel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_torque</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_momentum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static_friction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viscous_friction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_friction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/reaction_wheel.html#ReactionWheel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.reaction_wheel.ReactionWheel" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.reaction_wheel.</span></span><span class="sig-name descname"><span class="pre">ReactionWheel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_momentum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'RW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static_friction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viscous_friction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_friction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/reaction_wheel.html#ReactionWheel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.reaction_wheel.ReactionWheel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.actuator.Actuator" title="gnc_toolkit.actuators.actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actuator</span></code></a></p>
-<p>Reaction Wheel Actuator.
-Models torque generation with saturation and max speed limits.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.actuators.reaction_wheel.ReactionWheel.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">torque_cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/reaction_wheel.html#ReactionWheel.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.reaction_wheel.ReactionWheel.command" title="Link to this definition"></a></dt>
-<dd><p>Calculate delivered torque.</p>
+<p>Reaction Wheel Actuator.</p>
+<p>Models torque generation with saturation, max speed limits, and friction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>torque_cmd</strong> (<em>float</em>) – Commanded torque [Nm].</p></li>
-<li><p><strong>current_speed</strong> (<em>float</em>) – Current wheel speed [rad/s].</p></li>
+<li><p><strong>max_torque</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum torque (Nm). Default is None (no saturation).</p></li>
+<li><p><strong>max_momentum</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum angular momentum (Nms).</p></li>
+<li><p><strong>inertia</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia about spin axis (kg*m^2).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “RW”.</p></li>
+<li><p><strong>static_friction</strong> (<em>float</em><em>, </em><em>optional</em>) – Static friction torque (Nm). Default is 0.0.</p></li>
+<li><p><strong>viscous_friction</strong> (<em>float</em><em>, </em><em>optional</em>) – Viscous friction coefficient (Nm/(rad/s)). Default is 0.0.</p></li>
+<li><p><strong>coulomb_friction</strong> (<em>float</em><em>, </em><em>optional</em>) – Coulomb friction torque (Nm). Default is 0.0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.actuators.reaction_wheel.ReactionWheel.command">
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">torque_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/reaction_wheel.html#ReactionWheel.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.reaction_wheel.ReactionWheel.command" title="Link to this definition"></a></dt>
+<dd><p>Calculate delivered motor torque.</p>
+<p>Friction Model:
+$tau_f = f_v omega + f_c text{sgn}(omega)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>torque_cmd</strong> (<em>float</em>) – Commanded motor torque (Nm).</p></li>
+<li><p><strong>current_speed</strong> (<em>float</em><em>, </em><em>optional</em>) – Current wheel spin rate (rad/s). Default 0.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Actual torque delivered to the spacecraft (Nm).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Delivered torque [Nm].</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -392,47 +515,69 @@ Models torque generation with saturation and max speed limits.</p>
 <p>Solar Sail force model based on Solar Radiation Pressure (SRP).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.solar_sail.SolarSail">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.solar_sail.</span></span><span class="sig-name descname"><span class="pre">SolarSail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reflectivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specular_reflect_coeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SolarSail'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/solar_sail.html#SolarSail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.solar_sail.SolarSail" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.solar_sail.</span></span><span class="sig-name descname"><span class="pre">SolarSail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reflectivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specular_reflect_coeff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SolarSail'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/solar_sail.html#SolarSail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.solar_sail.SolarSail" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.actuator.Actuator" title="gnc_toolkit.actuators.actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actuator</span></code></a></p>
-<p>Solar Sail Actuator.
-Models force produced by Solar Radiation Pressure (SRP) on a flat sail.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.actuators.solar_sail.SolarSail.calculate_force">
-<span class="sig-name descname"><span class="pre">calculate_force</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sun_unit_vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal_unit_vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_au</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/solar_sail.html#SolarSail.calculate_force"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.solar_sail.SolarSail.calculate_force" title="Link to this definition"></a></dt>
-<dd><p>Calculate SRP force on the sail.</p>
+<p>Solar Sail Actuator model.</p>
+<p>Models the force produced by Solar Radiation Pressure (SRP) on a flat sail surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sun_unit_vec</strong> (<em>np.array</em>) – Unit vector from sail to Sun.</p></li>
-<li><p><strong>normal_unit_vec</strong> (<em>np.array</em>) – Unit vector normal to sail surface.</p></li>
-<li><p><strong>distance_au</strong> (<em>float</em>) – Distance from Sun [AU].</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – Surface area of the sail (m^2).</p></li>
+<li><p><strong>reflectivity</strong> (<em>float</em><em>, </em><em>optional</em>) – Total reflectivity coefficient [0 to 1]. Default is 0.9.</p></li>
+<li><p><strong>specular_reflect_coeff</strong> (<em>float</em><em>, </em><em>optional</em>) – Fraction of reflection that is specular [0 to 1]. Default is 0.9.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “SolarSail”.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.actuators.solar_sail.SolarSail.calculate_force">
+<span class="sig-name descname"><span class="pre">calculate_force</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sun_unit_vec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal_unit_vec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_au</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/solar_sail.html#SolarSail.calculate_force"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.solar_sail.SolarSail.calculate_force" title="Link to this definition"></a></dt>
+<dd><p>Calculate SRP force vector on the flat sail surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sun_unit_vec</strong> (<em>np.ndarray</em>) – Unit vector from sail towards the Sun.</p></li>
+<li><p><strong>normal_unit_vec</strong> (<em>np.ndarray</em>) – Unit vector normal to the sail surface.</p></li>
+<li><p><strong>distance_au</strong> (<em>float</em><em>, </em><em>optional</em>) – Distance from the Sun in Astronomical Units (AU). Default is 1.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>SRP force vector (N) in the same frame as input vectors.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Force vector [N].</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.solar_sail.SolarSail.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal_cmd</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/solar_sail.html#SolarSail.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.solar_sail.SolarSail.command" title="Link to this definition"></a></dt>
-<dd><p>Calculate force based on commanded normal vector and Sun position.</p>
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/solar_sail.html#SolarSail.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.solar_sail.SolarSail.command" title="Link to this definition"></a></dt>
+<dd><p>Calculate force based on commanded normal vector and current environment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>normal_cmd</strong> (<em>np.array</em>) – Commanded normal vector (towards Sun-ish).</p></li>
-<li><p><strong>kwargs</strong> – Must include ‘sun_vec’ (relative unit vector).</p></li>
+<li><p><strong>normal_cmd</strong> (<em>np.ndarray</em>) – Commanded normal vector for the sail.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – <ul>
+<li><dl class="simple">
+<dt>sun_vec<span class="classifier">np.ndarray</span></dt><dd><p>Unit vector towards the Sun. Required.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>distance_au<span class="classifier">float, optional</span></dt><dd><p>Distance from Sun (AU). Default is 1.0.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>Force vector (N).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Force vector [N].</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -445,88 +590,170 @@ Models force produced by Solar Radiation Pressure (SRP) on a flat sail.</p>
 <p>Thruster models including Chemical, Electric, and Multi-thruster clusters.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.ChemicalThruster">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">ChemicalThruster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_thrust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_on_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ChemThruster'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ChemicalThruster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ChemicalThruster" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">ChemicalThruster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_thrust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_on_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ChemThruster'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ChemicalThruster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ChemicalThruster" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.thruster.Thruster" title="gnc_toolkit.actuators.thruster.Thruster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Thruster</span></code></a></p>
-<p>Chemical Thruster.
-Models On/Off behavior or PWM-averaged thrust.</p>
+<p>Chemical Thruster model.</p>
+<p>Models On/Off behavior or PWM-averaged thrust with minimum on-time constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_thrust</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum thrust (N). Default is 10.0.</p></li>
+<li><p><strong>isp</strong> (<em>float</em><em>, </em><em>optional</em>) – Specific impulse (s). Default is 300.0.</p></li>
+<li><p><strong>min_on_time</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum valve open time (s). Default is 0.010.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “ChemThruster”.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.ChemicalThruster.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust_cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ChemicalThruster.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ChemicalThruster.command" title="Link to this definition"></a></dt>
-<dd><p>Considers PWM constraints.
-If the commanded thrust implies an on-time &lt; min_on_time, it is zeroed.</p>
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ChemicalThruster.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ChemicalThruster.command" title="Link to this definition"></a></dt>
+<dd><p>Considers PWM constraints for chemical valve.</p>
+<p>If the commanded thrust implies an on-time &lt; min_on_time, it is zeroed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thrust_cmd</strong> (<em>float</em>) – Commanded thrust (N).</p></li>
+<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Control period (s).</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Delivered thrust (N).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.ElectricThruster">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">ElectricThruster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_thrust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1500.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ElecThruster'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ElectricThruster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ElectricThruster" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">ElectricThruster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_thrust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1500.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_efficiency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ElecThruster'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ElectricThruster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ElectricThruster" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.thruster.Thruster" title="gnc_toolkit.actuators.thruster.Thruster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Thruster</span></code></a></p>
-<p>Electric Thruster (e.g. Hall Effect, Ion).
-Power-limited.</p>
+<p>Electric Thruster model (e.g., Hall Effect, Ion).</p>
+<p>Power-limited thrust generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_thrust</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum thrust (N). Default is 0.1.</p></li>
+<li><p><strong>isp</strong> (<em>float</em><em>, </em><em>optional</em>) – Specific impulse (s). Default is 1500.0.</p></li>
+<li><p><strong>power_efficiency</strong> (<em>float</em><em>, </em><em>optional</em>) – Electrical to Jet power efficiency (eta). Default is 0.6.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “ElecThruster”.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.ElectricThruster.get_power_consumption">
-<span class="sig-name descname"><span class="pre">get_power_consumption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ElectricThruster.get_power_consumption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ElectricThruster.get_power_consumption" title="Link to this definition"></a></dt>
-<dd><p>Calculate required electrical power [W].</p>
+<span class="sig-name descname"><span class="pre">get_power_consumption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ElectricThruster.get_power_consumption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ElectricThruster.get_power_consumption" title="Link to this definition"></a></dt>
+<dd><p>Calculate electrical power requirement.</p>
+<p>Equation:
+$P_{in} = frac{T I_{sp} g_0}{2 eta}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>thrust</strong> (<em>float</em>) – Produced thrust (N).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Electrical power consumption (W).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.Thruster">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">Thruster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_thrust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_impulse_bit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Thruster'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#Thruster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.Thruster" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">Thruster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_thrust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_impulse_bit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Thruster'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#Thruster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.Thruster" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.actuator.Actuator" title="gnc_toolkit.actuators.actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actuator</span></code></a></p>
-<p>Base Thruster model.
-Produces thrust Force.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.Thruster.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust_cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#Thruster.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.Thruster.command" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<p>Base Thruster model.</p>
+<p>Produces thrust force and consumes mass based on Isp.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>thrust_cmd</strong> (<em>float</em>) – Commanded thrust [N].</p></li>
-<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step duration [s]. Required for MIB checks.</p></li>
+<li><p><strong>max_thrust</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum thrust (N). Default is 1.0.</p></li>
+<li><p><strong>min_impulse_bit</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum impulse bit (Ns). Default is 0.0.</p></li>
+<li><p><strong>isp</strong> (<em>float</em><em>, </em><em>optional</em>) – Specific Impulse (s). Default is None.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “Thruster”.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.Thruster.command">
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#Thruster.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.Thruster.command" title="Link to this definition"></a></dt>
+<dd><p>Calculate delivered thrust.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thrust_cmd</strong> (<em>float</em>) – Commanded thrust (N).</p></li>
+<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step duration (s). Required for MIB checks.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional parameters.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Delivered thrust (N).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Delivered thrust [N].</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.Thruster.get_mass_flow">
-<span class="sig-name descname"><span class="pre">get_mass_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#Thruster.get_mass_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.Thruster.get_mass_flow" title="Link to this definition"></a></dt>
-<dd><p>Calculate mass flow rate for a given thrust.</p>
+<span class="sig-name descname"><span class="pre">get_mass_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#Thruster.get_mass_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.Thruster.get_mass_flow" title="Link to this definition"></a></dt>
+<dd><p>Calculate mass flow rate.</p>
+<p>Equation:
+$dot{m} = frac{T}{I_{sp} g_0}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>thrust</strong> (<em>float</em>) – Actual thrust produced (N).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mass flow rate (kg/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.ThrusterCluster">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">ThrusterCluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ThrusterCluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ThrusterCluster" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.thruster.</span></span><span class="sig-name descname"><span class="pre">ThrusterCluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thrusters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gnc_toolkit.actuators.thruster.Thruster" title="gnc_toolkit.actuators.thruster.Thruster"><span class="pre">Thruster</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ThrusterCluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ThrusterCluster" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A collection of thrusters with a defined allocation logic.
-Maps generalized force/torque to individual thruster on-times or throttle levels.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.ThrusterCluster.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_torque_cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ThrusterCluster.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ThrusterCluster.command" title="Link to this definition"></a></dt>
-<dd><p>Distribute 6-DOF command to thrusters.</p>
+<p>A collection of thrusters with defined allocation logic.</p>
+<p>Maps generalized 6-DOF force/torque commands to individual thruster outputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>force_torque_cmd</strong> (<em>np.array</em>) – (6,) desired [Fx, Fy, Fz, Tx, Ty, Tz].</p></li>
-<li><p><strong>dt</strong> (<em>float</em>) – Time step for MIB checks.</p></li>
+<li><p><strong>thrusters</strong> (<em>list</em><em>[</em><a class="reference internal" href="#gnc_toolkit.actuators.thruster.Thruster" title="gnc_toolkit.actuators.thruster.Thruster"><em>Thruster</em></a><em>]</em>) – List of thruster objects.</p></li>
+<li><p><strong>positions</strong> (<em>np.ndarray</em>) – (N, 3) positions of thrusters in body frame (m).</p></li>
+<li><p><strong>directions</strong> (<em>np.ndarray</em>) – (N, 3) thrust unit vectors in body frame.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.actuators.thruster.ThrusterCluster.command">
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_torque_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/thruster.html#ThrusterCluster.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.thruster.ThrusterCluster.command" title="Link to this definition"></a></dt>
+<dd><p>Distribute 6-DOF force/torque command to individual thrusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>force_torque_cmd</strong> (<em>np.ndarray</em>) – Desired [Fx, Fy, Fz, Tx, Ty, Tz] in body frame (N, Nm).</p></li>
+<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step for MIB and duty cycle checks (s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>Delivered thrusts for each thruster in the cluster (N).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Delivered thrusts for each thruster.</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -539,41 +766,58 @@ Maps generalized force/torque to individual thruster on-times or throttle levels
 <p>Variable Speed Control Moment Gyro (VSCMG) actuator model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.vscmg.VariableSpeedCMG">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.vscmg.</span></span><span class="sig-name descname"><span class="pre">VariableSpeedCMG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wheel_inertia</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gimbal_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VSCMG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_gimbal_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_wheel_torque</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/vscmg.html#VariableSpeedCMG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.vscmg.VariableSpeedCMG" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.actuators.vscmg.</span></span><span class="sig-name descname"><span class="pre">VariableSpeedCMG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wheel_inertia</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gimbal_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'VSCMG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_gimbal_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_wheel_torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/vscmg.html#VariableSpeedCMG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.vscmg.VariableSpeedCMG" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.actuators.cmg.ControlMomentGyro" title="gnc_toolkit.actuators.cmg.ControlMomentGyro"><code class="xref py py-class docutils literal notranslate"><span class="pre">ControlMomentGyro</span></code></a></p>
-<p>Variable Speed Control Moment Gyro (VSCMG).
-Allows wheel speed to change (Reaction Wheel effect) while gimbaling (CMG effect).
-Torque = I_w * alpha * s + gimbal_rate * h * t</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.actuators.vscmg.VariableSpeedCMG.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/vscmg.html#VariableSpeedCMG.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.vscmg.VariableSpeedCMG.command" title="Link to this definition"></a></dt>
-<dd><p>Calculate combined torque.</p>
+<p>Variable Speed Control Moment Gyro (VSCMG).</p>
+<p>Allows wheel speed to change (Reaction Wheel effect) while gimbaling (CMG effect).
+Torque = I_w * alpha * s + gimbal_rate * h * t.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cmd_vec</strong> (<em>tuple/list</em>) – (gimbal_rate_cmd, wheel_torque_cmd)</p></li>
-<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step [s].</p></li>
+<li><p><strong>wheel_inertia</strong> (<em>float</em>) – Moment of inertia of the wheel (kg*m^2).</p></li>
+<li><p><strong>gimbal_axis</strong> (<em>np.ndarray</em>) – Gimbal axis vector (3,).</p></li>
+<li><p><strong>spin_axis_init</strong> (<em>np.ndarray</em>) – Initial spin axis vector (3,).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Actuator name. Default is “VSCMG”.</p></li>
+<li><p><strong>max_gimbal_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum gimbal angular velocity (rad/s).</p></li>
+<li><p><strong>max_wheel_torque</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum torque for wheel acceleration (Nm).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.actuators.vscmg.VariableSpeedCMG.command">
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_vec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/vscmg.html#VariableSpeedCMG.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.vscmg.VariableSpeedCMG.command" title="Link to this definition"></a></dt>
+<dd><p>Calculate combined torque from gimbaling and wheel acceleration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmd_vec</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>] </em><em>| </em><em>list</em><em>[</em><em>float</em><em>]</em>) – (gimbal_rate_cmd, wheel_torque_cmd).
+- gimbal_rate_cmd : Commanded gimbal rate (rad/s).
+- wheel_torque_cmd : Commanded wheel torque (Nm).</p></li>
+<li><p><strong>dt</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step (s) for state integration.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>Net torque vector (Nm) (3,).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Net torque vector [Nm] (3,).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.actuators.vscmg.VariableSpeedCMG.get_jacobian">
-<span class="sig-name descname"><span class="pre">get_jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/vscmg.html#VariableSpeedCMG.get_jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.vscmg.VariableSpeedCMG.get_jacobian" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/actuators/vscmg.html#VariableSpeedCMG.get_jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.actuators.vscmg.VariableSpeedCMG.get_jacobian" title="Link to this definition"></a></dt>
 <dd><p>Returns full Jacobian matrix mapping [g_rate, w_torque]^T to torque vector.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>np.array</strong></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Gimbal angle to evaluate at (rad).</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>(3, 2) matrix.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(3, 2) Jacobian matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

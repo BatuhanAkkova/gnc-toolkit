@@ -95,19 +95,29 @@
 <div class="viewcode-block" id="Propagator.propagate">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.base.Propagator.propagate">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Propagates the state vector (position and velocity) forward in time.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            r_i (np.ndarray): Initial position vector [km] or [m] (consistent units required).</span>
-<span class="sd">            v_i (np.ndarray): Initial velocity vector [km/s] or [m/s].</span>
-<span class="sd">            dt (float): Time step to propagate [s].</span>
-<span class="sd">            **kwargs: Additional arguments specific to the propagator.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_i : np.ndarray</span>
+<span class="sd">            Initial position vector (m).</span>
+<span class="sd">        v_i : np.ndarray</span>
+<span class="sd">            Initial velocity vector (m/s).</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Time duration for propagation (s).</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional arguments specific to the propagator implementation.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            tuple: (r_f, v_f) Final position and velocity vectors.</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">            (r_f, v_f).</span>
+<span class="sd">            r_f : Final position vector (m).</span>
+<span class="sd">            v_f : Final velocity vector (m/s).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 </div>

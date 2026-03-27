@@ -90,31 +90,50 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Lidar</span><span class="p">(</span><span class="n">Sensor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Lidar sensor model.</span>
+
 <span class="sd">    Measures range and line-of-sight (LOS) vector to a target point.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    range_noise_std : float, optional</span>
+<span class="sd">        Range measurement noise standard deviation (m). Default is 0.01.</span>
+<span class="sd">    los_noise_std : float, optional</span>
+<span class="sd">        Angular noise standard deviation for LOS vector (rad). Default is 0.001.</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Sensor name. Default is &quot;Lidar&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">range_noise_std</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">los_noise_std</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Lidar&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            range_noise_std (float): Range measurement noise std dev [m].</span>
-<span class="sd">            los_noise_std (float): Angular noise std dev for LOS vector [rad].</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">range_noise_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="n">los_noise_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Lidar&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">range_noise_std</span> <span class="o">=</span> <span class="n">range_noise_std</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">los_noise_std</span> <span class="o">=</span> <span class="n">los_noise_std</span>
 
 <div class="viewcode-block" id="Lidar.measure">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.lidar.Lidar.measure">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_relative_pos</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_relative_pos</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            true_relative_pos (np.ndarray): True relative position vector in body frame [m].</span>
+<span class="sd">        Generate Lidar range and LOS measurement.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        true_relative_pos : np.ndarray</span>
+<span class="sd">            True relative position vector in body frame (m).</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional parameters.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            tuple: (measured_range, measured_los_vec)</span>
+<span class="sd">        tuple[float, np.ndarray]</span>
+<span class="sd">            (measured_range, measured_los_vec).</span>
+<span class="sd">            measured_range : Range to target (m).</span>
+<span class="sd">            measured_los_vec : Unit LOS vector in body frame.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">true_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">true_relative_pos</span><span class="p">)</span>
+        <span class="n">true_range</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">true_relative_pos</span><span class="p">))</span>
         <span class="n">true_los</span> <span class="o">=</span> <span class="n">true_relative_pos</span> <span class="o">/</span> <span class="n">true_range</span> <span class="k">if</span> <span class="n">true_range</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
         <span class="c1"># Add range noise</span>
@@ -128,7 +147,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">measured_los</span> <span class="o">=</span> <span class="n">true_los</span>
 
-        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">measured_range</span><span class="p">),</span> <span class="n">measured_los</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">measured_range</span><span class="p">)),</span> <span class="n">measured_los</span></div>
 </div>
 
 </pre></div>

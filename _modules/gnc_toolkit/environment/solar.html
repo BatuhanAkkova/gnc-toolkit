@@ -86,50 +86,65 @@
 <div class="viewcode-block" id="Sun">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.solar.Sun">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Sun</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solar Position Model (Astronomical Almanac).</span>
+
+<span class="sd">    Provides the Sun&#39;s position vector in the Earth-Centered Inertial (ECI) </span>
+<span class="sd">    frame (J2000).</span>
+
+<span class="sd">    Calculation:</span>
+<span class="sd">    $\lambda_{ecl} = q + 1.915 \sin(g) + 0.020 \sin(2g)$</span>
+<span class="sd">    where $q$ is mean longitude and $g$ is mean anomaly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize solar model.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="Sun.calculate_sun_eci">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.solar.Sun.calculate_sun_eci">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_sun_eci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jd</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_sun_eci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculates Sun vector in ECI frame.</span>
+<span class="sd">        Calculate Sun vector in ECI J2000.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            jd (float): Julian Date</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date (UT1).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.array: Sun vector in ECI frame (km).</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Sun position $[x, y, z]$ (m).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">jd</span> <span class="o">-</span> <span class="mf">2451545.0</span>  <span class="c1"># Number of days since J2000</span>
+        <span class="c1"># 1. Days since J2000 epoch</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">jd</span><span class="p">)</span> <span class="o">-</span> <span class="mf">2451545.0</span>
 
-        <span class="c1"># Mean anomaly of the Sun</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="mf">357.529</span> <span class="o">+</span> <span class="mf">0.98560028</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="n">g_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="c1"># 2. Mean anomaly of the Sun (rad)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">357.529</span> <span class="o">+</span> <span class="mf">0.98560028</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
 
-        <span class="c1"># Mean longitude</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="mf">280.459</span> <span class="o">+</span> <span class="mf">0.98564736</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="n">q_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="c1"># 3. Mean longitude of the Sun (rad)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">280.459</span> <span class="o">+</span> <span class="mf">0.98564736</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
 
-        <span class="c1"># Ecliptic longitude</span>
-        <span class="n">L</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="mf">1.915</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">g_rad</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.020</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g_rad</span><span class="p">)</span>
-        <span class="n">L_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+        <span class="c1"># 4. Ecliptic longitude (rad)</span>
+        <span class="n">lon_ecl</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">1.915</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">0.020</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
 
-        <span class="c1"># Obliquity of the ecliptic</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="mf">23.439</span> <span class="o">-</span> <span class="mf">0.00000036</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="n">e_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="c1"># 5. Obliquity of the ecliptic (rad)</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">23.439</span> <span class="o">-</span> <span class="mf">0.00000036</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
 
-        <span class="c1"># Distance is approx 1 AU</span>
-        <span class="n">au</span> <span class="o">=</span> <span class="mf">149597870700.0</span>  <span class="c1"># meters (approx)</span>
+        <span class="c1"># 6. Physical constant: 1 Astronomical Unit (AU) in meters</span>
+        <span class="n">au_m</span> <span class="o">=</span> <span class="mf">149597870700.0</span>
 
-        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">L_rad</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">e_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">L_rad</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">e_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">L_rad</span><span class="p">)</span>
+        <span class="c1"># 7. Convert from Ecliptic to ECI (Equatorial)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lon_ecl</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lon_ecl</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lon_ecl</span><span class="p">)</span>
 
-        <span class="n">r_sun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span> <span class="o">*</span> <span class="n">au</span>
-
-        <span class="k">return</span> <span class="n">r_sun</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span> <span class="o">*</span> <span class="n">au_m</span></div>
 </div>
 
 </pre></div>

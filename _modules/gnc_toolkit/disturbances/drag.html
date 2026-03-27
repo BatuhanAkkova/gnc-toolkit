@@ -80,58 +80,89 @@
 <span class="sd">Lumped atmospheric drag model for spacecraft acceleration.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="LumpedDrag">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.drag.LumpedDrag">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LumpedDrag</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lumped drag model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Atmospheric Drag Model.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">density_model</span><span class="p">,</span> <span class="n">co_rotate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            density_model: Object with get_density(r_eci, jd) method.</span>
-<span class="sd">            co_rotate (bool): Whether to include atmospheric co-rotation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    Acceleration Equation:</span>
+<span class="sd">    $\mathbf{a}_d = -\frac{1}{2} \rho v_{rel}^2 \frac{C_d A}{m} \hat{\mathbf{v}}_{rel}$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    density_model : Any</span>
+<span class="sd">        Atmospheric density provider.</span>
+<span class="sd">    co_rotate : bool, optional</span>
+<span class="sd">        Atmospheric co-rotation with planet. Default True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">density_model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">co_rotate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize drag model with density source.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">density_model</span> <span class="o">=</span> <span class="n">density_model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">co_rotate</span> <span class="o">=</span> <span class="n">co_rotate</span>
 
 <div class="viewcode-block" id="LumpedDrag.get_acceleration">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.drag.LumpedDrag.get_acceleration">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_acceleration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">cd</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate drag acceleration.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_acceleration</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">v_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">cd</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate instantaneous drag acceleration vector.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            r_eci (np.ndarray): Position ECI [m]</span>
-<span class="sd">            v_eci (np.ndarray): Velocity ECI [m/s]</span>
-<span class="sd">            jd (float): Julian Date</span>
-<span class="sd">            mass (float): Spacecraft mass [kg]</span>
-<span class="sd">            area (float): Cross-sectional area [m^2]</span>
-<span class="sd">            cd (float): Drag coefficient</span>
+<span class="sd">        Formula:</span>
+<span class="sd">        $\mathbf{a}_d = -\frac{1}{2} \rho v_{rel}^2 \frac{C_d A}{m} \hat{\mathbf{v}}_{rel}$</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            ECI Position vector (m).</span>
+<span class="sd">        v_eci : np.ndarray</span>
+<span class="sd">            ECI Velocity vector (m/s).</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date.</span>
+<span class="sd">        mass : float</span>
+<span class="sd">            Total spacecraft mass (kg).</span>
+<span class="sd">        area : float</span>
+<span class="sd">            Effective cross-sectional area ($m^2$).</span>
+<span class="sd">        cd : float</span>
+<span class="sd">            Drag coefficient.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.ndarray: Acceleration ECI [m/s^2]</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Acceleration vector ($m/s^2$).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Calculate density</span>
-        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">density_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+        <span class="n">r_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
+        <span class="n">v_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v_eci</span><span class="p">)</span>
 
-        <span class="c1"># Velocity relative to rotating atmosphere</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">density_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_val</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">co_rotate</span><span class="p">:</span>
+            <span class="c1"># Earth rotation vector approx (rad/s)</span>
             <span class="n">w_earth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">7.2921159e-5</span><span class="p">])</span>
-            <span class="n">v_rel</span> <span class="o">=</span> <span class="n">v_eci</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">w_earth</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">)</span>
+            <span class="n">v_rel</span> <span class="o">=</span> <span class="n">v_val</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">w_earth</span><span class="p">,</span> <span class="n">r_val</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">v_rel</span> <span class="o">=</span> <span class="n">v_eci</span>
+            <span class="n">v_rel</span> <span class="o">=</span> <span class="n">v_val</span>
 
         <span class="n">v_rel_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_rel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">v_rel_norm</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-        <span class="c1"># Drag force direction (opposing relative velocity)</span>
-        <span class="n">drag_force_mag</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_rel_norm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">*</span> <span class="n">area</span>
-        <span class="n">drag_acc</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">drag_force_mag</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_rel</span> <span class="o">/</span> <span class="n">v_rel_norm</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">drag_acc</span></div>
+        <span class="c1"># Acceleration calculation</span>
+        <span class="n">acc_mag</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">v_rel_norm</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">*</span> <span class="p">(</span><span class="n">area</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">acc_mag</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_rel</span> <span class="o">/</span> <span class="n">v_rel_norm</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

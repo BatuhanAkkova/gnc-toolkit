@@ -89,8 +89,8 @@
 <div class="viewcode-block" id="calculate_friis_link_budget">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.communications.calculate_friis_link_budget">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_friis_link_budget</span><span class="p">(</span>
-    <span class="n">p_tx_w</span><span class="p">,</span> <span class="n">g_tx_db</span><span class="p">,</span> <span class="n">g_rx_db</span><span class="p">,</span> <span class="n">frequency_hz</span><span class="p">,</span> <span class="n">distance_m</span><span class="p">,</span> <span class="n">losses_misc_db</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l_atm_db</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="p">):</span>
+    <span class="n">p_tx_w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">g_tx_db</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">g_rx_db</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">frequency_hz</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">distance_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">losses_misc_db</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">l_atm_db</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the link budget using Friis transmission equation.</span>
 
@@ -134,7 +134,7 @@
 
 <div class="viewcode-block" id="calculate_doppler_shift">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.communications.calculate_doppler_shift">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_doppler_shift</span><span class="p">(</span><span class="n">f_tx_hz</span><span class="p">,</span> <span class="n">r_ecef_rx</span><span class="p">,</span> <span class="n">v_ecef_rx</span><span class="p">,</span> <span class="n">r_ecef_tx</span><span class="p">,</span> <span class="n">v_ecef_tx</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_doppler_shift</span><span class="p">(</span><span class="n">f_tx_hz</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">r_ecef_rx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_ecef_rx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r_ecef_tx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_ecef_tx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the Doppler shift for a signal sent from TX to RX.</span>
 
@@ -181,7 +181,7 @@
 
 <div class="viewcode-block" id="calculate_atmospheric_attenuation">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.mission_design.html#gnc_toolkit.mission_design.communications.calculate_atmospheric_attenuation">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_atmospheric_attenuation</span><span class="p">(</span><span class="n">elevation_deg</span><span class="p">,</span> <span class="n">frequency_hz</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_atmospheric_attenuation</span><span class="p">(</span><span class="n">elevation_deg</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">frequency_hz</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates atmospheric attenuation using a simplified cosecant model.</span>
 

@@ -88,66 +88,109 @@
 <div class="viewcode-block" id="Canonball">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Canonball</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SRP canonball model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solar Radiation Pressure (SRP) &#39;Cannonball&#39; Model.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="sd">    Calculates acceleration due to solar photon momentum transfer, assuming</span>
+<span class="sd">    a spherical spacecraft with uniform optical properties.</span>
+
+<span class="sd">    Acceleration Equation:</span>
+<span class="sd">    $\mathbf{a}_{srp} = -\nu P_{AU} \left(\frac{AU}{d_{sun}}\right)^2 C_r \frac{A}{m} \hat{\mathbf{u}}_{sun}$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">        Initialized with default solar pressure at 1 AU.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Sun ephemeris and reference pressure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sun_model</span> <span class="o">=</span> <span class="n">Sun</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">P_sun</span> <span class="o">=</span> <span class="mf">4.56e-6</span>  <span class="c1"># N/m^2 (Solar radiation pressure at 1 AU)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_sun</span> <span class="o">=</span> <span class="mf">4.56e-6</span>  <span class="c1"># N/m^2 (Ref solar pressure at 1 AU)</span>
 
 <div class="viewcode-block" id="Canonball.get_acceleration">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball.get_acceleration">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_acceleration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate SRP acceleration.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_acceleration</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">cr</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate SRP acceleration vector.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            r_eci (np.ndarray): Position ECI [m]</span>
-<span class="sd">            jd (float): Julian Date</span>
-<span class="sd">            mass (float): Mass [kg]</span>
-<span class="sd">            area (float): Area [m^2]</span>
-<span class="sd">            cr (float): Reflectivity coefficient</span>
+<span class="sd">        Formula:</span>
+<span class="sd">        $\mathbf{a}_{srp} = -\nu P_{AU} \left(\frac{AU}{d_{sun}}\right)^2 C_r \frac{A}{m} \hat{\mathbf{u}}_{sun}$</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            ECI Position (m).</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date.</span>
+<span class="sd">        mass : float</span>
+<span class="sd">            Total mass (kg).</span>
+<span class="sd">        area : float</span>
+<span class="sd">            Solar cross-sectional area ($m^2$).</span>
+<span class="sd">        cr : float</span>
+<span class="sd">            Radiation pressure coefficient $[1, 2]$.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.ndarray: Acceleration ECI [m/s^2]</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Acceleration vector ($m/s^2$).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
         <span class="n">r_sun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sun_model</span><span class="o">.</span><span class="n">calculate_sun_eci</span><span class="p">(</span><span class="n">jd</span><span class="p">)</span>
 
-        <span class="c1"># Vector from Sat to Sun</span>
-        <span class="n">sat_to_sun</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">-</span> <span class="n">r_eci</span>
+        <span class="n">sat_to_sun</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">-</span> <span class="n">r_val</span>
         <span class="n">dist_sun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sat_to_sun</span><span class="p">)</span>
         <span class="n">u_sun</span> <span class="o">=</span> <span class="n">sat_to_sun</span> <span class="o">/</span> <span class="n">dist_sun</span>
 
-        <span class="c1"># Shadow function</span>
-        <span class="n">nu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_eclipse</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">)</span>
+        <span class="c1"># Shadow factor (nu)</span>
+        <span class="n">nu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_eclipse</span><span class="p">(</span><span class="n">r_val</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nu</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-        <span class="c1"># SRP pressure at distance (Inverse Square Law)</span>
+        <span class="c1"># Pressure scaling (Inverse Square Law)</span>
         <span class="n">au</span> <span class="o">=</span> <span class="mf">149597870700.0</span>
         <span class="n">p_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_sun</span> <span class="o">*</span> <span class="p">(</span><span class="n">au</span> <span class="o">/</span> <span class="n">dist_sun</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 
         <span class="n">acc_mag</span> <span class="o">=</span> <span class="n">nu</span> <span class="o">*</span> <span class="n">p_dist</span> <span class="o">*</span> <span class="n">cr</span> <span class="o">*</span> <span class="p">(</span><span class="n">area</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="o">-</span><span class="n">acc_mag</span> <span class="o">*</span> <span class="n">u_sun</span>  <span class="c1"># force away from sun</span></div>
+        <span class="k">return</span> <span class="o">-</span><span class="n">acc_mag</span> <span class="o">*</span> <span class="n">u_sun</span></div>
 
 
 <div class="viewcode-block" id="Canonball.check_eclipse">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.disturbances.html#gnc_toolkit.disturbances.srp.Canonball.check_eclipse">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_eclipse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_sat</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_eclipse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_sat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r_sun</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Cylindrical shadow model.</span>
-<span class="sd">        Returns 1.0 if in sunlight, 0.0 if in shadow.</span>
+<span class="sd">        Determine if the spacecraft is in Earth&#39;s shadow (Cylindrical Model).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_sat : np.ndarray</span>
+<span class="sd">            Satellite ECI position.</span>
+<span class="sd">        r_sun : np.ndarray</span>
+<span class="sd">            Sun ECI position.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Shadow factor [0=Full shadow, 1=Full sunlight].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Projection of r_sat onto Sun vector</span>
         <span class="n">u_sun</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_sun</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_sat</span><span class="p">,</span> <span class="n">u_sun</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">1.0</span>
 
-        <span class="c1"># Perpendicular distance</span>
         <span class="n">r_perp_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_sat</span><span class="p">,</span> <span class="n">r_sat</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span>
-
         <span class="n">R_earth</span> <span class="o">=</span> <span class="mf">6378137.0</span>
+
         <span class="k">if</span> <span class="n">r_perp_sq</span> <span class="o">&lt;</span> <span class="n">R_earth</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
         <span class="k">return</span> <span class="mf">1.0</span></div>

@@ -80,6 +80,8 @@
 <span class="sd">Star Tracker sensor model.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.sensors.sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span>
@@ -90,66 +92,66 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.star_tracker.StarTracker">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StarTracker</span><span class="p">(</span><span class="n">Sensor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Star Tracker sensor model.</span>
+<span class="sd">    Star Tracker Attitude Sensor.</span>
+
 <span class="sd">    Measures the attitude quaternion [x, y, z, w].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    noise_std : float, optional</span>
+<span class="sd">        Standard deviation of noise (rad). Default 0.0.</span>
+<span class="sd">    bias : np.ndarray | None, optional</span>
+<span class="sd">        Constant bias rotation vector (rad).</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Sensor name. Default &quot;StarTracker&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noise_std</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;StarTracker&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            noise_std (float): Standard deviation of noise [rad] (applied as small angle rotation).</span>
-<span class="sd">            bias (np.ndarray): Constant bias rotation (small angles) [rad]. Shape (3,).</span>
-<span class="sd">            name (str): Sensor name.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noise_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;StarTracker&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize star tracker.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">noise_std</span> <span class="o">=</span> <span class="n">noise_std</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">bias</span> <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span> <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
 <div class="viewcode-block" id="StarTracker.measure">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.star_tracker.StarTracker.measure">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_quat</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_quat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Simulate star tracker measurement.</span>
+<span class="sd">        Simulate attitude measurement with error quaternion.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            true_quat (np.ndarray): True attitude quaternion [x, y, z, w].</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        true_quat : np.ndarray</span>
+<span class="sd">            True attitude quaternion [x, y, z, w].</span>
+<span class="sd">        **kwargs : Any</span>
+<span class="sd">            Additional parameters.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.ndarray: Measured quaternion [x, y, z, w].</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Measured quaternion [x, y, z, w].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Generate error rotation vector (small angle approximation)</span>
+        <span class="n">tq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">true_quat</span><span class="p">)</span>
         <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_std</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
         <span class="n">error_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">+</span> <span class="n">noise</span>
 
-        <span class="c1"># q_err approx [ex/2, ey/2, ez/2, 1] for small angles (x, y, z, w)</span>
         <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">error_vec</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">angle</span> <span class="o">&gt;</span> <span class="mf">1e-8</span><span class="p">:</span>
             <span class="n">axis</span> <span class="o">=</span> <span class="n">error_vec</span> <span class="o">/</span> <span class="n">angle</span>
-            <span class="c1"># [x, y, z, w]</span>
-            <span class="n">q_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
-                    <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
-                    <span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
+            <span class="n">q_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">q_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 
-        <span class="n">q_meas</span> <span class="o">=</span> <span class="n">quat_mult</span><span class="p">(</span><span class="n">true_quat</span><span class="p">,</span> <span class="n">q_err</span><span class="p">)</span>
-
-        <span class="c1"># Ensure unit quaternion</span>
+        <span class="n">q_meas</span> <span class="o">=</span> <span class="n">quat_mult</span><span class="p">(</span><span class="n">tq</span><span class="p">,</span> <span class="n">q_err</span><span class="p">)</span>
         <span class="n">q_meas</span> <span class="o">=</span> <span class="n">q_meas</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">q_meas</span><span class="p">)</span>
 
-        <span class="c1"># Apply faults</span>
+        <span class="c1"># Apply faults from base class</span>
         <span class="n">q_meas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_faults</span><span class="p">(</span><span class="n">q_meas</span><span class="p">)</span>
-
-        <span class="c1"># Re-normalize if fault added noise</span>
-        <span class="n">q_meas</span> <span class="o">=</span> <span class="n">q_meas</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">q_meas</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">q_meas</span></div>
+        <span class="k">return</span> <span class="n">q_meas</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">q_meas</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

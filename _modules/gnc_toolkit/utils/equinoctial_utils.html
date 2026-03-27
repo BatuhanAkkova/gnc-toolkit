@@ -85,123 +85,192 @@
 
 <div class="viewcode-block" id="kepler2equinoctial">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.kepler2equinoctial">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">kepler2equinoctial</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converts Keplerian elements to Equinoctial elements.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">kepler2equinoctial</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ecc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">incl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">raan</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">argp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">m_anom</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert Keplerian elements to Classical Equinoctial elements.</span>
 
-<span class="sd">    Equinoctial elements (a, h, k, p, q, lambda) are non-singular for</span>
-<span class="sd">    zero eccentricity and zero/90-deg inclination.</span>
+<span class="sd">    Equinoctial elements $(a, h, k, p, q, \lambda_M)$ are non-singular </span>
+<span class="sd">    for zero eccentricity and zero/90-deg inclination.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        a (float): Semi-major axis</span>
-<span class="sd">        ecc (float): Eccentricity</span>
-<span class="sd">        incl (float): Inclination [rad]</span>
-<span class="sd">        raan (float): RAAN [rad]</span>
-<span class="sd">        argp (float): Argument of perigee [rad]</span>
-<span class="sd">        M (float): Mean anomaly [rad]</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : float</span>
+<span class="sd">        Semi-major axis (m).</span>
+<span class="sd">    ecc : float</span>
+<span class="sd">        Eccentricity.</span>
+<span class="sd">    incl : float</span>
+<span class="sd">        Inclination (rad).</span>
+<span class="sd">    raan : float</span>
+<span class="sd">        RAAN (rad).</span>
+<span class="sd">    argp : float</span>
+<span class="sd">        Argument of Perigee (rad).</span>
+<span class="sd">    m_anom : float</span>
+<span class="sd">        Mean Anomaly (rad).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        tuple: (a, h, k, p, q, l_mean)</span>
+<span class="sd">    tuple[float, float, float, float, float, float]</span>
+<span class="sd">        Equinoctial elements (a, h, k, p, q, mean_lon).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">ecc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">raan</span> <span class="o">+</span> <span class="n">argp</span><span class="p">)</span>
     <span class="n">k</span> <span class="o">=</span> <span class="n">ecc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">raan</span> <span class="o">+</span> <span class="n">argp</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">incl</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">raan</span><span class="p">)</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">incl</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">raan</span><span class="p">)</span>
-    <span class="n">l_mean</span> <span class="o">=</span> <span class="n">raan</span> <span class="o">+</span> <span class="n">argp</span> <span class="o">+</span> <span class="n">M</span>
+    <span class="n">mean_lon</span> <span class="o">=</span> <span class="n">raan</span> <span class="o">+</span> <span class="n">argp</span> <span class="o">+</span> <span class="n">m_anom</span>
 
-    <span class="c1"># Wrap l_mean to [0, 2pi]</span>
-    <span class="n">l_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">l_mean</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">l_mean</span></div>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">h</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">k</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">q</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">mean_lon</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="equinoctial2kepler">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.equinoctial2kepler">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">equinoctial2kepler</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">l_mean</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">equinoctial2kepler</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">q</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mean_lon</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converts Equinoctial elements to Keplerian elements.</span>
+<span class="sd">    Convert Equinoctial elements back to Keplerian elements.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a, h, k, p, q, mean_lon : float</span>
+<span class="sd">        Equinoctial elements.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[float, float, float, float, float, float, float]</span>
+<span class="sd">        Keplerian (a, ecc, incl, raan, argp, nu, M).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ecc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">incl</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
     <span class="n">raan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
     <span class="n">argp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">-</span> <span class="n">raan</span>
 
-    <span class="c1"># Solve for F (Equinoctial Eccentric Anomaly)</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">solve_kepler_equinoctial</span><span class="p">(</span><span class="n">l_mean</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="c1"># 1. Solve Equinoctial Kepler Equation for F (Eccentric Longitude)</span>
+    <span class="n">f_lon</span> <span class="o">=</span> <span class="n">solve_kepler_equinoctial</span><span class="p">(</span><span class="n">mean_lon</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
 
-    <span class="c1"># True anomaly nu from F, h, k</span>
-    <span class="n">sinF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
-    <span class="n">cosF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+    <span class="n">sin_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span>
+    <span class="n">cos_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
 
-    <span class="c1"># Components in the equinoctial frame</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">cosF</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">sinF</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
-    <span class="n">Y</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">sinF</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">cosF</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
+    <span class="c1"># 2. Coordinates in Equinoctial Frame</span>
+    <span class="n">x_eq</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos_f</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">sin_f</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
+    <span class="n">y_eq</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">sin_f</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">cos_f</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
 
-    <span class="n">nu_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">nu_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y_eq</span><span class="p">,</span> <span class="n">x_eq</span><span class="p">)</span>
     <span class="n">nu</span> <span class="o">=</span> <span class="n">nu_eq</span> <span class="o">-</span> <span class="p">(</span><span class="n">raan</span> <span class="o">+</span> <span class="n">argp</span><span class="p">)</span>
+    <span class="n">m_anom</span> <span class="o">=</span> <span class="n">mean_lon</span> <span class="o">-</span> <span class="n">raan</span> <span class="o">-</span> <span class="n">argp</span>
 
-    <span class="n">raan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">raan</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-    <span class="n">argp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">argp</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-    <span class="n">nu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-
-    <span class="c1"># M from F</span>
-    <span class="n">M</span> <span class="o">=</span> <span class="n">l_mean</span> <span class="o">-</span> <span class="n">raan</span> <span class="o">-</span> <span class="n">argp</span>
-    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">raan</span><span class="p">,</span> <span class="n">argp</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">M</span></div>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">ecc</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">incl</span><span class="p">),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">raan</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">argp</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">nu</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)),</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">m_anom</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="solve_kepler_equinoctial">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.solve_kepler_equinoctial">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">solve_kepler_equinoctial</span><span class="p">(</span><span class="n">l_mean</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Solves Kepler&#39;s equation for equinoctial elements to find F (Equinoctial Eccentric Anomaly).</span>
-<span class="sd">    lambda = F + h*cos(F) - k*sin(F)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_kepler_equinoctial</span><span class="p">(</span><span class="n">mean_lon</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Iteratively solve the Equinoctial Kepler Equation for $F$.</span>
+
+<span class="sd">    $\lambda_M = F + h \cos F - k \sin F$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mean_lon : float</span>
+<span class="sd">        Mean longitude (rad).</span>
+<span class="sd">    h, k : float</span>
+<span class="sd">        Equinoctial elements.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Eccentric longitude F (rad).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">l_mean</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-        <span class="n">f_val</span> <span class="o">=</span> <span class="n">F</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="n">l_mean</span>
-        <span class="n">df_val</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
-        <span class="n">F</span> <span class="o">=</span> <span class="n">F</span> <span class="o">-</span> <span class="n">f_val</span> <span class="o">/</span> <span class="n">df_val</span>
-        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f_val</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+    <span class="n">f_lon</span> <span class="o">=</span> <span class="n">mean_lon</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">f_lon</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_lon</span>
+        <span class="n">der</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span>
+        <span class="n">f_lon</span> <span class="o">=</span> <span class="n">f_lon</span> <span class="o">-</span> <span class="n">res</span> <span class="o">/</span> <span class="n">der</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-13</span><span class="p">:</span>
             <span class="k">break</span>
-    <span class="k">return</span> <span class="n">F</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="equinoctial2eci">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.equinoctial_utils.equinoctial2eci">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">equinoctial2eci</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">l_mean</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">398600.4415e9</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">equinoctial2eci</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">q</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mean_lon</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">398600.4415e9</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Direct conversion from Equinoctial to ECI position and velocity.</span>
+<span class="sd">    Direct conversion from Equinoctial elements to ECI state.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a, h, k, p, q, mean_lon : float</span>
+<span class="sd">        Equinoctial elements.</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Gravitational parameter ($m^3/s^2$).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        (Position vector (m), Velocity vector (m/s)).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">solve_kepler_equinoctial</span><span class="p">(</span><span class="n">l_mean</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="n">f_lon</span> <span class="o">=</span> <span class="n">solve_kepler_equinoctial</span><span class="p">(</span><span class="n">mean_lon</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
 
-    <span class="n">sinF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
-    <span class="n">cosF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
-
+    <span class="n">sin_f</span><span class="p">,</span> <span class="n">cos_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f_lon</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f_lon</span><span class="p">)</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">cosF</span> <span class="o">-</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sinF</span><span class="p">)</span>
 
-    <span class="n">X</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">cosF</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">sinF</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
-    <span class="n">Y</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">sinF</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">cosF</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
+    <span class="n">x_eq</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos_f</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">sin_f</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
+    <span class="n">y_eq</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">sin_f</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">cos_f</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
 
-    <span class="n">X_dot</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">cosF</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">sinF</span><span class="p">)</span>
-    <span class="n">Y_dot</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">cosF</span> <span class="o">-</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">sinF</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">a</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">cos_f</span> <span class="o">-</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sin_f</span><span class="p">)</span>
 
-    <span class="c1"># Transformation to ECI</span>
-    <span class="n">inv_sq_pq</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">p</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">f_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">p</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">p</span><span class="p">])</span> <span class="o">*</span> <span class="n">inv_sq_pq</span>
-    <span class="n">g_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">p</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">q</span><span class="p">])</span> <span class="o">*</span> <span class="n">inv_sq_pq</span>
+    <span class="n">x_dot_eq</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">cos_f</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">sin_f</span><span class="p">)</span>
+    <span class="n">y_dot_eq</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos_f</span> <span class="o">-</span> <span class="n">h</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">sin_f</span><span class="p">)</span>
 
-    <span class="n">reci</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="n">f_vec</span> <span class="o">+</span> <span class="n">Y</span> <span class="o">*</span> <span class="n">g_vec</span>
-    <span class="n">veci</span> <span class="o">=</span> <span class="n">X_dot</span> <span class="o">*</span> <span class="n">f_vec</span> <span class="o">+</span> <span class="n">Y_dot</span> <span class="o">*</span> <span class="n">g_vec</span>
+    <span class="c1"># Orientation vectors</span>
+    <span class="n">inv_sq</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">p</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">f_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">p</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">p</span><span class="p">])</span> <span class="o">*</span> <span class="n">inv_sq</span>
+    <span class="n">g_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">p</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">q</span><span class="p">])</span> <span class="o">*</span> <span class="n">inv_sq</span>
 
-    <span class="k">return</span> <span class="n">reci</span><span class="p">,</span> <span class="n">veci</span></div>
+    <span class="n">r_eci</span> <span class="o">=</span> <span class="n">x_eq</span> <span class="o">*</span> <span class="n">f_vec</span> <span class="o">+</span> <span class="n">y_eq</span> <span class="o">*</span> <span class="n">g_vec</span>
+    <span class="n">v_eci</span> <span class="o">=</span> <span class="n">x_dot_eq</span> <span class="o">*</span> <span class="n">f_vec</span> <span class="o">+</span> <span class="n">y_dot_eq</span> <span class="o">*</span> <span class="n">g_vec</span>
+
+    <span class="k">return</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span></div>
 
 </pre></div>
 

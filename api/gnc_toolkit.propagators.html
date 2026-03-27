@@ -125,22 +125,24 @@
 <p>Abstract base class for orbit propagators.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.base.Propagator.propagate">
-<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/base.html#Propagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.base.Propagator.propagate" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/base.html#Propagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.base.Propagator.propagate" title="Link to this definition"></a></dt>
 <dd><p>Propagates the state vector (position and velocity) forward in time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Initial position vector [km] or [m] (consistent units required).</p></li>
-<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Initial velocity vector [km/s] or [m/s].</p></li>
-<li><p><strong>dt</strong> (<em>float</em>) – Time step to propagate [s].</p></li>
-<li><p><strong>**kwargs</strong> – Additional arguments specific to the propagator.</p></li>
+<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Initial position vector (m).</p></li>
+<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Initial velocity vector (m/s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Time duration for propagation (s).</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments specific to the propagator implementation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>tuple</strong></p>
+<dd class="field-even"><p>(r_f, v_f).
+r_f : Final position vector (m).
+v_f : Final velocity vector (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(r_f, v_f) Final position and velocity vectors.</p>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -153,30 +155,40 @@
 <p>Numerical Cowell Propagator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.cowell.CowellPropagator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.cowell.</span></span><span class="sig-name descname"><span class="pre">CowellPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><span class="pre">Integrator</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/cowell.html#CowellPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.cowell.CowellPropagator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.cowell.</span></span><span class="sig-name descname"><span class="pre">CowellPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><span class="pre">Integrator</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/cowell.html#CowellPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.cowell.CowellPropagator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.propagators.base.Propagator" title="gnc_toolkit.propagators.base.Propagator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Propagator</span></code></a></p>
-<p>Numerical Cowell Propagator.
-Integrates the equations of motion numerically, allowing for perturbations.</p>
+<p>Numerical Cowell Propagator.</p>
+<p>Integrates the equations of motion numerically, allowing for perturbations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>integrator</strong> (<a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><em>Integrator</em></a><em>, </em><em>optional</em>) – Numerical integrator instance. Defaults to RK4.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter (m^3/s^2). Default is Earth’s.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.cowell.CowellPropagator.propagate">
-<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_acc_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/cowell.html#CowellPropagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.cowell.CowellPropagator.propagate" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_acc_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/cowell.html#CowellPropagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.cowell.CowellPropagator.propagate" title="Link to this definition"></a></dt>
 <dd><p>Propagates the state using numerical integration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Initial position vector [km] or [m].</p></li>
-<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Initial velocity vector [km/s] or [m/s].</p></li>
-<li><p><strong>dt</strong> (<em>float</em>) – Propagation duration [s].</p></li>
+<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Initial position vector (m).</p></li>
+<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Initial velocity vector (m/s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation duration (s).</p></li>
 <li><p><strong>perturbation_acc_fn</strong> (<em>callable</em><em>, </em><em>optional</em>) – Function that returns perturbation accelerations.
-Signature: acc_pert = f(t, r, v)</p></li>
-<li><p><strong>dt_step</strong> (<em>float</em><em>, </em><em>optional</em>) – Step size for the integrator. Default is dt (single step) or 10s if dt is large.</p></li>
+Signature: acc_pert = f(t, r, v) -&gt; np.ndarray.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments, e.g., ‘dt_step’ for integration step size.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>tuple</strong></p>
+<dd class="field-even"><p>(r_f, v_f).
+r_f : Final position vector (m).
+v_f : Final velocity vector (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(r_f, v_f) Final position and velocity vectors.</p>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,24 +201,42 @@ Signature: acc_pert = f(t, r, v)</p></li>
 <p>Encke’s Method Propagator.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.encke.EnckePropagator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.encke.</span></span><span class="sig-name descname"><span class="pre">EnckePropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><span class="pre">Integrator</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/encke.html#EnckePropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.encke.EnckePropagator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.encke.</span></span><span class="sig-name descname"><span class="pre">EnckePropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><span class="pre">Integrator</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect_tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/encke.html#EnckePropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.encke.EnckePropagator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.propagators.base.Propagator" title="gnc_toolkit.propagators.base.Propagator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Propagator</span></code></a></p>
-<p>Encke’s Method Propagator.
-Integrates the deviation from a reference Keplerian orbit.
+<p>Encke’s Method Propagator.</p>
+<p>Integrates the deviation from a reference Keplerian orbit.
 Suitable for orbit propagation with small disturbances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>integrator</strong> (<a class="reference internal" href="gnc_toolkit.integrators.html#gnc_toolkit.integrators.integrator.Integrator" title="gnc_toolkit.integrators.integrator.Integrator"><em>Integrator</em></a><em>, </em><em>optional</em>) – Numerical integrator for deviations. Defaults to RK4.</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter (m^3/s^2). Default is Earth’s.</p></li>
+<li><p><strong>rect_tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Rectification tolerance (<a href="#id1"><span class="problematic" id="id2">|dr|</span></a> / r_ref). Default 1e-6.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.encke.EnckePropagator.propagate">
-<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_acc_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/encke.html#EnckePropagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.encke.EnckePropagator.propagate" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_acc_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/encke.html#EnckePropagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.encke.EnckePropagator.propagate" title="Link to this definition"></a></dt>
 <dd><p>Propagate state using Encke’s method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Initial position vector [m].</p></li>
-<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Initial velocity vector [m/s].</p></li>
-<li><p><strong>dt</strong> (<em>float</em>) – Propagation duration [s].</p></li>
+<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Initial position vector (m).</p></li>
+<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Initial velocity vector (m/s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation duration (s).</p></li>
 <li><p><strong>perturbation_acc_fn</strong> (<em>callable</em><em>, </em><em>optional</em>) – Function that returns perturbation accelerations.
-Signature: acc_pert = f(t, r, v)</p></li>
+Signature: acc_pert = f(t, r, v) -&gt; np.ndarray.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments, e.g., ‘dt_step’ for integration step size.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(r_f, v_f).
+r_f : Final position vector (m).
+v_f : Final velocity vector (m/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -219,13 +249,39 @@ Signature: acc_pert = f(t, r, v)</p></li>
 <p>Analytical Two-Body Propagator using Kepler’s Equation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.kepler.KeplerPropagator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.kepler.</span></span><span class="sig-name descname"><span class="pre">KeplerPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/kepler.html#KeplerPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.kepler.KeplerPropagator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.kepler.</span></span><span class="sig-name descname"><span class="pre">KeplerPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/kepler.html#KeplerPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.kepler.KeplerPropagator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.propagators.base.Propagator" title="gnc_toolkit.propagators.base.Propagator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Propagator</span></code></a></p>
-<p>Analytical Two-Body Propagator using Kepler’s Equation.</p>
+<p>Analytical Two-Body Propagator.</p>
+<p>Solves Kepler’s Problem using Universal Variables:
+$M = E - e sin E$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.kepler.KeplerPropagator.propagate">
-<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/kepler.html#KeplerPropagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.kepler.KeplerPropagator.propagate" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/kepler.html#KeplerPropagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.kepler.KeplerPropagator.propagate" title="Link to this definition"></a></dt>
 <dd><p>Solves the two-body problem using the Kepler equation (Vallado implementation).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Initial position vector (m).</p></li>
+<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Initial velocity vector (m/s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation duration (s).</p></li>
+<li><p><strong>n_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of iterations for Newton-Raphson. Default is 100.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(r_f, v_f).
+r_f : Final position vector (m).
+v_f : Final velocity vector (m/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -238,37 +294,64 @@ Signature: acc_pert = f(t, r, v)</p></li>
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.propagators.sgp4_propagator.</span></span><span class="sig-name descname"><span class="pre">Sgp4Propagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/sgp4_propagator.html#Sgp4Propagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.propagators.base.Propagator" title="gnc_toolkit.propagators.base.Propagator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Propagator</span></code></a></p>
-<p>SGP4/SDP4 Analytical Propagator.
-Wraps the <cite>sgp4</cite> library to propagate orbits using Two-Line Elements (TLEs).
+<p>SGP4/SDP4 Analytical Propagator.</p>
+<p>Wraps the <cite>sgp4</cite> library to propagate orbits using Two-Line Elements (TLEs).
 State output is typically in the TEME frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line1</strong> (<em>str</em>) – First line of the TLE.</p></li>
+<li><p><strong>line2</strong> (<em>str</em>) – Second line of the TLE.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate">
-<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/sgp4_propagator.html#Sgp4Propagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate" title="Link to this definition"></a></dt>
-<dd><p>Propagates the satellite state from TLE epoch forward by dt.
-Note: initial position/velocity input (r_i, v_i) is IGNORED,
+<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/sgp4_propagator.html#Sgp4Propagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate" title="Link to this definition"></a></dt>
+<dd><p>Propagates the satellite state from TLE epoch forward by dt.</p>
+<p>Note: initial position/velocity input (r_i, v_i) is IGNORED,
 as SGP4 is fully determined by the initialized TLE.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Ignored.</p></li>
-<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Ignored.</p></li>
-<li><p><strong>dt</strong> (<em>float</em>) – Propagation time relative to TLE epoch [s].</p></li>
+<li><p><strong>r_i</strong> (<em>np.ndarray</em>) – Ignored initial position.</p></li>
+<li><p><strong>v_i</strong> (<em>np.ndarray</em>) – Ignored initial velocity.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation time relative to TLE epoch (s).</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>tuple</strong></p>
+<dd class="field-even"><p>(r_f, v_f).
+r_f : Position in TEME frame (m).
+v_f : Velocity in TEME frame (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(r_f, v_f) Position and Velocity in TEME frame [m, m/s].</p>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate_to_jd">
-<span class="sig-name descname"><span class="pre">propagate_to_jd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd_f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd_f_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/sgp4_propagator.html#Sgp4Propagator.propagate_to_jd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate_to_jd" title="Link to this definition"></a></dt>
-<dd><p>Propagate to a specific Julian Date.
-Returns state in TEME [m, m/s].</p>
+<span class="sig-name descname"><span class="pre">propagate_to_jd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd_f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd_f_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/propagators/sgp4_propagator.html#Sgp4Propagator.propagate_to_jd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator.propagate_to_jd" title="Link to this definition"></a></dt>
+<dd><p>Propagate to a specific Julian Date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jd_f</strong> (<em>float</em>) – Final Julian Date (integer part).</p></li>
+<li><p><strong>jd_f_frac</strong> (<em>float</em><em>, </em><em>optional</em>) – Final Julian Date (fractional part). Default is 0.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(r_f, v_f) in TEME frame (m, m/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – If SGP4 propagation fails.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

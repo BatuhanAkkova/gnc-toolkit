@@ -80,6 +80,7 @@
 <span class="sd">Navigation using GNSS (GPS) position and velocity measurements.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.orbit_determination</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrbitDeterminationEKF</span>
@@ -88,44 +89,66 @@
 <div class="viewcode-block" id="GPSNavigation">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.gps_nav.GPSNavigation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GPSNavigation</span><span class="p">(</span><span class="n">OrbitDeterminationEKF</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Navigation using GNSS (GPS) measurements.</span>
-<span class="sd">    Processes position and velocity updates.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    GNSS-based Navigation using absolute Position and Velocity measurements.</span>
+
+<span class="sd">    Processes PVT (Position, Velocity, Time) solutions from a receiver </span>
+<span class="sd">    to correct the integrated orbital state. Inherits dynamics from </span>
+<span class="sd">    `OrbitDeterminationEKF`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="GPSNavigation.update_gps">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.navigation.html#gnc_toolkit.navigation.gps_nav.GPSNavigation.update_gps">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_gps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_meas</span><span class="p">,</span> <span class="n">v_meas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">R_gps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update state using GPS measurements.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_gps</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">r_meas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">v_meas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gps_cov</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update state estimate using GNSS Cartesian measurements.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            r_meas (np.ndarray): Measured position [x, y, z] in ECI [m].</span>
-<span class="sd">            v_meas (np.ndarray, optional): Measured velocity [vx, vy, vz] in ECI [m/s].</span>
-<span class="sd">            R_gps (np.ndarray, optional): Custom measurement noise covariance.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_meas : np.ndarray</span>
+<span class="sd">            Measured ECI position (m).</span>
+<span class="sd">        v_meas : np.ndarray, optional</span>
+<span class="sd">            Measured ECI velocity (m/s).</span>
+<span class="sd">        gps_cov : np.ndarray, optional</span>
+<span class="sd">            Direct measurement covariance matrix.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional parameters (e.g., R_gps).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_meas</span><span class="p">)</span>
+
+        <span class="c1"># Handle custom R passed via kwargs or gps_cov</span>
+        <span class="n">r_custom</span> <span class="o">=</span> <span class="n">gps_cov</span> <span class="k">if</span> <span class="n">gps_cov</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;R_gps&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">v_meas</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Update with both position and velocity (6D measurement)</span>
-            <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r_meas</span><span class="p">,</span> <span class="n">v_meas</span><span class="p">])</span>
+            <span class="n">vv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v_meas</span><span class="p">)</span>
+            <span class="n">z_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">rv</span><span class="p">,</span> <span class="n">vv</span><span class="p">])</span>
 
-            <span class="k">def</span><span class="w"> </span><span class="nf">hx</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">x</span>  <span class="c1"># Measurement is the full state (pos, vel)</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">hx</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span>  <span class="c1"># Identity mapping</span>
 
-            <span class="k">def</span><span class="w"> </span><span class="nf">H_jac</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">h_jac</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">R_gps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># Default GPS R: 3x3 for pos, 3x3 for vel</span>
-                <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-                <span class="n">R</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span>
-                <span class="n">R</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="mf">0.01</span>
+            <span class="k">if</span> <span class="n">r_custom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">r_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_custom</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">R</span> <span class="o">=</span> <span class="n">R_gps</span>
+                <span class="c1"># Scaled default covariance</span>
+                <span class="n">r_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+                <span class="c1"># Ensure self.ekf.R is captured correctly even if not initialized as expected</span>
+                <span class="n">r_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span> <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">R</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">r_mat</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_pos</span>
+                <span class="n">r_mat</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">r_pos</span> <span class="o">*</span> <span class="mf">0.1</span>  <span class="c1"># Velocity noise heuristic</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">H_jac</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ekf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">z_vec</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">h_jac</span><span class="p">,</span> <span class="n">r_mat</span><span class="o">=</span><span class="n">r_mat</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Fallback to position-only update (defined in base class)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">r_meas</span><span class="p">)</span></div>
+            <span class="c1"># Position only update</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

@@ -88,24 +88,48 @@
 <div class="viewcode-block" id="KeplerPropagator">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.kepler.KeplerPropagator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KeplerPropagator</span><span class="p">(</span><span class="n">Propagator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Analytical Two-Body Propagator using Kepler&#39;s Equation.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analytical Two-Body Propagator.</span>
+
+<span class="sd">    Solves Kepler&#39;s Problem using Universal Variables:</span>
+<span class="sd">    $M = E - e \sin E$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Gravitational parameter ($m^3/s^2$).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">398600.4418e9</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the Kepler Propagator.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            mu (float): Gravitational parameter [m^3/s^2]. Default is Earth.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">398600.4418e9</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span>
 
 <div class="viewcode-block" id="KeplerPropagator.propagate">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.propagators.html#gnc_toolkit.propagators.kepler.KeplerPropagator.propagate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">propagate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">r_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Solves the two-body problem using the Kepler equation (Vallado implementation).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_i : np.ndarray</span>
+<span class="sd">            Initial position vector (m).</span>
+<span class="sd">        v_i : np.ndarray</span>
+<span class="sd">            Initial velocity vector (m/s).</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Propagation duration (s).</span>
+<span class="sd">        n_iter : int, optional</span>
+<span class="sd">            Maximum number of iterations for Newton-Raphson. Default is 100.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional arguments.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">            (r_f, v_f).</span>
+<span class="sd">            r_f : Final position vector (m).</span>
+<span class="sd">            v_f : Final velocity vector (m/s).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span>
         <span class="n">r_i_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_i</span><span class="p">)</span>
@@ -116,7 +140,7 @@
 
         <span class="c1"># Check for near-parabolic or undefined orbits</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-9</span><span class="p">:</span>
-            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="c1"># Universal variable initialization</span>
         <span class="k">if</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mf">1e-9</span><span class="p">:</span>  <span class="c1"># Circular or Elliptical</span>
@@ -135,10 +159,10 @@
             <span class="n">p</span> <span class="o">=</span> <span class="n">h_mag</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">mu</span>
 
             <span class="n">s</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="n">dt</span><span class="p">))</span>
-            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
 
             <span class="n">x_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">w</span><span class="p">))</span>
-            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Hyperbolic</span>
             <span class="c1"># Avoid division by zero and domain errors</span>
@@ -148,10 +172,7 @@
                     <span class="o">*</span> <span class="n">mu</span>
                     <span class="o">*</span> <span class="n">alpha</span>
                     <span class="o">*</span> <span class="n">dt</span>
-                    <span class="o">/</span> <span class="p">(</span>
-                        <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_i</span><span class="p">,</span> <span class="n">v_i</span><span class="p">)</span>
-                        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">r_i_mag</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span>
-                    <span class="p">)</span>
+                    <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_i</span><span class="p">,</span> <span class="n">v_i</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">r_i_mag</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">))</span>
                 <span class="p">)</span>
                 <span class="n">x_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
@@ -202,8 +223,20 @@
         <span class="k">return</span> <span class="n">r_new</span><span class="p">,</span> <span class="n">v_new</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_c23_eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaw</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates c2 and c3 functions.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_c23_eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaw</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates Stumpff functions c2 and c3.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        yaw : float</span>
+<span class="sd">            Universal variable argument (alpha * x^2).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[float, float]</span>
+<span class="sd">            (c2, c3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">yaw</span> <span class="o">&gt;</span> <span class="mf">1e-8</span><span class="p">:</span>
             <span class="n">sqrt_yaw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">yaw</span><span class="p">)</span>
             <span class="n">c2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sqrt_yaw</span><span class="p">))</span> <span class="o">/</span> <span class="n">yaw</span>
@@ -215,7 +248,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">c2</span> <span class="o">=</span> <span class="mf">0.5</span>
             <span class="n">c3</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">6.0</span>
-        <span class="k">return</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">c2</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">c3</span><span class="p">)</span></div>
 
 </pre></div>
 

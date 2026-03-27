@@ -120,29 +120,41 @@
 <p>Lumped atmospheric drag model for spacecraft acceleration.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.drag.LumpedDrag">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.drag.</span></span><span class="sig-name descname"><span class="pre">LumpedDrag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">co_rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/drag.html#LumpedDrag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.drag.LumpedDrag" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.drag.</span></span><span class="sig-name descname"><span class="pre">LumpedDrag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">co_rotate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/drag.html#LumpedDrag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.drag.LumpedDrag" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Lumped drag model.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.disturbances.drag.LumpedDrag.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/drag.html#LumpedDrag.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.drag.LumpedDrag.get_acceleration" title="Link to this definition"></a></dt>
-<dd><p>Calculate drag acceleration.</p>
+<p>Atmospheric Drag Model.</p>
+<p>Acceleration Equation:
+$mathbf{a}_d = -frac{1}{2} rho v_{rel}^2 frac{C_d A}{m} hat{mathbf{v}}_{rel}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position ECI [m]</p></li>
-<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – Velocity ECI [m/s]</p></li>
-<li><p><strong>jd</strong> (<em>float</em>) – Julian Date</p></li>
-<li><p><strong>mass</strong> (<em>float</em>) – Spacecraft mass [kg]</p></li>
-<li><p><strong>area</strong> (<em>float</em>) – Cross-sectional area [m^2]</p></li>
-<li><p><strong>cd</strong> (<em>float</em>) – Drag coefficient</p></li>
+<li><p><strong>density_model</strong> (<em>Any</em>) – Atmospheric density provider.</p></li>
+<li><p><strong>co_rotate</strong> (<em>bool</em><em>, </em><em>optional</em>) – Atmospheric co-rotation with planet. Default True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.disturbances.drag.LumpedDrag.get_acceleration">
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/drag.html#LumpedDrag.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.drag.LumpedDrag.get_acceleration" title="Link to this definition"></a></dt>
+<dd><p>Calculate instantaneous drag acceleration vector.</p>
+<p>Formula:
+$mathbf{a}_d = -frac{1}{2} rho v_{rel}^2 frac{C_d A}{m} hat{mathbf{v}}_{rel}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI Position vector (m).</p></li>
+<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – ECI Velocity vector (m/s).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – Total spacecraft mass (kg).</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – Effective cross-sectional area ($m^2$).</p></li>
+<li><p><strong>cd</strong> (<em>float</em>) – Drag coefficient.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Acceleration vector ($m/s^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Acceleration ECI [m/s^2]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -155,42 +167,78 @@
 <p>Gravitational acceleration models (Two-Body, J2, Harmonics) and Gradient Torques.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.GradientTorque">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">GradientTorque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#GradientTorque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.GradientTorque" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">GradientTorque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#GradientTorque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.GradientTorque" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Gravity Gradient Torque Calculation.</p>
+<p>Gravity Gradient Pointing Restoration Torque.</p>
+<p>Models the restorative moment acting on an asymmetric rigid body
+within a non-uniform gravity field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.GradientTorque.gravity_gradient_torque">
-<span class="sig-name descname"><span class="pre">gravity_gradient_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_body2eci</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#GradientTorque.gravity_gradient_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.GradientTorque.gravity_gradient_torque" title="Link to this definition"></a></dt>
-<dd><p>Calculates Gravity Gradient torque in Body Frame.
-T_gg = 3 * mu / R^5 * (r_body x J * r_body)
-(Note: r_body = -u_nadir_body * R. Formula using unit vector: 3*mu/R^3 * (u x Ju))</p>
+<span class="sig-name descname"><span class="pre">gravity_gradient_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_body2eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#GradientTorque.gravity_gradient_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.GradientTorque.gravity_gradient_torque" title="Link to this definition"></a></dt>
+<dd><p>Calculate Gravity Gradient torque in Body frame.</p>
+<p>Equation:
+$mathbf{T}_{gg} = frac{3mu}{r^3} mathbf{u}_n times (mathbf{J} mathbf{u}_n)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J</strong> (<em>np.ndarray</em>) – Inertia tensor ($3 times 3$) ($kg cdot m^2$).</p></li>
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI Position (m).</p></li>
+<li><p><strong>q_body2eci</strong> (<em>np.ndarray</em>) – Body-to-ECI quaternion $[q_w, q_x, q_y, q_z]$.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reaction torque vector (3,) (Nm).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.HarmonicsGravity">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">HarmonicsGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#HarmonicsGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.HarmonicsGravity" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">HarmonicsGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#HarmonicsGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.HarmonicsGravity" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Spherical Harmonics gravity model.
-EGM 2008 coefficients are used.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.HarmonicsGravity.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#HarmonicsGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.HarmonicsGravity.get_acceleration" title="Link to this definition"></a></dt>
-<dd><p>Calculate gravitational acceleration including spherical harmonics.
-Uses fully normalized coefficients and recursion.</p>
+<p>High-Fidelity Spherical Harmonics Model (EGM2008).</p>
+<p>Calculates the fine-grained gravitational acceleration by expanding the
+potential as an infinite series of Legendre polynomials and associated
+functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position ECI [m]</p></li>
-<li><p><strong>jd</strong> (<em>float</em>) – Julian Date</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
+<li><p><strong>re</strong> (<em>float</em><em>, </em><em>optional</em>) – Planetary reference radius (m).</p></li>
+<li><p><strong>n_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum expansion degree.</p></li>
+<li><p><strong>m_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum expansion order.</p></li>
+<li><p><strong>file_path</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Path to harmonic coefficients CSV.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.HarmonicsGravity.get_acceleration">
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#HarmonicsGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.HarmonicsGravity.get_acceleration" title="Link to this definition"></a></dt>
+<dd><p>Calculate harmonic acceleration vector in ECI.</p>
+<p>Implements Pines-style or Cunningham recursion for high-order gravity.
+Handles coordinate transformation between ECI/ECEF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI Position (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date for frame rotation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Total acceleration vector ($m/s^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Acceleration ECI [m/s^2]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -199,43 +247,75 @@ Uses fully normalized coefficients and recursion.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.J2Gravity">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">J2Gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001082635855</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#J2Gravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.J2Gravity" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">J2Gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001082635855</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#J2Gravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.J2Gravity" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>J2 gravity model.
-Includes J2 perturbation.</p>
+<p>Oblateness Perturbation ($J_2$).</p>
+<p>Specific Acceleration:
+$a_{J2} = frac{3mu J_2 R_e^2}{2r^5} left[ (5frac{z^2}{r^2}-1)x, (5frac{z^2}{r^2}-1)y, (5frac{z^2}{r^2}-3)z right]$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$).</p></li>
+<li><p><strong>j2</strong> (<em>float</em><em>, </em><em>optional</em>) – J2 coefficient.</p></li>
+<li><p><strong>re</strong> (<em>float</em><em>, </em><em>optional</em>) – Equatorial radius (m).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.J2Gravity.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#J2Gravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.J2Gravity.get_acceleration" title="Link to this definition"></a></dt>
-<dd><p>Calculate J2 acceleration in ECI frame.
-(ignoring precession/nutation for J2 simplified).</p>
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#J2Gravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.J2Gravity.get_acceleration" title="Link to this definition"></a></dt>
+<dd><p>Calculate acceleration including $J_2$ perturbation.</p>
+<p>Formula:
+$a_{j2,x} = frac{3}{2} J_2 frac{mu}{r^2} frac{R_e^2}{r^2} frac{x}{r} (5frac{z^2}{r^2} - 1)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI Position (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Julian Date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Acceleration vector ($m/s^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.OceanTidesGravity">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">OceanTidesGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#OceanTidesGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.OceanTidesGravity" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">OceanTidesGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6378137.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#OceanTidesGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.OceanTidesGravity" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Ocean Tides Gravity Correction (Simplified Model).
-Implements tidal corrections for n=2, m=1,2 using the four main
-constituents: M2, S2, K1, O1 based on IERS 2010 coefficients.
-Add this acceleration to other gravity models.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.OceanTidesGravity.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#OceanTidesGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.OceanTidesGravity.get_acceleration" title="Link to this definition"></a></dt>
-<dd><p>Calculate acceleration due to Ocean Tides in ECI frame.</p>
+<p>Spherical Harmonic Ocean Tide Model (Simplified).</p>
+<p>Applies periodic corrections to the potential field due to
+displacement of oceanic mass.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position ECI [m]</p></li>
-<li><p><strong>jd</strong> (<em>float</em>) – Julian Date</p></li>
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter.</p></li>
+<li><p><strong>re</strong> (<em>float</em><em>, </em><em>optional</em>) – Reference radius.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.OceanTidesGravity.get_acceleration">
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#OceanTidesGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.OceanTidesGravity.get_acceleration" title="Link to this definition"></a></dt>
+<dd><p>Calculate tidal acceleration contribution in ECI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI Position.</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Correction vector ($m/s^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Acceleration ECI [m/s^2]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,56 +324,106 @@ Add this acceleration to other gravity models.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.RelativisticCorrection">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">RelativisticCorrection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_earth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#RelativisticCorrection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.RelativisticCorrection" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">RelativisticCorrection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_earth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#RelativisticCorrection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.RelativisticCorrection" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>General Relativistic corrections for gravity.
-Includes Schwarzschild (static) and Lense-Thirring (frame-dragging).
-Reference: IERS Conventions (2010), Chapter 10.</p>
+<p>General Relativistic Gravitational Correction.</p>
+<p>Includes static Schwarzschild and dynamic Lense-Thirring
+(frame-dragging) effects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter.</p></li>
+<li><p><strong>J_earth</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Angular momentum vector of the planet.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.RelativisticCorrection.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#RelativisticCorrection.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.RelativisticCorrection.get_acceleration" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#RelativisticCorrection.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.RelativisticCorrection.get_acceleration" title="Link to this definition"></a></dt>
 <dd><p>Calculate relativistic acceleration correction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – State vectors in ECI.</p></li>
+<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – State vectors in ECI.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correction vector ($m/s^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.ThirdBodyGravity">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">ThirdBodyGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu_sun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.32712440018e+20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_moon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4902800066000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#ThirdBodyGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.ThirdBodyGravity" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">ThirdBodyGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu_sun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.32712440018e+20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_moon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4902800066000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#ThirdBodyGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.ThirdBodyGravity" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Luni-solar third-body gravity model.
-Treats Sun and Moon as point masses.</p>
+<p>Solar and Lunar Gravitational Perturbation Model.</p>
+<p>Calculates the point-mass acceleration acting on the spacecraft due
+to the Sun and Moon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu_sun</strong> (<em>float</em><em>, </em><em>optional</em>) – Solar gravitational parameter.</p></li>
+<li><p><strong>mu_moon</strong> (<em>float</em><em>, </em><em>optional</em>) – Lunar gravitational parameter.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.ThirdBodyGravity.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#ThirdBodyGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.ThirdBodyGravity.get_acceleration" title="Link to this definition"></a></dt>
-<dd><p>Calculate third-body acceleration in ECI frame.
-a = sum( mu_k * ( (s_k - r)/(<a href="#id1"><span class="problematic" id="id2">|</span></a>s_k - r|^3) - s_k/<a href="#id3"><span class="problematic" id="id4">|</span></a>s_k|^3 ) )</p>
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#ThirdBodyGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.ThirdBodyGravity.get_acceleration" title="Link to this definition"></a></dt>
+<dd><p>Calculate combined third-body acceleration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Satellite ECI position (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Acceleration vector ($m/s^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.TwoBodyGravity">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">TwoBodyGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#TwoBodyGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.TwoBodyGravity" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.gravity.</span></span><span class="sig-name descname"><span class="pre">TwoBodyGravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#TwoBodyGravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.TwoBodyGravity" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Two-body gravity model.
-Keplerian orbit, no gravitational perturbation.</p>
+<p>Standard Point-Mass Gravity.</p>
+<p>Acceleration:
+$mathbf{a}_{gg} = -frac{mu}{r^3} mathbf{r}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mu</strong> (<em>float</em><em>, </em><em>optional</em>) – Gravitational parameter ($m^3/s^2$). Default Earth.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.gravity.TwoBodyGravity.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#TwoBodyGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.TwoBodyGravity.get_acceleration" title="Link to this definition"></a></dt>
-<dd><p>Calculate acceleration in ECI frame.</p>
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/gravity.html#TwoBodyGravity.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.gravity.TwoBodyGravity.get_acceleration" title="Link to this definition"></a></dt>
+<dd><p>Calculate point mass acceleration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position vector in ECI frame [m]</p></li>
-<li><p><strong>jd</strong> (<em>float</em><em>, </em><em>optional</em>) – Julian Date (unused for TwoBody)</p></li>
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI Position (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Julian Date.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Acceleration ($m/s^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Acceleration vector in ECI frame [m/s^2]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -308,33 +438,57 @@ Keplerian orbit, no gravitational perturbation.</p>
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.srp.Canonball">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.disturbances.srp.</span></span><span class="sig-name descname"><span class="pre">Canonball</span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/srp.html#Canonball"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.srp.Canonball" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>SRP canonball model.</p>
+<p>Solar Radiation Pressure (SRP) ‘Cannonball’ Model.</p>
+<p>Calculates acceleration due to solar photon momentum transfer, assuming
+a spherical spacecraft with uniform optical properties.</p>
+<p>Acceleration Equation:
+$mathbf{a}_{srp} = -nu P_{AU} left(frac{AU}{d_{sun}}right)^2 C_r frac{A}{m} hat{mathbf{u}}_{sun}$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – Initialized with default solar pressure at 1 AU.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.srp.Canonball.check_eclipse">
-<span class="sig-name descname"><span class="pre">check_eclipse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_sat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_sun</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/srp.html#Canonball.check_eclipse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.srp.Canonball.check_eclipse" title="Link to this definition"></a></dt>
-<dd><p>Cylindrical shadow model.
-Returns 1.0 if in sunlight, 0.0 if in shadow.</p>
+<span class="sig-name descname"><span class="pre">check_eclipse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_sat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_sun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/srp.html#Canonball.check_eclipse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.srp.Canonball.check_eclipse" title="Link to this definition"></a></dt>
+<dd><p>Determine if the spacecraft is in Earth’s shadow (Cylindrical Model).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_sat</strong> (<em>np.ndarray</em>) – Satellite ECI position.</p></li>
+<li><p><strong>r_sun</strong> (<em>np.ndarray</em>) – Sun ECI position.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Shadow factor [0=Full shadow, 1=Full sunlight].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.disturbances.srp.Canonball.get_acceleration">
-<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/srp.html#Canonball.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.srp.Canonball.get_acceleration" title="Link to this definition"></a></dt>
-<dd><p>Calculate SRP acceleration.</p>
+<span class="sig-name descname"><span class="pre">get_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/disturbances/srp.html#Canonball.get_acceleration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.disturbances.srp.Canonball.get_acceleration" title="Link to this definition"></a></dt>
+<dd><p>Calculate SRP acceleration vector.</p>
+<p>Formula:
+$mathbf{a}_{srp} = -nu P_{AU} left(frac{AU}{d_{sun}}right)^2 C_r frac{A}{m} hat{mathbf{u}}_{sun}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position ECI [m]</p></li>
-<li><p><strong>jd</strong> (<em>float</em>) – Julian Date</p></li>
-<li><p><strong>mass</strong> (<em>float</em>) – Mass [kg]</p></li>
-<li><p><strong>area</strong> (<em>float</em>) – Area [m^2]</p></li>
-<li><p><strong>cr</strong> (<em>float</em>) – Reflectivity coefficient</p></li>
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI Position (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – Total mass (kg).</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – Solar cross-sectional area ($m^2$).</p></li>
+<li><p><strong>cr</strong> (<em>float</em>) – Radiation pressure coefficient $[1, 2]$.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Acceleration vector ($m/s^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Acceleration ECI [m/s^2]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

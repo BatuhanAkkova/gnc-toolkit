@@ -81,6 +81,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>  <span class="c1"># Added for **kwargs: Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -89,38 +90,69 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Sensor</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Abstract base class for all sensors.</span>
+<span class="sd">    Abstract Base Class for all sensors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Sensor name. Default &quot;Sensor&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Sensor&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Sensor&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize sensor base.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fault_state</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># None, &quot;stuck&quot;, &quot;spike&quot;, &quot;noise_increase&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stuck_value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fault_state</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stuck_value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Sensor.measure">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.measure">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_state</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a measurement based on the true state.</span>
+<span class="sd">        Generate a measurement.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            true_state: The true physical state (format depends on sensor type).</span>
-<span class="sd">            **kwargs: Additional parameters (e.g., time, environment).</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        true_state : np.ndarray | float</span>
+<span class="sd">            Actual physical state.</span>
+<span class="sd">        **kwargs : Any</span>
+<span class="sd">            Additional parameters.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Measured value with noise/bias applied.</span>
+<span class="sd">        np.ndarray | float</span>
+<span class="sd">            Measured value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="Sensor.apply_calibration">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.apply_calibration">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_calibration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">misalignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_calibration</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">misalignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scale_factor</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">bias</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Applies calibration residuals:</span>
-<span class="sd">        val_cal = (I + M) * S * val_true + b</span>
+<span class="sd">        Apply calibration residuals: val_cal = (I + M) * S * val_true + b.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : np.ndarray | float</span>
+<span class="sd">            True value to be calibrated.</span>
+<span class="sd">        misalignment : np.ndarray, optional</span>
+<span class="sd">            Skew/misalignment matrix (3x3 for vectors).</span>
+<span class="sd">        scale_factor : np.ndarray | float, optional</span>
+<span class="sd">            Scale factor error (scalar or vector). Default is 1.0.</span>
+<span class="sd">        bias : np.ndarray | float, optional</span>
+<span class="sd">            Constant bias vector or scalar.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray | float</span>
+<span class="sd">            Calibrated value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="c1"># Misalignment (M)</span>
@@ -129,10 +161,7 @@
                 <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">))</span> <span class="o">+</span> <span class="n">misalignment</span><span class="p">)</span> <span class="o">@</span> <span class="n">value</span>
 
             <span class="c1"># Scale Factor (S)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scale_factor</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">scale_factor</span> <span class="o">*</span> <span class="n">value</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">scale_factor</span> <span class="o">*</span> <span class="n">value</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">scale_factor</span> <span class="o">*</span> <span class="n">value</span>
 
             <span class="c1"># Bias (b)</span>
             <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -148,10 +177,29 @@
 
 <div class="viewcode-block" id="Sensor.apply_fogm_noise">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.apply_fogm_noise">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_fogm_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_val</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_fogm_noise</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">current_val</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Applies First-Order Gauss-Markov (FOGM) noise.</span>
+<span class="sd">        Apply First-Order Gauss-Markov (FOGM) noise.</span>
+
 <span class="sd">        x[k+1] = exp(-dt/tau) * x[k] + sigma * sqrt(1 - exp(-2*dt/tau)) * w[k]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        current_val : np.ndarray | float</span>
+<span class="sd">            Current noise state value.</span>
+<span class="sd">        sigma : float</span>
+<span class="sd">            Steady-state standard deviation.</span>
+<span class="sd">        tau : float</span>
+<span class="sd">            Correlation time constant (s).</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Time step (s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray | float</span>
+<span class="sd">            Updated noise state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">sigma</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">tau</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">current_val</span>
@@ -165,9 +213,19 @@
 
 <div class="viewcode-block" id="Sensor.apply_faults">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.apply_faults">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_faults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_faults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Injects faults into the measurement.</span>
+<span class="sd">        Inject faults into the measurement.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : np.ndarray | float</span>
+<span class="sd">            Clean measurement value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray | float</span>
+<span class="sd">            Faulted measurement value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fault_state</span> <span class="o">==</span> <span class="s2">&quot;stuck&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stuck_value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stuck_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">value</span>
@@ -189,9 +247,21 @@
 
 <div class="viewcode-block" id="Sensor.add_gaussian_noise">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.sensor.Sensor.add_gaussian_noise">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_gaussian_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_gaussian_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper to add zero-mean Gaussian noise.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : np.ndarray | float</span>
+<span class="sd">            Nominal value.</span>
+<span class="sd">        std_dev : float</span>
+<span class="sd">            Standard deviation of noise.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray | float</span>
+<span class="sd">            Noisy value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">std_dev</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">std_dev</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>

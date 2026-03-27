@@ -90,21 +90,32 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ControlMomentGyro</span><span class="p">(</span><span class="n">Actuator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Control Moment Gyro (CMG) Actuator.</span>
+
 <span class="sd">    Models torque produced by changing the orientation of a constant-speed momentum wheel.</span>
-<span class="sd">     Torque = gimbal_rate x momentum</span>
+<span class="sd">    Torque = gimbal_rate x momentum.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wheel_momentum : float</span>
+<span class="sd">        Angular momentum magnitude (Nms).</span>
+<span class="sd">    gimbal_axis : np.ndarray</span>
+<span class="sd">        Unit vector of the gimbal axis (3,).</span>
+<span class="sd">    spin_axis_init : np.ndarray</span>
+<span class="sd">        Unit vector of the initial spin axis (3,).</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Actuator name. Default is &quot;CMG&quot;.</span>
+<span class="sd">    max_gimbal_rate : float, optional</span>
+<span class="sd">        Maximum gimbal angular velocity (rad/s).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">wheel_momentum</span><span class="p">,</span> <span class="n">gimbal_axis</span><span class="p">,</span> <span class="n">spin_axis_init</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CMG&quot;</span><span class="p">,</span> <span class="n">max_gimbal_rate</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            wheel_momentum (float): Angular momentum magnitude [Nms].</span>
-<span class="sd">            gimbal_axis (np.array): Unit vector of the gimbal axis (3,).</span>
-<span class="sd">            spin_axis_init (np.array): Unit vector of the initial spin axis (3,).</span>
-<span class="sd">            name (str): Name.</span>
-<span class="sd">            max_gimbal_rate (float): Maximum gimbal angular velocity [rad/s].</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">wheel_momentum</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">gimbal_axis</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">spin_axis_init</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;CMG&quot;</span><span class="p">,</span>
+        <span class="n">max_gimbal_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">saturation</span><span class="o">=</span><span class="n">max_gimbal_rate</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">h_mag</span> <span class="o">=</span> <span class="n">wheel_momentum</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gimbal_axis</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">gimbal_axis</span><span class="p">)</span>
@@ -121,16 +132,19 @@
 
 <div class="viewcode-block" id="ControlMomentGyro.get_axes">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_axes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the current spin and transverse axes for a given gimbal angle.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            angle (float, optional): Gimbal angle [rad]. If None, uses current.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        angle : float, optional</span>
+<span class="sd">            Gimbal angle (rad). If None, uses current `self.gimbal_angle`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            tuple: (spin_axis, transverse_axis)</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">            (spin_axis, transverse_axis).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">theta</span> <span class="o">=</span> <span class="n">angle</span> <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">gimbal_angle</span>
         <span class="c1"># Rotation about gimbal axis</span>
@@ -141,23 +155,27 @@
 
 <div class="viewcode-block" id="ControlMomentGyro.command">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.cmg.ControlMomentGyro.command">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gimbal_rate_cmd</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gimbal_rate_cmd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate torque produced by gimbal rate.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            gimbal_rate_cmd (float): Commanded gimbal rate [rad/s].</span>
-<span class="sd">            dt (float, optional): Time step [s] to update gimbal angle.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gimbal_rate_cmd : float</span>
+<span class="sd">            Commanded gimbal rate (rad/s).</span>
+<span class="sd">        dt : float, optional</span>
+<span class="sd">            Time step (s) to update gimbal angle.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.array: Torque vector [Nm] (3,).</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Torque vector (Nm) (3,).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Apply rate limits</span>
-        <span class="n">g_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_saturation</span><span class="p">(</span><span class="n">gimbal_rate_cmd</span><span class="p">)</span>
+        <span class="n">g_rate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_saturation</span><span class="p">(</span><span class="n">gimbal_rate_cmd</span><span class="p">))</span>
 
         <span class="c1"># Current axes</span>
-        <span class="n">s</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_axes</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_axes</span><span class="p">()</span>
 
         <span class="c1"># Torque = g_rate * h_mag * (g x s) = g_rate * h_mag * t</span>
         <span class="n">torque_vec</span> <span class="o">=</span> <span class="n">g_rate</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_mag</span> <span class="o">*</span> <span class="n">t</span>
@@ -173,16 +191,19 @@
 
 <div class="viewcode-block" id="ControlMomentGyro.get_torque_jacobian">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.actuators.html#gnc_toolkit.actuators.cmg.ControlMomentGyro.get_torque_jacobian">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_torque_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_torque_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the Jacobian mapping gimbal rate to torque: T = A * g_rate.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            angle (float, optional): Angle to evaluate at.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        angle : float, optional</span>
+<span class="sd">            Angle to evaluate at (rad).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.array: (3,1) mapping matrix.</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            (3, 1) mapping matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_axes</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_mag</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>

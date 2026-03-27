@@ -87,72 +87,99 @@
 <div class="viewcode-block" id="LQE">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.lqe.LQE">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LQE</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Linear Quadratic Estimator (LQE) / Kalman Filter.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Linear Quadratic Estimator (LQE) / Kalman Filter gain designer.</span>
 
-<span class="sd">    Designs an optimal observer gain L for the system:</span>
-<span class="sd">    x_dot = Ax + Bu + Gw</span>
-<span class="sd">    y = Cx + v</span>
+<span class="sd">    Computes the optimal steady-state observer gain $L$ for a continuous-time</span>
+<span class="sd">    system with additive Gaussian process and measurement noise.</span>
 
-<span class="sd">    Where:</span>
-<span class="sd">    w is N(0, Q) (Process Noise)</span>
-<span class="sd">    v is N(0, R) (Measurement Noise)</span>
+<span class="sd">    System Model:</span>
+<span class="sd">    $\dot{x} = Ax + Bu + Gw$</span>
+<span class="sd">    $y = Cx + v$</span>
+<span class="sd">    where $Q = E[ww^T]$ and $R = E[vv^T]$.</span>
 
-<span class="sd">    The observer dynamics are:</span>
-<span class="sd">    x_hat_dot = A x_hat + B u + L(y - C x_hat)</span>
+<span class="sd">    The resulting observer dynamics are:</span>
+<span class="sd">    $\dot{\hat{x}} = A\hat{x} + Bu + L(y - C\hat{x})$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : np.ndarray</span>
+<span class="sd">        State matrix (nx x nx).</span>
+<span class="sd">    G : np.ndarray</span>
+<span class="sd">        Process noise input matrix (nx x nw). Often Identity.</span>
+<span class="sd">    C : np.ndarray</span>
+<span class="sd">        Output matrix (ny x nx).</span>
+<span class="sd">    Q : np.ndarray</span>
+<span class="sd">        Process noise covariance matrix (nw x nw).</span>
+<span class="sd">    R : np.ndarray</span>
+<span class="sd">        Measurement noise covariance matrix (ny x ny).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    P : np.ndarray</span>
+<span class="sd">        Steady-state estimation error covariance matrix.</span>
+<span class="sd">    L : np.ndarray</span>
+<span class="sd">        Optimal observer gain matrix (nx x ny).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the LQE.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            A (np.ndarray): State matrix</span>
-<span class="sd">            G (np.ndarray): Process noise input matrix (often Identity)</span>
-<span class="sd">            C (np.ndarray): Output matrix</span>
-<span class="sd">            Q (np.ndarray): Process noise covariance matrix</span>
-<span class="sd">            R (np.ndarray): Measurement noise covariance matrix</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">G</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the LQE parameters.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="LQE.solve">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.lqe.LQE.solve">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Solve the Continuous Algebraic Riccati Equation (CARE) for estimation.</span>
-<span class="sd">        Mapping:</span>
-<span class="sd">        X -&gt; P</span>
-<span class="sd">        a -&gt; A.T</span>
-<span class="sd">        b -&gt; C.T</span>
-<span class="sd">        q -&gt; G Q G.T</span>
-<span class="sd">        r -&gt; R</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span>
+<span class="sd">        Solve the Estimation Algebraic Riccati Equation (ARE).</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">solve_continuous_are</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="sd">        $A P + P A^T - P C^T R^{-1} C P + G Q G^T = 0$</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The unique positive-definite solution matrix P.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Mapping to solve_continuous_are:</span>
+        <span class="c1"># A_eff = A.T, B_eff = C.T, Q_eff = G*Q*G.T, R_eff = R</span>
+        <span class="n">a_eff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">b_eff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">q_eff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">r_eff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">solve_continuous_are</span><span class="p">(</span><span class="n">a_eff</span><span class="p">,</span> <span class="n">b_eff</span><span class="p">,</span> <span class="n">q_eff</span><span class="p">,</span> <span class="n">r_eff</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span></div>
 
 
 <div class="viewcode-block" id="LQE.compute_gain">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.lqe.LQE.compute_gain">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute the observer gain matrix L.</span>
-<span class="sd">        L = P C.T inv(R)</span>
+<span class="sd">        Compute the optimal observer gain matrix L.</span>
+
+<span class="sd">        $L = P C^T R^{-1}$</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Observer gain matrix L (nx x ny).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
 
-        <span class="c1"># For robustness, use R instead of inv(R) since R is square</span>
+        <span class="c1"># Numerically stable solve for R*L.T = C*P</span>
         <span class="n">term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">T</span>
 

@@ -90,28 +90,35 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">nadir_pointing_reference</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">vel_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a reference quaternion for Nadir pointing.</span>
-<span class="sd">    Target frame: Z-axis points towards Earth center, Y-axis along orbit normal,</span>
-<span class="sd">    X-axis completes the right-handed frame (approximately velocity direction).</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        pos_eci: ECI position vector [m] (3,)</span>
-<span class="sd">        vel_eci: ECI velocity vector [m/s] (3,)</span>
+<span class="sd">    The target frame is defined as:</span>
+<span class="sd">    - Z-axis: Points towards Earth center (Nadir).</span>
+<span class="sd">    - Y-axis: Aligned with the negative of the orbit normal.</span>
+<span class="sd">    - X-axis: Completes the right-handed frame (approximately velocity direction).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pos_eci : np.ndarray</span>
+<span class="sd">        ECI position vector [m] (3,).</span>
+<span class="sd">    vel_eci : np.ndarray</span>
+<span class="sd">        ECI velocity vector [m/s] (3,).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Reference quaternion [x, y, z, w]</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Reference quaternion [x, y, z, w].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pos_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">)</span>
-    <span class="n">vel_eci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vel_eci</span><span class="p">)</span>
+    <span class="n">pos_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">)</span>
+    <span class="n">vel_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vel_eci</span><span class="p">)</span>
 
     <span class="c1"># Z-axis (Nadir): Towards Earth center</span>
-    <span class="n">z_axis</span> <span class="o">=</span> <span class="o">-</span><span class="n">pos_eci</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">)</span>
+    <span class="n">z_axis</span> <span class="o">=</span> <span class="o">-</span><span class="n">pos_vec</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos_vec</span><span class="p">)</span>
 
-    <span class="c1"># Y-axis: Negative of Orbit normal (to align with negative Z_eci for equatorial)</span>
-    <span class="n">orb_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">,</span> <span class="n">vel_eci</span><span class="p">)</span>
+    <span class="c1"># Y-axis: Negative of Orbit normal</span>
+    <span class="n">orb_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">pos_vec</span><span class="p">,</span> <span class="n">vel_vec</span><span class="p">)</span>
     <span class="n">y_axis</span> <span class="o">=</span> <span class="o">-</span><span class="n">orb_normal</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">orb_normal</span><span class="p">)</span>
 
-    <span class="c1"># X-axis: Complete the frame (approximates velocity direction in circular orbit)</span>
+    <span class="c1"># X-axis: Complete the frame</span>
     <span class="n">x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">)</span>
     <span class="n">x_axis</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x_axis</span><span class="p">)</span>
 
@@ -127,31 +134,35 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">sun_pointing_reference</span><span class="p">(</span><span class="n">sun_vec_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a reference quaternion for Sun pointing.</span>
-<span class="sd">    Primary objective: Align Body X-axis with Sun vector.</span>
-<span class="sd">    Secondary objective: Minimize rotation about Sun vector (constrained pointing).</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        sun_vec_eci: ECI Sun direction vector (3,)</span>
+<span class="sd">    Primary objective is to align the spacecraft body X-axis with the Sun vector.</span>
+<span class="sd">    Secondary objective is to minimize rotation about the Sun vector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sun_vec_eci : np.ndarray</span>
+<span class="sd">        ECI Sun direction vector (3,).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Reference quaternion [x, y, z, w]</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Reference quaternion [x, y, z, w].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">sun_vec_eci</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sun_vec_eci</span><span class="p">)</span>
+    <span class="n">sun_dir</span> <span class="o">=</span> <span class="n">sun_vec_eci</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sun_vec_eci</span><span class="p">)</span>
 
-    <span class="c1"># Simple algorithm: find shortest rotation from ECI X to Sun vector</span>
+    <span class="c1"># Shortest rotation from ECI X to Sun vector</span>
     <span class="n">eci_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 
-    <span class="n">dot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eci_x</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dot</span> <span class="o">&gt;</span> <span class="mf">0.999999</span><span class="p">:</span>
+    <span class="n">dot_prod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eci_x</span><span class="p">,</span> <span class="n">sun_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dot_prod</span> <span class="o">&gt;</span> <span class="mf">0.999999</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">dot</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.999999</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">dot_prod</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.999999</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 
-    <span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">eci_x</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+    <span class="n">rot_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">eci_x</span><span class="p">,</span> <span class="n">sun_dir</span><span class="p">)</span>
+    <span class="n">rot_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot_prod</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">axis_angle_to_quat</span><span class="p">(</span><span class="n">axis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span> <span class="o">*</span> <span class="n">angle</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">axis_angle_to_quat</span><span class="p">(</span><span class="n">rot_axis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rot_axis</span><span class="p">)</span> <span class="o">*</span> <span class="n">rot_angle</span><span class="p">)</span></div>
 
 
 
@@ -160,24 +171,30 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">target_tracking_reference</span><span class="p">(</span><span class="n">pos_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">target_pos_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a reference quaternion to track a target position.</span>
-<span class="sd">    Target frame: Z-axis aligned with boresight (towards target).</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        pos_eci: ECI position vector of spacecraft [m] (3,)</span>
-<span class="sd">        target_pos_eci: ECI position vector of target [m] (3,)</span>
+<span class="sd">    The target frame is defined with the Z-axis aligned with the boresight (towards target).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pos_eci : np.ndarray</span>
+<span class="sd">        ECI position vector of the spacecraft [m] (3,).</span>
+<span class="sd">    target_pos_eci : np.ndarray</span>
+<span class="sd">        ECI position vector of the target [m] (3,).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Reference quaternion [x, y, z, w]</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Reference quaternion [x, y, z, w].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rel_pos</span> <span class="o">=</span> <span class="n">target_pos_eci</span> <span class="o">-</span> <span class="n">pos_eci</span>
     <span class="n">z_axis</span> <span class="o">=</span> <span class="n">rel_pos</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel_pos</span><span class="p">)</span>
 
-    <span class="n">eci_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">eci_z</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">0.99</span><span class="p">:</span>
-        <span class="n">eci_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+    <span class="c1"># Auxiliary vector for frame construction</span>
+    <span class="n">aux_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">aux_z</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">0.99</span><span class="p">:</span>
+        <span class="n">aux_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 
-    <span class="n">y_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">eci_z</span><span class="p">)</span>
+    <span class="n">y_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">aux_z</span><span class="p">)</span>
     <span class="n">y_axis</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">y_axis</span><span class="p">)</span>
     <span class="n">x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">)</span>
 
@@ -192,22 +209,23 @@
     <span class="n">q_initial</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_final</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">time_span</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate an eigenaxis slew profile between two orientations.</span>
-<span class="sd">    Using SLERP (Spherical Linear Interpolation).</span>
+<span class="sd">    Generate an eigenaxis slew profile using Spherical Linear Interpolation (SLERP).</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        q_initial: Initial quaternion [x, y, z, w]</span>
-<span class="sd">        q_final: Final quaternion [x, y, z, w]</span>
-<span class="sd">        time_span: Normalized time values [0, 1] (N,)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    q_initial : np.ndarray</span>
+<span class="sd">        Initial quaternion [x, y, z, w].</span>
+<span class="sd">    q_final : np.ndarray</span>
+<span class="sd">        Final quaternion [x, y, z, w].</span>
+<span class="sd">    time_span : np.ndarray</span>
+<span class="sd">        Normalized time values [0, 1] (N,).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        List of quaternions along the path</span>
+<span class="sd">    list[np.ndarray]</span>
+<span class="sd">        List of interpolated quaternions along the path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_span</span><span class="p">:</span>
-        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attitude_blending</span><span class="p">(</span><span class="n">q_initial</span><span class="p">,</span> <span class="n">q_final</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">path</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">attitude_blending</span><span class="p">(</span><span class="n">q_initial</span><span class="p">,</span> <span class="n">q_final</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_span</span><span class="p">]</span></div>
 
 
 
@@ -215,75 +233,91 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.attitude_guidance.attitude_blending">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">attitude_blending</span><span class="p">(</span><span class="n">q1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    SLERP (Spherical Linear Interpolation) between two quaternions.</span>
+<span class="sd">    SLERP (Spherical Linear Interpolation) between two orientation quaternions.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        q1: First quaternion [x, y, z, w]</span>
-<span class="sd">        q2: Second quaternion [x, y, z, w]</span>
-<span class="sd">        alpha: Blending factor [0, 1]</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    q1 : np.ndarray</span>
+<span class="sd">        First quaternion [x, y, z, w].</span>
+<span class="sd">    q2 : np.ndarray</span>
+<span class="sd">        Second quaternion [x, y, z, w].</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Blending factor [0, 1].</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Blended quaternion [x, y, z, w]</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Blended/interpolated quaternion [x, y, z, w].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">q1</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">q1</span><span class="p">)</span>
-    <span class="n">q2</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">q2</span><span class="p">)</span>
+    <span class="n">quat1</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">q1</span><span class="p">)</span>
+    <span class="n">quat2</span> <span class="o">=</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">q2</span><span class="p">)</span>
 
-    <span class="n">dot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">)</span>
+    <span class="n">dot_prod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">quat1</span><span class="p">,</span> <span class="n">quat2</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">dot</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">q1</span> <span class="o">=</span> <span class="o">-</span><span class="n">q1</span>
-        <span class="n">dot</span> <span class="o">=</span> <span class="o">-</span><span class="n">dot</span>
+    <span class="c1"># Ensure shortest path</span>
+    <span class="k">if</span> <span class="n">dot_prod</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">quat1</span> <span class="o">=</span> <span class="o">-</span><span class="n">quat1</span>
+        <span class="n">dot_prod</span> <span class="o">=</span> <span class="o">-</span><span class="n">dot_prod</span>
 
-    <span class="k">if</span> <span class="n">dot</span> <span class="o">&gt;</span> <span class="mf">0.9995</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">q2</span> <span class="o">-</span> <span class="n">q1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dot_prod</span> <span class="o">&gt;</span> <span class="mf">0.9995</span><span class="p">:</span>
+        <span class="c1"># Linear interpolation for very small angles</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">quat1</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">quat2</span> <span class="o">-</span> <span class="n">quat1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">quat_normalize</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 
-    <span class="n">theta_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+    <span class="n">theta_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot_prod</span><span class="p">)</span>
     <span class="n">theta</span> <span class="o">=</span> <span class="n">theta_0</span> <span class="o">*</span> <span class="n">alpha</span>
 
     <span class="n">sin_theta_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_0</span><span class="p">)</span>
     <span class="n">sin_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
 
-    <span class="n">s0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">dot</span> <span class="o">*</span> <span class="n">sin_theta</span> <span class="o">/</span> <span class="n">sin_theta_0</span>
+    <span class="n">s0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">dot_prod</span> <span class="o">*</span> <span class="n">sin_theta</span> <span class="o">/</span> <span class="n">sin_theta_0</span>
     <span class="n">s1</span> <span class="o">=</span> <span class="n">sin_theta</span> <span class="o">/</span> <span class="n">sin_theta_0</span>
 
-    <span class="k">return</span> <span class="p">(</span><span class="n">s0</span> <span class="o">*</span> <span class="n">q1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">s1</span> <span class="o">*</span> <span class="n">q2</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">s0</span> <span class="o">*</span> <span class="n">quat1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">s1</span> <span class="o">*</span> <span class="n">quat2</span><span class="p">)</span></div>
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_rmat_to_quat</span><span class="p">(</span><span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rmat_to_quat</span><span class="p">(</span><span class="n">r_mat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Internal helper to convert 3x3 rotation matrix to quaternion [x, y, z, w].</span>
-<span class="sd">    Robust implementation (Shepperd&#39;s algorithm).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">tr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tr</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-    <span class="k">elif</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-    <span class="k">elif</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">S</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S</span>
+<span class="sd">    Convert a 3x3 rotation matrix to a quaternion using Shepperd&#39;s algorithm.</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r_mat : np.ndarray</span>
+<span class="sd">        3x3 rotation matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Quaternion [x, y, z, w].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tr_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">r_mat</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tr_val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">scale_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tr_val</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">quat_w</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">scale_s</span>
+        <span class="n">quat_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
+        <span class="n">scale_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">quat_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_x</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">scale_s</span>
+        <span class="n">quat_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+    <span class="k">elif</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+        <span class="n">scale_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">quat_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_y</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">scale_s</span>
+        <span class="n">quat_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">scale_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">quat_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">r_mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">scale_s</span>
+        <span class="n">quat_z</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">scale_s</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">quat_x</span><span class="p">,</span> <span class="n">quat_y</span><span class="p">,</span> <span class="n">quat_z</span><span class="p">,</span> <span class="n">quat_w</span><span class="p">])</span>
 </pre></div>
 
            </div>

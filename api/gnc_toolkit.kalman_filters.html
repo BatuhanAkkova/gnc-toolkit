@@ -120,22 +120,49 @@
 <p>Adaptive Kalman Filter (AKF) with online covariance estimation (Myers-Tapley).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.akf.AKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.akf.</span></span><span class="sig-name descname"><span class="pre">AKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/akf.html#AKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.akf.AKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.akf.</span></span><span class="sig-name descname"><span class="pre">AKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/akf.html#AKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.akf.AKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.kalman_filters.kf.KF" title="gnc_toolkit.kalman_filters.kf.KF"><code class="xref py py-class docutils literal notranslate"><span class="pre">KF</span></code></a></p>
-<p>Adaptive Kalman Filter (AKF).
-Estimates process noise covariance (Q) and measurement noise covariance (R) online
-using the innovation sequence (Myers-Tapley method).
-Inherits from the standard Linear Kalman Filter (KF).</p>
+<p>Adaptive Kalman Filter (AKF) using Myers-Tapley online covariance estimation.</p>
+<p>Estimates process noise covariance (Q) and measurement noise covariance (R)
+online using the innovation sequence within a moving window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the state vector.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Moving window size (N) for covariance estimation. Default is 20.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.akf.AKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/akf.html#AKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.akf.AKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Standard predict step, but stores values for adaptation.</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/akf.html#AKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.akf.AKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict step (stores history for adaptation).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Control input vector.</p></li>
+<li><p><strong>f_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – State transition matrix.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Process noise covariance.</p></li>
+<li><p><strong>b_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Control input matrix.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.akf.AKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/akf.html#AKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.akf.AKF.update" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/akf.html#AKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.akf.AKF.update" title="Link to this definition"></a></dt>
 <dd><p>Update step with online R and Q adaptation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector.</p></li>
+<li><p><strong>h_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement matrix.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement noise covariance.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -146,27 +173,50 @@ Inherits from the standard Linear Kalman Filter (KF).</p>
 <p>Cubature Kalman Filter (CKF) using spherical-radial rule for non-linear estimation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ckf.CKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ckf.</span></span><span class="sig-name descname"><span class="pre">CKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ckf.html#CKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ckf.CKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ckf.</span></span><span class="sig-name descname"><span class="pre">CKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ckf.html#CKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ckf.CKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Cubature Kalman Filter (CKF).
-Based on the spherical-radial cubature rule.
-Alternative to UKF with fixed weights and potentially better stability for high dimensions.</p>
+<p>Cubature Kalman Filter (CKF) using the spherical-radial rule.</p>
+<p>Offers superior numerical stability and accuracy for high-dimensional
+non-linear systems compared to the UKF. Uses exactly $2n$ cubature points
+with equal weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the state vector $x$.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector $z$.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ckf.CKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ckf.html#CKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ckf.CKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict step.
-dt: Time step
-fx: State transition function f(x, dt, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) -&gt; x_new
-Q: Optional process noise covariance</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ckf.html#CKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ckf.CKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Cubature predict step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation time step (s).</p></li>
+<li><p><strong>fx_func</strong> (<em>Callable</em>) – Non-linear transition function $f(x, dt, dots) to x_{new}$.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Process noise covariance. Defaults to <cite>self.Q</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional parameters for $f$.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ckf.CKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ckf.html#CKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ckf.CKF.update" title="Link to this definition"></a></dt>
-<dd><p>Update step.
-z: Measurement vector
-hx: Measurement function h(x, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs) -&gt; z_pred
-R: Optional measurement noise covariance</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ckf.html#CKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ckf.CKF.update" title="Link to this definition"></a></dt>
+<dd><p>Cubature update step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector.</p></li>
+<li><p><strong>hx_func</strong> (<em>Callable</em>) – Non-linear measurement model $h(x, dots) to z_{pred}$.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement noise covariance. Defaults to <cite>self.R</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional parameters for $h$.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -177,29 +227,61 @@ R: Optional measurement noise covariance</p>
 <p>Extended Kalman Filter (EKF) for non-linear systems using Jacobians.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ekf.EKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ekf.</span></span><span class="sig-name descname"><span class="pre">EKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ekf.</span></span><span class="sig-name descname"><span class="pre">EKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Extended Kalman Filter (EKF).
-Suitable for non-linear estimation and navigation.</p>
+<p>Extended Kalman Filter (EKF) for non-linear systems.</p>
+<p>Linearizes the non-linear state transition and measurement models around the
+current estimate using first-order Taylor expansion (Jacobians).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the state vector $x$.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector $z$.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ekf.EKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F_jac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict step.
-fx: State transition function f(x, dt, u, <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs) -&gt; x_new
-F_jac: Function that returns the Jacobian of f at (x, dt, u) -&gt; F matrix
-dt: Time step
-u: Optional control input
-Q: Optional process noise covariance</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_jac_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Non-linear state prediction.</p>
+<p>Equations:
+- State Predict: $mathbf{hat{x}}_{k|k-1} = f(mathbf{hat{x}}_{k-1|k-1}, Delta t, mathbf{u})$
+- Covariance Predict: $mathbf{P}_{k|k-1} = mathbf{F} mathbf{P}_{k-1|k-1} mathbf{F}^T + mathbf{Q}$
+where $mathbf{F}$ is the state transition Jacobian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fx_func</strong> (<em>Callable</em>) – Transition function.</p></li>
+<li><p><strong>f_jac_func</strong> (<em>Callable</em>) – Jacobian of fx_func.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation step (s).</p></li>
+<li><p><strong>u</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Control input.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Process noise.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional parameters.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ekf.EKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_jac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF.update" title="Link to this definition"></a></dt>
-<dd><p>Update step.
-z: Measurement vector
-hx: Measurement function h(x, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs) -&gt; z_pred
-H_jac: Function that returns the Jacobian of h at x -&gt; H matrix
-R: Optional measurement noise covariance</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_jac_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ekf.html#EKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ekf.EKF.update" title="Link to this definition"></a></dt>
+<dd><p>Non-linear measurement update.</p>
+<p>Equations:
+- Innovation: $mathbf{y} = mathbf{z} - h(mathbf{hat{x}}_{k|k-1})$
+- Gain: $mathbf{K} = mathbf{P}_{k|k-1} mathbf{H}^T (mathbf{H} mathbf{P}_{k|k-1} mathbf{H}^T + mathbf{R})^{-1}$
+- Update: $mathbf{hat{x}}_{k|k} = mathbf{hat{x}}_{k|k-1} + mathbf{K} mathbf{y}$
+- Joseph Form Covariance: $mathbf{P}_{k|k} = (mathbf{I} - mathbf{K} mathbf{H}) mathbf{P}_{k|k-1} (mathbf{I} - mathbf{K} mathbf{H})^T + mathbf{K} mathbf{R} mathbf{K}^T$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector.</p></li>
+<li><p><strong>hx_func</strong> (<em>Callable</em>) – Measurement model.</p></li>
+<li><p><strong>h_jac_func</strong> (<em>Callable</em>) – Jacobian of hx_func.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Measurement noise.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional parameters.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -210,45 +292,77 @@ R: Optional measurement noise covariance</p>
 <p>Ensemble Kalman Filter (EnKF) using Monte Carlo samples for covariance representation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.enkf.EnKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.enkf.</span></span><span class="sig-name descname"><span class="pre">EnKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.enkf.</span></span><span class="sig-name descname"><span class="pre">EnKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Ensemble Kalman Filter (EnKF).
-Uses an ensemble of states to represent the covariance matrix.
-Efficient for high-dimensional systems where the full covariance is too large.</p>
+<p>Ensemble Kalman Filter (EnKF).</p>
+<p>Uses an ensemble of states to represent the error covariance matrix.
+Highly efficient for high-dimensional systems (e.g., weather/climate models)
+where the full covariance matrix is too large to compute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the state vector.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector.</p></li>
+<li><p><strong>ensemble_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of ensemble members (N). Default is 50.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.enkf.EnKF.P">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">P</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.P" title="Link to this definition"></a></dt>
-<dd><p>Returns the ensemble covariance matrix.</p>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">P</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.P" title="Link to this definition"></a></dt>
+<dd><p>Ensemble covariance matrix.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.enkf.EnKF.initialize_ensemble">
-<span class="sig-name descname"><span class="pre">initialize_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF.initialize_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.initialize_ensemble" title="Link to this definition"></a></dt>
-<dd><p>Initialize the ensemble around a mean with covariance P.</p>
+<span class="sig-name descname"><span class="pre">initialize_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_cov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF.initialize_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.initialize_ensemble" title="Link to this definition"></a></dt>
+<dd><p>Initialize the ensemble using a multivariate normal distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_mean</strong> (<em>np.ndarray</em>) – Mean initial state (dim_x,).</p></li>
+<li><p><strong>p_cov</strong> (<em>np.ndarray</em>) – Initial state error covariance (dim_x, dim_x).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.enkf.EnKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict step.
-dt: Time step
-fx: State transition function f(x, dt, <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs) -&gt; x_new
-Q: Optional process noise covariance</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict step (Propagates each ensemble member).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Time step (s).</p></li>
+<li><p><strong>fx_func</strong> (<em>Callable</em>) – Nonlinear state transition function $f(x, dt, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) to x_{new}$.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Process noise covariance (dim_x, dim_x). If None, uses <cite>self.Q</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to transition function.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.enkf.EnKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.update" title="Link to this definition"></a></dt>
-<dd><p>Update step.
-z: Measurement vector
-hx: Measurement function h(x, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs) -&gt; z_pred
-R: Optional measurement noise covariance</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/enkf.html#EnKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update step (Ensemble transformation).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector (dim_z,).</p></li>
+<li><p><strong>hx_func</strong> (<em>Callable</em>) – Nonlinear measurement function $h(x, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs) to z_{pred}$.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement noise covariance (dim_z, dim_z). If None, uses <cite>self.R</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to measurement function.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.enkf.EnKF.x">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="Link to this definition"></a></dt>
-<dd><p>Returns the ensemble mean state.</p>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.enkf.EnKF.x" title="Link to this definition"></a></dt>
+<dd><p>Ensemble mean state vector.</p>
 </dd></dl>
 
 </dd></dl>
@@ -259,25 +373,26 @@ R: Optional measurement noise covariance</p>
 <p>Fixed-Interval Smoother (Fraser-Potter / Two-Filter) for linear systems.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.fixed_interval_smoother.</span></span><span class="sig-name descname"><span class="pre">fixed_interval_smoother</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ps_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Zs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Hs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/fixed_interval_smoother.html#fixed_interval_smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother" title="Link to this definition"></a></dt>
-<dd><p>Fixed-Interval Smoother (Two-Filter / Fraser-Potter approach).
-Combines a forward Kalman filter with a backward information filter.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.fixed_interval_smoother.</span></span><span class="sig-name descname"><span class="pre">fixed_interval_smoother</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_mats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_mats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/fixed_interval_smoother.html#fixed_interval_smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.fixed_interval_smoother.fixed_interval_smoother" title="Link to this definition"></a></dt>
+<dd><p>Fixed-Interval Smoother (Two-Filter / Fraser-Potter approach).</p>
+<p>Combines a forward-running Kalman filter with a backward-running information
+filter to produce the optimal estimate at every point in a fixed interval.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Xs_f</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Forward filtered states x_{k|k}.</p></li>
-<li><p><strong>Ps_f</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Forward filtered covariances P_{k|k}.</p></li>
-<li><p><strong>Fs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – State transition matrices F_k (from k to k+1).</p></li>
-<li><p><strong>Qs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Process noise covariances Q_k.</p></li>
-<li><p><strong>Zs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Measurements z_k.</p></li>
-<li><p><strong>Hs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Measurement matrices H_k.</p></li>
-<li><p><strong>Rs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Measurement noise covariances R_k.</p></li>
+<li><p><strong>x_forward</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Forward filtered states $x_{k|k}$. Length N.</p></li>
+<li><p><strong>p_forward</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Forward filtered covariances $P_{k|k}$. Length N.</p></li>
+<li><p><strong>f_mats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – State transition matrices $F_k$ (from $k$ to $k+1$). Length N-1.</p></li>
+<li><p><strong>q_mats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Process noise covariances $Q_k$ (from $k$ to $k+1$). Length N-1.</p></li>
+<li><p><strong>z_meas</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Measurements $z_k$. Length N.</p></li>
+<li><p><strong>h_mats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Measurement matrices $H_k$. Length N.</p></li>
+<li><p><strong>r_mats</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – Measurement noise covariances $R_k$. Length N.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>X_smooth (np.ndarray)</strong> (<em>Smoothed states.</em>)</p></li>
-<li><p><strong>P_smooth (np.ndarray)</strong> (<em>Smoothed covariances.</em>)</p></li>
+<li><p><strong>x_smooth</strong> (<em>np.ndarray</em>) – Smoothed states.</p></li>
+<li><p><strong>p_smooth</strong> (<em>np.ndarray</em>) – Smoothed covariances.</p></li>
 </ul>
 </p>
 </dd>
@@ -290,21 +405,52 @@ Combines a forward Kalman filter with a backward information filter.</p>
 <p>Interacting Multiple Model (IMM) Filter for switching-mode systems.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.imm.IMM">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.imm.</span></span><span class="sig-name descname"><span class="pre">IMM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/imm.html#IMM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.imm.</span></span><span class="sig-name descname"><span class="pre">IMM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/imm.html#IMM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Interacting Multiple Model (IMM) Filter.
-Estimates the state of a system that can switch between multiple modes (models).
-Excellent for tracking maneuvering targets (e.g., constant velocity vs. constant acceleration).</p>
+<p>Interacting Multiple Model (IMM) Filter.</p>
+<p>Estimates the state of a system that can switch between multiple discrete
+modes (models). Ideal for tracking maneuvering targets where dynamics
+switch between models like constant velocity and constant acceleration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filters</strong> (<em>list</em>) – List of filter objects (e.g., KF, EKF, UKF).</p></li>
+<li><p><strong>transition_matrix</strong> (<em>np.ndarray</em>) – Model transition probability matrix (N x N), where $T_{ij} = P(M_j | M_i)$.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.imm.IMM.mu">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mu</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM.mu" title="Link to this definition"></a></dt>
+<dd><p>Alias for mu_probs (backward compatibility).</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.imm.IMM.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/imm.html#IMM.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM.predict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/imm.html#IMM.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM.predict" title="Link to this definition"></a></dt>
 <dd><p>Predict step (Mixing and model-specific prediction).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Time step (s).</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to the sub-filters’ predict methods.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.imm.IMM.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/imm.html#IMM.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM.update" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/imm.html#IMM.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.imm.IMM.update" title="Link to this definition"></a></dt>
 <dd><p>Update step (Model-specific update and mode probability update).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector (dim_z,).</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to the sub-filters’ update methods.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -315,27 +461,53 @@ Excellent for tracking maneuvering targets (e.g., constant velocity vs. constant
 <p>Standard Linear Kalman Filter (KF) implementation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.kf.KF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.kf.</span></span><span class="sig-name descname"><span class="pre">KF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.kf.</span></span><span class="sig-name descname"><span class="pre">KF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Standard Linear Kalman Filter (KF).
-Suitable for linear estimation and navigation (e.g., constant velocity models).</p>
+<p>Standard Discrete-Time Linear Kalman Filter (KF).</p>
+<p>Suitable for linear estimation and navigation problems (e.g., constant
+velocity or constant acceleration models in Cartesian space).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the state vector $x$.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector $z$.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.kf.KF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict step.
-u: Control input vector
-F: State transition matrix
-Q: Process noise covariance
-B: Control input matrix</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict the state and covariance one step forward.</p>
+<p>Equations:
+$x_{k|k-1} = F x_{k-1|k-1} + B u_k$
+$P_{k|k-1} = F P_{k-1|k-1} F^T + Q$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Control input vector (dim_u,).</p></li>
+<li><p><strong>f_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – State transition matrix (dim_x, dim_x). Defaults to <cite>self.F</cite>.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Process noise covariance (dim_x, dim_x). Defaults to <cite>self.Q</cite>.</p></li>
+<li><p><strong>b_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Control input matrix (dim_x, dim_u). Defaults to <cite>self.B</cite>.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.kf.KF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF.update" title="Link to this definition"></a></dt>
-<dd><p>Update step.
-z: Measurement vector
-H: Measurement matrix
-R: Measurement noise covariance</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/kf.html#KF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.kf.KF.update" title="Link to this definition"></a></dt>
+<dd><p>Update state estimate using a new measurement.</p>
+<p>Uses the Joseph robust form for covariance updates to maintain symmetry
+and positive-definiteness.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector (dim_z,).</p></li>
+<li><p><strong>h_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement matrix (dim_z, dim_x). Defaults to <cite>self.H</cite>.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement noise covariance (dim_z, dim_z). Defaults to <cite>self.R</cite>.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -346,28 +518,49 @@ R: Measurement noise covariance</p>
 <p>Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.mekf.MEKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.mekf.</span></span><span class="sig-name descname"><span class="pre">MEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.mekf.</span></span><span class="sig-name descname"><span class="pre">MEKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
-Reference: Crassidis and Junkins, “Optimal Estimation of Dynamic Systems”.
-State: [q_x, q_y, q_z, q_w, beta_x, beta_y, beta_z] (7x1)
-Error State: [delta_theta_x, delta_theta_y, delta_theta_z, delta_beta_x, delta_beta_y, delta_beta_z] (6x1)</p>
+<p>Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.</p>
+<p>Maintains a global quaternion for orientation and an additive 3-component
+error vector in the tangent space for bias and local attitude corrections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_init</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Initial quaternion $[q_x, q_y, q_z, q_w]$. Defaults to identity $[0,0,0,1]$.</p></li>
+<li><p><strong>beta_init</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Initial gyro bias $[b_x, b_y, b_z]$ (rad/s). Defaults to zeros.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.mekf.MEKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omega_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF.predict" title="Link to this definition"></a></dt>
-<dd><p>MEKF Prediction Step.
-omega_meas: Measured angular velocity (3x1)
-dt: Time step
-Q: Optional process noise covariance</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omega_meas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict the reference state and propagate error covariance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>omega_meas</strong> (<em>np.ndarray</em>) – Measured angular velocity in body frame (rad/s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Propagation interval (s).</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Process noise covariance (6x6). Defaults to <cite>self.Q</cite>.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.mekf.MEKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF.update" title="Link to this definition"></a></dt>
-<dd><p>MEKF Update Step.
-z: Measured vector in body frame (normalized)
-z_ref: Reference vector in inertial frame (normalized)
-R: Optional measurement noise covariance</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/mekf.html#MEKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.mekf.MEKF.update" title="Link to this definition"></a></dt>
+<dd><p>Perform a vector measurement update.</p>
+<p>Linearizes the observation of a reference vector (e.g., Sun, Earth)
+and applies a multiplicative correction to the quaternion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_body</strong> (<em>np.ndarray</em>) – Measured vector in spacecraft body frame (normalized).</p></li>
+<li><p><strong>z_ref</strong> (<em>np.ndarray</em>) – Reference vector in inertial frame (normalized).</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement noise covariance (3x3). Defaults to <cite>self.R</cite>.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -378,56 +571,96 @@ R: Optional measurement noise covariance</p>
 <p>Particle Filter (Sequential Importance Resampling) for non-Gaussian/non-linear systems.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.pf.</span></span><span class="sig-name descname"><span class="pre">ParticleFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.pf.</span></span><span class="sig-name descname"><span class="pre">ParticleFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Bootstrap Particle Filter (Sequential Importance Resampling).
-Handles non-Gaussian distributions and highly non-linear models.</p>
+<p>Bootstrap Particle Filter (Sequential Importance Resampling).</p>
+<p>Estimated non-Gaussian distributions and handles highly non-linear dynamics
+by propagating a set of discrete particles (samples).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the state vector.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector.</p></li>
+<li><p><strong>num_particles</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of particles (N). Default is 1000.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter.P">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">P</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.P" title="Link to this definition"></a></dt>
-<dd><p>Returns the weighted covariance matrix.</p>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">P</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.P" title="Link to this definition"></a></dt>
+<dd><p>Weighted error covariance matrix.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter.initialize_particles">
-<span class="sig-name descname"><span class="pre">initialize_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.initialize_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.initialize_particles" title="Link to this definition"></a></dt>
-<dd><p>Initialize particles from a Gaussian distribution.</p>
+<span class="sig-name descname"><span class="pre">initialize_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_cov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.initialize_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.initialize_particles" title="Link to this definition"></a></dt>
+<dd><p>Initialize particles from a multivariate Gaussian distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_mean</strong> (<em>np.ndarray</em>) – Mean initial state (dim_x,).</p></li>
+<li><p><strong>p_cov</strong> (<em>np.ndarray</em>) – Initial covariance (dim_x, dim_x).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter.neff">
-<span class="sig-name descname"><span class="pre">neff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.neff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.neff" title="Link to this definition"></a></dt>
-<dd><p>Returns the effective number of particles.</p>
+<span class="sig-name descname"><span class="pre">neff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.neff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.neff" title="Link to this definition"></a></dt>
+<dd><p>Calculate effective number of particles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Effective sample size.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict step (Proposal distribution).
-dt: Time step
-fx: State transition function f(x, dt, <a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs) -&gt; x_new
-Q: Optional process noise covariance</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict step (Proposal distribution).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Time step (s).</p></li>
+<li><p><strong>fx_func</strong> (<em>Callable</em>) – State transition function $f(x, dt, <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs) to x_{new}$.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Process noise covariance (dim_x, dim_x). If None, uses <cite>self.Q</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to transition function.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter.resample">
-<span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.resample" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.resample" title="Link to this definition"></a></dt>
 <dd><p>Resample particles using Systematic Resampling.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.update" title="Link to this definition"></a></dt>
-<dd><p>Update step (Weighting and Resampling).
-z: Measurement vector
-hx: Measurement function h(x, <a href="#id15"><span class="problematic" id="id16">**</span></a>kwargs) -&gt; z_pred
-R: Optional measurement noise covariance</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/pf.html#ParticleFilter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.update" title="Link to this definition"></a></dt>
+<dd><p>Update step (Weighting and Resampling).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector (dim_z,).</p></li>
+<li><p><strong>hx_func</strong> (<em>Callable</em>) – Measurement function $h(x, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs) to z_{pred}$.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement noise covariance (dim_z, dim_z). If None, uses <cite>self.R</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to measurement function.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.pf.ParticleFilter.x">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.x" title="Link to this definition"></a></dt>
-<dd><p>Returns the weighted mean state.</p>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.pf.ParticleFilter.x" title="Link to this definition"></a></dt>
+<dd><p>Weighted mean state vector.</p>
 </dd></dl>
 
 </dd></dl>
@@ -438,29 +671,27 @@ R: Optional measurement noise covariance</p>
 <p>Rauch-Tung-Striebel (RTS) Smoother for linear systems.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.rts_smoother.rts_smoother">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.rts_smoother.</span></span><span class="sig-name descname"><span class="pre">rts_smoother</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/rts_smoother.html#rts_smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.rts_smoother.rts_smoother" title="Link to this definition"></a></dt>
-<dd><p>Rauch-Tung-Striebel (RTS) Smoother.
-Performs a backward pass over Kalman filter results to provide optimal
-estimates given all data in a fixed interval.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.rts_smoother.</span></span><span class="sig-name descname"><span class="pre">rts_smoother</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_filtered_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_filtered_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_mats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/rts_smoother.html#rts_smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.rts_smoother.rts_smoother" title="Link to this definition"></a></dt>
+<dd><p>Rauch-Tung-Striebel (RTS) Smoother for linear systems.</p>
+<p>Performs a backward pass over Kalman filter results to provide optimal
+minimum-variance estimates utilizing all future information (fixed-interval
+smoothing).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Xs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – List of predicted/updated states from forward pass.
-Length N. Xs[k] is x_{k|k}.</p></li>
-<li><p><strong>Ps</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – List of predicted/updated covariances from forward pass.
-Length N. Ps[k] is P_{k|k}.</p></li>
-<li><p><strong>Fs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – List of state transition matrices.
-Length N-1. Fs[k] is F from k to k+1.</p></li>
-<li><p><strong>Qs</strong> (<em>list</em><em> of </em><em>np.ndarray</em>) – List of process noise covariances.
-Length N-1. Qs[k] is Q from k to k+1.</p></li>
+<li><p><strong>x_filtered_list</strong> (<em>list</em><em>[</em><em>np.ndarray</em><em>]</em>) – List of filtered state estimates $x_{k|k}$ (N steps).</p></li>
+<li><p><strong>p_filtered_list</strong> (<em>list</em><em>[</em><em>np.ndarray</em><em>]</em>) – List of filtered covariances $P_{k|k}$ (N steps).</p></li>
+<li><p><strong>f_mats</strong> (<em>list</em><em>[</em><em>np.ndarray</em><em>]</em>) – List of state transition matrices $F_k$ from $k$ to $k+1$. (N-1 steps).</p></li>
+<li><p><strong>q_mats</strong> (<em>list</em><em>[</em><em>np.ndarray</em><em>]</em>) – List of process noise covariances $Q_k$ from $k$ to $k+1$. (N-1 steps).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>X_smooth (np.ndarray)</strong> (<em>Smoothed states, (N, dim_x).</em>)</p></li>
-<li><p><strong>P_smooth (np.ndarray)</strong> (<em>Smoothed covariances, (N, dim_x, dim_x).</em>)</p></li>
-</ul>
-</p>
+<dd class="field-even"><p>(x_smoothed, p_smoothed) arrays.
+- x_smoothed: (N, dim_x)
+- p_smoothed: (N, dim_x, dim_x)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -471,33 +702,58 @@ Length N-1. Qs[k] is Q from k to k+1.</p></li>
 <p>Square-Root Unscented Kalman Filter (SR-UKF) algorithm.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.sr_ukf.SRUKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.sr_ukf.</span></span><span class="sig-name descname"><span class="pre">SRUKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/sr_ukf.html#SRUKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.sr_ukf.</span></span><span class="sig-name descname"><span class="pre">SRUKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/sr_ukf.html#SRUKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Square-Root Unscented Kalman Filter (SR-UKF).
-Provides better numerical stability and efficiency than standard UKF
-by propagating the Cholesky factor (S) of the covariance matrix P = S*S.T.</p>
+<p>Square-Root Unscented Kalman Filter (SR-UKF).</p>
+<p>Provides better numerical stability and efficiency than standard UKF
+by propagating the Cholesky factor (S) of the covariance matrix, where $P = S S^T$.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the state vector.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – Primary scaling parameter. Default is 1e-3.</p></li>
+<li><p><strong>beta</strong> (<em>float</em><em>, </em><em>optional</em>) – Secondary scaling parameter (optimal for Gaussians = 2). Default is 2.0.</p></li>
+<li><p><strong>kappa</strong> (<em>float</em><em>, </em><em>optional</em>) – Tertiary scaling parameter. Default is 0.0.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.sr_ukf.SRUKF.P">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">P</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.P" title="Link to this definition"></a></dt>
-<dd><p>Returns the full covariance matrix P = S*S.T</p>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">P</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.P" title="Link to this definition"></a></dt>
+<dd><p>Full error covariance matrix P = S S^T.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.sr_ukf.SRUKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/sr_ukf.html#SRUKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict step.
-dt: Time step
-fx: State transition function f(x, dt, <a href="#id17"><span class="problematic" id="id18">**</span></a>kwargs) -&gt; x_new
-Qs: Optional square-root process noise covariance (S_Q)</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qs_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/sr_ukf.html#SRUKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Time step (s).</p></li>
+<li><p><strong>fx_func</strong> (<em>Callable</em>) – State transition function $f(x, dt, <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs) to x_{new}$.</p></li>
+<li><p><strong>qs_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Square-root process noise covariance (S_Q). If None, uses <cite>self.Qs</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to transition function.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.sr_ukf.SRUKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/sr_ukf.html#SRUKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.update" title="Link to this definition"></a></dt>
-<dd><p>Update step.
-z: Measurement vector
-hx: Measurement function h(x, <a href="#id19"><span class="problematic" id="id20">**</span></a>kwargs) -&gt; z_pred
-Rs: Optional square-root measurement noise covariance (S_R)</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/sr_ukf.html#SRUKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.sr_ukf.SRUKF.update" title="Link to this definition"></a></dt>
+<dd><p>Update step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector (dim_z,).</p></li>
+<li><p><strong>hx_func</strong> (<em>Callable</em>) – Measurement function $h(x, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs) to z_{pred}$.</p></li>
+<li><p><strong>rs_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Square-root measurement noise covariance (S_R). If None, uses <cite>self.Rs</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional arguments passed to measurement function.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -508,39 +764,83 @@ Rs: Optional square-root measurement noise covariance (S_R)</p>
 <p>Unscented Kalman Filter (UKF) with support for states on manifolds.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ukf.</span></span><span class="sig-name descname"><span class="pre">UKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtract_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ukf.</span></span><span class="sig-name descname"><span class="pre">UKF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtract_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Generalized Unscented Kalman Filter (UKF).
-Supports states on manifolds by providing custom add, subtract, and mean functions.</p>
+<p>Generalized Unscented Kalman Filter (UKF).</p>
+<p>Propagates state and covariance through non-linear functions using the
+Unscented Transform (UT) with support for manifolds (e.g., $S^3$ for quaternions).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_x</strong> (<em>int</em>) – Dimension of the full state vector $x$.</p></li>
+<li><p><strong>dim_z</strong> (<em>int</em>) – Dimension of the measurement vector $z$.</p></li>
+<li><p><strong>dim_p</strong> (<em>int</em><em>, </em><em>optional</em>) – Dimension of the covariance $P$ in tangent space. Defaults to <cite>dim_x</cite>.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – UT tuning parameter $(10^{-4}, 1)$. Controls spread of sigma points.</p></li>
+<li><p><strong>beta</strong> (<em>float</em><em>, </em><em>optional</em>) – UT parameter incorporating prior knowledge of distribution. Default 2.0.</p></li>
+<li><p><strong>kappa</strong> (<em>float</em><em>, </em><em>optional</em>) – UT secondary scaling parameter. Usually 0 or $3-L$.</p></li>
+<li><p><strong>subtract_x</strong> (<em>Callable</em><em>, </em><em>optional</em>) – Tangent space difference $(x_1, x_2) to dx$.</p></li>
+<li><p><strong>add_x</strong> (<em>Callable</em><em>, </em><em>optional</em>) – Manifold state update $(x, dx) to x_{new}$.</p></li>
+<li><p><strong>mean_x</strong> (<em>Callable</em><em>, </em><em>optional</em>) – Weighted manifold mean $(sigmas, weights) to x_{mean}$.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF.generate_sigma_points">
-<span class="sig-name descname"><span class="pre">generate_sigma_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.generate_sigma_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.generate_sigma_points" title="Link to this definition"></a></dt>
-<dd><p>Generates sigma points around x using covariance P in tangent space.</p>
+<span class="sig-name descname"><span class="pre">generate_sigma_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_cov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.generate_sigma_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.generate_sigma_points" title="Link to this definition"></a></dt>
+<dd><p>Generates sigma points around $x$ using covariance $P$ in tangent space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – Current state estimate.</p></li>
+<li><p><strong>p_cov</strong> (<em>np.ndarray</em>) – Current estimation error covariance (tangent space).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sigma points array (num_sigmas, dim_x).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.predict" title="Link to this definition"></a></dt>
-<dd><p>Predict step.
-dt: Time step
-fx: State transition function f(x, dt, <a href="#id21"><span class="problematic" id="id22">**</span></a>kwargs) -&gt; x_new
-Q: Optional process noise covariance</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.predict" title="Link to this definition"></a></dt>
+<dd><p>Unscented transform prediction step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Time step (s).</p></li>
+<li><p><strong>fx_func</strong> (<em>Callable</em>) – Non-linear transition function.</p></li>
+<li><p><strong>q_mat</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Process noise covariance.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional parameters.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.update" title="Link to this definition"></a></dt>
-<dd><p>Update step.
-z: Measurement vector
-hx: Measurement function h(x, <a href="#id23"><span class="problematic" id="id24">**</span></a>kwargs) -&gt; z_pred
-R: Optional measurement noise covariance</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hx_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF.update" title="Link to this definition"></a></dt>
+<dd><p>Unscented update step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – Measurement vector.</p></li>
+<li><p><strong>hx_func</strong> (<em>Callable</em>) – Non-linear measurement model $h(x, dots) to z_{pred}$.</p></li>
+<li><p><strong>r_mat</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Measurement noise covariance. Defaults to <cite>self.R</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional parameters for $h$.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.kalman_filters.ukf.UKF_Attitude">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ukf.</span></span><span class="sig-name descname"><span class="pre">UKF_Attitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF_Attitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF_Attitude" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.kalman_filters.ukf.</span></span><span class="sig-name descname"><span class="pre">UKF_Attitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/kalman_filters/ukf.html#UKF_Attitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.kalman_filters.ukf.UKF_Attitude" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gnc_toolkit.kalman_filters.ukf.UKF" title="gnc_toolkit.kalman_filters.ukf.UKF"><code class="xref py py-class docutils literal notranslate"><span class="pre">UKF</span></code></a></p>
 <p>Specialized UKF for Attitude Estimation.
 State: [q0, q1, q2, q3, bias_x, bias_y, bias_z] (7 dim)

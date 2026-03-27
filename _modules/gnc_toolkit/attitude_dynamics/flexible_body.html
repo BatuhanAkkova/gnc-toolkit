@@ -85,89 +85,118 @@
 
 <div class="viewcode-block" id="flexible_body_dynamics">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.flexible_body.flexible_body_dynamics">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">flexible_body_dynamics</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">eta_dot</span><span class="p">,</span> <span class="n">omega_dot</span><span class="p">,</span> <span class="n">natural_freqs</span><span class="p">,</span> <span class="n">damping_ratios</span><span class="p">,</span> <span class="n">modal_influence</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes the second derivative of modal coordinates for flexible body dynamics.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">flexible_body_dynamics</span><span class="p">(</span>
+    <span class="n">eta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">eta_dot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">omega_dot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">natural_freqs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">damping_ratios</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">modal_influence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute modal acceleration $\ddot{\eta}$.</span>
 
-<span class="sd">    The model assumes:</span>
-<span class="sd">    eta_ddot + 2 * zeta * omega_n * eta_dot + omega_n^2 * eta = Phi^T * omega_dot</span>
+<span class="sd">    Modal Equation:</span>
+<span class="sd">    $\ddot{\eta}_i + 2\zeta_i\omega_{n,i}\dot{\eta}_i + \omega_{n,i}^2\eta_i = \mathbf{\Phi}_i \cdot \dot{\omega}$</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        eta (np.ndarray): Modal displacements (n_modes,).</span>
-<span class="sd">        eta_dot (np.ndarray): Modal velocities (n_modes,).</span>
-<span class="sd">        omega_dot (np.ndarray): Rigid body angular acceleration (3,).</span>
-<span class="sd">        natural_freqs (np.ndarray): Natural frequencies [rad/s] (n_modes,).</span>
-<span class="sd">        damping_ratios (np.ndarray): Damping ratios (n_modes,).</span>
-<span class="sd">        modal_influence (np.ndarray): Modal influence matrix (n_modes, 3).</span>
-<span class="sd">                                     Maps rigid body acceleration to modal forces.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eta : np.ndarray</span>
+<span class="sd">        Modal displacements (n_modes,).</span>
+<span class="sd">    eta_dot : np.ndarray</span>
+<span class="sd">        Modal velocities (n_modes,).</span>
+<span class="sd">    omega_dot : np.ndarray</span>
+<span class="sd">        Rigid body angular acceleration (3,) (rad/s$^2$).</span>
+<span class="sd">    natural_freqs : np.ndarray</span>
+<span class="sd">        Natural frequencies $\omega_{n,i}$ (n_modes,) (rad/s).</span>
+<span class="sd">    damping_ratios : np.ndarray</span>
+<span class="sd">        Damping ratios $\zeta_i$ (n_modes,).</span>
+<span class="sd">    modal_influence : np.ndarray</span>
+<span class="sd">        Influence matrix $\mathbf{\Phi}$ (n_modes, 3).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        np.ndarray: Modal accelerations eta_ddot (n_modes,).</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Modal acceleration $\ddot{\eta}$ (n_modes,) (rad/s$^2$).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Force/Torque coupling term</span>
-    <span class="n">coupling_term</span> <span class="o">=</span> <span class="n">modal_influence</span> <span class="o">@</span> <span class="n">omega_dot</span>
+    <span class="n">eta_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eta</span><span class="p">)</span>
+    <span class="n">edot_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eta_dot</span><span class="p">)</span>
+    <span class="n">odot_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">omega_dot</span><span class="p">)</span>
 
-    <span class="c1"># Damping term: 2 * zeta * omega_n * eta_dot</span>
-    <span class="n">damping_term</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">damping_ratios</span> <span class="o">*</span> <span class="n">natural_freqs</span> <span class="o">*</span> <span class="n">eta_dot</span>
+    <span class="c1"># Force/Torque coupling term: F_modal = Phi * omega_dot</span>
+    <span class="n">coupling</span> <span class="o">=</span> <span class="n">modal_influence</span> <span class="o">@</span> <span class="n">odot_val</span>
 
-    <span class="c1"># Stiffness term: omega_n^2 * eta</span>
-    <span class="n">stiffness_term</span> <span class="o">=</span> <span class="p">(</span><span class="n">natural_freqs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">eta</span>
+    <span class="c1"># Damping: 2 * zeta * omega_n * eta_dot</span>
+    <span class="n">damping</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">damping_ratios</span> <span class="o">*</span> <span class="n">natural_freqs</span> <span class="o">*</span> <span class="n">edot_val</span>
 
-    <span class="c1"># Solve for eta_ddot</span>
-    <span class="n">eta_ddot</span> <span class="o">=</span> <span class="n">coupling_term</span> <span class="o">-</span> <span class="n">damping_term</span> <span class="o">-</span> <span class="n">stiffness_term</span>
+    <span class="c1"># Stiffness: omega_n^2 * eta</span>
+    <span class="n">stiffness</span> <span class="o">=</span> <span class="p">(</span><span class="n">natural_freqs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">eta_val</span>
 
-    <span class="k">return</span> <span class="n">eta_ddot</span></div>
+    <span class="k">return</span> <span class="n">coupling</span> <span class="o">-</span> <span class="n">damping</span> <span class="o">-</span> <span class="n">stiffness</span></div>
 
 
 
 <div class="viewcode-block" id="coupled_flexible_rigid_dynamics">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.flexible_body.coupled_flexible_rigid_dynamics">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">coupled_flexible_rigid_dynamics</span><span class="p">(</span>
-    <span class="n">J_rigid</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">eta_dot</span><span class="p">,</span> <span class="n">natural_freqs</span><span class="p">,</span> <span class="n">damping_ratios</span><span class="p">,</span> <span class="n">modal_influence</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes coupled rigid-flexible body dynamics.</span>
+    <span class="n">J_rigid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">omega</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">torque</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">eta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">eta_dot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">natural_freqs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">damping_ratios</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">modal_influence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute coupled rigid-flexible body dynamics.</span>
 
-<span class="sd">    System Equations:</span>
-<span class="sd">    [ J_rigid  -Phi^T ] [ omega_dot ] + [ omega x (J_rigid * omega) ] = [ torque ]</span>
-<span class="sd">    [ -Phi      I     ] [ eta_ddot  ]   [ 2*zeta*omega_n*eta_dot + omega_n^2*eta ] = [ 0 ]</span>
+<span class="sd">    Augmented System Projection:</span>
+<span class="sd">    $\begin{bmatrix} \mathbf{J} &amp; \mathbf{\Phi}^T \\ \mathbf{\Phi} &amp; \mathbf{I} \end{bmatrix} \begin{bmatrix} \dot{\omega} \\ \ddot{\eta} \end{bmatrix} = \begin{bmatrix} \tau - \omega \times (\mathbf{J} \omega) \\ -2\zeta\omega_n\dot{\eta} - \omega_n^2\eta \end{bmatrix}$</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        J_rigid (np.ndarray): Rigid body inertia tensor (3, 3).</span>
-<span class="sd">        omega (np.ndarray): Angular velocity (3,).</span>
-<span class="sd">        torque (np.ndarray): External torque (3,).</span>
-<span class="sd">        eta (np.ndarray): Modal displacements (n_modes,).</span>
-<span class="sd">        eta_dot (np.ndarray): Modal velocities (n_modes,).</span>
-<span class="sd">        natural_freqs (np.ndarray): (n_modes,).</span>
-<span class="sd">        damping_ratios (np.ndarray): (n_modes,).</span>
-<span class="sd">        modal_influence (np.ndarray): (n_modes, 3).</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    J_rigid : np.ndarray</span>
+<span class="sd">        Rigid inertia tensor (3, 3) ($kg \cdot m^2$).</span>
+<span class="sd">    omega : np.ndarray</span>
+<span class="sd">        Angular velocity (3,) (rad/s).</span>
+<span class="sd">    torque : np.ndarray</span>
+<span class="sd">        External torque (3,) (Nm).</span>
+<span class="sd">    eta : np.ndarray</span>
+<span class="sd">        Modal displacements (n_modes,).</span>
+<span class="sd">    eta_dot : np.ndarray</span>
+<span class="sd">        Modal velocities (n_modes,).</span>
+<span class="sd">    natural_freqs : np.ndarray</span>
+<span class="sd">        Natural frequencies (n_modes,) (rad/s).</span>
+<span class="sd">    damping_ratios : np.ndarray</span>
+<span class="sd">        Damping ratios (n_modes,).</span>
+<span class="sd">    modal_influence : np.ndarray</span>
+<span class="sd">        Influence matrix (n_modes, 3).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        omega_dot (np.ndarray): (3,).</span>
-<span class="sd">        eta_ddot (np.ndarray): (n_modes,).</span>
+<span class="sd">    tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        (omega_dot, eta_ddot).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">jr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">J_rigid</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+    <span class="n">tq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">torque</span><span class="p">)</span>
     <span class="n">n_modes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">natural_freqs</span><span class="p">)</span>
 
-    <span class="c1"># Build augmented mass matrix</span>
-    <span class="c1"># [ J_rigid         Phi^T ]</span>
-    <span class="c1"># [  Phi             I    ]</span>
-    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span> <span class="o">+</span> <span class="n">n_modes</span><span class="p">,</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">n_modes</span><span class="p">))</span>
-    <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">J_rigid</span>
-    <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">modal_influence</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">modal_influence</span>
-    <span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_modes</span><span class="p">)</span>
+    <span class="c1"># 1. Build augmented mass matrix M_aug</span>
+    <span class="n">m_aug</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span> <span class="o">+</span> <span class="n">n_modes</span><span class="p">,</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">n_modes</span><span class="p">))</span>
+    <span class="n">m_aug</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">jr</span>
+    <span class="n">m_aug</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">modal_influence</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">m_aug</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">modal_influence</span>
+    <span class="n">m_aug</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_modes</span><span class="p">)</span>
 
-    <span class="c1"># Build RHS</span>
-    <span class="c1"># [ torque - omega x (J_rigid * omega) ]</span>
-    <span class="c1"># [ -(2 * zeta * omega_n * eta_dot + omega_n^2 * eta) ]</span>
+    <span class="c1"># 2. Build Right-Hand Side</span>
     <span class="n">rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="n">n_modes</span><span class="p">)</span>
-    <span class="n">rhs</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">torque</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">J_rigid</span> <span class="o">@</span> <span class="n">omega</span><span class="p">)</span>
+    <span class="n">rhs</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">tq</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">jr</span> <span class="o">@</span> <span class="n">w</span><span class="p">)</span>
     <span class="n">rhs</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">damping_ratios</span> <span class="o">*</span> <span class="n">natural_freqs</span> <span class="o">*</span> <span class="n">eta_dot</span> <span class="o">+</span> <span class="p">(</span><span class="n">natural_freqs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">eta</span><span class="p">)</span>
 
-    <span class="c1"># Solve for accelerations</span>
-    <span class="n">sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+    <span class="c1"># 3. Solve system</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">m_aug</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sol</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">sol</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span></div>
 

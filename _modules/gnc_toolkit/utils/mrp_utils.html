@@ -85,84 +85,142 @@
 
 <div class="viewcode-block" id="quat_to_mrp">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.quat_to_mrp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">quat_to_mrp</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert quaternion [x, y, z, w] to Modified Rodrigues Parameters (MRP).</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">quat_to_mrp</span><span class="p">(</span><span class="n">q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a quaternion to Modified Rodrigues Parameters (MRP).</span>
 
-<span class="sd">    sigma = q_vec / (1 + q_w)</span>
+<span class="sd">    Mathematical form: $\sigma = \mathbf{q}_{vec} / (1 + q_w)$.</span>
+<span class="sd">    Singular for 360-degree rotations ($q_w = -1$).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    q : np.ndarray</span>
+<span class="sd">        Quaternion [x, y, z, w].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">q</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span></div>
+    <span class="n">qv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">qv</span>
+    <span class="c1"># Handle singularity by adding a small epsilon or implying shadow set</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">w</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">den</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+        <span class="c1"># Fallback to a very large but finite MRP or notify</span>
+        <span class="c1"># In practice, we use shadow sets before this happens.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e12</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span> <span class="o">/</span> <span class="n">den</span></div>
 
 
 
 <div class="viewcode-block" id="mrp_to_quat">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.mrp_to_quat">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">mrp_to_quat</span><span class="p">(</span><span class="n">sigma</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert Modified Rodrigues Parameters (MRP) to quaternion [x, y, z, w].</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mrp_to_quat</span><span class="p">(</span><span class="n">sigma</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert Modified Rodrigues Parameters to a quaternion.</span>
 
-<span class="sd">    q_w = (1 - |sigma|^2) / (1 + |sigma|^2)</span>
-<span class="sd">    q_vec = 2 * sigma / (1 + |sigma|^2)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sigma : np.ndarray</span>
+<span class="sd">        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Unit quaternion [x, y, z, w].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sigma_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sigma_sq</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sigma_sq</span><span class="p">)</span>
-    <span class="n">xyz</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sigma_sq</span><span class="p">)</span>
+    <span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">sigma_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">sigma_sq</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">sigma_sq</span><span class="p">)</span>
+    <span class="n">xyz</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sv</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">sigma_sq</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">w</span><span class="p">])</span></div>
 
 
 
 <div class="viewcode-block" id="mrp_to_dcm">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.mrp_to_dcm">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">mrp_to_dcm</span><span class="p">(</span><span class="n">sigma</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert MRP to 3x3 Direction Cosine Matrix.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mrp_to_dcm</span><span class="p">(</span><span class="n">sigma</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert Modified Rodrigues Parameters to a Direction Cosine Matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sigma : np.ndarray</span>
+<span class="sd">        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        3x3 Direction Cosine Matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sigma_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">s_x</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">s_y</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">s_z</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">sigma_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span> <span class="o">=</span> <span class="n">sv</span>
 
-    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">s_z</span><span class="p">,</span> <span class="n">s_y</span><span class="p">],</span> <span class="p">[</span><span class="n">s_z</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">s_x</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">s_y</span><span class="p">,</span> <span class="n">s_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+    <span class="n">s_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">s3</span><span class="p">,</span>  <span class="n">s2</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">s3</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">s1</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">s2</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">]</span>
+    <span class="p">])</span>
 
-    <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">I</span> <span class="o">+</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">S</span> <span class="o">@</span> <span class="n">S</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sigma_sq</span><span class="p">)</span> <span class="o">*</span> <span class="n">S</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sigma_sq</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-    <span class="k">return</span> <span class="n">R</span></div>
+    <span class="n">den</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">sigma_sq</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">8.0</span> <span class="o">*</span> <span class="n">s_mat</span> <span class="o">@</span> <span class="n">s_mat</span> <span class="o">+</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">sigma_sq</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_mat</span><span class="p">)</span> <span class="o">/</span> <span class="n">den</span></div>
 
 
 
 <div class="viewcode-block" id="get_shadow_mrp">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.get_shadow_mrp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_shadow_mrp</span><span class="p">(</span><span class="n">sigma</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_shadow_mrp</span><span class="p">(</span><span class="n">sigma</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the shadow set for the given MRP.</span>
 
-<span class="sd">    sigma_shadow = -sigma / |sigma|^2</span>
+<span class="sd">    The shadow set represents the same rotation but stays within the </span>
+<span class="sd">    unit sphere ($|\sigma| \le 1$).</span>
+<span class="sd">    $\sigma_{shadow} = -\sigma / \|\sigma\|^2$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sigma : np.ndarray</span>
+<span class="sd">        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Shadow MRP vector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sigma_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sigma_sq</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+    <span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">sigma_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sigma_sq</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-    <span class="k">return</span> <span class="o">-</span><span class="n">sigma</span> <span class="o">/</span> <span class="n">sigma_sq</span></div>
+    <span class="k">return</span> <span class="o">-</span><span class="n">sv</span> <span class="o">/</span> <span class="n">sigma_sq</span></div>
 
 
 
 <div class="viewcode-block" id="check_mrp_switching">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.utils.html#gnc_toolkit.utils.mrp_utils.check_mrp_switching">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">check_mrp_switching</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_mrp_switching</span><span class="p">(</span><span class="n">sigma</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check if the MRP should be switched to its shadow set to avoid singularity.</span>
+<span class="sd">    Ensure the MRP magnitude remains below a threshold by switching to the shadow set.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        sigma (np.ndarray): Current MRP.</span>
-<span class="sd">        threshold (float): Switching threshold (typically 1.0).</span>
+<span class="sd">    Typically used to maintain the MRP within the unit sphere ($threshold=1.0$).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sigma : np.ndarray</span>
+<span class="sd">        Current MRP vector.</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        Magnitude threshold for switching. Default is 1.0.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        np.ndarray: Switched (or original) MRP.</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Standard or shadow MRP vector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">get_shadow_mrp</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sigma</span></div>
+    <span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_shadow_mrp</span><span class="p">(</span><span class="n">sv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sv</span></div>
 
 </pre></div>
 

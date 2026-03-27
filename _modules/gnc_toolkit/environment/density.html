@@ -80,6 +80,9 @@
 <span class="sd">Atmospheric density models (Exponential, Harris-Priester, NRLMSISE-00, JB2008).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pymsis</span>
 
@@ -91,25 +94,81 @@
 <div class="viewcode-block" id="Exponential">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.Exponential">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Exponential</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho0</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">8.5</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simple Exponential Density Model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exponential Atmospheric Density.</span>
+
+<span class="sd">    Model:</span>
+<span class="sd">    $\rho = \rho_0 \exp\left(-\frac{h - h_0}{H}\right)$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rho0 : float, optional</span>
+<span class="sd">        Base density at $h_0$ (kg/m^3).</span>
+<span class="sd">    h0 : float, optional</span>
+<span class="sd">        Reference altitude (km).</span>
+<span class="sd">    h_scale : float, optional</span>
+<span class="sd">        Scale height $H$ (km).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rho0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.225</span><span class="p">,</span>
+        <span class="n">h0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">h_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize exponential model parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rho0 : float, optional</span>
+<span class="sd">            Reference density at altitude $h_0$ (kg/m^3). Default 1.225 (Sea Level).</span>
+<span class="sd">        h0 : float, optional</span>
+<span class="sd">            Reference altitude $h_0$ (km). Default 0.0.</span>
+<span class="sd">        h_scale : float, optional</span>
+<span class="sd">            Scale height $H$ (km). Default 8.5.</span>
+<span class="sd">        **kwargs : Any</span>
+<span class="sd">            Additional arguments, accepts &#39;H&#39; as an alias for &#39;h_scale&#39; for backward compatibility.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rho0</span> <span class="o">=</span> <span class="n">rho0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">h0</span> <span class="o">=</span> <span class="n">h0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">H</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">R_earth</span> <span class="o">=</span> <span class="mf">6378.137</span>  <span class="c1"># km</span>
+
+        <span class="c1"># Handle backward compatibility for &#39;H&#39;</span>
+        <span class="k">if</span> <span class="n">h_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_scale</span> <span class="o">=</span> <span class="n">h_scale</span>
+        <span class="k">elif</span> <span class="s2">&quot;H&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_scale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_scale</span> <span class="o">=</span> <span class="mf">8.5</span>
 
 <div class="viewcode-block" id="Exponential.get_density">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.Exponential.get_density">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">):</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate local density.</span>
 
-        <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            ECI position vector (m).</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date (UT1).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Atmospheric density ($kg/m^3$).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h_m</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">h_m</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho0</span>
 
-        <span class="c1"># Convert h to km for scale height calculation</span>
-        <span class="n">h_km</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="mf">1000.0</span>
-        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">h_km</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">h0</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">rho</span></div>
+        <span class="n">h_km</span> <span class="o">=</span> <span class="n">h_m</span> <span class="o">/</span> <span class="mf">1000.0</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">h_km</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">h0</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_scale</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span></div>
 </div>
 
 
@@ -117,113 +176,118 @@
 <div class="viewcode-block" id="HarrisPriester">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.HarrisPriester">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">HarrisPriester</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lag</span><span class="o">=</span><span class="mf">30.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Harris Priester Density Model&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lag</span><span class="p">)</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Harris-Priester Diurnal Bulge Model.</span>
+
+<span class="sd">    Equation:</span>
+<span class="sd">    $\rho = \rho_{min} + (\rho_{max} - \rho_{min}) \cos^n(\frac{\psi}{2})$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lag_deg : float, optional</span>
+<span class="sd">        Solar lag angle (degrees). Default 30.0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lag_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize HP model with solar lag and ephemeris.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lag_deg : float, optional</span>
+<span class="sd">            Diurnal bulge lag angle behind the sub-solar point (deg). </span>
+<span class="sd">            Default 30.0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lag_deg</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sun_model</span> <span class="o">=</span> <span class="n">Sun</span><span class="p">()</span>
 
 <div class="viewcode-block" id="HarrisPriester.get_density">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.HarrisPriester.get_density">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate Harris-Priester interpolated density.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            ECI position vector (m).</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date (UT1).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Density ($kg/m^3$).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
         <span class="n">r_sun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sun_model</span><span class="o">.</span><span class="n">calculate_sun_eci</span><span class="p">(</span><span class="n">jd</span><span class="p">)</span>
-        <span class="n">sun</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_sun</span><span class="p">)</span>  <span class="c1"># Unit vector</span>
 
-        <span class="n">apex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">sun</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag</span><span class="p">)</span> <span class="o">-</span> <span class="n">sun</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag</span><span class="p">),</span>
-                <span class="n">sun</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag</span><span class="p">)</span> <span class="o">+</span> <span class="n">sun</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag</span><span class="p">),</span>
-                <span class="n">sun</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="p">]</span>
-        <span class="p">)</span>  <span class="c1"># Apex of the diurnal bulge</span>
+        <span class="n">sun_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_sun</span><span class="p">)</span>
+        <span class="n">sun_u</span> <span class="o">=</span> <span class="n">r_sun</span> <span class="o">/</span> <span class="n">sun_norm</span> <span class="k">if</span> <span class="n">sun_norm</span> <span class="o">&gt;</span> <span class="mf">1e-12</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 
-        <span class="n">r_unit</span> <span class="o">=</span> <span class="n">r_eci</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
-        <span class="n">cos_psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_unit</span><span class="p">,</span> <span class="n">apex</span><span class="p">)</span>  <span class="c1"># Angle between satellite and apex</span>
+        <span class="c1"># Apex rotation</span>
+        <span class="n">cl</span><span class="p">,</span> <span class="n">sl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag</span><span class="p">)</span>
+        <span class="n">apex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">sun_u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">cl</span> <span class="o">-</span> <span class="n">sun_u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">sl</span><span class="p">,</span>
+            <span class="n">sun_u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">sl</span> <span class="o">+</span> <span class="n">sun_u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">cl</span><span class="p">,</span>
+            <span class="n">sun_u</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="p">])</span>
 
-        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 2 for low inclination, 6 for polar orbit</span>
-        <span class="n">cos_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">cos_psi</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span> <span class="o">**</span> <span class="n">n</span>
+        <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
+        <span class="n">r_u</span> <span class="o">=</span> <span class="n">rv</span> <span class="o">/</span> <span class="n">r_mag</span> <span class="k">if</span> <span class="n">r_mag</span> <span class="o">&gt;</span> <span class="mf">1e-12</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+        <span class="n">cos_psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_u</span><span class="p">,</span> <span class="n">apex</span><span class="p">)</span>
 
-        <span class="c1"># Look up table for mean solar flux (F10.7=150)</span>
-        <span class="c1"># altitude (m), min_density (kg/m^3), max_density (kg/m^3)</span>
-        <span class="n">rho_mod</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="mf">100000.0</span><span class="p">,</span> <span class="mf">4.974e-07</span><span class="p">,</span> <span class="mf">4.974e-07</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">120000.0</span><span class="p">,</span> <span class="mf">2.490e-08</span><span class="p">,</span> <span class="mf">2.490e-08</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">130000.0</span><span class="p">,</span> <span class="mf">8.377e-09</span><span class="p">,</span> <span class="mf">8.710e-09</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">140000.0</span><span class="p">,</span> <span class="mf">3.899e-09</span><span class="p">,</span> <span class="mf">4.059e-09</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">150000.0</span><span class="p">,</span> <span class="mf">2.122e-09</span><span class="p">,</span> <span class="mf">2.215e-09</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">160000.0</span><span class="p">,</span> <span class="mf">1.263e-09</span><span class="p">,</span> <span class="mf">1.344e-09</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">170000.0</span><span class="p">,</span> <span class="mf">8.008e-10</span><span class="p">,</span> <span class="mf">8.758e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">180000.0</span><span class="p">,</span> <span class="mf">5.283e-10</span><span class="p">,</span> <span class="mf">6.010e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">190000.0</span><span class="p">,</span> <span class="mf">3.617e-10</span><span class="p">,</span> <span class="mf">4.297e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">200000.0</span><span class="p">,</span> <span class="mf">2.557e-10</span><span class="p">,</span> <span class="mf">3.162e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">210000.0</span><span class="p">,</span> <span class="mf">1.839e-10</span><span class="p">,</span> <span class="mf">2.396e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">220000.0</span><span class="p">,</span> <span class="mf">1.341e-10</span><span class="p">,</span> <span class="mf">1.853e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">230000.0</span><span class="p">,</span> <span class="mf">9.949e-11</span><span class="p">,</span> <span class="mf">1.455e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">240000.0</span><span class="p">,</span> <span class="mf">7.488e-11</span><span class="p">,</span> <span class="mf">1.157e-10</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">250000.0</span><span class="p">,</span> <span class="mf">5.709e-11</span><span class="p">,</span> <span class="mf">9.308e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">260000.0</span><span class="p">,</span> <span class="mf">4.403e-11</span><span class="p">,</span> <span class="mf">7.555e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">270000.0</span><span class="p">,</span> <span class="mf">3.430e-11</span><span class="p">,</span> <span class="mf">6.182e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">280000.0</span><span class="p">,</span> <span class="mf">2.697e-11</span><span class="p">,</span> <span class="mf">5.095e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">290000.0</span><span class="p">,</span> <span class="mf">2.139e-11</span><span class="p">,</span> <span class="mf">4.226e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">300000.0</span><span class="p">,</span> <span class="mf">1.708e-11</span><span class="p">,</span> <span class="mf">3.526e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">320000.0</span><span class="p">,</span> <span class="mf">1.099e-11</span><span class="p">,</span> <span class="mf">2.511e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">340000.0</span><span class="p">,</span> <span class="mf">7.214e-12</span><span class="p">,</span> <span class="mf">1.819e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">360000.0</span><span class="p">,</span> <span class="mf">4.824e-12</span><span class="p">,</span> <span class="mf">1.337e-11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">380000.0</span><span class="p">,</span> <span class="mf">3.274e-12</span><span class="p">,</span> <span class="mf">9.955e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">400000.0</span><span class="p">,</span> <span class="mf">2.249e-12</span><span class="p">,</span> <span class="mf">7.492e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">420000.0</span><span class="p">,</span> <span class="mf">1.558e-12</span><span class="p">,</span> <span class="mf">5.684e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">440000.0</span><span class="p">,</span> <span class="mf">1.091e-12</span><span class="p">,</span> <span class="mf">4.355e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">460000.0</span><span class="p">,</span> <span class="mf">7.701e-13</span><span class="p">,</span> <span class="mf">3.362e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">480000.0</span><span class="p">,</span> <span class="mf">5.474e-13</span><span class="p">,</span> <span class="mf">2.612e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">500000.0</span><span class="p">,</span> <span class="mf">3.916e-13</span><span class="p">,</span> <span class="mf">2.042e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">520000.0</span><span class="p">,</span> <span class="mf">2.819e-13</span><span class="p">,</span> <span class="mf">1.605e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">540000.0</span><span class="p">,</span> <span class="mf">2.042e-13</span><span class="p">,</span> <span class="mf">1.267e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">560000.0</span><span class="p">,</span> <span class="mf">1.488e-13</span><span class="p">,</span> <span class="mf">1.005e-12</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">580000.0</span><span class="p">,</span> <span class="mf">1.092e-13</span><span class="p">,</span> <span class="mf">7.997e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">600000.0</span><span class="p">,</span> <span class="mf">8.070e-14</span><span class="p">,</span> <span class="mf">6.390e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">620000.0</span><span class="p">,</span> <span class="mf">6.012e-14</span><span class="p">,</span> <span class="mf">5.123e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">640000.0</span><span class="p">,</span> <span class="mf">4.519e-14</span><span class="p">,</span> <span class="mf">4.121e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">660000.0</span><span class="p">,</span> <span class="mf">3.430e-14</span><span class="p">,</span> <span class="mf">3.325e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">680000.0</span><span class="p">,</span> <span class="mf">2.632e-14</span><span class="p">,</span> <span class="mf">2.691e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">700000.0</span><span class="p">,</span> <span class="mf">2.043e-14</span><span class="p">,</span> <span class="mf">2.185e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">720000.0</span><span class="p">,</span> <span class="mf">1.607e-14</span><span class="p">,</span> <span class="mf">1.779e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">740000.0</span><span class="p">,</span> <span class="mf">1.281e-14</span><span class="p">,</span> <span class="mf">1.452e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">760000.0</span><span class="p">,</span> <span class="mf">1.036e-14</span><span class="p">,</span> <span class="mf">1.190e-13</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">780000.0</span><span class="p">,</span> <span class="mf">8.496e-15</span><span class="p">,</span> <span class="mf">9.776e-14</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">800000.0</span><span class="p">,</span> <span class="mf">7.069e-15</span><span class="p">,</span> <span class="mf">8.059e-14</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">840000.0</span><span class="p">,</span> <span class="mf">4.680e-15</span><span class="p">,</span> <span class="mf">5.741e-14</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">880000.0</span><span class="p">,</span> <span class="mf">3.200e-15</span><span class="p">,</span> <span class="mf">4.210e-14</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">920000.0</span><span class="p">,</span> <span class="mf">2.210e-15</span><span class="p">,</span> <span class="mf">3.130e-14</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">960000.0</span><span class="p">,</span> <span class="mf">1.560e-15</span><span class="p">,</span> <span class="mf">2.360e-14</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1000000.0</span><span class="p">,</span> <span class="mf">1.150e-15</span><span class="p">,</span> <span class="mf">1.810e-14</span><span class="p">),</span>
+        <span class="n">n_pow</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">cos_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">cos_psi</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span> <span class="o">**</span> <span class="n">n_pow</span>
+
+        <span class="c1"># Profile Lookup</span>
+        <span class="n">rho_table</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mf">100000.0</span><span class="p">,</span> <span class="mf">4.974e-07</span><span class="p">,</span> <span class="mf">4.974e-07</span><span class="p">),</span> <span class="p">(</span><span class="mf">120000.0</span><span class="p">,</span> <span class="mf">2.490e-08</span><span class="p">,</span> <span class="mf">2.490e-08</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">130000.0</span><span class="p">,</span> <span class="mf">8.377e-09</span><span class="p">,</span> <span class="mf">8.710e-09</span><span class="p">),</span> <span class="p">(</span><span class="mf">140000.0</span><span class="p">,</span> <span class="mf">3.899e-09</span><span class="p">,</span> <span class="mf">4.059e-09</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">150000.0</span><span class="p">,</span> <span class="mf">2.122e-09</span><span class="p">,</span> <span class="mf">2.215e-09</span><span class="p">),</span> <span class="p">(</span><span class="mf">160000.0</span><span class="p">,</span> <span class="mf">1.263e-09</span><span class="p">,</span> <span class="mf">1.344e-09</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">170000.0</span><span class="p">,</span> <span class="mf">8.008e-10</span><span class="p">,</span> <span class="mf">8.758e-10</span><span class="p">),</span> <span class="p">(</span><span class="mf">180000.0</span><span class="p">,</span> <span class="mf">5.283e-10</span><span class="p">,</span> <span class="mf">6.010e-10</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">190000.0</span><span class="p">,</span> <span class="mf">3.617e-10</span><span class="p">,</span> <span class="mf">4.297e-10</span><span class="p">),</span> <span class="p">(</span><span class="mf">200000.0</span><span class="p">,</span> <span class="mf">2.557e-10</span><span class="p">,</span> <span class="mf">3.162e-10</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">210000.0</span><span class="p">,</span> <span class="mf">1.839e-10</span><span class="p">,</span> <span class="mf">2.396e-10</span><span class="p">),</span> <span class="p">(</span><span class="mf">220000.0</span><span class="p">,</span> <span class="mf">1.341e-10</span><span class="p">,</span> <span class="mf">1.853e-10</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">230000.0</span><span class="p">,</span> <span class="mf">9.949e-11</span><span class="p">,</span> <span class="mf">1.455e-10</span><span class="p">),</span> <span class="p">(</span><span class="mf">240000.0</span><span class="p">,</span> <span class="mf">7.488e-11</span><span class="p">,</span> <span class="mf">1.157e-10</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">250000.0</span><span class="p">,</span> <span class="mf">5.709e-11</span><span class="p">,</span> <span class="mf">9.308e-11</span><span class="p">),</span> <span class="p">(</span><span class="mf">260000.0</span><span class="p">,</span> <span class="mf">4.403e-11</span><span class="p">,</span> <span class="mf">7.555e-11</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">270000.0</span><span class="p">,</span> <span class="mf">3.430e-11</span><span class="p">,</span> <span class="mf">6.182e-11</span><span class="p">),</span> <span class="p">(</span><span class="mf">280000.0</span><span class="p">,</span> <span class="mf">2.697e-11</span><span class="p">,</span> <span class="mf">5.095e-11</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">290000.0</span><span class="p">,</span> <span class="mf">2.139e-11</span><span class="p">,</span> <span class="mf">4.226e-11</span><span class="p">),</span> <span class="p">(</span><span class="mf">300000.0</span><span class="p">,</span> <span class="mf">1.708e-11</span><span class="p">,</span> <span class="mf">3.526e-11</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">320000.0</span><span class="p">,</span> <span class="mf">1.099e-11</span><span class="p">,</span> <span class="mf">2.511e-11</span><span class="p">),</span> <span class="p">(</span><span class="mf">340000.0</span><span class="p">,</span> <span class="mf">7.214e-12</span><span class="p">,</span> <span class="mf">1.819e-11</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">360000.0</span><span class="p">,</span> <span class="mf">4.824e-12</span><span class="p">,</span> <span class="mf">1.337e-11</span><span class="p">),</span> <span class="p">(</span><span class="mf">380000.0</span><span class="p">,</span> <span class="mf">3.274e-12</span><span class="p">,</span> <span class="mf">9.955e-12</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">400000.0</span><span class="p">,</span> <span class="mf">2.249e-12</span><span class="p">,</span> <span class="mf">7.492e-12</span><span class="p">),</span> <span class="p">(</span><span class="mf">420000.0</span><span class="p">,</span> <span class="mf">1.558e-12</span><span class="p">,</span> <span class="mf">5.684e-12</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">440000.0</span><span class="p">,</span> <span class="mf">1.091e-12</span><span class="p">,</span> <span class="mf">4.355e-12</span><span class="p">),</span> <span class="p">(</span><span class="mf">460000.0</span><span class="p">,</span> <span class="mf">7.701e-13</span><span class="p">,</span> <span class="mf">3.362e-12</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">480000.0</span><span class="p">,</span> <span class="mf">5.474e-13</span><span class="p">,</span> <span class="mf">2.612e-12</span><span class="p">),</span> <span class="p">(</span><span class="mf">500000.0</span><span class="p">,</span> <span class="mf">3.916e-13</span><span class="p">,</span> <span class="mf">2.042e-12</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">520000.0</span><span class="p">,</span> <span class="mf">2.819e-13</span><span class="p">,</span> <span class="mf">1.605e-12</span><span class="p">),</span> <span class="p">(</span><span class="mf">540000.0</span><span class="p">,</span> <span class="mf">2.042e-13</span><span class="p">,</span> <span class="mf">1.267e-12</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">560000.0</span><span class="p">,</span> <span class="mf">1.488e-13</span><span class="p">,</span> <span class="mf">1.005e-12</span><span class="p">),</span> <span class="p">(</span><span class="mf">580000.0</span><span class="p">,</span> <span class="mf">1.092e-13</span><span class="p">,</span> <span class="mf">7.997e-13</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">600000.0</span><span class="p">,</span> <span class="mf">8.070e-14</span><span class="p">,</span> <span class="mf">6.390e-13</span><span class="p">),</span> <span class="p">(</span><span class="mf">620000.0</span><span class="p">,</span> <span class="mf">6.012e-14</span><span class="p">,</span> <span class="mf">5.123e-13</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">640000.0</span><span class="p">,</span> <span class="mf">4.519e-14</span><span class="p">,</span> <span class="mf">4.121e-13</span><span class="p">),</span> <span class="p">(</span><span class="mf">660000.0</span><span class="p">,</span> <span class="mf">3.430e-14</span><span class="p">,</span> <span class="mf">3.325e-13</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">680000.0</span><span class="p">,</span> <span class="mf">2.632e-14</span><span class="p">,</span> <span class="mf">2.691e-13</span><span class="p">),</span> <span class="p">(</span><span class="mf">700000.0</span><span class="p">,</span> <span class="mf">2.043e-14</span><span class="p">,</span> <span class="mf">2.185e-13</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">720000.0</span><span class="p">,</span> <span class="mf">1.607e-14</span><span class="p">,</span> <span class="mf">1.779e-13</span><span class="p">),</span> <span class="p">(</span><span class="mf">740000.0</span><span class="p">,</span> <span class="mf">1.281e-14</span><span class="p">,</span> <span class="mf">1.452e-13</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">760000.0</span><span class="p">,</span> <span class="mf">1.036e-14</span><span class="p">,</span> <span class="mf">1.190e-13</span><span class="p">),</span> <span class="p">(</span><span class="mf">780000.0</span><span class="p">,</span> <span class="mf">8.496e-15</span><span class="p">,</span> <span class="mf">9.776e-14</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">800000.0</span><span class="p">,</span> <span class="mf">7.069e-15</span><span class="p">,</span> <span class="mf">8.059e-14</span><span class="p">),</span> <span class="p">(</span><span class="mf">840000.0</span><span class="p">,</span> <span class="mf">4.680e-15</span><span class="p">,</span> <span class="mf">5.741e-14</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">880000.0</span><span class="p">,</span> <span class="mf">3.200e-15</span><span class="p">,</span> <span class="mf">4.210e-14</span><span class="p">),</span> <span class="p">(</span><span class="mf">920000.0</span><span class="p">,</span> <span class="mf">2.210e-15</span><span class="p">,</span> <span class="mf">3.130e-14</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">960000.0</span><span class="p">,</span> <span class="mf">1.560e-15</span><span class="p">,</span> <span class="mf">2.360e-14</span><span class="p">),</span> <span class="p">(</span><span class="mf">1000000.0</span><span class="p">,</span> <span class="mf">1.150e-15</span><span class="p">,</span> <span class="mf">1.810e-14</span><span class="p">),</span>
         <span class="p">]</span>
 
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">eci2llh</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>  <span class="c1"># Altitude [m]</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h_m</span> <span class="o">=</span> <span class="n">eci2llh</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
 
-        <span class="c1"># Edge Cases</span>
-        <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="n">rho_mod</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="n">rho_mod</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">rho_mod</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="n">rho_mod</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">h_m</span> <span class="o">&lt;</span> <span class="n">rho_table</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">rho_table</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">h_m</span> <span class="o">&gt;</span> <span class="n">rho_table</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">rho_table</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">rho_mod</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">rho_mod</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">rho_table</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">h_m</span> <span class="o">&gt;</span> <span class="n">rho_table</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="c1"># Linear interpolation in Log-Density</span>
-        <span class="n">h1</span> <span class="o">=</span> <span class="n">rho_mod</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">rho_min1</span> <span class="o">=</span> <span class="n">rho_mod</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">rho_max1</span> <span class="o">=</span> <span class="n">rho_mod</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">h1</span><span class="p">,</span> <span class="n">rho_min1</span><span class="p">,</span> <span class="n">rho_max1</span> <span class="o">=</span> <span class="n">rho_table</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="n">h2</span><span class="p">,</span> <span class="n">rho_min2</span><span class="p">,</span> <span class="n">rho_max2</span> <span class="o">=</span> <span class="n">rho_table</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">h2</span> <span class="o">=</span> <span class="n">rho_mod</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">rho_min2</span> <span class="o">=</span> <span class="n">rho_mod</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">rho_max2</span> <span class="o">=</span> <span class="n">rho_mod</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
-
-        <span class="n">frac</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">h1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h2</span> <span class="o">-</span> <span class="n">h1</span><span class="p">)</span>
-
+        <span class="n">frac</span> <span class="o">=</span> <span class="p">(</span><span class="n">h_m</span> <span class="o">-</span> <span class="n">h1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h2</span> <span class="o">-</span> <span class="n">h1</span><span class="p">)</span>
         <span class="n">rho_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rho_min1</span><span class="p">)</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rho_min2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rho_min1</span><span class="p">)))</span>
         <span class="n">rho_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rho_max1</span><span class="p">)</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rho_max2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rho_max1</span><span class="p">)))</span>
 
-        <span class="k">return</span> <span class="n">rho_min</span> <span class="o">+</span> <span class="p">(</span><span class="n">rho_max</span> <span class="o">-</span> <span class="n">rho_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos_term</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">rho_min</span> <span class="o">+</span> <span class="p">(</span><span class="n">rho_max</span> <span class="o">-</span> <span class="n">rho_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos_term</span><span class="p">)</span></div>
 </div>
 
 
@@ -231,31 +295,54 @@
 <div class="viewcode-block" id="NRLMSISE00">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.NRLMSISE00">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NRLMSISE00</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;NRLMSISE-00 atmospheric model using pymsis.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    NRLMSISE-00 high-fidelity atmospheric density model.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="sd">    The standard empirical model of the Earth&#39;s atmosphere from ground to </span>
+<span class="sd">    space. Accounts for solar activity, geomagnetic storms, and seasonal </span>
+<span class="sd">    variations.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Requires the `pymsis` package.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize NRLMSISE-00 model.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="NRLMSISE00.get_density">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.NRLMSISE00.get_density">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get total mass density [kg/m^3].</span>
-<span class="sd">        Args:</span>
-<span class="sd">            r_eci (np.ndarray): Position vector in ECI frame [km].</span>
-<span class="sd">            date (datetime): Current time.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">jd</span><span class="p">,</span> <span class="n">jdfrac</span> <span class="o">=</span> <span class="n">calc_jd</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">second</span><span class="p">)</span>
-        <span class="n">jd</span> <span class="o">+=</span> <span class="n">jdfrac</span>
-        <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+<span class="sd">        Get total mass density using NRLMSISE-00.</span>
 
-        <span class="n">output</span> <span class="o">=</span> <span class="n">pymsis</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            ECI position vector (m).</span>
+<span class="sd">        date : datetime</span>
+<span class="sd">            Current UTC time.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Atmospheric density ($kg/m^3$).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
+        <span class="n">jd</span><span class="p">,</span> <span class="n">jdfrac</span> <span class="o">=</span> <span class="n">calc_jd</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">second</span><span class="p">)</span>
+        <span class="n">jdf</span> <span class="o">=</span> <span class="n">jd</span> <span class="o">+</span> <span class="n">jdfrac</span>
+
+        <span class="n">lon_deg</span><span class="p">,</span> <span class="n">lat_deg</span><span class="p">,</span> <span class="n">alt_m</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">jdf</span><span class="p">)</span>
+
+        <span class="c1"># alt in km for pymsis</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">pymsis</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">lon_deg</span><span class="p">,</span> <span class="n">lat_deg</span><span class="p">,</span> <span class="n">alt_m</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>
 
         <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">rho</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">rho</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Total mass density</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">rho</span></div>
 </div>
@@ -267,39 +354,54 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">JB2008</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simplified Jacchia-Bowman 2008 (JB2008) Atmosphere Model.</span>
-<span class="sd">    This implementation focuses on the structure and requires solar indices.</span>
+
+<span class="sd">    A high-accuracy model based on Jacchia&#39;s diffusion equations, </span>
+<span class="sd">    driven by solar indices (F10.7, S10, M10, etc).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    space_weather : Optional[Any], optional</span>
+<span class="sd">        SpaceWeather model for fetching real-time indices.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space_weather</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space_weather</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize JB2008 with space weather source.&quot;&quot;&quot;</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">gnc_toolkit.environment.space_weather</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpaceWeather</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sw</span> <span class="o">=</span> <span class="n">space_weather</span> <span class="k">if</span> <span class="n">space_weather</span> <span class="k">else</span> <span class="n">SpaceWeather</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sun_model</span> <span class="o">=</span> <span class="n">Sun</span><span class="p">()</span>
 
 <div class="viewcode-block" id="JB2008.get_density">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.JB2008.get_density">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Simplified JB2008: exponential base density scaled by F10.7 solar flux.</span>
-<span class="sd">        Full JB2008 requires look-up tables for solar/geomagnetic corrections.</span>
+<span class="sd">        Calculate density using solar-scaled thermospheric approximation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            ECI position vector (m).</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date (UT1).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Atmospheric density ($kg/m^3$).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Get altitude and solar position</span>
-        <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h_m</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+
         <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw</span><span class="o">.</span><span class="n">get_indices</span><span class="p">(</span><span class="n">jd</span><span class="p">)</span>
-        <span class="n">F10</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="s2">&quot;f107&quot;</span><span class="p">]</span>
-        <span class="n">F10bar</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="s2">&quot;f107_avg&quot;</span><span class="p">]</span>
+        <span class="n">f10</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;f107&quot;</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
+        <span class="n">f10_avg</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;f107_avg&quot;</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
 
-        <span class="c1"># Base density from exponential model scaled by solar flux</span>
-        <span class="c1"># Base scale height H ~ 8.5 km, rho0 ~ 1.225 at sea level</span>
-        <span class="c1"># For thermosphere (h &gt; 100km), scale height varies significantly.</span>
-        <span class="n">H</span> <span class="o">=</span> <span class="mf">7.0</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>  <span class="c1"># km, very rough approximation</span>
-        <span class="n">rho_base</span> <span class="o">=</span> <span class="mf">1.225</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">H</span><span class="p">)</span>
+        <span class="n">h_scale</span> <span class="o">=</span> <span class="mf">7.0</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="p">(</span><span class="n">h_m</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>
+        <span class="n">rho_base</span> <span class="o">=</span> <span class="mf">1.225</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">h_m</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">h_scale</span><span class="p">)</span>
 
-        <span class="c1"># Scaling based on F10.7 (Solar activity correction)</span>
-        <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">F10</span> <span class="o">+</span> <span class="n">F10bar</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">f10</span> <span class="o">+</span> <span class="n">f10_avg</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="n">solar_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="mf">70.0</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">rho_base</span> <span class="o">*</span> <span class="n">solar_factor</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">rho_base</span> <span class="o">*</span> <span class="n">solar_factor</span><span class="p">)</span></div>
 </div>
 
 
@@ -311,25 +413,37 @@
 <span class="sd">    COSPAR International Reference Atmosphere (CIRA) 1972 simplified version.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># CIRA-72 often uses look-up tables or polynomial fits.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize simplified CIRA-72 model.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="CIRA72.get_density">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.environment.html#gnc_toolkit.environment.density.CIRA72.get_density">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jd</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Simplified CIRA-72 density calculation.</span>
+<span class="sd">        Calculate density using log-polynomial fit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            ECI position vector (m).</span>
+<span class="sd">        jd : float</span>
+<span class="sd">            Julian Date.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Atmospheric density ($kg/m^3$).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">eci2geodetic</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
         <span class="n">h_km</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="mf">1000.0</span>
 
         <span class="k">if</span> <span class="n">h_km</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">1.225</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">h_km</span> <span class="o">/</span> <span class="mf">8.5</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mf">1.225</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">h_km</span> <span class="o">/</span> <span class="mf">8.5</span><span class="p">))</span>
 
-        <span class="c1"># Polynomial fit for log10(rho) vs altitude, mean solar conditions, 100-800 km</span>
         <span class="n">log_rho</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.0</span> <span class="o">-</span> <span class="mf">0.015</span> <span class="o">*</span> <span class="p">(</span><span class="n">h_km</span> <span class="o">-</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.2e-5</span> <span class="o">*</span> <span class="p">(</span><span class="n">h_km</span> <span class="o">-</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="k">return</span> <span class="mi">10</span><span class="o">**</span><span class="n">log_rho</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">log_rho</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

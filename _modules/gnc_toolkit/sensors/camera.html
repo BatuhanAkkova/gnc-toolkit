@@ -90,24 +90,31 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Camera</span><span class="p">(</span><span class="n">Sensor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple pinhole camera model.</span>
+
 <span class="sd">    Projects 3D points in the body frame onto a 2D image plane.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    focal_length : float, optional</span>
+<span class="sd">        Focal length (m). Default is 1.0.</span>
+<span class="sd">    resolution : tuple[int, int], optional</span>
+<span class="sd">        (width, height) in pixels. Default is (1024, 1024).</span>
+<span class="sd">    sensor_size : tuple[float, float], optional</span>
+<span class="sd">        (width, height) in physical units (e.g., m). Default is (1.0, 1.0).</span>
+<span class="sd">    noise_std : float, optional</span>
+<span class="sd">        Pixel noise standard deviation. Default is 0.0.</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Sensor name. Default is &quot;Camera&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">focal_length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span>
-        <span class="n">sensor_size</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-        <span class="n">noise_std</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Camera&quot;</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            focal_length (float): Focal length [m? or pixels?].</span>
-<span class="sd">            resolution (tuple): (width, height) in pixels.</span>
-<span class="sd">            sensor_size (tuple): (width, height) in physical units (e.g., m).</span>
-<span class="sd">            noise_std (float): Pixel noise standard deviation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">focal_length</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span>
+        <span class="n">sensor_size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="n">noise_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Camera&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">focal_length</span> <span class="o">=</span> <span class="n">focal_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
@@ -124,15 +131,22 @@
 
 <div class="viewcode-block" id="Camera.measure">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.sensors.html#gnc_toolkit.sensors.camera.Camera.measure">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_point_body</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_point_body</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            true_point_body (np.ndarray): 3D point in the camera/body frame [m].</span>
-<span class="sd">                                        Assumes Z is along the optical axis.</span>
+<span class="sd">        Project 3D point onto image plane.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        true_point_body : np.ndarray</span>
+<span class="sd">            3D point in the camera/body frame (m).</span>
+<span class="sd">            Assumes Z is along the optical axis.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional parameters.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            np.ndarray: (u, v) pixel coordinates, or None if outside FOV.</span>
+<span class="sd">        np.ndarray | None</span>
+<span class="sd">            (u, v) pixel coordinates, or None if outside FOV or behind camera.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">true_point_body</span>
 

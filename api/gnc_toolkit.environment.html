@@ -125,45 +125,128 @@
 <p>COSPAR International Reference Atmosphere (CIRA) 1972 simplified version.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.CIRA72.get_density">
-<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#CIRA72.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.CIRA72.get_density" title="Link to this definition"></a></dt>
-<dd><p>Simplified CIRA-72 density calculation.</p>
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#CIRA72.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.CIRA72.get_density" title="Link to this definition"></a></dt>
+<dd><p>Calculate density using log-polynomial fit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI position vector (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric density ($kg/m^3$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.Exponential">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">Exponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.225</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#Exponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.Exponential" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">Exponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.225</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#Exponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.Exponential" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Exponential Atmospheric Density.</p>
+<p>Model:
+$rho = rho_0 expleft(-frac{h - h_0}{H}right)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho0</strong> (<em>float</em><em>, </em><em>optional</em>) – Base density at $h_0$ (kg/m^3).</p></li>
+<li><p><strong>h0</strong> (<em>float</em><em>, </em><em>optional</em>) – Reference altitude (km).</p></li>
+<li><p><strong>h_scale</strong> (<em>float</em><em>, </em><em>optional</em>) – Scale height $H$ (km).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.Exponential.get_density">
-<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#Exponential.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.Exponential.get_density" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#Exponential.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.Exponential.get_density" title="Link to this definition"></a></dt>
+<dd><p>Calculate local density.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI position vector (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date (UT1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric density ($kg/m^3$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.HarrisPriester">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">HarrisPriester</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#HarrisPriester"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.HarrisPriester" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">HarrisPriester</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lag_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#HarrisPriester"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.HarrisPriester" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Harris-Priester Diurnal Bulge Model.</p>
+<p>Equation:
+$rho = rho_{min} + (rho_{max} - rho_{min}) cos^n(frac{psi}{2})$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lag_deg</strong> (<em>float</em><em>, </em><em>optional</em>) – Solar lag angle (degrees). Default 30.0.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.HarrisPriester.get_density">
-<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#HarrisPriester.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.HarrisPriester.get_density" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#HarrisPriester.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.HarrisPriester.get_density" title="Link to this definition"></a></dt>
+<dd><p>Calculate Harris-Priester interpolated density.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI position vector (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date (UT1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Density ($kg/m^3$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.JB2008">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">JB2008</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space_weather</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#JB2008"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.JB2008" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">JB2008</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space_weather</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#JB2008"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.JB2008" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Simplified Jacchia-Bowman 2008 (JB2008) Atmosphere Model.
-This implementation focuses on the structure and requires solar indices.</p>
+<p>Simplified Jacchia-Bowman 2008 (JB2008) Atmosphere Model.</p>
+<p>A high-accuracy model based on Jacchia’s diffusion equations,
+driven by solar indices (F10.7, S10, M10, etc).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>space_weather</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – SpaceWeather model for fetching real-time indices.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.JB2008.get_density">
-<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#JB2008.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.JB2008.get_density" title="Link to this definition"></a></dt>
-<dd><p>Simplified JB2008: exponential base density scaled by F10.7 solar flux.
-Full JB2008 requires look-up tables for solar/geomagnetic corrections.</p>
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#JB2008.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.JB2008.get_density" title="Link to this definition"></a></dt>
+<dd><p>Calculate density using solar-scaled thermospheric approximation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI position vector (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date (UT1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric density ($kg/m^3$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -172,15 +255,30 @@ Full JB2008 requires look-up tables for solar/geomagnetic corrections.</p>
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.NRLMSISE00">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.density.</span></span><span class="sig-name descname"><span class="pre">NRLMSISE00</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#NRLMSISE00"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.NRLMSISE00" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>NRLMSISE-00 atmospheric model using pymsis.</p>
+<p>NRLMSISE-00 high-fidelity atmospheric density model.</p>
+<p>The standard empirical model of the Earth’s atmosphere from ground to
+space. Accounts for solar activity, geomagnetic storms, and seasonal
+variations.</p>
+<p class="rubric">Notes</p>
+<p>Requires the <cite>pymsis</cite> package.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.density.NRLMSISE00.get_density">
-<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#NRLMSISE00.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.NRLMSISE00.get_density" title="Link to this definition"></a></dt>
-<dd><p>Get total mass density [kg/m^3].
-:param r_eci: Position vector in ECI frame [km].
-:type r_eci: np.ndarray
-:param date: Current time.
-:type date: datetime</p>
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/density.html#NRLMSISE00.get_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.density.NRLMSISE00.get_density" title="Link to this definition"></a></dt>
+<dd><p>Get total mass density using NRLMSISE-00.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI position vector (m).</p></li>
+<li><p><strong>date</strong> (<em>datetime</em>) – Current UTC time.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric density ($kg/m^3$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -191,22 +289,71 @@ Full JB2008 requires look-up tables for solar/geomagnetic corrections.</p>
 <p>Earth magnetic field models (IGRF, WMM, Tilted Dipole).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.mag_field.igrf_field">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">igrf_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#igrf_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.igrf_field" title="Link to this definition"></a></dt>
-<dd><p>Get the IGRF magnetic field at a given location and time.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">igrf_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#igrf_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.igrf_field" title="Link to this definition"></a></dt>
+<dd><p>Get the International Geomagnetic Reference Field (IGRF) vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat</strong> (<em>float</em>) – Geodetic latitude (deg).</p></li>
+<li><p><strong>lon</strong> (<em>float</em>) – Geodetic longitude (deg).</p></li>
+<li><p><strong>alt</strong> (<em>float</em>) – Altitude above the WGS84 ellipsoid (km).</p></li>
+<li><p><strong>time</strong> (<em>datetime.datetime</em><em> or </em><em>float</em>) – Time for IGRF calculation. Decimal year preferred for float.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Magnetic field vector $[B_{North}, B_{East}, B_{Down}]$ (nT).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ImportError</strong> – If <cite>ppigrf</cite> dependency is not installed.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.mag_field.tilted_dipole_field">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">tilted_dipole_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_ecef</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#tilted_dipole_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.tilted_dipole_field" title="Link to this definition"></a></dt>
-<dd><p>Calculates the magnetic field vector at a given position using the tilted dipole model.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">tilted_dipole_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_ecef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#tilted_dipole_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.tilted_dipole_field" title="Link to this definition"></a></dt>
+<dd><p>Tilted Dipole Geomagnetic Approximation.</p>
+<p>A simplified model useful for fast orbit propagation. Approximates Earth’s
+field as a dipole tilted relative to the geographic poles.</p>
+<p>Equation:
+$mathbf{B} = frac{mu_0}{4pi} frac{1}{r^3} [3(mathbf{m} cdot hat{mathbf{r}})hat{mathbf{r}} - mathbf{m}]$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>r_ecef</strong> (<em>np.ndarray</em>) – Position vector in ECEF frame (m).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Magnetic field vector in ECEF frame (T).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.mag_field.wmm_field">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">wmm_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#wmm_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.wmm_field" title="Link to this definition"></a></dt>
-<dd><p>Get the World Magnetic Model (WMM) field.</p>
-<p>Proxied via IGRF (closely related for GNC purposes). For high precision
-load WMM2020.COF via a dedicated WMM library.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.mag_field.</span></span><span class="sig-name descname"><span class="pre">wmm_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/mag_field.html#wmm_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.mag_field.wmm_field" title="Link to this definition"></a></dt>
+<dd><p>Get the World Magnetic Model (WMM) field vector.</p>
+<p>Proxied via IGRF in this implementation for GNC simulation balance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat</strong> (<em>float</em>) – Geodetic latitude (deg).</p></li>
+<li><p><strong>lon</strong> (<em>float</em>) – Geodetic longitude (deg).</p></li>
+<li><p><strong>alt</strong> (<em>float</em>) – Altitude (km).</p></li>
+<li><p><strong>date</strong> (<em>datetime.datetime</em><em> or </em><em>float</em>) – Date for model calculation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Magnetic field vector $[B_{North}, B_{East}, B_{Down}]$ (nT).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -217,21 +364,30 @@ load WMM2020.COF via a dedicated WMM library.</p>
 <dt class="sig sig-object py" id="gnc_toolkit.environment.moon.Moon">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.moon.</span></span><span class="sig-name descname"><span class="pre">Moon</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/moon.html#Moon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.moon.Moon" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Simplified Lunar Ephemeris Model.
-Based on low-precision formulas (e.g., Vallado).</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.environment.moon.Moon.calculate_moon_eci">
-<span class="sig-name descname"><span class="pre">calculate_moon_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/moon.html#Moon.calculate_moon_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.moon.Moon.calculate_moon_eci" title="Link to this definition"></a></dt>
-<dd><p>Calculates Moon vector in ECI frame.</p>
+<p>Lunar Ephemeris Model (Vallado 3.5).</p>
+<p>Provides the Moon’s position vector in the Earth-Centered Inertial (ECI)
+frame.</p>
+<p>Calculation (Fundamental Arguments):
+$L$ = Mean longitude, $M’$ = Moon mean anomaly, $M$ = Sun mean anomaly,
+$D$ = Mean elongation, $u$ = Mean latitude.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>jd</strong> (<em>float</em>) – Julian Date</p>
+<dd class="field-odd"><p><strong>None</strong></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.moon.Moon.calculate_moon_eci">
+<span class="sig-name descname"><span class="pre">calculate_moon_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/moon.html#Moon.calculate_moon_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.moon.Moon.calculate_moon_eci" title="Link to this definition"></a></dt>
+<dd><p>Calculate Moon vector in ECI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>jd</strong> (<em>float</em>) – Julian Date (UT1).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Moon position vector $[x, y, z]$ (m).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Moon position vector in ECI frame [m]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -246,32 +402,49 @@ Based on low-precision formulas (e.g., Vallado).</p>
 <dt class="sig sig-object py" id="gnc_toolkit.environment.radiation.RadiationModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.radiation.</span></span><span class="sig-name descname"><span class="pre">RadiationModel</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Basic radiation environment models for spacecraft.</p>
+<p>Parametric Space Radiation Environment Models.</p>
+<p>Estimates Total Ionizing Dose (TID) and Single Event Upset (SEU) rates
+for spacecraft electronic components in Low Earth Orbit (LEO).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.radiation.RadiationModel.estimate_seu_rate">
-<span class="sig-name descname"><span class="pre">estimate_seu_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_km</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_cross_section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel.estimate_seu_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel.estimate_seu_rate" title="Link to this definition"></a></dt>
-<dd><p>Estimate Single Event Upset (SEU) rate.</p>
+<span class="sig-name descname"><span class="pre">estimate_seu_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_km</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_cross_section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel.estimate_seu_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel.estimate_seu_rate" title="Link to this definition"></a></dt>
+<dd><p>Estimate Single Event Upset (SEU) rate from proton flux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>altitude_km</strong> (<em>float</em>) – Orbit altitude</p></li>
-<li><p><strong>device_cross_section</strong> (<em>float</em>) – Sensitive area [cm^2/bit]</p></li>
+<li><p><strong>altitude_km</strong> (<em>float</em>) – Orbit altitude (km).</p></li>
+<li><p><strong>device_cross_section</strong> (<em>float</em><em>, </em><em>optional</em>) – Device sensitive area ($cm^2/bit$). Default 1e-12.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Estimated SEUs per bit-day.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>SEUs per bit-day</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.radiation.RadiationModel.estimate_tid">
-<span class="sig-name descname"><span class="pre">estimate_tid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_km</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclination_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_days</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel.estimate_tid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel.estimate_tid" title="Link to this definition"></a></dt>
-<dd><p>Estimate Total Ionising Dose (TID) in kRad(Si).
-Rough parametric model for LEO.</p>
+<span class="sig-name descname"><span class="pre">estimate_tid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_km</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclination_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_days</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/radiation.html#RadiationModel.estimate_tid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.radiation.RadiationModel.estimate_tid" title="Link to this definition"></a></dt>
+<dd><p>Estimate cumulative Total Ionizing Dose (TID).</p>
+<p>Uses a parametric fit for LEO orbits assuming 2.5 mm Aluminum shielding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>altitude_km</strong> (<em>float</em>) – Orbit altitude (km).</p></li>
+<li><p><strong>inclination_deg</strong> (<em>float</em>) – Orbit inclination (deg).</p></li>
+<li><p><strong>duration_days</strong> (<em>float</em>) – Mission duration (days).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimated TID in kRad(Si).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -284,19 +457,30 @@ Rough parametric model for LEO.</p>
 <dt class="sig sig-object py" id="gnc_toolkit.environment.solar.Sun">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.solar.</span></span><span class="sig-name descname"><span class="pre">Sun</span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/solar.html#Sun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.solar.Sun" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gnc_toolkit.environment.solar.Sun.calculate_sun_eci">
-<span class="sig-name descname"><span class="pre">calculate_sun_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/solar.html#Sun.calculate_sun_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.solar.Sun.calculate_sun_eci" title="Link to this definition"></a></dt>
-<dd><p>Calculates Sun vector in ECI frame.</p>
+<p>Solar Position Model (Astronomical Almanac).</p>
+<p>Provides the Sun’s position vector in the Earth-Centered Inertial (ECI)
+frame (J2000).</p>
+<p>Calculation:
+$lambda_{ecl} = q + 1.915 sin(g) + 0.020 sin(2g)$
+where $q$ is mean longitude and $g$ is mean anomaly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>jd</strong> (<em>float</em>) – Julian Date</p>
+<dd class="field-odd"><p><strong>None</strong></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gnc_toolkit.environment.solar.Sun.calculate_sun_eci">
+<span class="sig-name descname"><span class="pre">calculate_sun_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/solar.html#Sun.calculate_sun_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.solar.Sun.calculate_sun_eci" title="Link to this definition"></a></dt>
+<dd><p>Calculate Sun vector in ECI J2000.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>jd</strong> (<em>float</em>) – Julian Date (UT1).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.array</strong></p>
+<dd class="field-even"><p>Sun position $[x, y, z]$ (m).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Sun vector in ECI frame (km).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -309,21 +493,50 @@ Rough parametric model for LEO.</p>
 <p>Space weather index management (F10.7, Ap, Kp) for disturbance models.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.space_weather.SpaceWeather">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.space_weather.</span></span><span class="sig-name descname"><span class="pre">SpaceWeather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f107</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f107_avg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.space_weather.</span></span><span class="sig-name descname"><span class="pre">SpaceWeather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f107</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f107_avg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Model for managing space weather indices like F10.7, Ap, and Kp.
-Used for atmospheric density and radiation models.</p>
+<p>Solar and Geomagnetic Activity Indices Manager.</p>
+<p>Coordinates F10.7 (solar flux) and Ap/Kp (geomagnetic) indices used by
+thermospheric and radiation models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f107</strong> (<em>float</em><em>, </em><em>optional</em>) – Daily solar flux index at 10.7cm (sfu). Default 150.0.</p></li>
+<li><p><strong>f107_avg</strong> (<em>float</em><em>, </em><em>optional</em>) – 81-day centered mean solar flux (sfu). Default 150.0.</p></li>
+<li><p><strong>ap</strong> (<em>float</em><em>, </em><em>optional</em>) – Planetary equivalent amplitude index (geomagnetic). Default 15.0.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.space_weather.SpaceWeather.get_indices">
-<span class="sig-name descname"><span class="pre">get_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather.get_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather.get_indices" title="Link to this definition"></a></dt>
-<dd><p>Get indices for a specific date.
-Currently returns static values, but can be extended for database lookup.</p>
+<span class="sig-name descname"><span class="pre">get_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather.get_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather.get_indices" title="Link to this definition"></a></dt>
+<dd><p>Retrieve indices for a given epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>date</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Target epoch. Currently returns static values.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Indices dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, float]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.space_weather.SpaceWeather.set_solar_flux">
-<span class="sig-name descname"><span class="pre">set_solar_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f107</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f107_avg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather.set_solar_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather.set_solar_flux" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">set_solar_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f107</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f107_avg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/space_weather.html#SpaceWeather.set_solar_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.space_weather.SpaceWeather.set_solar_flux" title="Link to this definition"></a></dt>
+<dd><p>Update local solar flux parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f107</strong> (<em>float</em>) – Daily solar flux (sfu).</p></li>
+<li><p><strong>f107_avg</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – Average solar flux. Defaults to <cite>f107</cite> if None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -333,26 +546,70 @@ Currently returns static values, but can be extended for database lookup.</p>
 <p>Spacecraft thermal environment flux models (Solar, Albedo, Earth IR).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.thermal.</span></span><span class="sig-name descname"><span class="pre">ThermalEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo_coeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">earth_ir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">230.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.thermal.</span></span><span class="sig-name descname"><span class="pre">ThermalEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo_coeff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">earth_ir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">230.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Models for external thermal fluxes: Solar, Albedo, and Earth IR.</p>
+<p>Spacecraft External Thermal Environment Models.</p>
+<p>Calculates heat fluxes from direct solar radiation, planetary albedo, and
+outgoing longwave radiation (Earth IR).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo_coeff</strong> (<em>float</em><em>, </em><em>optional</em>) – Planetary mean spherical albedo [0, 1]. Default 0.3.</p></li>
+<li><p><strong>earth_ir</strong> (<em>float</em><em>, </em><em>optional</em>) – Mean outgoing longwave radiation (W/m^2). Default 230.0.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment.get_albedo_flux">
-<span class="sig-name descname"><span class="pre">get_albedo_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_sat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_sun</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_albedo_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_albedo_flux" title="Link to this definition"></a></dt>
-<dd><p>Calculate albedo flux on a nadir-facing surface.
-Simplified model based on angle between Sat-Sun and Nadir.</p>
+<span class="sig-name descname"><span class="pre">get_albedo_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_sat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_sun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_albedo_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_albedo_flux" title="Link to this definition"></a></dt>
+<dd><p>Calculate planet-reflected solar flux (Albedo).</p>
+<p>Uses a Lambertian reflection model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_sat</strong> (<em>np.ndarray</em>) – Satellite ECI position (m).</p></li>
+<li><p><strong>r_sun</strong> (<em>np.ndarray</em>) – Sun ECI position (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Albedo flux on a nadir-facing surface ($W/m^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment.get_earth_ir_flux">
-<span class="sig-name descname"><span class="pre">get_earth_ir_flux</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_earth_ir_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_earth_ir_flux" title="Link to this definition"></a></dt>
-<dd><p>Earth IR flux [W/m^2].</p>
+<span class="sig-name descname"><span class="pre">get_earth_ir_flux</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_earth_ir_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_earth_ir_flux" title="Link to this definition"></a></dt>
+<dd><p>Get standard Earth IR flux.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Planetary IR flux ($W/m^2$).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.thermal.ThermalEnvironment.get_solar_flux">
-<span class="sig-name descname"><span class="pre">get_solar_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_au</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_solar_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_solar_flux" title="Link to this definition"></a></dt>
-<dd><p>Direct solar flux at distance [W/m^2].</p>
+<span class="sig-name descname"><span class="pre">get_solar_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_au</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/thermal.html#ThermalEnvironment.get_solar_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.thermal.ThermalEnvironment.get_solar_flux" title="Link to this definition"></a></dt>
+<dd><p>Calculate direct solar flux.</p>
+<p>Equation: $F_{sun} = S / d^2$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>distance_au</strong> (<em>float</em><em>, </em><em>optional</em>) – Sun-spacecraft distance (AU). Default 1.0.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Solar flux ($W/m^2$).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -363,33 +620,57 @@ Simplified model based on angle between Sat-Sun and Nadir.</p>
 <p>Atmospheric wind and earth co-rotation modeling.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.wind.AtmosphereCoRotation">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.wind.</span></span><span class="sig-name descname"><span class="pre">AtmosphereCoRotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omega_earth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7.2921151467e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.environment.wind.</span></span><span class="sig-name descname"><span class="pre">AtmosphereCoRotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omega_e</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7.2921151467e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Calculates atmospheric wind velocity assuming co-rotation with Earth.</p>
+<p>Atmospheric Wind Model (Strict Co-Rotation).</p>
+<p>Assumes that the atmosphere rotates perfectly in sync with the planet’s
+Earth-Centered Earth-Fixed (ECEF) frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>omega_e</strong> (<em>float</em><em>, </em><em>optional</em>) – Planetary angular rate (rad/s). Default Earth WGS84 rate.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.wind.AtmosphereCoRotation.get_relative_velocity">
-<span class="sig-name descname"><span class="pre">get_relative_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation.get_relative_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_relative_velocity" title="Link to this definition"></a></dt>
-<dd><p>Calculate spacecraft velocity relative to the atmosphere.
-v_rel = v_sc - v_wind</p>
+<span class="sig-name descname"><span class="pre">get_relative_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation.get_relative_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_relative_velocity" title="Link to this definition"></a></dt>
+<dd><p>Calculate spacecraft velocity relative to the atmosphere (Airspeed).</p>
+<p>Equation:
+$mathbf{v}_{rel} = mathbf{v}_{sc} - mathbf{v}_w$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI position (m).</p></li>
+<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – ECI spacecraft velocity (m/s).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Relative velocity vector (m/s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.environment.wind.AtmosphereCoRotation.get_wind_velocity">
-<span class="sig-name descname"><span class="pre">get_wind_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation.get_wind_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_wind_velocity" title="Link to this definition"></a></dt>
-<dd><p>Calculate wind velocity in ECI frame.
-v_wind = omega x r</p>
+<span class="sig-name descname"><span class="pre">get_wind_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/environment/wind.html#AtmosphereCoRotation.get_wind_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.environment.wind.AtmosphereCoRotation.get_wind_velocity" title="Link to this definition"></a></dt>
+<dd><p>Calculate local wind velocity vector in ECI.</p>
+<p>Equation:
+$mathbf{v}_w = boldsymbol{omega}_E times mathbf{r}_{eci}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position vector in ECI frame [m]</p></li>
-<li><p><strong>jd</strong> (<em>float</em>) – Julian Date</p></li>
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – ECI position vector (m).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Wind velocity vector (m/s).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Wind velocity vector in ECI [m/s]</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

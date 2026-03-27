@@ -80,6 +80,8 @@
 <span class="sd">Porkchop plot grid generation for interplanetary transfers.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..guidance.rendezvous</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_lambert</span>
@@ -88,23 +90,46 @@
 <div class="viewcode-block" id="generate_porkchop_grid">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.guidance.html#gnc_toolkit.guidance.porkchop.generate_porkchop_grid">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_porkchop_grid</span><span class="p">(</span>
-    <span class="n">departure_dates</span><span class="p">,</span> <span class="n">arrival_dates</span><span class="p">,</span> <span class="n">r_dep_func</span><span class="p">,</span> <span class="n">v_dep_func</span><span class="p">,</span> <span class="n">r_arr_func</span><span class="p">,</span> <span class="n">v_arr_func</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">398600.4418</span>
-<span class="p">):</span>
+    <span class="n">departure_dates</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">arrival_dates</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">r_dep_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">v_dep_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">r_arr_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">v_arr_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">398600.4418</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generates a grid of C3 and V_infinity values for a range of departure and arrival dates.</span>
+<span class="sd">    Generate a grid of C3 and V-infinity values for interplanetary transfers.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        departure_dates (array-like): Array of departure times (e.g., seconds from epoch).</span>
-<span class="sd">        arrival_dates (array-like): Array of arrival times (e.g., seconds from epoch).</span>
-<span class="sd">        r_dep_func (callable): Function that returns position vector at departure time t.</span>
-<span class="sd">        v_dep_func (callable): Function that returns velocity vector at departure time t.</span>
-<span class="sd">        r_arr_func (callable): Function that returns position vector at arrival time t.</span>
-<span class="sd">        v_arr_func (callable): Function that returns velocity vector at arrival time t.</span>
-<span class="sd">        mu (float): Gravitational parameter.</span>
+<span class="sd">    Computes a &#39;porkchop&#39; plot grid by solving Lambert&#39;s problem for every</span>
+<span class="sd">    combination of departure and arrival dates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    departure_dates : array-like</span>
+<span class="sd">        List or array of departure times (e.g., seconds from J2000).</span>
+<span class="sd">    arrival_dates : array-like</span>
+<span class="sd">        List or array of arrival times (e.g., seconds from J2000).</span>
+<span class="sd">    r_dep_func : Callable</span>
+<span class="sd">        Function returning the planet&#39;s position vector [3] at departure time t.</span>
+<span class="sd">    v_dep_func : Callable</span>
+<span class="sd">        Function returning the planet&#39;s velocity vector [3] at departure time t.</span>
+<span class="sd">    r_arr_func : Callable</span>
+<span class="sd">        Function returning the destination&#39;s position vector [3] at arrival time t.</span>
+<span class="sd">    v_arr_func : Callable</span>
+<span class="sd">        Function returning the destination&#39;s velocity vector [3] at arrival time t.</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Gravitational parameter of the central body. Default is Earth.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        dict: Containing grids for &#39;c3&#39;, &#39;v_inf_arr&#39;, &#39;tof&#39;, and the input axes.</span>
+<span class="sd">    Dict</span>
+<span class="sd">        Dictionary containing:</span>
+<span class="sd">        - &#39;departure_dates&#39;: Copy of departure axes.</span>
+<span class="sd">        - &#39;arrival_dates&#39;: Copy of arrival axes.</span>
+<span class="sd">        - &#39;c3&#39;: (N_arr, N_dep) grid of Launch C3 values ($km^2/s^2$).</span>
+<span class="sd">        - &#39;v_inf_arr&#39;: (N_arr, N_dep) grid of Arrival V-infinity ($km/s$).</span>
+<span class="sd">        - &#39;tof&#39;: (N_arr, N_dep) grid of Time-of-flight (s).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_dep</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">departure_dates</span><span class="p">)</span>
     <span class="n">n_arr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrival_dates</span><span class="p">)</span>
@@ -118,7 +143,7 @@
         <span class="n">v_dep_planet</span> <span class="o">=</span> <span class="n">v_dep_func</span><span class="p">(</span><span class="n">t_dep</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">t_arr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">arrival_dates</span><span class="p">):</span>
-            <span class="n">dt</span> <span class="o">=</span> <span class="n">t_arr</span> <span class="o">-</span> <span class="n">t_dep</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t_arr</span> <span class="o">-</span> <span class="n">t_dep</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">continue</span>
 
@@ -131,13 +156,13 @@
 
                 <span class="c1"># V_infinity at departure</span>
                 <span class="n">v_inf_dep</span> <span class="o">=</span> <span class="n">v_dep_sc</span> <span class="o">-</span> <span class="n">v_dep_planet</span>
-                <span class="n">c3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v_inf_dep</span><span class="p">,</span> <span class="n">v_inf_dep</span><span class="p">)</span>
+                <span class="n">c3_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v_inf_dep</span><span class="p">,</span> <span class="n">v_inf_dep</span><span class="p">)</span>
 
                 <span class="c1"># V_infinity at arrival</span>
-                <span class="n">v_inf_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_arr_sc</span> <span class="o">-</span> <span class="n">v_arr_planet</span><span class="p">)</span>
+                <span class="n">v_inf_arr_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_arr_sc</span> <span class="o">-</span> <span class="n">v_arr_planet</span><span class="p">)</span>
 
-                <span class="n">c3_grid</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c3</span>
-                <span class="n">v_inf_arr_grid</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_inf_arr</span>
+                <span class="n">c3_grid</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c3_val</span>
+                <span class="n">v_inf_arr_grid</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_inf_arr_val</span>
                 <span class="n">tof_grid</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span>
 
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>

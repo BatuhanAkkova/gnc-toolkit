@@ -81,59 +81,75 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">inv</span>
 
 
 <div class="viewcode-block" id="compute_mahalanobis_distance">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tracking.compute_mahalanobis_distance">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_mahalanobis_distance</span><span class="p">(</span>
-    <span class="n">x1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cov1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cov2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">x1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">x2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cov1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cov2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes the Mahalanobis distance between two state vectors.</span>
-<span class="sd">    State vectors usually contain Position and Velocity (6 elements).</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the Mahalanobis statistical distance between two state estimates.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        x1 (np.ndarray): State 1 (e.g., shape (6,))</span>
-<span class="sd">        x2 (np.ndarray): State 2 (e.g., shape (6,))</span>
-<span class="sd">        cov1 (np.ndarray): Covariance matrix of State 1 (6, 6)</span>
-<span class="sd">        cov2 (np.ndarray): Covariance matrix of State 2 (6, 6)</span>
+<span class="sd">    Used to measure the separation between two Gaussian distributions </span>
+<span class="sd">    accounting for their covariance.</span>
+<span class="sd">    Formula: $d_M = \sqrt{(\mathbf{x}_1 - \mathbf{x}_2)^T (\mathbf{P}_1 + \mathbf{P}_2)^{-1} (\mathbf{x}_1 - \mathbf{x}_2)}$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x1, x2 : np.ndarray</span>
+<span class="sd">        State vectors (e.g., Position/Velocity) (6,).</span>
+<span class="sd">    cov1, cov2 : np.ndarray</span>
+<span class="sd">        Estimation error covariance matrices (6, 6).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        float: Mahalanobis distance.</span>
+<span class="sd">    float</span>
+<span class="sd">        Mahalanobis distance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dx</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span>
-    <span class="n">cov_comb</span> <span class="o">=</span> <span class="n">cov1</span> <span class="o">+</span> <span class="n">cov2</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    <span class="n">p_comb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cov1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cov2</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dx</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">inv</span><span class="p">(</span><span class="n">cov_comb</span><span class="p">)</span> <span class="o">@</span> <span class="n">dx</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="c1"># Fallback if covariance is singular</span>
-        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">dist</span></div>
+        <span class="c1"># Distance squared: d^2 = dx&#39; * P^-1 * dx</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="n">dx</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">p_comb</span><span class="p">)</span> <span class="o">@</span> <span class="n">dx</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d2</span><span class="p">)))</span>
+    <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+        <span class="c1"># Fallback to Euclidean if singular</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dx</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="correlate_tracks">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tracking.correlate_tracks">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">correlate_tracks</span><span class="p">(</span>
-    <span class="n">x1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cov1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cov2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span>
+    <span class="n">x1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">x2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cov1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cov2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Correlates two state vectors to determine if they represent the same object.</span>
+<span class="sd">    Correlate two tracks based on a Mahalanobis distance threshold.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        x1 (np.ndarray): State 1 (e.g., shape (6,))</span>
-<span class="sd">        x2 (np.ndarray): State 2 (e.g., shape (6,))</span>
-<span class="sd">        cov1 (np.ndarray): Covariance 1 (6, 6)</span>
-<span class="sd">        cov2 (np.ndarray): Covariance 2 (6, 6)</span>
-<span class="sd">        threshold (float): Threshold for Mahalanobis distance (standard is 3.0 for 3-sigma).</span>
+<span class="sd">    Used for track-to-track association in SSA catalogs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x1, x2 : np.ndarray</span>
+<span class="sd">        State vectors to compare.</span>
+<span class="sd">    cov1, cov2 : np.ndarray</span>
+<span class="sd">        State covariances.</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        Correlation limit (n-sigma). Default is 3.0 (3-sigma).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        bool: True if correlated, False otherwise.</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the distance is within the specified threshold.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="n">compute_mahalanobis_distance</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">cov1</span><span class="p">,</span> <span class="n">cov2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dist</span> <span class="o">&lt;=</span> <span class="n">threshold</span></div>

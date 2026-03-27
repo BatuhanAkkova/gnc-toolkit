@@ -85,76 +85,108 @@
 
 <div class="viewcode-block" id="fuel_slosh_dynamics">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuel_slosh_dynamics</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_dot</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">omega_dot</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">r_base</span><span class="p">,</span> <span class="n">g_equiv</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes the second derivative of the slosh pendulum angle.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuel_slosh_dynamics</span><span class="p">(</span>
+    <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">theta_dot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">omega</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">omega_dot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">L</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r_base</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">g_equiv</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute slosh pendulum angular acceleration $\ddot{\theta}$.</span>
 
-<span class="sd">    Model: Pendulum of length L, base at r_base from spacecraft CM.</span>
-<span class="sd">    g_equiv: Equivalent acceleration (e.g., from thrust).</span>
+<span class="sd">    The pendulum is subject to base acceleration:</span>
+<span class="sd">    $\mathbf{a}_{base} = \mathbf{g}_{eq} - \dot{\omega} \times \mathbf{r}_b - \omega \times (\omega \times \mathbf{r}_b)$</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        theta (float): Pendulum angle [rad].</span>
-<span class="sd">        theta_dot (float): Pendulum angular velocity [rad/s].</span>
-<span class="sd">        omega (np.ndarray): Spacecraft angular velocity (3,).</span>
-<span class="sd">        omega_dot (np.ndarray): Spacecraft angular acceleration (3,).</span>
-<span class="sd">        L (float): Pendulum length [m].</span>
-<span class="sd">        r_base (np.ndarray): Location of pendulum base from CM (3,).</span>
-<span class="sd">        g_equiv (np.ndarray): Equivalent gravity/acceleration vector (3,).</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    theta : float</span>
+<span class="sd">        Pendulum angle (rad).</span>
+<span class="sd">    theta_dot : float</span>
+<span class="sd">        Pendulum rate (rad/s).</span>
+<span class="sd">    omega : np.ndarray</span>
+<span class="sd">        Spacecraft angular velocity (3,) (rad/s).</span>
+<span class="sd">    omega_dot : np.ndarray</span>
+<span class="sd">        Spacecraft angular acceleration (3,) (rad/s$^2$).</span>
+<span class="sd">    L : float</span>
+<span class="sd">        Pendulum length (m).</span>
+<span class="sd">    r_base : np.ndarray</span>
+<span class="sd">        Pivot location relative to spacecraft CM (3,) (m).</span>
+<span class="sd">    g_equiv : np.ndarray</span>
+<span class="sd">        Effective gravity/acceleration vector (3,) (m/s$^2$).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        float: Pendulum angular acceleration theta_ddot [rad/s^2].</span>
+<span class="sd">    float</span>
+<span class="sd">        Pendulum acceleration $\ddot{\theta}$ (rad/s$^2$).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Simple pendulum in a non-inertial frame</span>
-    <span class="c1"># Accel at base: a_base = g_equiv - omega_dot x r_base - omega x (omega x r_base)</span>
-    <span class="n">a_base</span> <span class="o">=</span> <span class="n">g_equiv</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega_dot</span><span class="p">,</span> <span class="n">r_base</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">r_base</span><span class="p">))</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+    <span class="n">odot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">omega_dot</span><span class="p">)</span>
+    <span class="n">rb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_base</span><span class="p">)</span>
+    <span class="n">ge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">g_equiv</span><span class="p">)</span>
 
-    <span class="c1"># Projection of a_base onto the pendulum&#39;s transverse direction</span>
-    <span class="c1"># Assume pendulum swings in the x-z plane of its local frame</span>
-    <span class="c1"># Local unit vectors:</span>
-    <span class="c1"># e_r (radial) = [sin(theta), 0, -cos(theta)]</span>
-    <span class="c1"># e_theta (transverse) = [cos(theta), 0, sin(theta)]</span>
+    <span class="c1"># 1. Acceleration at the pivot (base) in body frame</span>
+    <span class="c1"># a_base = g - omega_dot x r - omega x (omega x r)</span>
+    <span class="n">a_base</span> <span class="o">=</span> <span class="n">ge</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">odot</span><span class="p">,</span> <span class="n">rb</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">rb</span><span class="p">))</span>
+
+    <span class="c1"># 2. Transverse unit vector: e_theta = [cos(theta), 0, sin(theta)]</span>
     <span class="n">e_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)])</span>
 
-    <span class="c1"># theta_ddot = (a_base . e_theta) / L</span>
-    <span class="n">theta_ddot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a_base</span><span class="p">,</span> <span class="n">e_theta</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span>
-
-    <span class="k">return</span> <span class="n">theta_ddot</span></div>
+    <span class="c1"># 3. Torque balance / dynamics: L * theta_ddot = a_base \cdot e_theta</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a_base</span><span class="p">,</span> <span class="n">e_theta</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="fuel_slosh_torque">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.attitude_dynamics.html#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_torque">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuel_slosh_torque</span><span class="p">(</span><span class="n">m_p</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">theta_dot</span><span class="p">,</span> <span class="n">theta_ddot</span><span class="p">,</span> <span class="n">r_base</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuel_slosh_torque</span><span class="p">(</span>
+    <span class="n">m_p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">L</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">theta_dot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">theta_ddot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r_base</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes the reaction torque from fuel slosh on the spacecraft body.</span>
+<span class="sd">    Compute reaction torque from slosh bob.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        m_p (float): Pendulum mass [kg].</span>
-<span class="sd">        L (float): Pendulum length [m].</span>
-<span class="sd">        theta (float): Pendulum angle [rad].</span>
-<span class="sd">        theta_dot (float): Pendulum angular velocity [rad/s].</span>
-<span class="sd">        theta_ddot (float): Pendulum angular acceleration [rad/s^2].</span>
-<span class="sd">        r_base (np.ndarray): Base location (3,).</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m_p : float</span>
+<span class="sd">        Slosh mass (kg).</span>
+<span class="sd">    L : float</span>
+<span class="sd">        Pendulum length (m).</span>
+<span class="sd">    theta : float</span>
+<span class="sd">        Pendulum angle (rad).</span>
+<span class="sd">    theta_dot : float</span>
+<span class="sd">        Pendulum rate (rad/s).</span>
+<span class="sd">    theta_ddot : float</span>
+<span class="sd">        Pendulum acceleration (rad/s$^2$).</span>
+<span class="sd">    r_base : np.ndarray</span>
+<span class="sd">        Pivot location (3,) (m).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        np.ndarray: Slosh reaction torque (3,).</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Reaction torque vector (3,) (Nm).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Relative acceleration of bob:</span>
-    <span class="c1"># a_rel = L * theta_ddot * e_theta - L * theta_dot^2 * e_r</span>
+    <span class="n">rb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r_base</span><span class="p">)</span>
+
+    <span class="c1"># Relative unit vectors for pendulum bob</span>
     <span class="n">e_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)])</span>
     <span class="n">e_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)])</span>
+
+    <span class="c1"># Bob relative acceleration: a_rel = L*theta_ddot*e_theta - L*theta_dot^2*e_r</span>
     <span class="n">a_rel</span> <span class="o">=</span> <span class="n">L</span> <span class="o">*</span> <span class="n">theta_ddot</span> <span class="o">*</span> <span class="n">e_theta</span> <span class="o">-</span> <span class="n">L</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta_dot</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_r</span>
 
-    <span class="c1"># Reaction force on body: -m_p * a_rel</span>
-    <span class="n">force_slosh</span> <span class="o">=</span> <span class="o">-</span><span class="n">m_p</span> <span class="o">*</span> <span class="n">a_rel</span>
+    <span class="c1"># Reaction force: F_react = -m_p * a_rel</span>
+    <span class="n">force_react</span> <span class="o">=</span> <span class="o">-</span><span class="n">m_p</span> <span class="o">*</span> <span class="n">a_rel</span>
 
-    <span class="c1"># Torque on body: r_bob x force_slosh</span>
-    <span class="n">r_bob</span> <span class="o">=</span> <span class="n">r_base</span> <span class="o">+</span> <span class="n">L</span> <span class="o">*</span> <span class="n">e_r</span>
-    <span class="n">torque_slosh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r_bob</span><span class="p">,</span> <span class="n">force_slosh</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">torque_slosh</span></div>
+    <span class="c1"># Torque: r_bob x F_react</span>
+    <span class="n">r_bob</span> <span class="o">=</span> <span class="n">rb</span> <span class="o">+</span> <span class="n">L</span> <span class="o">*</span> <span class="n">e_r</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r_bob</span><span class="p">,</span> <span class="n">force_react</span><span class="p">)</span></div>
 
 </pre></div>
 

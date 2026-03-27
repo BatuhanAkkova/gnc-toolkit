@@ -121,33 +121,54 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.conjunction.compute_pc_chan">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.conjunction.</span></span><span class="sig-name descname"><span class="pre">compute_pc_chan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hbr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/conjunction.html#compute_pc_chan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.conjunction.compute_pc_chan" title="Link to this definition"></a></dt>
-<dd><p>Computes Probability of Collision using Chan’s analytical approximation.
-Usually faster and applicable when HBR is small relative to state errors.</p>
+<dd><p>Probability of Collision (Pc) via Chan’s Analytical Approximation.</p>
+<p>Provides a fast, series-based solution to the 2D Gaussian integral over
+a circular region. Most accurate when the HBR is small compared to
+the standard deviation of the covariance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI Position vectors at TCA (m).</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI Position vectors at TCA (m).</p></li>
+<li><p><strong>v1</strong> (<em>np.ndarray</em>) – ECI Velocity vectors at TCA (m/s).</p></li>
+<li><p><strong>v2</strong> (<em>np.ndarray</em>) – ECI Velocity vectors at TCA (m/s).</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – $3times 3$ error covariance matrices ($m^2$).</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – $3times 3$ error covariance matrices ($m^2$).</p></li>
+<li><p><strong>hbr</strong> (<em>float</em>) – Combined Hard Body Radius (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Computed probability of collision.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.conjunction.compute_pc_foster">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.conjunction.</span></span><span class="sig-name descname"><span class="pre">compute_pc_foster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hbr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/conjunction.html#compute_pc_foster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.conjunction.compute_pc_foster" title="Link to this definition"></a></dt>
-<dd><p>Computes the Probability of Collision (Pc) using Foster’s method.
-Assumes Gaussian distribution for states.
-Projects covariance matrices into the collision plane perpendicular to relative velocity.</p>
+<dd><p>Compute Probability of Collision (Pc) via Foster’s method.</p>
+<p>Projects the encounter into a 2D plane and integrates the PDF:
+$P_c = iint_{HBR} frac{1}{2pi sqrt{<a href="#id1"><span class="problematic" id="id2">|\mathbf{C}|</span></a>}} expleft(-frac{1}{2} mathbf{x}^T mathbf{C}^{-1} mathbf{x}right) dA$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Position of object 1 [m], shape (3,)</p></li>
-<li><p><strong>v1</strong> (<em>np.ndarray</em>) – Velocity of object 1 [m/s], shape (3,)</p></li>
-<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Covariance matrix of object 1 [m^2], shape (3,3)</p></li>
-<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Position of object 2 [m], shape (3,)</p></li>
-<li><p><strong>v2</strong> (<em>np.ndarray</em>) – Velocity of object 2 [m/s], shape (3,)</p></li>
-<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Covariance matrix of object 2 [m^2], shape (3,3)</p></li>
-<li><p><strong>hbr</strong> (<em>float</em>) – Hard Body Radius [m]</p></li>
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI state of Object 1 at TCA (m, m/s).</p></li>
+<li><p><strong>v1</strong> (<em>np.ndarray</em>) – ECI state of Object 1 at TCA (m, m/s).</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – $3 times 3$ covariance of Object 1 ($m^2$).</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI state of Object 2 at TCA (m, m/s).</p></li>
+<li><p><strong>v2</strong> (<em>np.ndarray</em>) – ECI state of Object 2 at TCA (m, m/s).</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – $3 times 3$ covariance of Object 2 ($m^2$).</p></li>
+<li><p><strong>hbr</strong> (<em>float</em>) – Combined Hard Body Radius (m).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Probability of collision $P_c in [0, 1]$.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Probability of collision (0 to 1).</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -159,24 +180,29 @@ Projects covariance matrices into the collision plane perpendicular to relative 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.maneuver.plan_avoidance_maneuver">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.maneuver.</span></span><span class="sig-name descname"><span class="pre">plan_avoidance_maneuver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_sat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_sat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_debris</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_debris</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safety_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_encounter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/maneuver.html#plan_avoidance_maneuver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.maneuver.plan_avoidance_maneuver" title="Link to this definition"></a></dt>
-<dd><p>Plans an impulsive avoidance maneuver (Along-Track).
-Along-Track maneuvers are generally most efficient for phasing to avoid collisions.</p>
+<dd><p>Plan an impulsive Debris Avoidance Maneuver (DAM).</p>
+<p>Primarily calculates an along-track thrust to achieve a target miss
+distance at encounter via phasing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_sat</strong> (<em>np.ndarray</em>) – Sat position [m]</p></li>
-<li><p><strong>v_sat</strong> (<em>np.ndarray</em>) – Sat velocity [m/s]</p></li>
-<li><p><strong>r_debris</strong> (<em>np.ndarray</em>) – Debris position [m]</p></li>
-<li><p><strong>v_debris</strong> (<em>np.ndarray</em>) – Debris velocity [m/s]</p></li>
-<li><p><strong>safety_radius</strong> (<em>float</em>) – Target miss distance [m]</p></li>
-<li><p><strong>t_encounter</strong> (<em>float</em>) – Time to encounter [s] (Time delta)</p></li>
+<li><p><strong>r_sat</strong> (<em>np.ndarray</em>) – Spacecraft ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>v_sat</strong> (<em>np.ndarray</em>) – Spacecraft ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>r_debris</strong> (<em>np.ndarray</em>) – Debris ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>v_debris</strong> (<em>np.ndarray</em>) – Debris ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>safety_radius</strong> (<em>float</em>) – Desired minimum separation distance (m).</p></li>
+<li><p><strong>t_encounter</strong> (<em>float</em>) – Time until predicted conjunction (s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>Tuple[np.ndarray, float]</strong></p>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Delta-V vector in ECI (m/s).</p></li>
+<li><p>Estimated miss distance after maneuver (m).</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(Delta-V Vector [m/s], Miss distance [m] after maneuver)</p>
+<dd class="field-odd"><p>Tuple[np.ndarray, float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,33 +215,50 @@ Along-Track maneuvers are generally most efficient for phasing to avoid collisio
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLECatalog">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.tle_interface.</span></span><span class="sig-name descname"><span class="pre">TLECatalog</span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manages a collection of TLEs for search and lookup.</p>
+<p>Catalog for managing and searching a collection of satellite TLEs.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLECatalog.add_tle">
-<span class="sig-name descname"><span class="pre">add_tle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.add_tle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.add_tle" title="Link to this definition"></a></dt>
-<dd><p>Add a single TLE entity.</p>
+<span class="sig-name descname"><span class="pre">add_tle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.add_tle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.add_tle" title="Link to this definition"></a></dt>
+<dd><p>Register a new TLE in the catalog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Satellite name.</p></li>
+<li><p><strong>line1</strong> (<em>str</em>) – TLE data.</p></li>
+<li><p><strong>line2</strong> (<em>str</em>) – TLE data.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLECatalog.get_by_name">
 <span class="sig-name descname"><span class="pre">get_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.ssa.tle_interface.TLEEntity" title="gnc_toolkit.ssa.tle_interface.TLEEntity"><span class="pre">TLEEntity</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.get_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.get_by_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Lookup satellite by name (case-insensitive).</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLECatalog.get_by_norad_id">
-<span class="sig-name descname"><span class="pre">get_by_norad_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">norad_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.ssa.tle_interface.TLEEntity" title="gnc_toolkit.ssa.tle_interface.TLEEntity"><span class="pre">TLEEntity</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.get_by_norad_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.get_by_norad_id" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">get_by_norad_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">norad_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.ssa.tle_interface.TLEEntity" title="gnc_toolkit.ssa.tle_interface.TLEEntity"><span class="pre">TLEEntity</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.get_by_norad_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.get_by_norad_id" title="Link to this definition"></a></dt>
+<dd><p>Lookup satellite by catalog ID.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLECatalog.list_satellites">
 <span class="sig-name descname"><span class="pre">list_satellites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.list_satellites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.list_satellites" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>List names of all registered satellites.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLECatalog.load_from_txt">
-<span class="sig-name descname"><span class="pre">load_from_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.load_from_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.load_from_txt" title="Link to this definition"></a></dt>
-<dd><p>Loads TLEs from a text file.
-Assumes 3-line format (Name, Line 1, Line 2).</p>
+<span class="sig-name descname"><span class="pre">load_from_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.load_from_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLECatalog.load_from_txt" title="Link to this definition"></a></dt>
+<dd><p>Load TLE data from a standard text file.</p>
+<p>Supports both 2-line and 3-line (with name) TLE formats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – Path to the TLE file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -224,10 +267,28 @@ Assumes 3-line format (Name, Line 1, Line 2).</p>
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLEEntity">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.tle_interface.</span></span><span class="sig-name descname"><span class="pre">TLEEntity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLEEntity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLEEntity" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of a Two-Line Element (TLE) set for a satellite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Common name of the satellite.</p></li>
+<li><p><strong>line1</strong> (<em>str</em>) – First line of the TLE.</p></li>
+<li><p><strong>line2</strong> (<em>str</em>) – Second line of the TLE.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tle_interface.TLEEntity.get_propagator">
 <span class="sig-name descname"><span class="pre">get_propagator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator" title="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator"><span class="pre">Sgp4Propagator</span></a></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLEEntity.get_propagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tle_interface.TLEEntity.get_propagator" title="Link to this definition"></a></dt>
-<dd><p>Returns an Sgp4Propagator for this TLE.</p>
+<dd><p>Create a propagator instance for this TLE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SGP4 propagator initialized with TLE lines.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator" title="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator">Sgp4Propagator</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -239,22 +300,24 @@ Assumes 3-line format (Name, Line 1, Line 2).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tracking.compute_mahalanobis_distance">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.tracking.</span></span><span class="sig-name descname"><span class="pre">compute_mahalanobis_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tracking.html#compute_mahalanobis_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tracking.compute_mahalanobis_distance" title="Link to this definition"></a></dt>
-<dd><p>Computes the Mahalanobis distance between two state vectors.
-State vectors usually contain Position and Velocity (6 elements).</p>
+<dd><p>Compute the Mahalanobis statistical distance between two state estimates.</p>
+<p>Used to measure the separation between two Gaussian distributions
+accounting for their covariance.
+Formula: $d_M = sqrt{(mathbf{x}_1 - mathbf{x}_2)^T (mathbf{P}_1 + mathbf{P}_2)^{-1} (mathbf{x}_1 - mathbf{x}_2)}$.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State 1 (e.g., shape (6,))</p></li>
-<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State 2 (e.g., shape (6,))</p></li>
-<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Covariance matrix of State 1 (6, 6)</p></li>
-<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Covariance matrix of State 2 (6, 6)</p></li>
+<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State vectors (e.g., Position/Velocity) (6,).</p></li>
+<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State vectors (e.g., Position/Velocity) (6,).</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Estimation error covariance matrices (6, 6).</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Estimation error covariance matrices (6, 6).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Mahalanobis distance.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Mahalanobis distance.</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -262,22 +325,23 @@ State vectors usually contain Position and Velocity (6 elements).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.tracking.correlate_tracks">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.tracking.</span></span><span class="sig-name descname"><span class="pre">correlate_tracks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tracking.html#correlate_tracks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.tracking.correlate_tracks" title="Link to this definition"></a></dt>
-<dd><p>Correlates two state vectors to determine if they represent the same object.</p>
+<dd><p>Correlate two tracks based on a Mahalanobis distance threshold.</p>
+<p>Used for track-to-track association in SSA catalogs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State 1 (e.g., shape (6,))</p></li>
-<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State 2 (e.g., shape (6,))</p></li>
-<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Covariance 1 (6, 6)</p></li>
-<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Covariance 2 (6, 6)</p></li>
-<li><p><strong>threshold</strong> (<em>float</em>) – Threshold for Mahalanobis distance (standard is 3.0 for 3-sigma).</p></li>
+<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State vectors to compare.</p></li>
+<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State vectors to compare.</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – State covariances.</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – State covariances.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Correlation limit (n-sigma). Default is 3.0 (3-sigma).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>bool</strong></p>
+<dd class="field-even"><p>True if the distance is within the specified threshold.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if correlated, False otherwise.</p>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -290,33 +354,50 @@ State vectors usually contain Position and Velocity (6 elements).</p>
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLECatalog">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.</span></span><span class="sig-name descname"><span class="pre">TLECatalog</span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manages a collection of TLEs for search and lookup.</p>
+<p>Catalog for managing and searching a collection of satellite TLEs.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLECatalog.add_tle">
-<span class="sig-name descname"><span class="pre">add_tle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.add_tle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.add_tle" title="Link to this definition"></a></dt>
-<dd><p>Add a single TLE entity.</p>
+<span class="sig-name descname"><span class="pre">add_tle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.add_tle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.add_tle" title="Link to this definition"></a></dt>
+<dd><p>Register a new TLE in the catalog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Satellite name.</p></li>
+<li><p><strong>line1</strong> (<em>str</em>) – TLE data.</p></li>
+<li><p><strong>line2</strong> (<em>str</em>) – TLE data.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLECatalog.get_by_name">
 <span class="sig-name descname"><span class="pre">get_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.ssa.tle_interface.TLEEntity" title="gnc_toolkit.ssa.tle_interface.TLEEntity"><span class="pre">TLEEntity</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.get_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.get_by_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Lookup satellite by name (case-insensitive).</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLECatalog.get_by_norad_id">
-<span class="sig-name descname"><span class="pre">get_by_norad_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">norad_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.ssa.tle_interface.TLEEntity" title="gnc_toolkit.ssa.tle_interface.TLEEntity"><span class="pre">TLEEntity</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.get_by_norad_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.get_by_norad_id" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">get_by_norad_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">norad_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gnc_toolkit.ssa.tle_interface.TLEEntity" title="gnc_toolkit.ssa.tle_interface.TLEEntity"><span class="pre">TLEEntity</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.get_by_norad_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.get_by_norad_id" title="Link to this definition"></a></dt>
+<dd><p>Lookup satellite by catalog ID.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLECatalog.list_satellites">
 <span class="sig-name descname"><span class="pre">list_satellites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.list_satellites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.list_satellites" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>List names of all registered satellites.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLECatalog.load_from_txt">
-<span class="sig-name descname"><span class="pre">load_from_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.load_from_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.load_from_txt" title="Link to this definition"></a></dt>
-<dd><p>Loads TLEs from a text file.
-Assumes 3-line format (Name, Line 1, Line 2).</p>
+<span class="sig-name descname"><span class="pre">load_from_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLECatalog.load_from_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLECatalog.load_from_txt" title="Link to this definition"></a></dt>
+<dd><p>Load TLE data from a standard text file.</p>
+<p>Supports both 2-line and 3-line (with name) TLE formats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – Path to the TLE file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -325,10 +406,28 @@ Assumes 3-line format (Name, Line 1, Line 2).</p>
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLEEntity">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.</span></span><span class="sig-name descname"><span class="pre">TLEEntity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLEEntity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLEEntity" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of a Two-Line Element (TLE) set for a satellite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Common name of the satellite.</p></li>
+<li><p><strong>line1</strong> (<em>str</em>) – First line of the TLE.</p></li>
+<li><p><strong>line2</strong> (<em>str</em>) – Second line of the TLE.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.TLEEntity.get_propagator">
 <span class="sig-name descname"><span class="pre">get_propagator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator" title="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator"><span class="pre">Sgp4Propagator</span></a></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tle_interface.html#TLEEntity.get_propagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.TLEEntity.get_propagator" title="Link to this definition"></a></dt>
-<dd><p>Returns an Sgp4Propagator for this TLE.</p>
+<dd><p>Create a propagator instance for this TLE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SGP4 propagator initialized with TLE lines.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="gnc_toolkit.propagators.html#gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator" title="gnc_toolkit.propagators.sgp4_propagator.Sgp4Propagator">Sgp4Propagator</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -336,22 +435,24 @@ Assumes 3-line format (Name, Line 1, Line 2).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.compute_mahalanobis_distance">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.</span></span><span class="sig-name descname"><span class="pre">compute_mahalanobis_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tracking.html#compute_mahalanobis_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.compute_mahalanobis_distance" title="Link to this definition"></a></dt>
-<dd><p>Computes the Mahalanobis distance between two state vectors.
-State vectors usually contain Position and Velocity (6 elements).</p>
+<dd><p>Compute the Mahalanobis statistical distance between two state estimates.</p>
+<p>Used to measure the separation between two Gaussian distributions
+accounting for their covariance.
+Formula: $d_M = sqrt{(mathbf{x}_1 - mathbf{x}_2)^T (mathbf{P}_1 + mathbf{P}_2)^{-1} (mathbf{x}_1 - mathbf{x}_2)}$.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State 1 (e.g., shape (6,))</p></li>
-<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State 2 (e.g., shape (6,))</p></li>
-<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Covariance matrix of State 1 (6, 6)</p></li>
-<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Covariance matrix of State 2 (6, 6)</p></li>
+<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State vectors (e.g., Position/Velocity) (6,).</p></li>
+<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State vectors (e.g., Position/Velocity) (6,).</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Estimation error covariance matrices (6, 6).</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Estimation error covariance matrices (6, 6).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Mahalanobis distance.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Mahalanobis distance.</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -359,33 +460,54 @@ State vectors usually contain Position and Velocity (6 elements).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.compute_pc_chan">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.</span></span><span class="sig-name descname"><span class="pre">compute_pc_chan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hbr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/conjunction.html#compute_pc_chan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.compute_pc_chan" title="Link to this definition"></a></dt>
-<dd><p>Computes Probability of Collision using Chan’s analytical approximation.
-Usually faster and applicable when HBR is small relative to state errors.</p>
+<dd><p>Probability of Collision (Pc) via Chan’s Analytical Approximation.</p>
+<p>Provides a fast, series-based solution to the 2D Gaussian integral over
+a circular region. Most accurate when the HBR is small compared to
+the standard deviation of the covariance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI Position vectors at TCA (m).</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI Position vectors at TCA (m).</p></li>
+<li><p><strong>v1</strong> (<em>np.ndarray</em>) – ECI Velocity vectors at TCA (m/s).</p></li>
+<li><p><strong>v2</strong> (<em>np.ndarray</em>) – ECI Velocity vectors at TCA (m/s).</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – $3times 3$ error covariance matrices ($m^2$).</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – $3times 3$ error covariance matrices ($m^2$).</p></li>
+<li><p><strong>hbr</strong> (<em>float</em>) – Combined Hard Body Radius (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Computed probability of collision.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.compute_pc_foster">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.</span></span><span class="sig-name descname"><span class="pre">compute_pc_foster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hbr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/conjunction.html#compute_pc_foster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.compute_pc_foster" title="Link to this definition"></a></dt>
-<dd><p>Computes the Probability of Collision (Pc) using Foster’s method.
-Assumes Gaussian distribution for states.
-Projects covariance matrices into the collision plane perpendicular to relative velocity.</p>
+<dd><p>Compute Probability of Collision (Pc) via Foster’s method.</p>
+<p>Projects the encounter into a 2D plane and integrates the PDF:
+$P_c = iint_{HBR} frac{1}{2pi sqrt{<a href="#id3"><span class="problematic" id="id4">|\mathbf{C}|</span></a>}} expleft(-frac{1}{2} mathbf{x}^T mathbf{C}^{-1} mathbf{x}right) dA$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r1</strong> (<em>np.ndarray</em>) – Position of object 1 [m], shape (3,)</p></li>
-<li><p><strong>v1</strong> (<em>np.ndarray</em>) – Velocity of object 1 [m/s], shape (3,)</p></li>
-<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Covariance matrix of object 1 [m^2], shape (3,3)</p></li>
-<li><p><strong>r2</strong> (<em>np.ndarray</em>) – Position of object 2 [m], shape (3,)</p></li>
-<li><p><strong>v2</strong> (<em>np.ndarray</em>) – Velocity of object 2 [m/s], shape (3,)</p></li>
-<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Covariance matrix of object 2 [m^2], shape (3,3)</p></li>
-<li><p><strong>hbr</strong> (<em>float</em>) – Hard Body Radius [m]</p></li>
+<li><p><strong>r1</strong> (<em>np.ndarray</em>) – ECI state of Object 1 at TCA (m, m/s).</p></li>
+<li><p><strong>v1</strong> (<em>np.ndarray</em>) – ECI state of Object 1 at TCA (m, m/s).</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – $3 times 3$ covariance of Object 1 ($m^2$).</p></li>
+<li><p><strong>r2</strong> (<em>np.ndarray</em>) – ECI state of Object 2 at TCA (m, m/s).</p></li>
+<li><p><strong>v2</strong> (<em>np.ndarray</em>) – ECI state of Object 2 at TCA (m, m/s).</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – $3 times 3$ covariance of Object 2 ($m^2$).</p></li>
+<li><p><strong>hbr</strong> (<em>float</em>) – Combined Hard Body Radius (m).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Probability of collision $P_c in [0, 1]$.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Probability of collision (0 to 1).</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -393,22 +515,23 @@ Projects covariance matrices into the collision plane perpendicular to relative 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.correlate_tracks">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.</span></span><span class="sig-name descname"><span class="pre">correlate_tracks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/tracking.html#correlate_tracks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.correlate_tracks" title="Link to this definition"></a></dt>
-<dd><p>Correlates two state vectors to determine if they represent the same object.</p>
+<dd><p>Correlate two tracks based on a Mahalanobis distance threshold.</p>
+<p>Used for track-to-track association in SSA catalogs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State 1 (e.g., shape (6,))</p></li>
-<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State 2 (e.g., shape (6,))</p></li>
-<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – Covariance 1 (6, 6)</p></li>
-<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – Covariance 2 (6, 6)</p></li>
-<li><p><strong>threshold</strong> (<em>float</em>) – Threshold for Mahalanobis distance (standard is 3.0 for 3-sigma).</p></li>
+<li><p><strong>x1</strong> (<em>np.ndarray</em>) – State vectors to compare.</p></li>
+<li><p><strong>x2</strong> (<em>np.ndarray</em>) – State vectors to compare.</p></li>
+<li><p><strong>cov1</strong> (<em>np.ndarray</em>) – State covariances.</p></li>
+<li><p><strong>cov2</strong> (<em>np.ndarray</em>) – State covariances.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Correlation limit (n-sigma). Default is 3.0 (3-sigma).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>bool</strong></p>
+<dd class="field-even"><p>True if the distance is within the specified threshold.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if correlated, False otherwise.</p>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -416,24 +539,29 @@ Projects covariance matrices into the collision plane perpendicular to relative 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.ssa.plan_avoidance_maneuver">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.ssa.</span></span><span class="sig-name descname"><span class="pre">plan_avoidance_maneuver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_sat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_sat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_debris</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_debris</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safety_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_encounter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/ssa/maneuver.html#plan_avoidance_maneuver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.ssa.plan_avoidance_maneuver" title="Link to this definition"></a></dt>
-<dd><p>Plans an impulsive avoidance maneuver (Along-Track).
-Along-Track maneuvers are generally most efficient for phasing to avoid collisions.</p>
+<dd><p>Plan an impulsive Debris Avoidance Maneuver (DAM).</p>
+<p>Primarily calculates an along-track thrust to achieve a target miss
+distance at encounter via phasing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>r_sat</strong> (<em>np.ndarray</em>) – Sat position [m]</p></li>
-<li><p><strong>v_sat</strong> (<em>np.ndarray</em>) – Sat velocity [m/s]</p></li>
-<li><p><strong>r_debris</strong> (<em>np.ndarray</em>) – Debris position [m]</p></li>
-<li><p><strong>v_debris</strong> (<em>np.ndarray</em>) – Debris velocity [m/s]</p></li>
-<li><p><strong>safety_radius</strong> (<em>float</em>) – Target miss distance [m]</p></li>
-<li><p><strong>t_encounter</strong> (<em>float</em>) – Time to encounter [s] (Time delta)</p></li>
+<li><p><strong>r_sat</strong> (<em>np.ndarray</em>) – Spacecraft ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>v_sat</strong> (<em>np.ndarray</em>) – Spacecraft ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>r_debris</strong> (<em>np.ndarray</em>) – Debris ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>v_debris</strong> (<em>np.ndarray</em>) – Debris ECI state at planning epoch (m, m/s).</p></li>
+<li><p><strong>safety_radius</strong> (<em>float</em>) – Desired minimum separation distance (m).</p></li>
+<li><p><strong>t_encounter</strong> (<em>float</em>) – Time until predicted conjunction (s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>Tuple[np.ndarray, float]</strong></p>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Delta-V vector in ECI (m/s).</p></li>
+<li><p>Estimated miss distance after maneuver (m).</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(Delta-V Vector [m/s], Miss distance [m] after maneuver)</p>
+<dd class="field-odd"><p>Tuple[np.ndarray, float]</p>
 </dd>
 </dl>
 </dd></dl>

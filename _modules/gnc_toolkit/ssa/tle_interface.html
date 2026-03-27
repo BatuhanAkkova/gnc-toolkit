@@ -86,14 +86,28 @@
 <div class="viewcode-block" id="TLEEntity">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLEEntity">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TLEEntity</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Representation of a Two-Line Element (TLE) set for a satellite.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Common name of the satellite.</span>
+<span class="sd">    line1 : str</span>
+<span class="sd">        First line of the TLE.</span>
+<span class="sd">    line2 : str</span>
+<span class="sd">        Second line of the TLE.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize TLE entity and parse metadata.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line1</span> <span class="o">=</span> <span class="n">line1</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line2</span> <span class="o">=</span> <span class="n">line2</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">norad_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_norad_id</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_norad_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># Line 1 columns 3-7 (0-indexed 2 to 6)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract NORAD catalog ID from Line 1.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">return</span> <span class="s2">&quot;00000&quot;</span>
@@ -101,7 +115,14 @@
 <div class="viewcode-block" id="TLEEntity.get_propagator">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLEEntity.get_propagator">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_propagator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sgp4Propagator</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an Sgp4Propagator for this TLE.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a propagator instance for this TLE.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Sgp4Propagator</span>
+<span class="sd">            SGP4 propagator initialized with TLE lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Sgp4Propagator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">)</span></div>
 </div>
 
@@ -111,18 +132,28 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TLECatalog</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Manages a collection of TLEs for search and lookup.</span>
+<span class="sd">    Catalog for managing and searching a collection of satellite TLEs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize empty catalog.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">satellites</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TLEEntity</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_by_id</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TLEEntity</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_by_name</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TLEEntity</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="TLECatalog.add_tle">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog.add_tle">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_tle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a single TLE entity.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_tle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register a new TLE in the catalog.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Satellite name.</span>
+<span class="sd">        line1, line2 : str</span>
+<span class="sd">            TLE data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">entity</span> <span class="o">=</span> <span class="n">TLEEntity</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">satellites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_by_id</span><span class="p">[</span><span class="n">entity</span><span class="o">.</span><span class="n">norad_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">entity</span>
@@ -131,49 +162,53 @@
 
 <div class="viewcode-block" id="TLECatalog.load_from_txt">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog.load_from_txt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_from_txt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_from_txt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads TLEs from a text file.</span>
-<span class="sd">        Assumes 3-line format (Name, Line 1, Line 2).</span>
+<span class="sd">        Load TLE data from a standard text file.</span>
+
+<span class="sd">        Supports both 2-line and 3-line (with name) TLE formats.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filepath : str</span>
+<span class="sd">            Path to the TLE file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
 
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="c1"># Check if line 1 starts with &#39;1&#39; and line 2 with &#39;2&#39;</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">l1</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="n">l2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
-
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">l1</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">l2</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_tle</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">)</span>
-                <span class="n">i</span> <span class="o">+=</span> <span class="mi">3</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># 2-line format</span>
-                <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">l1</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">add_tle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SAT_</span><span class="si">{</span><span class="n">name</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">l1</span><span class="p">)</span>
-                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+                <span class="c1"># 3-line format (Name above 1/2) or 2rd/3rd line of 3-line</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># Skip invalid line</span>
-                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span></div>
+                    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SAT_</span><span class="si">{</span><span class="n">l1</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_tle</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="TLECatalog.get_by_norad_id">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog.get_by_norad_id">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_by_norad_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norad_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TLEEntity</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_by_norad_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norad_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TLEEntity</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup satellite by catalog ID.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_by_id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">norad_id</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="TLECatalog.get_by_name">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog.get_by_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TLEEntity</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup satellite by name (case-insensitive).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="TLECatalog.list_satellites">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.ssa.html#gnc_toolkit.ssa.tle_interface.TLECatalog.list_satellites">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">list_satellites</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List names of all registered satellites.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">satellites</span><span class="p">]</span></div>
 </div>
 

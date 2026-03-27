@@ -120,57 +120,54 @@
 <p>Flexible body dynamics propagation and coupling models.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_dynamics.flexible_body.coupled_flexible_rigid_dynamics">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.flexible_body.</span></span><span class="sig-name descname"><span class="pre">coupled_flexible_rigid_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_rigid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_freqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping_ratios</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_influence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/flexible_body.html#coupled_flexible_rigid_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.flexible_body.coupled_flexible_rigid_dynamics" title="Link to this definition"></a></dt>
-<dd><p>Computes coupled rigid-flexible body dynamics.</p>
-<p>System Equations:
-[ J_rigid  -Phi^T ] [ omega_dot ] + [ omega x (J_rigid * omega) ] = [ torque ]
-[ -Phi      I     ] [ eta_ddot  ]   [ 2*zeta*omega_n*eta_dot + omega_n^2*eta ] = [ 0 ]</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.flexible_body.</span></span><span class="sig-name descname"><span class="pre">coupled_flexible_rigid_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_rigid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_freqs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping_ratios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_influence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/flexible_body.html#coupled_flexible_rigid_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.flexible_body.coupled_flexible_rigid_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Compute coupled rigid-flexible body dynamics.</p>
+<p>Augmented System Projection:
+$begin{bmatrix} mathbf{J} &amp; mathbf{Phi}^T \ mathbf{Phi} &amp; mathbf{I} end{bmatrix} begin{bmatrix} dot{omega} \ ddot{eta} end{bmatrix} = begin{bmatrix} tau - omega times (mathbf{J} omega) \ -2zetaomega_ndot{eta} - omega_n^2eta end{bmatrix}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J_rigid</strong> (<em>np.ndarray</em>) – Rigid body inertia tensor (3, 3).</p></li>
-<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity (3,).</p></li>
-<li><p><strong>torque</strong> (<em>np.ndarray</em>) – External torque (3,).</p></li>
+<li><p><strong>J_rigid</strong> (<em>np.ndarray</em>) – Rigid inertia tensor (3, 3) ($kg cdot m^2$).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity (3,) (rad/s).</p></li>
+<li><p><strong>torque</strong> (<em>np.ndarray</em>) – External torque (3,) (Nm).</p></li>
 <li><p><strong>eta</strong> (<em>np.ndarray</em>) – Modal displacements (n_modes,).</p></li>
 <li><p><strong>eta_dot</strong> (<em>np.ndarray</em>) – Modal velocities (n_modes,).</p></li>
-<li><p><strong>natural_freqs</strong> (<em>np.ndarray</em>) – (n_modes,).</p></li>
-<li><p><strong>damping_ratios</strong> (<em>np.ndarray</em>) – (n_modes,).</p></li>
-<li><p><strong>modal_influence</strong> (<em>np.ndarray</em>) – (n_modes, 3).</p></li>
+<li><p><strong>natural_freqs</strong> (<em>np.ndarray</em>) – Natural frequencies (n_modes,) (rad/s).</p></li>
+<li><p><strong>damping_ratios</strong> (<em>np.ndarray</em>) – Damping ratios (n_modes,).</p></li>
+<li><p><strong>modal_influence</strong> (<em>np.ndarray</em>) – Influence matrix (n_modes, 3).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>omega_dot (np.ndarray)</strong> (<em>(3,).</em>)</p></li>
-<li><p><strong>eta_ddot (np.ndarray)</strong> (<em>(n_modes,).</em>)</p></li>
-</ul>
-</p>
+<dd class="field-even"><p>(omega_dot, eta_ddot).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_dynamics.flexible_body.flexible_body_dynamics">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.flexible_body.</span></span><span class="sig-name descname"><span class="pre">flexible_body_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_freqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping_ratios</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_influence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/flexible_body.html#flexible_body_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.flexible_body.flexible_body_dynamics" title="Link to this definition"></a></dt>
-<dd><p>Computes the second derivative of modal coordinates for flexible body dynamics.</p>
-<p>The model assumes:
-eta_ddot + 2 * zeta * omega_n * eta_dot + omega_n^2 * eta = Phi^T * omega_dot</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.flexible_body.</span></span><span class="sig-name descname"><span class="pre">flexible_body_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_freqs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping_ratios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_influence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/flexible_body.html#flexible_body_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.flexible_body.flexible_body_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Compute modal acceleration $ddot{eta}$.</p>
+<p>Modal Equation:
+$ddot{eta}_i + 2zeta_iomega_{n,i}dot{eta}_i + omega_{n,i}^2eta_i = mathbf{Phi}_i cdot dot{omega}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eta</strong> (<em>np.ndarray</em>) – Modal displacements (n_modes,).</p></li>
 <li><p><strong>eta_dot</strong> (<em>np.ndarray</em>) – Modal velocities (n_modes,).</p></li>
-<li><p><strong>omega_dot</strong> (<em>np.ndarray</em>) – Rigid body angular acceleration (3,).</p></li>
-<li><p><strong>natural_freqs</strong> (<em>np.ndarray</em>) – Natural frequencies [rad/s] (n_modes,).</p></li>
-<li><p><strong>damping_ratios</strong> (<em>np.ndarray</em>) – Damping ratios (n_modes,).</p></li>
-<li><p><strong>modal_influence</strong> (<em>np.ndarray</em>) – Modal influence matrix (n_modes, 3).
-Maps rigid body acceleration to modal forces.</p></li>
+<li><p><strong>omega_dot</strong> (<em>np.ndarray</em>) – Rigid body angular acceleration (3,) (rad/s$^2$).</p></li>
+<li><p><strong>natural_freqs</strong> (<em>np.ndarray</em>) – Natural frequencies $omega_{n,i}$ (n_modes,) (rad/s).</p></li>
+<li><p><strong>damping_ratios</strong> (<em>np.ndarray</em>) – Damping ratios $zeta_i$ (n_modes,).</p></li>
+<li><p><strong>modal_influence</strong> (<em>np.ndarray</em>) – Influence matrix $mathbf{Phi}$ (n_modes, 3).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Modal acceleration $ddot{eta}$ (n_modes,) (rad/s$^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Modal accelerations eta_ddot (n_modes,).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -181,51 +178,51 @@ Maps rigid body acceleration to modal forces.</p></li>
 <p>Fuel slosh dynamics using equivalent pendulum models.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.fuel_slosh.</span></span><span class="sig-name descname"><span class="pre">fuel_slosh_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_equiv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/fuel_slosh.html#fuel_slosh_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics" title="Link to this definition"></a></dt>
-<dd><p>Computes the second derivative of the slosh pendulum angle.</p>
-<p>Model: Pendulum of length L, base at r_base from spacecraft CM.
-g_equiv: Equivalent acceleration (e.g., from thrust).</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.fuel_slosh.</span></span><span class="sig-name descname"><span class="pre">fuel_slosh_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_equiv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/fuel_slosh.html#fuel_slosh_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Compute slosh pendulum angular acceleration $ddot{theta}$.</p>
+<p>The pendulum is subject to base acceleration:
+$mathbf{a}_{base} = mathbf{g}_{eq} - dot{omega} times mathbf{r}_b - omega times (omega times mathbf{r}_b)$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>theta</strong> (<em>float</em>) – Pendulum angle [rad].</p></li>
-<li><p><strong>theta_dot</strong> (<em>float</em>) – Pendulum angular velocity [rad/s].</p></li>
-<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Spacecraft angular velocity (3,).</p></li>
-<li><p><strong>omega_dot</strong> (<em>np.ndarray</em>) – Spacecraft angular acceleration (3,).</p></li>
-<li><p><strong>L</strong> (<em>float</em>) – Pendulum length [m].</p></li>
-<li><p><strong>r_base</strong> (<em>np.ndarray</em>) – Location of pendulum base from CM (3,).</p></li>
-<li><p><strong>g_equiv</strong> (<em>np.ndarray</em>) – Equivalent gravity/acceleration vector (3,).</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – Pendulum angle (rad).</p></li>
+<li><p><strong>theta_dot</strong> (<em>float</em>) – Pendulum rate (rad/s).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Spacecraft angular velocity (3,) (rad/s).</p></li>
+<li><p><strong>omega_dot</strong> (<em>np.ndarray</em>) – Spacecraft angular acceleration (3,) (rad/s$^2$).</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – Pendulum length (m).</p></li>
+<li><p><strong>r_base</strong> (<em>np.ndarray</em>) – Pivot location relative to spacecraft CM (3,) (m).</p></li>
+<li><p><strong>g_equiv</strong> (<em>np.ndarray</em>) – Effective gravity/acceleration vector (3,) (m/s$^2$).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>float</strong></p>
+<dd class="field-even"><p>Pendulum acceleration $ddot{theta}$ (rad/s$^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Pendulum angular acceleration theta_ddot [rad/s^2].</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_torque">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.fuel_slosh.</span></span><span class="sig-name descname"><span class="pre">fuel_slosh_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_ddot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/fuel_slosh.html#fuel_slosh_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_torque" title="Link to this definition"></a></dt>
-<dd><p>Computes the reaction torque from fuel slosh on the spacecraft body.</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.fuel_slosh.</span></span><span class="sig-name descname"><span class="pre">fuel_slosh_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_ddot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/fuel_slosh.html#fuel_slosh_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.fuel_slosh.fuel_slosh_torque" title="Link to this definition"></a></dt>
+<dd><p>Compute reaction torque from slosh bob.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>m_p</strong> (<em>float</em>) – Pendulum mass [kg].</p></li>
-<li><p><strong>L</strong> (<em>float</em>) – Pendulum length [m].</p></li>
-<li><p><strong>theta</strong> (<em>float</em>) – Pendulum angle [rad].</p></li>
-<li><p><strong>theta_dot</strong> (<em>float</em>) – Pendulum angular velocity [rad/s].</p></li>
-<li><p><strong>theta_ddot</strong> (<em>float</em>) – Pendulum angular acceleration [rad/s^2].</p></li>
-<li><p><strong>r_base</strong> (<em>np.ndarray</em>) – Base location (3,).</p></li>
+<li><p><strong>m_p</strong> (<em>float</em>) – Slosh mass (kg).</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – Pendulum length (m).</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – Pendulum angle (rad).</p></li>
+<li><p><strong>theta_dot</strong> (<em>float</em>) – Pendulum rate (rad/s).</p></li>
+<li><p><strong>theta_ddot</strong> (<em>float</em>) – Pendulum acceleration (rad/s$^2$).</p></li>
+<li><p><strong>r_base</strong> (<em>np.ndarray</em>) – Pivot location (3,) (m).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Reaction torque vector (3,) (Nm).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Slosh reaction torque (3,).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -237,23 +234,25 @@ g_equiv: Equivalent acceleration (e.g., from thrust).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_dynamics.rigid_body.euler_equations">
 <span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.rigid_body.</span></span><span class="sig-name descname"><span class="pre">euler_equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/rigid_body.html#euler_equations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.rigid_body.euler_equations" title="Link to this definition"></a></dt>
-<dd><p>Computes the angular acceleration of a rigid body using Euler’s equations of motion.</p>
+<dd><p>Compute rigid body angular acceleration via Euler’s equations.</p>
+<p>Equation of Motion:
+$mathbf{J} dot{omega} + mathbf{omega} times (mathbf{J} omega) = mathbf{tau}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J</strong> (<em>np.ndarray</em>) – Inertia tensor (3x3 matrix) [kg*m^2].</p></li>
-<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity vector (3,) [rad/s].</p></li>
-<li><p><strong>torque</strong> (<em>np.ndarray</em>) – External torque vector (3,) [N*m].</p></li>
+<li><p><strong>J</strong> (<em>np.ndarray</em>) – Inertia tensor ($3 times 3$) ($kg cdot m^2$).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity vector (3,) (rad/s).</p></li>
+<li><p><strong>torque</strong> (<em>np.ndarray</em>) – Net external torque vector (3,) (Nm).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Angular acceleration $dot{omega}$ (3,) (rad/s$^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Angular acceleration vector (3,) [rad/s^2].</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If input shapes are incorrect.:</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If input dimensions are invalid.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,48 +263,47 @@ g_equiv: Equivalent acceleration (e.g., from thrust).</p>
 <p>Attitude dynamics with time-varying inertia tensors.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_dynamics.variable_inertia.mass_depletion_J_dot">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.variable_inertia.</span></span><span class="sig-name descname"><span class="pre">mass_depletion_J_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_nominal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_initial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm_dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/variable_inertia.html#mass_depletion_J_dot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.variable_inertia.mass_depletion_J_dot" title="Link to this definition"></a></dt>
-<dd><p>A simple model for J_dot due to point-mass depletion (e.g., fuel at r_point).</p>
-<p>J = J_rigid + m(t) * [ (r’r)I - rr’ ]
-J_dot = m_dot * [ (r’r)I - rr’ ]</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.variable_inertia.</span></span><span class="sig-name descname"><span class="pre">mass_depletion_J_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_nominal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_initial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm_dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/variable_inertia.html#mass_depletion_J_dot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.variable_inertia.mass_depletion_J_dot" title="Link to this definition"></a></dt>
+<dd><p>Model $dot{mathbf{J}}$ due to point-mass depletion.</p>
+<p>$dot{mathbf{J}} = dot{m} [ (mathbf{r}^T mathbf{r}) mathbf{I} - mathbf{r} mathbf{r}^T ]$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J_nominal</strong> (<em>np.ndarray</em>) – Nominal inertia (unused here, placeholder).</p></li>
-<li><p><strong>m_initial</strong> (<em>float</em>) – Initial mass of segment [kg].</p></li>
-<li><p><strong>dm_dt</strong> (<em>float</em>) – Mass flow rate [kg/s] (usually negative).</p></li>
-<li><p><strong>r_point</strong> (<em>np.ndarray</em>) – Position of mass segment from CM (3,).</p></li>
+<li><p><strong>J_nominal</strong> (<em>np.ndarray</em>) – Nominal system inertia (3, 3).</p></li>
+<li><p><strong>m_initial</strong> (<em>float</em>) – Initial segment mass (kg).</p></li>
+<li><p><strong>dm_dt</strong> (<em>float</em>) – Mass flow rate (kg/s). Negative for depletion.</p></li>
+<li><p><strong>r_point</strong> (<em>np.ndarray</em>) – Position of mass segment relative to system CM (3,) (m).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Inertia derivative $dot{mathbf{J}}$ (3, 3) ($kg cdot m^2 / s$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>J_dot (3, 3).</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gnc_toolkit.attitude_dynamics.variable_inertia.variable_inertia_euler_equations">
-<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.variable_inertia.</span></span><span class="sig-name descname"><span class="pre">variable_inertia_euler_equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/variable_inertia.html#variable_inertia_euler_equations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.variable_inertia.variable_inertia_euler_equations" title="Link to this definition"></a></dt>
-<dd><p>Computes angular acceleration for a body with time-varying inertia.</p>
-<p>The equation of motion is:
-J * omega_dot + J_dot * omega + omega x (J * omega) = torque</p>
+<span class="sig-prename descclassname"><span class="pre">gnc_toolkit.attitude_dynamics.variable_inertia.</span></span><span class="sig-name descname"><span class="pre">variable_inertia_euler_equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/gnc_toolkit/attitude_dynamics/variable_inertia.html#variable_inertia_euler_equations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gnc_toolkit.attitude_dynamics.variable_inertia.variable_inertia_euler_equations" title="Link to this definition"></a></dt>
+<dd><p>Compute $dot{omega}$ for a body with time-varying inertia.</p>
+<p>Equation of Motion:
+$mathbf{J} dot{omega} + dot{mathbf{J}} omega + omega times (mathbf{J} omega) = mathbf{tau}$</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J</strong> (<em>np.ndarray</em>) – Inertia tensor (3, 3) [kg*m^2].</p></li>
-<li><p><strong>J_dot</strong> (<em>np.ndarray</em>) – Time derivative of inertia tensor (3, 3) [kg*m^2/s].</p></li>
-<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity vector (3,) [rad/s].</p></li>
-<li><p><strong>torque</strong> (<em>np.ndarray</em>) – External torque vector (3,) [N*m].</p></li>
+<li><p><strong>J</strong> (<em>np.ndarray</em>) – Current inertia tensor ($3 times 3$) ($kg cdot m^2$).</p></li>
+<li><p><strong>J_dot</strong> (<em>np.ndarray</em>) – Inertia derivative ($3 times 3$) ($kg cdot m^2 / s$).</p></li>
+<li><p><strong>omega</strong> (<em>np.ndarray</em>) – Angular velocity (3,) (rad/s).</p></li>
+<li><p><strong>torque</strong> (<em>np.ndarray</em>) – External torque (3,) (Nm).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>np.ndarray</strong></p>
+<dd class="field-even"><p>Angular acceleration $dot{omega}$ (3,) (rad/s$^2$).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Angular acceleration vector (3,) [rad/s^2].</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

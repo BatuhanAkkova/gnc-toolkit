@@ -80,38 +80,43 @@
 <span class="sd">Sliding Mode Controller (SMC) implementation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="SlidingModeController">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SlidingModeController</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sliding Mode Controller (SMC).</span>
 
-<span class="sd">    Implements a control law of the form:</span>
-<span class="sd">    u = u_eq(x, t) - K * sign(s(x, t))</span>
+<span class="sd">    Control Law:</span>
+<span class="sd">    $u = u_{eq} - K \cdot \text{sat}(s/\Phi)$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surface_func : Callable</span>
+<span class="sd">        Sliding surface $s(\mathbf{x}, t)$.</span>
+<span class="sd">    k_gain : float</span>
+<span class="sd">        Switching gain $K$.</span>
+<span class="sd">    equivalent_control_func : Callable | None, optional</span>
+<span class="sd">        $\mathbf{u}_{eq}$ component.</span>
+<span class="sd">    chattering_reduction : bool, optional</span>
+<span class="sd">        Use saturation instead of sign. Default True.</span>
+<span class="sd">    boundary_layer : float, optional</span>
+<span class="sd">        Saturation boundary $\Phi$.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">surface_func</span><span class="p">,</span>
-        <span class="n">k_gain</span><span class="p">,</span>
-        <span class="n">equivalent_control_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">chattering_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">boundary_layer</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the Sliding Mode Controller.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            surface_func (callable): Function s(x, t) returning the scalar sliding surface value.</span>
-<span class="sd">            k_gain (float): Switching gain K.</span>
-<span class="sd">            equivalent_control_func (callable, optional): Function u_eq(x, t) returning the equivalent control.</span>
-<span class="sd">                                                          Defaults to returning 0.</span>
-<span class="sd">            chattering_reduction (bool): If True, use a saturation function instead of sign().</span>
-<span class="sd">            boundary_layer (float): The thickness &#39;phi&#39; of the boundary layer for saturation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">surface_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">k_gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">equivalent_control_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">chattering_reduction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">boundary_layer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Sliding Mode Controller.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surface_func</span> <span class="o">=</span> <span class="n">surface_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_gain</span> <span class="o">=</span> <span class="n">k_gain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eq_func</span> <span class="o">=</span> <span class="n">equivalent_control_func</span> <span class="k">if</span> <span class="n">equivalent_control_func</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="mf">0.0</span>
@@ -120,32 +125,31 @@
 
 <div class="viewcode-block" id="SlidingModeController.compute_control">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.sliding_mode.SlidingModeController.compute_control">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute the control input.</span>
+<span class="sd">        Compute the sliding mode control input.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            x (np.ndarray): State vector.</span>
-<span class="sd">            t (float): Time.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : np.ndarray</span>
+<span class="sd">            Current state vector.</span>
+<span class="sd">        t : float, optional</span>
+<span class="sd">            Current time (s). Default is 0.0.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            float or np.ndarray: Control input u.</span>
+<span class="sd">        float or np.ndarray</span>
+<span class="sd">            The computed control input signal.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">s_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_sat</span><span class="p">:</span>
-            <span class="c1"># Saturation function: sat(s/phi)</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">s</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span>
-            <span class="c1"># Clip handles scalars and arrays</span>
-            <span class="n">switching_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="c1"># Saturation function: sat(s/phi) used for chattering reduction</span>
+            <span class="n">switching_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s_val</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">switching_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">switching_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">s_val</span><span class="p">)</span>
 
-        <span class="n">u_eq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">u_eq</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_gain</span> <span class="o">*</span> <span class="n">switching_term</span>
-
-        <span class="k">return</span> <span class="n">u</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_gain</span> <span class="o">*</span> <span class="n">switching_term</span></div>
 </div>
 
 </pre></div>

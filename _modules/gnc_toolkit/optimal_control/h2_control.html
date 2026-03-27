@@ -80,6 +80,9 @@
 <span class="sd">H2 Optimal Controller (LQG equivalent).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.lqg</span><span class="w"> </span><span class="kn">import</span> <span class="n">LQG</span>
 
 
@@ -87,28 +90,57 @@
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.h2_control.H2Controller">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">H2Controller</span><span class="p">(</span><span class="n">LQG</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    H2 Optimal Controller.</span>
+<span class="sd">    H2-Optimal Controller.</span>
 
-<span class="sd">    The H2 control problem is equivalent to the LQG problem for a linear system</span>
-<span class="sd">    subject to white Gaussian noise, where the objective is to minimize the</span>
-<span class="sd">    H2 norm of the transfer function from disturbances to regulated outputs.</span>
+<span class="sd">    Solves the standard H2 control problem for linear state-space systems.</span>
+<span class="sd">    For systems with Gaussian noise and quadratic performance indices, the</span>
+<span class="sd">    H2-optimal controller is equivalent to the Linear Quadratic Gaussian (LQG)</span>
+<span class="sd">    controller.</span>
 
-<span class="sd">    This class inherits from LQG as the implementation is identical for standard</span>
-<span class="sd">    state-space systems. It provides an alias and can be extended for more</span>
-<span class="sd">    general H2 problems.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : np.ndarray</span>
+<span class="sd">        State matrix (nx x nx).</span>
+<span class="sd">    B : np.ndarray</span>
+<span class="sd">        Control input matrix (nx x nu).</span>
+<span class="sd">    C : np.ndarray</span>
+<span class="sd">        Output matrix (ny x nx).</span>
+<span class="sd">    Q_lqr : np.ndarray</span>
+<span class="sd">        State weighting matrix for LQR (nx x nx).</span>
+<span class="sd">    R_lqr : np.ndarray</span>
+<span class="sd">        Control weighting matrix for LQR (nu x nu).</span>
+<span class="sd">    Q_lqe : np.ndarray</span>
+<span class="sd">        Process noise covariance matrix for LQE (nw x nw).</span>
+<span class="sd">    R_lqe : np.ndarray</span>
+<span class="sd">        Measurement noise covariance matrix for LQE (ny x ny).</span>
+<span class="sd">    G_lqe : np.ndarray, optional</span>
+<span class="sd">        Process noise input matrix (nx x nw). Defaults to Identity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Q_lqr</span><span class="p">,</span> <span class="n">R_lqr</span><span class="p">,</span> <span class="n">Q_lqe</span><span class="p">,</span> <span class="n">R_lqe</span><span class="p">,</span> <span class="n">G_lqe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize H2 Controller (LQG equivalent).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">B</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Q_lqr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">R_lqr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Q_lqe</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">R_lqe</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">G_lqe</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize H2 controller as an LQG instance.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Q_lqr</span><span class="p">,</span> <span class="n">R_lqr</span><span class="p">,</span> <span class="n">Q_lqe</span><span class="p">,</span> <span class="n">R_lqe</span><span class="p">,</span> <span class="n">G_lqe</span><span class="p">)</span>
 
 <div class="viewcode-block" id="H2Controller.solve">
 <a class="viewcode-back" href="../../../api/gnc_toolkit.optimal_control.html#gnc_toolkit.optimal_control.h2_control.H2Controller.solve">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Solve both LQR and LQE sub-problems.</span>
+<span class="sd">        Solve LQR and LQE optimal gain design problems.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">            Optimal feedback gain K (nu x nx) and observer gain L (nx x ny).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lqr</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lqe</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>

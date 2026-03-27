@@ -6,6 +6,7 @@ import csv
 import os
 
 import numpy as np
+from numba import njit
 
 """
 Gravitational acceleration models (Two-Body, J2, Harmonics) and Gradient Torques.
@@ -193,77 +194,96 @@ class HarmonicsGravity:
         r_val = np.asarray(r_eci)
         r_ecef, _ = eci2ecef(r_val, np.zeros(3), jd)
         x, y, z = r_ecef
-        r_sq = x*x + y*y + z*z
-        r_mag = np.sqrt(r_sq)
 
-        rho = self.re / r_mag
-        sin_phi = z / r_mag
+        acc_ecef = _compute_gravity_njit(
+            x, y, z, self.re, self.mu, self.n_max, self.m_max, self.C, self.S
+        )
 
-        P = np.zeros((self.n_max + 2, self.m_max + 2))
-        P[0, 0] = 1.0
-        P[1, 0] = np.sqrt(3) * sin_phi
-        P[1, 1] = np.sqrt(3) * np.sqrt(max(0, 1 - sin_phi**2))
-
-        for n in range(2, self.n_max + 1):
-            a_n0 = np.sqrt((2*n + 1) / n) * np.sqrt(2*n - 1)
-            b_n0 = np.sqrt((2*n + 1) / n) * np.sqrt((n - 1) / (2*n - 3))
-            P[n, 0] = a_n0 * sin_phi * P[n-1, 0] - b_n0 * P[n-2, 0]
-
-            for m in range(1, min(n + 1, self.m_max + 1)):
-                if n == m:
-                    c_nn = np.sqrt((2*n + 1) / (2*n))
-                    P[n, n] = c_nn * np.sqrt(max(0, 1 - sin_phi**2)) * P[n-1, n-1]
-                else:
-                    anm = np.sqrt(((2*n - 1) * (2*n + 1)) / ((n - m) * (n + m)))
-                    bnm = np.sqrt(((2*n + 1) * (n + m - 1) * (n - m - 1)) / ((2*n - 3) * (n + m) * (n - m)))
-                    P[n, m] = anm * sin_phi * P[n-1, m] - bnm * P[n-2, m]
-
-        du_dr, du_dlat, du_dlon = 0.0, 0.0, 0.0
-        lon = np.arctan2(y, x)
-        clon, slon = np.cos(lon), np.sin(lon)
-
-        # Precompute m*lon trig
-        cos_mlon = np.array([np.cos(m * lon) for m in range(self.m_max + 1)])
-        sin_mlon = np.array([np.sin(m * lon) for m in range(self.m_max + 1)])
-
-        for n in range(2, self.n_max + 1):
-            rn = rho**n
-            s_r, s_lat, s_lon = 0.0, 0.0, 0.0
-            for m in range(0, min(n, self.m_max) + 1):
-                cv, sv = self.C[n, m], self.S[n, m]
-                gt = cv * cos_mlon[m] + sv * sin_mlon[m]
-
-                # Deriv dP/dphi
-                if n == m:
-                    cos_phi_sq = max(1e-15, 1 - sin_phi**2)
-                    dp = -n * sin_phi / np.sqrt(cos_phi_sq) * P[n, n]
-                else:
-                    anm = np.sqrt((2*n + 1) / (n - m)) * np.sqrt((2*n - 1) / (n + m))
-                    cos_phi_sq = max(1e-15, 1 - sin_phi**2)
-                    dp = (n * sin_phi * P[n, m] - anm * P[n-1, m]) / np.sqrt(cos_phi_sq)
-
-                s_r += (n + 1) * P[n, m] * gt
-                s_lat += dp * gt
-                s_lon += P[n, m] * m * (-cv * sin_mlon[m] + sv * cos_mlon[m])
-
-            du_dr -= (self.mu / r_sq) * rn * s_r
-            du_dlat += (self.mu / r_mag) * rn * s_lat
-            du_dlon += (self.mu / r_mag) * rn * s_lon
-
-        cos_phi = np.sqrt(max(0, 1 - sin_phi**2))
-        safe_cos = max(1e-15, cos_phi)
-
-        term_r = du_dr * cos_phi
-        term_lat = (du_dlat / r_mag) * (-sin_phi)
-        term_lon = (du_dlon / (r_mag * safe_cos))
-
-        ax_ecef = (term_r + term_lat) * clon + term_lon * (-slon)
-        ay_ecef = (term_r + term_lat) * slon + term_lon * clon
-        az_ecef = du_dr * sin_phi + (du_dlat / r_mag) * cos_phi
-
-        aec = np.array([ax_ecef, ay_ecef, az_ecef])
-        aeci, _ = ecef2eci(aec, np.zeros(3), jd)
+        aeci, _ = ecef2eci(acc_ecef, np.zeros(3), jd)
         return aeci
+
+
+@njit
+def _compute_gravity_njit(x, y, z, re, mu, n_max, m_max, C, S):
+    """
+    Numba-accelerated spherical harmonics recursion.
+    """
+    r_sq = x*x + y*y + z*z
+    r_mag = np.sqrt(r_sq)
+
+    rho = re / r_mag
+    sin_phi = z / r_mag
+    cos_phi_approx = np.sqrt(max(0.0, 1.0 - sin_phi**2))
+
+    P = np.zeros((n_max + 2, m_max + 2))
+    P[0, 0] = 1.0
+    # P1,0 = sqrt(3) * sin_phi
+    P[1, 0] = np.sqrt(3.0) * sin_phi
+    # P1,1 = sqrt(3) * cos_phi
+    P[1, 1] = np.sqrt(3.0) * cos_phi_approx
+
+    for n in range(2, n_max + 1):
+        # m = 0
+        an0 = np.sqrt((4.0 * n**2 - 1.0) / n**2)
+        bn0 = np.sqrt((2.0 * n + 1.0) * (n - 1.0)**2 / (n**2 * (2.0 * n - 3.0)))
+        P[n, 0] = an0 * sin_phi * P[n-1, 0] - bn0 * P[n-2, 0]
+
+        for m in range(1, min(n + 1, m_max + 1)):
+            if n == m:
+                cnn = np.sqrt((2.0 * n + 1.0) / (2.0 * n))
+                P[n, n] = cnn * cos_phi_approx * P[n-1, n-1]
+            else:
+                anm = np.sqrt((4.0 * n**2 - 1.0) / (n**2 - m**2))
+                bnm = np.sqrt((2.0 * n + 1.0) * ((n - 1.0)**2 - m**2) / ((2.0 * n - 3.0) * (n**2 - m**2)))
+                P[n, m] = anm * sin_phi * P[n-1, m] - bnm * P[n-2, m]
+
+    du_dr = -mu / r_sq
+    du_dlat, du_dlon = 0.0, 0.0
+    lon = np.arctan2(y, x)
+    clon, slon = np.cos(lon), np.sin(lon)
+
+    # Precompute m*lon trig
+    cos_mlon = np.zeros(m_max + 1)
+    sin_mlon = np.zeros(m_max + 1)
+    for m in range(m_max + 1):
+        cos_mlon[m] = np.cos(m * lon)
+        sin_mlon[m] = np.sin(m * lon)
+
+    for n in range(2, n_max + 1):
+        rn = rho**n
+        s_r, s_lat, s_lon = 0.0, 0.0, 0.0
+        for m in range(0, min(n, m_max) + 1):
+            cv, sv = C[n, m], S[n, m]
+            gt = cv * cos_mlon[m] + sv * sin_mlon[m]
+
+            # Deriv dP/dphi
+            if n == m:
+                cos_phi_sq = max(1e-15, 1.0 - sin_phi**2)
+                dp = -n * sin_phi / np.sqrt(cos_phi_sq) * P[n, n]
+            else:
+                anm = np.sqrt((2.0 * n + 1.0) / (n - m)) * np.sqrt((2.0 * n - 1.0) / (n + m))
+                cos_phi_sq = max(1e-15, 1.0 - sin_phi**2)
+                dp = (n * sin_phi * P[n, m] - anm * P[n-1, m]) / np.sqrt(cos_phi_sq)
+
+            s_r += (n + 1.0) * P[n, m] * gt
+            s_lat += dp * gt
+            s_lon += P[n, m] * m * (-cv * sin_mlon[m] + sv * cos_mlon[m])
+
+        du_dr -= (mu / r_sq) * rn * s_r
+        du_dlat += (mu / r_mag) * rn * s_lat
+        du_dlon += (mu / r_mag) * rn * s_lon
+
+    safe_cos = max(1e-15, cos_phi_approx)
+
+    term_r = du_dr * cos_phi_approx
+    term_lat = (du_dlat / r_mag) * (-sin_phi)
+    term_lon = (du_dlon / (r_mag * safe_cos))
+
+    ax_ecef = (term_r + term_lat) * clon + term_lon * (-slon)
+    ay_ecef = (term_r + term_lat) * slon + term_lon * clon
+    az_ecef = du_dr * sin_phi + (du_dlat / r_mag) * cos_phi_approx
+
+    return np.array([ax_ecef, ay_ecef, az_ecef])
 
 
 class GradientTorque:

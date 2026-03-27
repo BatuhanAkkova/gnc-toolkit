@@ -19,10 +19,10 @@ This roadmap outlines the strategic development of **OpenGNC** to bridge the gap
 
 ### Phase 1: High-Fidelity Foundation & Orbit Mastery
 *Solidify the core orbital mechanics and environment tools.*
-- [ ] **Recursive Gravity Models**: Optimize EGM2008 up to degree/order 360+ via Cython/Numba.
-- [ ] **Multi-Body Dynamics**: Implement Circular Restricted Three-Body Problem (CR3BP) and Solar System JPL Ephemeris integration.
-- [ ] **Advanced Propagators**: Add Gauss-Variational Equations (GVE) and Taylor Series integrators.
-- [ ] **Covariance Analysis**: Formalize Covariance Transform Tool (ECI/RIC/TLE) and reach-ability analysis.
+- [x] **Recursive Gravity Models**: Optimize EGM2008 up to degree/order 360+ via Cython/Numba. ✅
+- [x] **Multi-Body Dynamics**: Implement Circular Restricted Three-Body Problem (CR3BP) and Solar System JPL Ephemeris integration. ✅
+- [x] **Advanced Propagators**: Add Gauss-Variational Equations (GVE) and Taylor Series integrators. ✅
+- [x] **Covariance Analysis**: Formalize Covariance Transform Tool (ECI/RIC/TLE) and reach-ability analysis. ✅
 
 ### Phase 2: Autonomy, AI & Next-Gen GNC
 *Integrate modern control and estimation techniques.*

@@ -74,5 +74,66 @@ def main():
     print(f"Eccentricity:    {ecc_est:.6f}")
     print(f"Inclination:     {np.degrees(incl_est):.2f} deg")
 
+    # 8. Plotting Results
+    try:
+        import matplotlib.pyplot as plt
+        from mpl_toolkits.mplot3d import Axes3D
+        
+        fig = plt.figure(figsize=(10, 8))
+        ax = fig.add_subplot(111, projection='3d')
+        
+        # Plot Earth
+        u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
+        x_e = Re * np.cos(u) * np.sin(v)
+        y_e = Re * np.sin(u) * np.sin(v)
+        z_e = Re * np.cos(v)
+        ax.plot_wireframe(x_e, y_e, z_e, color="blue", alpha=0.1)
+
+        # Generate orbit trajectory for visualization (one period)
+        period = 2 * np.pi * np.sqrt(a**3 / mu)
+        time_vec = np.linspace(0, period, 200)
+        orbit_pts = []
+        for t in time_vec:
+            nu_t = nu0 + mean_motion * t
+            r_t, _ = kepler2eci(a, ecc, incl, raan, argp, nu_t)
+            orbit_pts.append(r_t)
+        orbit_pts = np.array(orbit_pts)
+
+        ax.plot(orbit_pts[:, 0], orbit_pts[:, 1], orbit_pts[:, 2], 'k--', label="True Orbit", alpha=0.5)
+        
+        # Generate estimated orbit trajectory
+        mean_motion_est = np.sqrt(mu / a_est**3)
+        est_pts = []
+        for t in time_vec:
+            nu_t = nu_est + mean_motion_est * (t - t2)
+            r_t, _ = kepler2eci(a_est, ecc_est, incl_est, raan_est, argp_est, nu_t)
+            est_pts.append(r_t)
+        est_pts = np.array(est_pts)
+        ax.plot(est_pts[:, 0], est_pts[:, 1], est_pts[:, 2], 'b-', label="Estimated Orbit", linewidth=2)
+
+        # Plot observations
+        obs_pts = np.array([r1_true, r2_true, r3_true])
+        ax.scatter(obs_pts[:, 0], obs_pts[:, 1], obs_pts[:, 2], color='red', s=50, label='Observations')
+        
+        # Plot LOS vectors from observers
+        for R, r_true in zip([R1, R2, R3], [r1_true, r2_true, r3_true]):
+            ax.plot([R[0], r_true[0]], [R[1], r_true[1]], [R[2], r_true[2]], 'g:', alpha=0.6)
+
+        ax.set_xlabel('X (m)')
+        ax.set_ylabel('Y (m)')
+        ax.set_zlabel('Z (m)')
+        ax.set_title(f'Gauss IOD Results\nPos Error: {pos_error:.2f} m, Vel Error: {vel_error:.4f} m/s')
+        ax.legend()
+        
+        # Adjust view
+        # ax.view_init(elev=20, azim=45)
+        
+        output_path = "assets/gauss_iod_results.png"
+        plt.savefig(output_path, dpi=150)
+        print(f"\nFigure saved to {output_path}")
+        
+    except ImportError:
+        print("\nMatplotlib not found. Skipping plot generation.")
+
 if __name__ == "__main__":
     main()

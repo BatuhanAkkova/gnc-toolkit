@@ -1,29 +1,40 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Union, Dict
 
 
 class ScenarioConfig:
     """
-    Scenario configuration module.
-    Responsible for parsing reproducible mission setups from JSON (or YAML if available).
+    Scenario Configuration Manager.
+
+    Handles loading and parsing of reproducible mission configurations from 
+    external formatted files (JSON, YAML).
+
+    Parameters
+    ----------
+    filename : Union[str, Path]
+        Path to the configuration file.
     """
 
-    def __init__(self, filename: str | Path):
-        """
-        Initialize the scenario configuration.
-
-        Parameters
-        ----------
-        filename : str or Path
-            Path to the JSON or YAML configuration file.
-        """
+    def __init__(self, filename: Union[str, Path]):
+        """Initialize and automatically load configuration."""
         self.filename = Path(filename)
-        self.config: dict[str, Any] = {}
+        self.config: Dict[str, Any] = {}
         self.load()
 
-    def load(self):
-        """Loads the configuration file."""
+    def load(self) -> None:
+        """
+        Load data from the filesystem into the internal configuration dictionary.
+
+        Raises
+        ------
+        FileNotFoundError
+            If path does not exist.
+        ImportError
+            If YAML is requested but PyYAML is missing.
+        ValueError
+            If file extension is unsupported.
+        """
         if not self.filename.exists():
             raise FileNotFoundError(f"Scenario configuration file not found: {self.filename}")
 
@@ -34,7 +45,6 @@ class ScenarioConfig:
         elif ext in [".yaml", ".yml"]:
             try:
                 import yaml
-
                 with open(self.filename, encoding="utf-8") as f:
                     self.config = yaml.safe_load(f)
             except ImportError:
@@ -46,19 +56,22 @@ class ScenarioConfig:
 
     def get(self, key: str, default: Any = None) -> Any:
         """
-        Retrieve a configuration value by key. Supports dot notation for nested keys.
+        Retrieve a configuration value using dot-notation.
+
+        Example: `config.get('spacecraft.mass', 500.0)` retrieves the 'mass' 
+        property from the 'spacecraft' object.
 
         Parameters
         ----------
         key : str
-            Configuration key (e.g., 'satellite.mass').
-        default : Any
-            Default value if key is not found.
+            Dot-separated access path (e.g., 'propulsion.tank_vol').
+        default : Any, optional
+            Fallback value if key is missing.
 
         Returns
-        -------
+-------
         Any
-            The configuration value.
+            The requested parameter value.
         """
         keys = key.split(".")
         current = self.config

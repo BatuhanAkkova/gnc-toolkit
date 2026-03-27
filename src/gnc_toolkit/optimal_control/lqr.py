@@ -7,48 +7,63 @@ from scipy.linalg import solve_continuous_are
 
 
 class LQR:
+    r"""
+    Linear Quadratic Regulator (LQR).
+
+    Minimizes:
+    $J = \int_0^\infty (\mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}) dt$
+
+    Optimal Law: $\mathbf{u} = -\mathbf{K} \mathbf{x}$
+
+    Parameters
+    ----------
+    A : np.ndarray
+        State matrix ($n \times n$).
+    B : np.ndarray
+        Input matrix ($n \times m$).
+    Q : np.ndarray
+        Weight matrix ($n \times n$, PSD).
+    R : np.ndarray
+        Weight matrix ($m \times m$, PD).
     """
-    Linear Quadratic Regulator (LQR) Controller.
 
-    Minimizes the cost function:
-    J = integral(x.T * Q * x + u.T * R * u) dt
-
-    The control law is u = -K * x
-    """
-
-    def __init__(self, A, B, Q, R):
-        """
-        Initialize the LQR controller.
-
-        Args:
-            A (np.ndarray): State matrix
-            B (np.ndarray): Input matrix
-            Q (np.ndarray): State cost matrix
-            R (np.ndarray): Input cost matrix
-        """
-        self.A = np.array(A)
-        self.B = np.array(B)
-        self.Q = np.array(Q)
-        self.R = np.array(R)
+    def __init__(self, A: np.ndarray, B: np.ndarray, Q: np.ndarray, R: np.ndarray):
+        """Initialize the LQR controller with system and cost matrices."""
+        self.A = np.asarray(A)
+        self.B = np.asarray(B)
+        self.Q = np.asarray(Q)
+        self.R = np.asarray(R)
         self.P = None
         self.K = None
 
-    def solve(self):
+    def solve(self) -> np.ndarray:
         """
         Solve the Continuous Algebraic Riccati Equation (CARE).
-        P * A + A.T * P - P * B * inv(R) * B.T * P + Q = 0
+
+        $A^T P + P A - P B R^{-1} B^T P + Q = 0$
+
+        Returns
+        -------
+        np.ndarray
+            The unique positive-definite solution matrix P.
         """
         self.P = solve_continuous_are(self.A, self.B, self.Q, self.R)
         return self.P
 
-    def compute_gain(self):
+    def compute_gain(self) -> np.ndarray:
         """
-        Compute the feedback gain matrix K.
-        K = inv(R) * B.T * P
+        Compute the optimal feedback gain matrix K.
+
+        $K = R^{-1} B^T P$
+
+        Returns
+        -------
+        np.ndarray
+            Feedback gain matrix K (m x n).
         """
         if self.P is None:
             self.solve()
 
-        # For robustness, use R instead of inv(R) since R is square
+        # Numerically stable solve for R*K = B^T*P
         self.K = np.linalg.solve(self.R, self.B.T @ self.P)
         return self.K

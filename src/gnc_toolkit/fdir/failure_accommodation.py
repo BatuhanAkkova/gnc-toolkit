@@ -3,106 +3,95 @@ Actuator accommodation and control allocation weight adjustment.
 """
 
 import numpy as np
+from typing import Optional
 
 
 class ActuatorAccommodation:
-    """
-    Accommodates actuator failures by updating control allocation weights.
+    r"""
+    Actuator Fault Accommodation and Weighted Control Allocation.
 
-    Standard control allocation problem:
-        tau = B * u
-    where:
-        tau: Desired control effort (e.g., torque)
-        u: Actuator commands
-        B: Control allocation / geometry matrix (k x m)
+    Redistributes control efforts across healthy actuators in response to 
+    partial or total failures.
+    Allocation Logic: $\mathbf{u} = \mathbf{W}^{-1} \mathbf{B}^T (\mathbf{B} \mathbf{W}^{-1} \mathbf{B}^T)^{-1} \tau$.
 
-    We want to find u such that tau = B * u while minimizing some cost,
-    often u^T * W * u, where W is a weight matrix.
-
-    Minimum norm solution with weights:
-        u = W^{-1} * B^T * (B * W^{-1} * B^T)^{-1} * tau
-
-    We can also use a "health" vector h (m x 1) where h_i in [0, 1].
-    If h_i = 0, actuator i is failed and we set its weight to infinity
-    (or remove it from the allocation).
+    Parameters
+    ----------
+    B : np.ndarray
+        Control allocation (geometry) matrix of shape $(k, m)$.
+    initial_weights : np.ndarray, optional
+        Weight matrix $\mathbf{W}$ (relative cost of using each actuator). 
+        Can be $(m, m)$ or diagonal $(m,)$. Defaults to identity.
     """
 
     def __init__(self, B: np.ndarray, initial_weights: np.ndarray | None = None):
-        """
-        Initialize the actuator accommodation list.
-
-        Args:
-            B: Control allocation matrix (k x m)
-            initial_weights: Weight matrix W (m x m) or diagonal elements (m x 1).
-                             Defaults to Identity (equal weighting).
-        """
-        self.B = B
-        self.k, self.m = B.shape
+        """Initialize allocation matrix and baseline weights."""
+        self.B = np.asarray(B)
+        self.k, self.m = self.B.shape
 
         if initial_weights is None:
             self.W_diag = np.ones(self.m)
         else:
-            if initial_weights.ndim == 2:
-                self.W_diag = np.diag(initial_weights)
-            else:
-                self.W_diag = initial_weights
+            w_arr = np.asarray(initial_weights)
+            self.W_diag = np.diag(w_arr) if w_arr.ndim == 2 else w_arr
 
-        self.health = np.ones(self.m)  # 1 = Healthy, 0 = Failed
+        self.health = np.ones(self.m)  # 1.0 = Healthy, 0.0 = Dead
 
-    def set_health(self, index: int, status: float):
+    def set_health(self, index: int, status: float) -> None:
         """
-        Set the health status of an actuator.
+        Update the health status of a specific actuator.
 
-        Args:
-            index: Actuator index (0 to m-1)
-            status: Health status (1.0 = healthy, 0.0 = completely failed)
+        Parameters
+        ----------
+        index : int
+            Actuator index.
+        status : float
+            Health factor in range [0, 1].
         """
-        if index < 0 or index >= self.m:
-            raise IndexError(f"Actuator index {index} out of bounds")
-        self.health[index] = status
+        if not (0 <= index < self.m):
+            raise IndexError("Actuator index out of range")
+        self.health[index] = np.clip(status, 0.0, 1.0)
 
-    def update_allocation_matrix(self, W_diag: np.ndarray | None = None) -> np.ndarray:
-        """
-        Compute the pseudo-inverse allocation matrix based on current weights and health.
+    def update_allocation_matrix(self) -> np.ndarray:
+        r"""
+        Compute the optimal weighted pseudo-inverse based on health.
 
         Returns
         -------
-            B_pinv: Pseudo-inverse matrix (m x k)
+        np.ndarray
+            $m\times k$ allocation matrix.
         """
-        weights = self.W_diag.copy() if W_diag is None else W_diag.copy()
-
-        # Apply health status
-        effective_weights = weights.copy()
+        # effective_cost = weight / health
+        eff_weights = self.W_diag.copy()
         for i in range(self.m):
             if self.health[i] <= 1e-6:
-                effective_weights[i] = 1e12  # High cost to use this actuator
+                eff_weights[i] = 1e12  # Infinite cost
             else:
-                effective_weights[i] = weights[i] / self.health[i]
+                eff_weights[i] /= self.health[i]
 
-        W_inv_diag = 1.0 / effective_weights
-        W_inv = np.diag(W_inv_diag)
+        w_inv_diag = 1.0 / eff_weights
+        w_inv = np.diag(w_inv_diag)
 
-        # Calculate B_pinv = W_inv * B^T * (B * W_inv * B^T)^{-1}
+        # B_pinv = W_inv * B^T * (B * W_inv * B^T)^-1
         try:
-            temp = self.B @ W_inv @ self.B.T
-            B_pinv = W_inv @ self.B.T @ np.linalg.inv(temp)
+            gram_mat = self.B @ w_inv @ self.B.T
+            return w_inv @ self.B.T @ np.linalg.inv(gram_mat)
         except np.linalg.LinAlgError:
-            # Fallback to standard pinv if singular
-            B_pinv = np.linalg.pinv(self.B)
-
-        return B_pinv
+            return np.linalg.pinv(self.B)
 
     def allocate(self, tau: np.ndarray) -> np.ndarray:
         """
-        Allocate control effort to actuators.
+        Map desired torque/effort to actuator commands.
 
-        Args:
-            tau: Desired control effort (k x 1)
+        Parameters
+        ----------
+        tau : np.ndarray
+            Desired control effort $(k,)$.
 
         Returns
         -------
-            u: Actuator commands (m x 1)
+        np.ndarray
+            Actuator command vector $(m,)$.
         """
-        tau = tau.reshape(-1, 1)
-        B_pinv = self.update_allocation_matrix()
-        return B_pinv @ tau
+        tau_vec = np.asarray(tau).flatten()
+        b_pinv = self.update_allocation_matrix()
+        return b_pinv @ tau_vec

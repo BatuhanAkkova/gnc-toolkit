@@ -15,7 +15,7 @@
 | Feature | Status | Notes |
 |---|---|---|
 | Type hints | 🔄 | Partial; expand to all public APIs |
-| Docstrings (NumPy style) | 🔄 | Partial; enforce style guide |
+| Docstrings (NumPy style) | ✅ | Partial; enforce style guide |
 | Linting (ruff / flake8) | ✅ | |
 | Pre-commit hooks | ✅ | |
 | Benchmarks / performance profiling | ✅ | `timeit`-based suite |

@@ -5,98 +5,185 @@ Time system conversions (UTC, TAI, GPS, TT, TDB) and Julian date utilities.
 import numpy as np
 
 
-def calc_jd(year, month, day, hour=0, minute=0, sec=0, leap_sec=False) -> tuple[float, float]:
-    """Calculates Julian Date from date and universal time."""
+def calc_jd(
+    year: int,
+    month: int,
+    day: int,
+    hour: int = 0,
+    minute: int = 0,
+    sec: float = 0.0
+) -> tuple[float, float]:
+    """
+    Calculate the Julian Date (JD) from a Gregorian date and time.
+
+    Standard epoch is Noon, January 1, 4713 BC.
+
+    Parameters
+    ----------
+    year : int
+        Year (e.g. 2024).
+    month : int
+        Month (1-12).
+    day : int
+        Day of month (1-31).
+    hour : int, optional
+        Hour (0-23). Default 0.
+    minute : int, optional
+        Minute (0-59). Default 0.
+    sec : float, optional
+        Seconds (0-60). Default 0.0.
+
+    Returns
+    -------
+    tuple[float, float]
+        (JD integer part, JD fractional part).
+    """
     if month <= 2:
-        year -= 1
-        month += 12
+        y_adj = int(year) - 1
+        m_adj = int(month) + 12
+    else:
+        y_adj = int(year)
+        m_adj = int(month)
 
-    a = int(year / 100)
-    b = 2 - a + int(a / 4)
-    jd = int(365.25 * (year + 4716)) + int(30.6001 * (month + 1)) + day + b - 1524.5
-    jdfrac = (hour * 3600 + minute * 60 + sec) / 86400
-    if jdfrac >= 1:
-        jd += int(jdfrac)
-        jdfrac %= 1
-    return jd, jdfrac
-
-
-def jd_to_datetime(jd, jdfrac) -> tuple[int, int, int, int, int, float]:
-    """Calculates date and time from Julian Date."""
-    jd = jd + jdfrac
-
-    jd_i = int(jd + 0.5)
-    df = jd + 0.5 - jd_i
-    if df < 0:
-        df += 1.0
-
-    l = jd_i + 68569
-    n = 4 * l // 146097
-    l = l - (146097 * n + 3) // 4
-    i = 4000 * (l + 1) // 1461001
-    l = l - 1461 * i // 4 + 31
-    j = 80 * l // 2447
-    day = l - 2447 * j // 80
-    l = j // 11
-    month = j + 2 - 12 * l
-    year = 100 * (n - 49) + i + l
-
-    df *= 86400
-    hour = int(df / 3600)
-    df -= hour * 3600
-    minute = int(df / 60)
-    df -= minute * 60
-    second = df
-
-    return year, month, day, hour, minute, second
+    # 1. Compute integer part (Meeus algorithm)
+    a_val = int(y_adj / 100)
+    b_val = 2 - a_val + int(a_val / 4)
+    jd_int = int(365.25 * (y_adj + 4716)) + int(30.6001 * (m_adj + 1)) + day + b_val - 1524.5
+    
+    # 2. Compute fractional day part
+    jd_frac = (hour * 3600.0 + minute * 60.0 + sec) / 86400.0
+    
+    # Normalize
+    rollover = np.floor(jd_frac)
+    jd_int += rollover
+    jd_frac -= rollover
+    
+    return float(jd_int), float(jd_frac)
 
 
-def day_to_mdtime(year, days) -> tuple[int, int, int, int, float]:
-    """Calculates month, day, hour, minute, second from day and year."""
-    len_month = [0] * 13
-    for i in range(1, 13):
-        if i == 2:
-            len_month[i] = 28
-        elif i == 4 or i == 6 or i == 9 or i == 11:
-            len_month[i] = 30
-        else:
-            len_month[i] = 31
+def jd_to_datetime(jd: float, jd_frac: float) -> tuple[int, int, int, int, int, float]:
+    """
+    Convert Julian Date to Gregorian date and time.
 
-    doy = np.floor(days)  # Day of year
+    Parameters
+    ----------
+    jd : float
+        Integer part of Julian Date.
+    jd_frac : float
+        Fractional part of Julian Date.
 
-    if np.remainder(year - 1900, 4) == 0:  # Feb in every 4 years
-        len_month[2] = 29
+    Returns
+    -------
+    tuple[int, int, int, int, int, float]
+        (Year, Month, Day, Hour, Minute, Second).
+    """
+    jd_total = float(jd) + float(jd_frac)
+    z_val = int(jd_total + 0.5)
+    f_val = jd_total + 0.5 - z_val
+    
+    if z_val < 2299161:
+        a_val = z_val
+    else:
+        alpha = int((z_val - 1867216.25) / 36524.25)
+        a_val = z_val + 1 + alpha - int(alpha / 4)
 
-    i = 1
-    i_temp = 0
-    while (doy > i_temp + len_month[i]) and i < 12:
-        i_temp += len_month[i]
-        i += 1
-    month = i
-    day = doy - i_temp
+    b_val = a_val + 1524
+    c_val = int((b_val - 122.1) / 365.25)
+    d_val = int(365.25 * c_val)
+    e_val = int((b_val - d_val) / 30.6001)
 
-    hour = np.fix((days - doy) * 24.0)
-    minute = np.fix(((days - doy) * 24.0 - hour) * 60.0)
-    second = (((days - doy) * 24.0 - hour) * 60.0 - minute) * 60.0
+    day = b_val - d_val - int(30.6001 * e_val) + f_val
+    month = e_val - 1 if e_val < 14 else e_val - 13
+    year = c_val - 4716 if month > 2 else c_val - 4715
 
-    return month, day, hour, minute, second
+    # Extract time from fractional day
+    day_int = int(day)
+    time_frac = (day - day_int) * 86400.0
+    
+    hour = int(time_frac / 3600.0)
+    minute = int((time_frac - hour * 3600.0) / 60.0)
+    second = time_frac - hour * 3600.0 - minute * 60.0
+
+    return int(year), int(month), day_int, hour, minute, second
 
 
-def calc_gmst(jd, dut1=0):
-    """Calculates Greenwich Mean Sidereal Time from Julian Date and DUT1."""
+def day_to_mdtime(year: int, doy_frac: float) -> tuple[int, int, int, int, float]:
+    """
+    Convert day-of-year (DOY) to month, day, and time.
+
+    Parameters
+    ----------
+    year : int
+        Year.
+    doy_frac : float
+        Day of the year, including fraction (1.0 = Jan 1 00:00).
+
+    Returns
+    -------
+    tuple[int, int, int, int, float]
+        (Month, Day, Hour, Minute, Second).
+    """
+    is_leap = (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0))
+    mon_days = [31, 29 if is_leap else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    
+    doy = int(doy_frac)
+    time_frac = (float(doy_frac) - doy) * 24.0
+    
+    month = 0
+    while doy > mon_days[month] and month < 11:
+        doy -= mon_days[month]
+        month += 1
+    
+    hour = int(time_frac)
+    minute = int((time_frac - hour) * 60.0)
+    second = ((time_frac - hour) * 60.0 - minute) * 60.0
+    
+    return month + 1, doy, hour, minute, second
+
+
+def calc_gmst(jd: float, dut1: float = 0.0) -> float:
+    """
+    Calculates Greenwich Mean Sidereal Time from Julian Date and DUT1.
+
+    Parameters
+    ----------
+    jd : float
+        Julian Date (UT1).
+    dut1 : float, optional
+        UT1-UTC difference (s). Default is 0.0.
+
+    Returns
+    -------
+    float
+        Greenwich Mean Sidereal Time in radians.
+    """
     jd_ut1 = jd + dut1 / 86400.0
     ut1 = (jd_ut1 - 2451545.0) / 36525.0
     gmst = (
         67310.54841 + (876600 * 3600.0 + 8640184.812866) * ut1 + 0.093104 * ut1**2 - 6.2e-6 * ut1**3
     ) % 86400.0
     gmst /= 240.0
-    if gmst < 0:
-        gmst += 360.0
-    return np.radians(gmst)
+    return np.radians(gmst % 360.0)
 
 
-def calc_last(jd, lon, dut1=0):
-    """Calculates Local Apparent Sidereal Time from Julian Date and Longitude."""
+def calc_last(jd: float, lon: float, dut1: float = 0.0) -> float:
+    """
+    Calculates Local Apparent Sidereal Time from Julian Date and Longitude.
+
+    Parameters
+    ----------
+    jd : float
+        Julian Date (UT1).
+    lon : float
+        Longitude (rad).
+    dut1 : float, optional
+        UT1-UTC difference (s). Default is 0.0.
+
+    Returns
+    -------
+    float
+        Local Apparent Sidereal Time in radians.
+    """
     ut1 = (jd - 2451545.0) / 36525.0
     gmst = calc_gmst(jd + dut1 / 86400.0)
 
@@ -119,23 +206,67 @@ def calc_last(jd, lon, dut1=0):
     return last
 
 
-def calc_lst(gmst, lon, dut1=0):
-    """Calculates Local Sidereal Time from GMST and Longitude."""
+def calc_lst(gmst: float, lon: float, dut1: float = 0.0) -> float:
+    """
+    Calculates Local Sidereal Time from GMST and Longitude.
+
+    Parameters
+    ----------
+    gmst : float
+        Greenwich Mean Sidereal Time (rad).
+    lon : float
+        Longitude (rad).
+    dut1 : float, optional
+        UT1-UTC difference (s). Default is 0.0.
+
+    Returns
+    -------
+    float
+        Local Sidereal Time in radians.
+    """
     return gmst + lon + dut1 / 86400.0
 
 
-def calc_doy(year, month, day):
-    """Calculates the day of the year."""
+def calc_doy(year: int, month: int, day: int) -> int:
+    """
+    Calculates the day of the year.
+
+    Parameters
+    ----------
+    year : int
+        Year.
+    month : int
+        Month (1-12).
+    day : int
+        Day of the month (1-31).
+
+    Returns
+    -------
+    int
+        Day of the year (1-366).
+    """
     months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     if is_leap_year(year):
         months[1] = 29
     idx = month - 1
     doy = np.sum(months[:idx]) + day
-    return doy
+    return int(doy)
 
 
-def is_leap_year(year):
-    """Checks if a year is a leap year."""
+def is_leap_year(year: int) -> bool:
+    """
+    Checks if a year is a leap year.
+
+    Parameters
+    ----------
+    year : int
+        Year.
+
+    Returns
+    -------
+    bool
+        True if the year is a leap year, False otherwise.
+    """
     if np.remainder(year, 4) != 0:
         return False
     else:
@@ -149,11 +280,65 @@ def is_leap_year(year):
 
 
 def convert_time(
-    year, month, day, hour, minute, sec, timezone, output, dut1, dat
+    year: int,
+    month: int,
+    day: int,
+    hour: int,
+    minute: int,
+    sec: float,
+    timezone: float,
+    output: str,
+    dut1: float,
+    dat: float,
 ) -> tuple[
-    float, float, float, float, float, float, float, float, float, float, float, float, float, float
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
+    float,
 ]:
-    """Converts UTC to any time system."""
+    """
+    Converts UTC to any time system.
+
+    Parameters
+    ----------
+    year : int
+        Year.
+    month : int
+        Month.
+    day : int
+        Day.
+    hour : int
+        Hour.
+    minute : int
+        Minute.
+    sec : float
+        Seconds.
+    timezone : float
+        Timezone offset (hours).
+    output : str
+        Target time system (placeholder).
+    dut1 : float
+        UT1 - UTC (s).
+    dat : float
+        TAI - UTC (s).
+
+    Returns
+    -------
+    tuple
+        A tuple containing converted time values for various systems:
+        (ut1, tut1, jdut1, jdut1frac, utc, tai, gps, tt, ttt, jdtt, jdttfrac, tdb, ttdb, jdtdb, jdtdbfrac)
+    """
     local_hour = timezone + hour
     utc = hour * 3600 + minute * 60 + sec
 

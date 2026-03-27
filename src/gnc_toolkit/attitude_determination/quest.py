@@ -7,91 +7,113 @@ import numpy as np
 from gnc_toolkit.utils.quat_utils import quat_normalize
 
 
-def quest(body_vectors, ref_vectors, weights=None, tol=1e-12, max_iter=20):
-    """
-    Compute the optimal attitude quaternion (Inertial -> Body) using the QUEST algorithm.
+from typing import Optional, Union
 
-    This implementation uses the iterative approach to find the maximum eigenvalue
-    of the K-matrix, which is more efficient than full eigenvalue decomposition.
+def quest(
+    body_vectors: np.ndarray,
+    ref_vectors: np.ndarray,
+    weights: Optional[np.ndarray] = None,
+    tol: float = 1e-12,
+    max_iter: int = 20,
+) -> np.ndarray:
+    r"""
+    Solve for the optimal attitude quaternion using QUEST.
 
-    Args:
-        body_vectors (list or np.ndarray): List of N vectors measured in body frame. Shape (N, 3).
-        ref_vectors (list or np.ndarray): List of N vectors known in reference (inertial) frame. Shape (N, 3).
-        weights (list or np.ndarray, optional): List of N scalar weights. If None, weights are equal.
-        tol (float, optional): Convergence tolerance for the iterative eigenvalue search.
-        max_iter (int, optional): Maximum number of iterations for eigenvalue search.
+    QUEST (QUaternion ESTimator) minimizes Wahba's Loss:
+    $J(\mathbf{R}) = \frac{1}{2} \sum_{i=1}^N w_i \|\mathbf{b}_i - \mathbf{R} \mathbf{r}_i\|^2$
+
+    It achieves this by finding the maximum eigenvalue of the K-matrix:
+    $\mathbf{K} \mathbf{q}_{opt} = \lambda_{max} \mathbf{q}_{opt}$
+
+    Parameters
+    ----------
+    body_vectors : np.ndarray
+        Body-frame measurements (N, 3).
+    ref_vectors : np.ndarray
+        Inertial-frame references (N, 3).
+    weights : np.ndarray | None, optional
+        Weights for observations (N,).
+    tol : float, optional
+        Newton convergence tolerance. Default 1e-12.
+    max_iter : int, optional
+        Max iterations. Default 20.
 
     Returns
     -------
-        np.ndarray: Normalized quaternion [x, y, z, w] representing rotation R_BI.
+    np.ndarray
+        Hamilton quaternion $[x, y, z, w]$ (Inertial $\to$ Body).
+
+    Raises
+    ------
+    ValueError
+        On dimension mismatch.
     """
     b_vecs = np.asarray(body_vectors)
     r_vecs = np.asarray(ref_vectors)
 
-    n = b_vecs.shape[0]
-    if r_vecs.shape[0] != n:
-        raise ValueError("Number of body vectors must match number of reference vectors.")
+    n_vecs = b_vecs.shape[0]
+    if r_vecs.shape[0] != n_vecs:
+        raise ValueError("Body and reference vector count mismatch.")
 
-    if weights is None:
-        weights = np.ones(n) / n
-    else:
-        weights = np.asarray(weights)
+    w = np.asarray(weights) if weights is not None else np.ones(n_vecs) / n_vecs
+    if len(w) != n_vecs:
+        raise ValueError("Weight vector dimension mismatch.")
 
-    # Normalize input vectors
-    b_vecs_norm = b_vecs / np.linalg.norm(b_vecs, axis=1)[:, np.newaxis]
-    r_vecs_norm = r_vecs / np.linalg.norm(r_vecs, axis=1)[:, np.newaxis]
+    # Normalize vectors and compute B matrix
+    b_norm = b_vecs / np.linalg.norm(b_vecs, axis=1)[:, np.newaxis]
+    r_norm = r_vecs / np.linalg.norm(r_vecs, axis=1)[:, np.newaxis]
 
-    # Compute B matrix
-    B = np.zeros((3, 3))
-    for i in range(n):
-        B += weights[i] * np.outer(b_vecs_norm[i], r_vecs_norm[i])
+    b_matrix = np.zeros((3, 3))
+    for i in range(n_vecs):
+        b_matrix += w[i] * np.outer(b_norm[i], r_norm[i])
 
-    S = B + B.T
-    sigma = np.trace(B)
-    Z = np.array([B[2, 1] - B[1, 2], B[0, 2] - B[2, 0], B[1, 0] - B[0, 1]])
+    # K-matrix components
+    s_matrix = b_matrix + b_matrix.T
+    sigma = float(np.trace(b_matrix))
+    z_vec = np.array([
+        b_matrix[2, 1] - b_matrix[1, 2],
+        b_matrix[0, 2] - b_matrix[2, 0],
+        b_matrix[1, 0] - b_matrix[0, 1]
+    ])
 
-    # Solve for lambda_max using Newton-Raphson
-    # Characteristic polynomial: f(L) = det(K - L*I) = 0
-    # Let S' = S - sigma*I
-    # f(L) = L^4 - (a+b)L^2 - cL + (ab-d)
-
-    B_sq_norm = np.trace(B @ B.T)
-    adj_B = np.array(
+    # Characteristic polynomial coefficients for lambda search
+    b_frob_sq = float(np.trace(b_matrix @ b_matrix.T))
+    adj_b = np.array([
         [
-            [
-                B[1, 1] * B[2, 2] - B[1, 2] * B[2, 1],
-                B[0, 2] * B[2, 1] - B[0, 1] * B[2, 2],
-                B[0, 1] * B[1, 2] - B[0, 2] * B[1, 1],
-            ],
-            [
-                B[1, 2] * B[2, 0] - B[1, 0] * B[2, 2],
-                B[0, 0] * B[2, 2] - B[0, 2] * B[2, 0],
-                B[0, 2] * B[1, 0] - B[0, 0] * B[1, 2],
-            ],
-            [
-                B[1, 0] * B[2, 1] - B[1, 1] * B[2, 0],
-                B[0, 1] * B[2, 0] - B[0, 0] * B[2, 1],
-                B[0, 0] * B[1, 1] - B[0, 1] * B[1, 0],
-            ],
+            b_matrix[1, 1]*b_matrix[2, 2] - b_matrix[1, 2]*b_matrix[2, 1],
+            b_matrix[0, 2]*b_matrix[2, 1] - b_matrix[0, 1]*b_matrix[2, 2],
+            b_matrix[0, 1]*b_matrix[1, 2] - b_matrix[0, 2]*b_matrix[1, 1]
+        ],
+        [
+            b_matrix[1, 2]*b_matrix[2, 0] - b_matrix[1, 0]*b_matrix[2, 2],
+            b_matrix[0, 0]*b_matrix[2, 2] - b_matrix[0, 2]*b_matrix[2, 0],
+            b_matrix[0, 2]*b_matrix[1, 0] - b_matrix[0, 0]*b_matrix[1, 2]
+        ],
+        [
+            b_matrix[1, 0]*b_matrix[2, 1] - b_matrix[1, 1]*b_matrix[2, 0],
+            b_matrix[0, 1]*b_matrix[2, 0] - b_matrix[0, 0]*b_matrix[2, 1],
+            b_matrix[0, 0]*b_matrix[1, 1] - b_matrix[0, 1]*b_matrix[1, 0]
         ]
-    )
-    adj_B_sq_norm = np.trace(adj_B @ adj_B.T)
-    det_B = np.linalg.det(B)
+    ]).T  # Adjugate is the transpose of the cofactor matrix
+    
+    adj_b_frob_sq = float(np.trace(adj_b @ adj_b.T))
+    det_b = float(np.linalg.det(b_matrix))
 
-    L = np.sum(weights)  # Initial guess is total weight
+    # Solve for lambda_max using Newton-Raphson starting at sum of weights
+    lam = float(np.sum(w))
     for _ in range(max_iter):
-        f = (L**2 - B_sq_norm) ** 2 - 8 * L * det_B - 4 * adj_B_sq_norm
-        df = 4 * L * (L**2 - B_sq_norm) - 8 * det_B
-        dL = f / df
-        L -= dL
-        if abs(dL) < tol:
+        # f(lam) and f'(lam) from Davenport characteristic equation
+        f_val = (lam**2 - b_frob_sq)**2 - 8*lam*det_b - 4*adj_b_frob_sq
+        fp_val = 4*lam*(lam**2 - b_frob_sq) - 8*det_b
+        
+        delta = f_val / fp_val
+        lam -= delta
+        if abs(delta) < tol:
             break
 
-    # Compute optimal quaternion via Gibbs vector p
-    # q = [p, 1] / sqrt(1 + |p|^2)
-    # [(L + sigma)*I - S] * p = Z
-    M = (L + sigma) * np.eye(3) - S
-    p = np.linalg.solve(M, Z)
+    # Compute optimal quaternion via Gibbs vector p = ( (l+s)I - S )^-1 z
+    m_inv_lhs = (lam + sigma) * np.eye(3) - s_matrix
+    p_vec = np.linalg.solve(m_inv_lhs, z_vec)
 
-    q_opt = np.array([p[0], p[1], p[2], 1.0])
+    q_opt = np.array([p_vec[0], p_vec[1], p_vec[2], 1.0])
     return quat_normalize(q_opt)

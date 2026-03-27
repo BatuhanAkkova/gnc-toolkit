@@ -11,37 +11,50 @@ from .base import Propagator
 class Sgp4Propagator(Propagator):
     """
     SGP4/SDP4 Analytical Propagator.
+
     Wraps the `sgp4` library to propagate orbits using Two-Line Elements (TLEs).
     State output is typically in the TEME frame.
+
+    Parameters
+    ----------
+    line1 : str
+        First line of the TLE.
+    line2 : str
+        Second line of the TLE.
     """
 
     def __init__(self, line1: str, line2: str):
-        """
-        Initialize the SGP4 Propagator with a TLE.
-
-        Args:
-            line1 (str): First line of the TLE.
-            line2 (str): Second line of the TLE.
-        """
         self.sat = Satrec.twoline2rv(line1, line2)
         # TLE Epoch Julian Date
         self.jdsatepoch = self.sat.jdsatepoch
         self.jdsatepochF = self.sat.jdsatepochF
 
-    def propagate(self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs):
+    def propagate(
+        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagates the satellite state from TLE epoch forward by dt.
+
         Note: initial position/velocity input (r_i, v_i) is IGNORED,
         as SGP4 is fully determined by the initialized TLE.
 
-        Args:
-            r_i (np.ndarray): Ignored.
-            v_i (np.ndarray): Ignored.
-            dt (float): Propagation time relative to TLE epoch [s].
+        Parameters
+        ----------
+        r_i : np.ndarray
+            Ignored initial position.
+        v_i : np.ndarray
+            Ignored initial velocity.
+        dt : float
+            Propagation time relative to TLE epoch (s).
+        **kwargs : dict
+            Additional arguments.
 
         Returns
         -------
-            tuple: (r_f, v_f) Position and Velocity in TEME frame [m, m/s].
+        tuple[np.ndarray, np.ndarray]
+            (r_f, v_f).
+            r_f : Position in TEME frame (m).
+            v_f : Velocity in TEME frame (m/s).
         """
         # SGP4 takes time in minutes from epoch
         minutes_from_epoch = dt / 60.0
@@ -62,10 +75,26 @@ class Sgp4Propagator(Propagator):
 
         return r_f, v_f
 
-    def propagate_to_jd(self, jd_f: float, jd_f_frac: float = 0.0):
+    def propagate_to_jd(self, jd_f: float, jd_f_frac: float = 0.0) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagate to a specific Julian Date.
-        Returns state in TEME [m, m/s].
+
+        Parameters
+        ----------
+        jd_f : float
+            Final Julian Date (integer part).
+        jd_f_frac : float, optional
+            Final Julian Date (fractional part). Default is 0.0.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            (r_f, v_f) in TEME frame (m, m/s).
+
+        Raises
+        ------
+        RuntimeError
+            If SGP4 propagation fails.
         """
         err, r_km, v_kms = self.sat.sgp4(jd_f, jd_f_frac)
         if err != 0:

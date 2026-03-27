@@ -158,6 +158,9 @@ class TestLQR(unittest.TestCase):
          with self.assertRaises(ValueError):
               mpc = LinearMPC(A, B, Q, R, horizon=5, x_min=[1,2,3])
               mpc.solve([1,1])
+         with self.assertRaises(ValueError):
+              mpc = LinearMPC(A, B, Q, R, horizon=5, x_max=[1,2,3])
+              mpc.solve([1,1])
 
     def test_mpc_x_min(self):
          A = np.eye(2)
@@ -206,6 +209,31 @@ class TestLQR(unittest.TestCase):
          nmpc = NonlinearMPC(f, L, V, horizon=5, nx=2, nu=2, x_min=[10.0, 10.0], x_max=[-10.0, -10.0])
          u_nl = nmpc.solve([0.0, 0.0])
          self.assertEqual(u_nl.shape, (5, 2))
+
+    def test_mpc_coverage(self):
+        A = np.zeros((1, 1))
+        B = np.ones((1, 1))
+    
+        with self.assertRaises(ValueError):
+            LinearMPC(A, B, np.eye(1), np.eye(1), horizon=5, u_min=np.array([0, 0]))
+        with self.assertRaises(ValueError):
+            LinearMPC(A, B, np.eye(1), np.eye(1), horizon=5, u_max=np.array([0, 0]))
+
+        mpc = LinearMPC(A, B, np.eye(1), np.eye(1), horizon=5)
+        mpc.solve(np.array([1.0]))
+    
+        def d(x, u): return x + u
+        def c(x, u): return float(np.sum(x**2 + u**2))
+        def tc(x): return float(np.sum(x**2))
+    
+        with self.assertRaises(ValueError):
+            NonlinearMPC(d, c, tc, 5, 1, 2, u_min=np.array([0]))
+        with self.assertRaises(ValueError):
+            NonlinearMPC(d, c, tc, 5, 1, 2, u_max=np.array([0, 0, 0]))
+        with self.assertRaises(ValueError):
+            NonlinearMPC(d, c, tc, 5, 2, 1, x_min=np.array([0]))
+        with self.assertRaises(ValueError):
+            NonlinearMPC(d, c, tc, 5, 2, 1, x_max=np.array([0, 0, 0]))
 
     def test_feedback_linearization(self):
         f_func = lambda x: x**2

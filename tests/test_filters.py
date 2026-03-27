@@ -478,3 +478,40 @@ def test_fixed_interval_smoother():
     
     for k in range(num_steps):
         assert np.trace(ps_smooth[k]) <= np.trace(ps_filt[k]) * 1.01
+
+def test_ukf_attitude_branches():
+    ukf = UKF_Attitude()
+    q1 = np.array([0, 0, 0, 1.0])
+    q2 = np.array([0, 0, 0, -1.0])
+    x1 = np.concatenate([q1, np.zeros(3)])
+    x2 = np.concatenate([q2, np.zeros(3)])
+    dx = ukf.subtract_x(x1, x2)
+    assert np.allclose(dx, 0.0)
+    sigmas = np.array([
+        [0, 0, 0, 1.0, 0, 0, 0],
+        [0, 0, 0, -1.0, 0, 0, 0]
+    ])
+    weights = np.array([0.5, 0.5])
+    x_mean = ukf.mean_x(sigmas, weights)
+    assert np.allclose(x_mean[:4], np.array([0, 0, 0, 1.0]))
+
+def test_imm_mu_setter():
+    from gnc_toolkit.kalman_filters.ekf import EKF
+    kf1 = EKF(3, 3)
+    kf2 = EKF(3, 3)
+    imm = IMM([kf1, kf2], np.eye(2))
+    imm.mu = np.array([0.7, 0.3])
+    assert np.allclose(imm.mu_probs, [0.7, 0.3])
+
+def test_imm_predict_dt_branch():
+    class MockFilter:
+        def __init__(self):
+            self.dim_x = 3
+            self.x = np.zeros(3)
+            self.P = np.eye(3)
+        def predict(self, dt, **kwargs):
+            self.predict_called_with_dt = dt
+    mf = MockFilter()
+    imm = IMM([mf], np.array([[1.0]]))
+    imm.predict(dt=10.0)
+    assert mf.predict_called_with_dt == 10.0

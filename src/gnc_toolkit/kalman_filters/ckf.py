@@ -6,115 +6,161 @@ import numpy as np
 from scipy.linalg import cholesky
 
 
+from typing import Callable, Any, Optional
+
 class CKF:
     """
-    Cubature Kalman Filter (CKF).
-    Based on the spherical-radial cubature rule.
-    Alternative to UKF with fixed weights and potentially better stability for high dimensions.
+    Cubature Kalman Filter (CKF) using the spherical-radial rule.
+
+    Offers superior numerical stability and accuracy for high-dimensional 
+    non-linear systems compared to the UKF. Uses exactly $2n$ cubature points 
+    with equal weights.
+
+    Parameters
+    ----------
+    dim_x : int
+        Dimension of the state vector $x$.
+    dim_z : int
+        Dimension of the measurement vector $z$.
     """
 
-    def __init__(self, dim_x, dim_z):
-        """
-        Initialize the CKF.
-        dim_x: Dimension of the state vector
-        dim_z: Dimension of the measurement vector
-        """
+    def __init__(self, dim_x: int, dim_z: int):
+        """Initialize CKF weights and unit cubature points."""
         self.dim_x = dim_x
         self.dim_z = dim_z
 
-        # CKF uses 2n cubature points
-        self.m = 2 * dim_x
-        self.weights = 1.0 / self.m
+        # 1. Spherical-Radial weights: w_i = 1 / (2*n)
+        self.num_points = 2 * dim_x
+        self.weight = 1.0 / self.num_points
 
-        # Cubature points set (unit vectors along each dimension)
-        self.xi = np.zeros((dim_x, self.m))
+        # 2. Unit cubature points: xi_i = [sqrt(n) * e_i, -sqrt(n) * e_i]
+        self.xi = np.zeros((dim_x, self.num_points))
+        scale = np.sqrt(dim_x)
         for i in range(dim_x):
-            self.xi[i, i] = np.sqrt(dim_x)
-            self.xi[i, i + dim_x] = -np.sqrt(dim_x)
+            self.xi[i, i] = scale
+            self.xi[i, i + dim_x] = -scale
 
         self.x = np.zeros(dim_x)
         self.P = np.eye(dim_x)
         self.Q = np.eye(dim_x)
         self.R = np.eye(dim_z)
 
-    def predict(self, dt, fx, Q=None, **kwargs):
-        """
-        Predict step.
-        dt: Time step
-        fx: State transition function f(x, dt, **kwargs) -> x_new
-        Q: Optional process noise covariance
-        """
-        if Q is None:
-            Q = self.Q
+    def predict(
+        self,
+        dt: float,
+        fx_func: Callable,
+        q_mat: Optional[np.ndarray] = None,
+        **kwargs: Any,
+    ) -> None:
+        r"""
+        Cubature predict step.
 
-        # Generate cubature points from predicted distribution
+        Parameters
+        ----------
+        dt : float
+            Propagation time step (s).
+        fx_func : Callable
+            Non-linear transition function $f(x, dt, \dots) \to x_{new}$.
+        q_mat : np.ndarray, optional
+            Process noise covariance. Defaults to `self.Q`.
+        **kwargs : Any
+            Additional parameters for $f$.
+        """
+        q = np.asarray(q_mat) if q_mat is not None else self.Q
+
+        # 1. Generate points using Cholesky of P
         points = self._generate_cubature_points(self.x, self.P)
 
-        # Propagate cubature points
-        points_f = np.zeros((self.m, self.dim_x))
-        for i in range(self.m):
-            points_f[i] = fx(points[:, i], dt, **kwargs)
+        # 2. Propagate points through non-linear transition
+        points_f = np.zeros((self.num_points, self.dim_x))
+        for i in range(self.num_points):
+            points_f[i] = fx_func(points[:, i], dt, **kwargs)
 
-        # Predicted mean
-        self.x = self.weights * np.sum(points_f, axis=0)
+        # 3. Predicted mean
+        self.x = self.weight * np.sum(points_f, axis=0)
 
-        # Predicted covariance
+        # 4. Predicted covariance
         self.P = np.zeros((self.dim_x, self.dim_x))
-        for i in range(self.m):
+        for i in range(self.num_points):
             dx = points_f[i] - self.x
-            self.P += self.weights * np.outer(dx, dx)
-        self.P += Q
+            self.P += self.weight * np.outer(dx, dx)
+        self.P += q
 
-    def update(self, z, hx, R=None, **kwargs):
-        """
-        Update step.
-        z: Measurement vector
-        hx: Measurement function h(x, **kwargs) -> z_pred
-        R: Optional measurement noise covariance
-        """
-        if R is None:
-            R = self.R
+    def update(
+        self,
+        z: np.ndarray,
+        hx_func: Callable,
+        r_mat: Optional[np.ndarray] = None,
+        **kwargs: Any,
+    ) -> None:
+        r"""
+        Cubature update step.
 
-        # Regenerate cubature points from predicted distribution
+        Parameters
+        ----------
+        z : np.ndarray
+            Measurement vector.
+        hx_func : Callable
+            Non-linear measurement model $h(x, \dots) \to z_{pred}$.
+        r_mat : np.ndarray, optional
+            Measurement noise covariance. Defaults to `self.R`.
+        **kwargs : Any
+            Additional parameters for $h$.
+        """
+        r = np.asarray(r_mat) if r_mat is not None else self.R
+        zv = np.asarray(z)
+
+        # 1. Regenerate cubature points
         points_f = self._generate_cubature_points(self.x, self.P)
 
-        # Transform to measurement space
-        points_h = np.zeros((self.m, self.dim_z))
-        for i in range(self.m):
-            points_h[i] = hx(points_f[:, i], **kwargs)
+        # 2. Transform to measurement space
+        points_h = np.zeros((self.num_points, self.dim_z))
+        for i in range(self.num_points):
+            points_h[i] = hx_func(points_f[:, i], **kwargs)
 
-        # Mean measurement
-        zp = self.weights * np.sum(points_h, axis=0)
+        # 3. Measurement mean
+        zp = self.weight * np.sum(points_h, axis=0)
 
-        # Innovation covariance S and Cross-covariance Pxz
-        S = np.zeros((self.dim_z, self.dim_z))
-        Pxz = np.zeros((self.dim_x, self.dim_z))
+        # 4. Cross-covariance and Innovation covariance
+        s_mat = np.zeros((self.dim_z, self.dim_z))
+        pxz = np.zeros((self.dim_x, self.dim_z))
 
-        for i in range(self.m):
+        for i in range(self.num_points):
             dx = points_f[:, i] - self.x
             dz = points_h[i] - zp
-            S += self.weights * np.outer(dz, dz)
-            Pxz += self.weights * np.outer(dx, dz)
+            s_mat += self.weight * np.outer(dz, dz)
+            pxz += self.weight * np.outer(dx, dz)
 
-        S += R
+        s_mat += r
 
-        # Kalman gain
-        K = np.dot(Pxz, np.linalg.inv(S))
+        # 5. Kalman Gain and state/covariance correction
+        k_gain = pxz @ np.linalg.inv(s_mat)
+        self.x += k_gain @ (zv - zp)
+        self.P -= k_gain @ s_mat @ k_gain.T
 
-        # Correct mean and covariance
-        self.x += np.dot(K, z - zp)
-        self.P -= np.dot(K, np.dot(S, K.T))
+    def _generate_cubature_points(self, x: np.ndarray, p_cov: np.ndarray) -> np.ndarray:
+        """
+        Generate $2n$ points using the Cholesky factor of the covariance matrix.
 
-    def _generate_cubature_points(self, x, P):
-        """Generate 2n cubature points using Cholesky factor of P."""
-        # Ensure symmetry
-        P_sym = (P + P.T) / 2 + np.eye(self.dim_x) * 1e-12
+        Parameters
+        ----------
+        x : np.ndarray
+            Current mean vector.
+        p_cov : np.ndarray
+            Current error covariance matrix.
+
+        Returns
+        -------
+        np.ndarray
+            Points array (dim_x, num_points).
+        """
+        # Ensure symmetry and PDness for Cholesky
+        p_sym = (p_cov + p_cov.T) / 2 + np.eye(self.dim_x) * 1e-12
         try:
-            S = cholesky(P_sym, lower=True)
-            return x[:, np.newaxis] + np.dot(S, self.xi)
+            chol_l = cholesky(p_sym, lower=True)
+            return x[:, np.newaxis] + (chol_l @ self.xi)
         except np.linalg.LinAlgError:
-            # Fallback if P is not PSD
+            # Fallback to sqrtm if Cholesky fails due to semi-definiteness
             from scipy.linalg import sqrtm
-
-            S = sqrtm(P_sym).real
-            return x[:, np.newaxis] + np.dot(S, self.xi)
+            sqrt_p = sqrtm(p_sym).real
+            return x[:, np.newaxis] + (sqrt_p @ self.xi)

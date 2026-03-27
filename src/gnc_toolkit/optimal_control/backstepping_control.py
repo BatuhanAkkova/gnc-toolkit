@@ -3,86 +3,104 @@ Backstepping Controller for generic 2nd order nonlinear systems.
 """
 
 import numpy as np
+from typing import Optional, Any, Callable, Union
 
 
 class BacksteppingController:
+    r"""
+    Backstepping Controller for cascaded 2nd-order nonlinear systems.
+
+    Designed for systems of the form:
+    $\dot{x}_1 = x_2$
+    $\dot{x}_2 = f(x_1, x_2) + g(x_1, x_2) u$
+
+    This implementation uses a standard recursive design to achieve global
+    asymptotic stability of a desired trajectory.
+
+    Parameters
+    ----------
+    f_func : Callable[[np.ndarray, np.ndarray], np.ndarray]
+        Nonlinear drift function $f(x_1, x_2)$.
+    g_func : Callable[[np.ndarray, np.ndarray], np.ndarray]
+        Nonlinear input matrix $g(x_1, x_2)$.
+    k1 : Union[float, np.ndarray]
+        Feedback gain for the first error state (position).
+    k2 : Union[float, np.ndarray]
+        Feedback gain for the second error state (velocity).
     """
-    Backstepping Controller for generic 2nd order nonlinear systems.
 
-    System model:
-    x1_dot = x2
-    x2_dot = f(x) + g(x) * u
-
-    where x = [x1, x2].
-    Commonly used for mechanical systems with rigid body dynamics.
-    """
-
-    def __init__(self, f_func, g_func, k1, k2):
-        """
-        Initialize the Backstepping Controller.
-
-        Args:
-            f_func (callable): Function returns f(x1, x2). scalar/array [n].
-            g_func (callable): Function returns g(x1, x2). matrix/scalar [n x m].
-            k1 (np.ndarray or float): Gain matrix for tracking error e1.
-            k2 (np.ndarray or float): Gain matrix for virtual error e2.
-        """
+    def __init__(
+        self,
+        f_func: Callable[[np.ndarray, np.ndarray], np.ndarray],
+        g_func: Callable[[np.ndarray, np.ndarray], np.ndarray],
+        k1: Union[float, np.ndarray],
+        k2: Union[float, np.ndarray],
+    ):
+        """Initialize the backstepping controller parameters."""
         self.f = f_func
         self.g = g_func
         self.k1 = k1
         self.k2 = k2
 
-    def compute_control(self, x1, x2, x1_d, x1_dot_d, x1_ddot_d=None):
+    def compute_control(
+        self,
+        x1: np.ndarray,
+        x2: np.ndarray,
+        x1_d: np.ndarray,
+        x1_dot_d: np.ndarray,
+        x1_ddot_d: Optional[np.ndarray] = None,
+    ) -> np.ndarray:
         """
-        Compute control input u.
+        Compute the backstepping control input for the current state.
 
-        Args:
-            x1 (np.ndarray): State 1 (e.g., position) [n].
-            x2 (np.ndarray): State 2 (e.g., velocity) [n].
-            x1_d (np.ndarray): Desired State 1 [n].
-            x1_dot_d (np.ndarray): Desired Velocity [n].
-            x1_ddot_d (np.ndarray, optional): Desired Acceleration [n].
+        Parameters
+        ----------
+        x1 : np.ndarray
+            Measured position/primary state vector (n,).
+        x2 : np.ndarray
+            Measured velocity/secondary state vector (n,).
+        x1_d : np.ndarray
+            Desired position/trajectory (n,).
+        x1_dot_d : np.ndarray
+            Desired velocity (n,).
+        x1_ddot_d : np.ndarray, optional
+            Desired acceleration (n,). Defaults to zero.
 
         Returns
-        -------
-            np.ndarray: Control effort u [m].
+-------
+        np.ndarray
+            Control input vector $u$ (m,).
         """
-        x1 = np.array(x1)
-        x2 = np.array(x2)
-        x1_d = np.array(x1_d)
-        x1_dot_d = np.array(x1_dot_d)
-        if x1_ddot_d is None:
-            x1_ddot_d = np.zeros_like(x1_d)
-        else:
-            x1_ddot_d = np.array(x1_ddot_d)
+        x1 = np.asarray(x1)
+        x2 = np.asarray(x2)
+        x1_des = np.asarray(x1_d)
+        v_des = np.asarray(x1_dot_d)
+        a_des = np.asarray(x1_ddot_d) if x1_ddot_d is not None else np.zeros_like(x1_des)
 
-        # 1. Step 1: Virtual Control Error e1
-        # e1 = x1 - x1_d
-        e1 = x1 - x1_d
+        # 1. Position error (e1)
+        e1 = x1 - x1_des
 
-        # 2. Virtual Control Law alpha
+        # 2. Virtual control law (alpha)
+        # alpha acts as the 'desired' x2 to stabilize e1
         # alpha = -k1 * e1 + x1_dot_d
-        alpha = -self.k1 @ e1 if isinstance(self.k1, np.ndarray) else -self.k1 * e1
-        alpha += x1_dot_d
+        alpha = - (self.k1 @ e1 if isinstance(self.k1, np.ndarray) else self.k1 * e1)
+        alpha += v_des
 
-        # 3. Virtual Error e2
-        # e2 = x2 - alpha
+        # 3. Virtual velocity error (e2)
         e2 = x2 - alpha
 
-        # 4. Compute alpha_dot
-        # d/dt(alpha) = -k1 * d/dt(e1) + d/dt(x1_dot_d)
-        # d/dt(e1) = x2 - x1_dot_d
-        e1_dot = x2 - x1_dot_d
-        alpha_dot = -self.k1 @ e1_dot if isinstance(self.k1, np.ndarray) else -self.k1 * e1_dot
-        alpha_dot += x1_ddot_d
+        # 4. Time derivative of alpha
+        # d/dt(alpha) = -k1 * (x2 - x1_dot_d) + x1_ddot_d
+        e1_dot = x2 - v_des
+        alpha_dot = - (self.k1 @ e1_dot if isinstance(self.k1, np.ndarray) else self.k1 * e1_dot)
+        alpha_dot += a_des
 
-        # 5. Get System Dynamics
+        # 5. System dynamics evaluation
         f_val = self.f(x1, x2)
         g_val = self.g(x1, x2)
 
-        # 6. Control Law Step 2
-        # u = g_inv * (-e1 - f + alpha_dot - k2 * e2)
-        # Assuming g is invertible (square or full rank)
+        # 6. Final Control Law (Step 2)
+        # u = g^-1 * (-e1 - f + alpha_dot - k2 * e2)
         inner_term = (
             -e1
             - f_val
@@ -91,9 +109,7 @@ class BacksteppingController:
         )
 
         if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1, 1):
-            u = inner_term / g_val
-        else:
-            # pinv for robustness to non-square systems or singularity
-            u = np.linalg.pinv(g_val) @ inner_term
-
-        return u
+            return inner_term / g_val
+        
+        # Use pseudoinverse for robust inversion
+        return np.linalg.pinv(g_val) @ inner_term

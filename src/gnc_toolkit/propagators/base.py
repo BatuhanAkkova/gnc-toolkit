@@ -13,18 +13,28 @@ class Propagator(ABC):
     """
 
     @abstractmethod
-    def propagate(self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs):
+    def propagate(
+        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagates the state vector (position and velocity) forward in time.
 
-        Args:
-            r_i (np.ndarray): Initial position vector [km] or [m] (consistent units required).
-            v_i (np.ndarray): Initial velocity vector [km/s] or [m/s].
-            dt (float): Time step to propagate [s].
-            **kwargs: Additional arguments specific to the propagator.
+        Parameters
+        ----------
+        r_i : np.ndarray
+            Initial position vector (m).
+        v_i : np.ndarray
+            Initial velocity vector (m/s).
+        dt : float
+            Time duration for propagation (s).
+        **kwargs : dict
+            Additional arguments specific to the propagator implementation.
 
         Returns
         -------
-            tuple: (r_f, v_f) Final position and velocity vectors.
+        tuple[np.ndarray, np.ndarray]
+            (r_f, v_f).
+            r_f : Final position vector (m).
+            v_f : Final velocity vector (m/s).
         """
         pass

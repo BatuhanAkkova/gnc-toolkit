@@ -8,22 +8,46 @@ from .base import Propagator
 
 
 class KeplerPropagator(Propagator):
-    """
-    Analytical Two-Body Propagator using Kepler's Equation.
+    r"""
+    Analytical Two-Body Propagator.
+
+    Solves Kepler's Problem using Universal Variables:
+    $M = E - e \sin E$
+
+    Parameters
+    ----------
+    mu : float, optional
+        Gravitational parameter ($m^3/s^2$).
     """
 
-    def __init__(self, mu=398600.4418e9):
-        """
-        Initialize the Kepler Propagator.
-
-        Args:
-            mu (float): Gravitational parameter [m^3/s^2]. Default is Earth.
-        """
+    def __init__(self, mu: float = 398600.4418e9):
         self.mu = mu
 
-    def propagate(self, r_i: np.ndarray, v_i: np.ndarray, dt: float, n_iter=100, **kwargs):
+    def propagate(
+        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, n_iter: int = 100, **kwargs
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Solves the two-body problem using the Kepler equation (Vallado implementation).
+
+        Parameters
+        ----------
+        r_i : np.ndarray
+            Initial position vector (m).
+        v_i : np.ndarray
+            Initial velocity vector (m/s).
+        dt : float
+            Propagation duration (s).
+        n_iter : int, optional
+            Maximum number of iterations for Newton-Raphson. Default is 100.
+        **kwargs : dict
+            Additional arguments.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            (r_f, v_f).
+            r_f : Final position vector (m).
+            v_f : Final velocity vector (m/s).
         """
         mu = self.mu
         r_i_mag = np.linalg.norm(r_i)
@@ -34,7 +58,7 @@ class KeplerPropagator(Propagator):
 
         # Check for near-parabolic or undefined orbits
         if np.abs(energy) < 1e-9:
-            alpha = 0
+            alpha = 0.0
 
         # Universal variable initialization
         if alpha > 1e-9:  # Circular or Elliptical
@@ -53,10 +77,10 @@ class KeplerPropagator(Propagator):
             p = h_mag**2 / mu
 
             s = 0.5 * (np.pi / 2 - np.arctan(3 * np.sqrt(mu / (p**3)) * dt))
-            w = np.arctan(np.tan(s) ** (1 / 3))
+            w = np.arctan(np.power(np.tan(s), 1 / 3))
 
             x_i = np.sqrt(p) * (2 / np.tan(2 * w))
-            alpha = 0
+            alpha = 0.0
 
         else:  # Hyperbolic
             # Avoid division by zero and domain errors
@@ -66,10 +90,7 @@ class KeplerPropagator(Propagator):
                     * mu
                     * alpha
                     * dt
-                    / (
-                        np.dot(r_i, v_i)
-                        + np.sign(dt) * np.sqrt(-mu / alpha) * (1 - r_i_mag * alpha)
-                    )
+                    / (np.dot(r_i, v_i) + np.sign(dt) * np.sqrt(-mu / alpha) * (1 - r_i_mag * alpha))
                 )
                 x_i = np.sign(dt) * np.sqrt(-1 / alpha) * np.log(temp)
             except:
@@ -119,8 +140,20 @@ class KeplerPropagator(Propagator):
 
         return r_new, v_new
 
-    def _c23_eq(self, yaw):
-        """Calculates c2 and c3 functions."""
+    def _c23_eq(self, yaw: float) -> tuple[float, float]:
+        """
+        Calculates Stumpff functions c2 and c3.
+
+        Parameters
+        ----------
+        yaw : float
+            Universal variable argument (alpha * x^2).
+
+        Returns
+        -------
+        tuple[float, float]
+            (c2, c3).
+        """
         if yaw > 1e-8:
             sqrt_yaw = np.sqrt(yaw)
             c2 = (1 - np.cos(sqrt_yaw)) / yaw
@@ -132,4 +165,4 @@ class KeplerPropagator(Propagator):
         else:
             c2 = 0.5
             c3 = 1 / 6.0
-        return c2, c3
+        return float(c2), float(c3)

@@ -4,47 +4,61 @@ Solar position models based on Julian Date.
 
 import numpy as np
 
-
 class Sun:
-    def __init__(self):
+    r"""
+    Solar Position Model (Astronomical Almanac).
+
+    Provides the Sun's position vector in the Earth-Centered Inertial (ECI) 
+    frame (J2000).
+
+    Calculation:
+    $\lambda_{ecl} = q + 1.915 \sin(g) + 0.020 \sin(2g)$
+    where $q$ is mean longitude and $g$ is mean anomaly.
+
+    Parameters
+    ----------
+    None
+    """
+
+    def __init__(self) -> None:
+        """Initialize solar model."""
         pass
 
-    def calculate_sun_eci(self, jd):
+    def calculate_sun_eci(self, jd: float) -> np.ndarray:
         """
-        Calculates Sun vector in ECI frame.
+        Calculate Sun vector in ECI J2000.
 
-        Args:
-            jd (float): Julian Date
+        Parameters
+        ----------
+        jd : float
+            Julian Date (UT1).
 
         Returns
         -------
-            np.array: Sun vector in ECI frame (km).
+        np.ndarray
+            Sun position $[x, y, z]$ (m).
         """
-        n = jd - 2451545.0  # Number of days since J2000
+        # 1. Days since J2000 epoch
+        n = float(jd) - 2451545.0
 
-        # Mean anomaly of the Sun
-        g = 357.529 + 0.98560028 * n
-        g_rad = np.radians(g)
+        # 2. Mean anomaly of the Sun (rad)
+        g = np.radians(357.529 + 0.98560028 * n)
 
-        # Mean longitude
-        q = 280.459 + 0.98564736 * n
-        q_rad = np.radians(q)
+        # 3. Mean longitude of the Sun (rad)
+        q = np.radians(280.459 + 0.98564736 * n)
 
-        # Ecliptic longitude
-        L = q + 1.915 * np.sin(g_rad) + 0.020 * np.sin(2 * g_rad)
-        L_rad = np.radians(L)
+        # 4. Ecliptic longitude (rad)
+        lon_ecl = q + np.radians(1.915) * np.sin(g) + np.radians(0.020) * np.sin(2 * g)
 
-        # Obliquity of the ecliptic
-        e = 23.439 - 0.00000036 * n
-        e_rad = np.radians(e)
+        # 5. Obliquity of the ecliptic (rad)
+        eps = np.radians(23.439 - 0.00000036 * n)
 
-        # Distance is approx 1 AU
-        au = 149597870700.0  # meters (approx)
+        # 6. Physical constant: 1 Astronomical Unit (AU) in meters
+        au_m = 149597870700.0
 
-        x = np.cos(L_rad)
-        y = np.cos(e_rad) * np.sin(L_rad)
-        z = np.sin(e_rad) * np.sin(L_rad)
+        # 7. Convert from Ecliptic to ECI (Equatorial)
+        x = np.cos(lon_ecl)
+        y = np.cos(eps) * np.sin(lon_ecl)
+        z = np.sin(eps) * np.sin(lon_ecl)
 
-        r_sun = np.array([x, y, z]) * au
-
-        return r_sun
+        return np.array([x, y, z]) * au_m

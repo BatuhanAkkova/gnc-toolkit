@@ -3,64 +3,69 @@ Sliding Mode Controller (SMC) implementation.
 """
 
 import numpy as np
+from typing import Callable, Any, Optional
 
+
+from typing import Callable, Union, Optional
 
 class SlidingModeController:
-    """
+    r"""
     Sliding Mode Controller (SMC).
 
-    Implements a control law of the form:
-    u = u_eq(x, t) - K * sign(s(x, t))
+    Control Law:
+    $u = u_{eq} - K \cdot \text{sat}(s/\Phi)$
+
+    Parameters
+    ----------
+    surface_func : Callable
+        Sliding surface $s(\mathbf{x}, t)$.
+    k_gain : float
+        Switching gain $K$.
+    equivalent_control_func : Callable | None, optional
+        $\mathbf{u}_{eq}$ component.
+    chattering_reduction : bool, optional
+        Use saturation instead of sign. Default True.
+    boundary_layer : float, optional
+        Saturation boundary $\Phi$.
     """
 
     def __init__(
         self,
-        surface_func,
-        k_gain,
-        equivalent_control_func=None,
-        chattering_reduction=True,
-        boundary_layer=0.1,
+        surface_func: Callable[[np.ndarray, float], float],
+        k_gain: float,
+        equivalent_control_func: Optional[Callable[[np.ndarray, float], float]] = None,
+        chattering_reduction: bool = True,
+        boundary_layer: float = 0.1,
     ):
-        """
-        Initialize the Sliding Mode Controller.
-
-        Args:
-            surface_func (callable): Function s(x, t) returning the scalar sliding surface value.
-            k_gain (float): Switching gain K.
-            equivalent_control_func (callable, optional): Function u_eq(x, t) returning the equivalent control.
-                                                          Defaults to returning 0.
-            chattering_reduction (bool): If True, use a saturation function instead of sign().
-            boundary_layer (float): The thickness 'phi' of the boundary layer for saturation.
-        """
+        """Initialize the Sliding Mode Controller."""
         self.surface_func = surface_func
         self.k_gain = k_gain
         self.eq_func = equivalent_control_func if equivalent_control_func else lambda x, t: 0.0
         self.use_sat = chattering_reduction
         self.phi = boundary_layer
 
-    def compute_control(self, x, t=0):
+    def compute_control(self, x: np.ndarray, t: float = 0.0) -> Union[float, np.ndarray]:
         """
-        Compute the control input.
+        Compute the sliding mode control input.
 
-        Args:
-            x (np.ndarray): State vector.
-            t (float): Time.
+        Parameters
+        ----------
+        x : np.ndarray
+            Current state vector.
+        t : float, optional
+            Current time (s). Default is 0.0.
 
         Returns
-        -------
-            float or np.ndarray: Control input u.
+-------
+        float or np.ndarray
+            The computed control input signal.
         """
-        s = self.surface_func(x, t)
+        s_val = self.surface_func(x, t)
 
         if self.use_sat:
-            # Saturation function: sat(s/phi)
-            val = s / self.phi
-            # Clip handles scalars and arrays
-            switching_term = np.clip(val, -1.0, 1.0)
+            # Saturation function: sat(s/phi) used for chattering reduction
+            switching_term = np.clip(s_val / self.phi, -1.0, 1.0)
         else:
-            switching_term = np.sign(s)
+            switching_term = np.sign(s_val)
 
-        u_eq = self.eq_func(x, t)
-        u = u_eq - self.k_gain * switching_term
-
-        return u
+        return self.eq_func(x, t) - self.k_gain * switching_term

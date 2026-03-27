@@ -3,6 +3,7 @@ Encke's Method Propagator.
 """
 
 import numpy as np
+from typing import Callable
 
 from ..integrators.integrator import Integrator
 from ..integrators.rk4 import RK4
@@ -13,36 +14,62 @@ from .kepler import KeplerPropagator
 class EnckePropagator(Propagator):
     """
     Encke's Method Propagator.
+
     Integrates the deviation from a reference Keplerian orbit.
     Suitable for orbit propagation with small disturbances.
+
+    Parameters
+    ----------
+    integrator : Integrator, optional
+        Numerical integrator for deviations. Defaults to RK4.
+    mu : float, optional
+        Gravitational parameter (m^3/s^2). Default is Earth's.
+    rect_tol : float, optional
+        Rectification tolerance (|dr| / r_ref). Default 1e-6.
     """
 
-    def __init__(self, integrator: Integrator = None, mu=398600.4418e9, rect_tol=1e-6):
-        """
-        Initialize EnckePropagator.
-
-        Args:
-            integrator (Integrator): Numerical integrator for deviations. Defaults to RK4.
-            mu (float): Gravitational parameter [m^3/s^2].
-            rect_tol (float): Rectification tolerance (|dr| / r_ref). Default 1e-6.
-        """
+    def __init__(
+        self,
+        integrator: Integrator | None = None,
+        mu: float = 398600.4418e9,
+        rect_tol: float = 1e-6,
+    ):
         self.integrator = integrator if integrator else RK4()
         self.mu = mu
         self.rect_tol = rect_tol
         self.kepler = KeplerPropagator(mu=mu)
 
     def propagate(
-        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, perturbation_acc_fn=None, **kwargs
-    ):
+        self,
+        r_i: np.ndarray,
+        v_i: np.ndarray,
+        dt: float,
+        perturbation_acc_fn: Callable | None = None,
+        **kwargs,
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagate state using Encke's method.
 
-        Args:
-            r_i (np.ndarray): Initial position vector [m].
-            v_i (np.ndarray): Initial velocity vector [m/s].
-            dt (float): Propagation duration [s].
-            perturbation_acc_fn (callable, optional): Function that returns perturbation accelerations.
-                                                      Signature: acc_pert = f(t, r, v)
+        Parameters
+        ----------
+        r_i : np.ndarray
+            Initial position vector (m).
+        v_i : np.ndarray
+            Initial velocity vector (m/s).
+        dt : float
+            Propagation duration (s).
+        perturbation_acc_fn : callable, optional
+            Function that returns perturbation accelerations.
+            Signature: acc_pert = f(t, r, v) -> np.ndarray.
+        **kwargs : dict
+            Additional arguments, e.g., 'dt_step' for integration step size.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            (r_f, v_f).
+            r_f : Final position vector (m).
+            v_f : Final velocity vector (m/s).
         """
         step_size = kwargs.get("dt_step", 10.0)
         if step_size > dt:

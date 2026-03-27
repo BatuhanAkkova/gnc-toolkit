@@ -3,23 +3,39 @@ Square-Root Unscented Kalman Filter (SR-UKF) algorithm.
 """
 
 import numpy as np
+from typing import Callable, Any, Optional
 from scipy.linalg import cholesky, qr, solve_triangular
 
 
 class SRUKF:
     """
     Square-Root Unscented Kalman Filter (SR-UKF).
+
     Provides better numerical stability and efficiency than standard UKF
-    by propagating the Cholesky factor (S) of the covariance matrix P = S*S.T.
+    by propagating the Cholesky factor (S) of the covariance matrix, where $P = S S^T$.
+
+    Parameters
+    ----------
+    dim_x : int
+        Dimension of the state vector.
+    dim_z : int
+        Dimension of the measurement vector.
+    alpha : float, optional
+        Primary scaling parameter. Default is 1e-3.
+    beta : float, optional
+        Secondary scaling parameter (optimal for Gaussians = 2). Default is 2.0.
+    kappa : float, optional
+        Tertiary scaling parameter. Default is 0.0.
     """
 
-    def __init__(self, dim_x, dim_z, alpha=1e-3, beta=2.0, kappa=0.0):
-        """
-        Initialize the SR-UKF.
-        dim_x: Dimension of the state vector
-        dim_z: Dimension of the measurement vector
-        alpha, beta, kappa: UKF tuning parameters
-        """
+    def __init__(
+        self,
+        dim_x: int,
+        dim_z: int,
+        alpha: float = 1e-3,
+        beta: float = 2.0,
+        kappa: float = 0.0,
+    ):
         self.dim_x = dim_x
         self.dim_z = dim_z
 
@@ -49,15 +65,24 @@ class SRUKF:
         self.Qs = np.eye(dim_x)
         self.Rs = np.eye(dim_z)
 
-    def predict(self, dt, fx, Qs=None, **kwargs):
-        """
+    def predict(
+        self, dt: float, fx_func: Callable, qs_mat: np.ndarray | None = None, **kwargs: Any
+    ) -> None:
+        r"""
         Predict step.
-        dt: Time step
-        fx: State transition function f(x, dt, **kwargs) -> x_new
-        Qs: Optional square-root process noise covariance (S_Q)
+
+        Parameters
+        ----------
+        dt : float
+            Time step (s).
+        fx_func : Callable
+            State transition function $f(x, dt, **kwargs) \to x_{new}$.
+        qs_mat : np.ndarray, optional
+            Square-root process noise covariance (S_Q). If None, uses `self.Qs`.
+        **kwargs : Any
+            Additional arguments passed to transition function.
         """
-        if Qs is None:
-            Qs = self.Qs
+        qs_curr = qs_mat if qs_mat is not None else self.Qs
 
         # Generate sigma points using S
         sigmas = self._generate_sigma_points()
@@ -65,32 +90,41 @@ class SRUKF:
         # Propagate sigma points
         sigmas_f = np.zeros((self.num_sigmas, self.dim_x))
         for i in range(self.num_sigmas):
-            sigmas_f[i] = fx(sigmas[i], dt, **kwargs)
+            sigmas_f[i] = fx_func(sigmas[i], dt, **kwargs)
 
         # Predicted mean
-        self.x = np.dot(self.Wm, sigmas_f)
+        self.x = self.Wm @ sigmas_f
 
         # Update square-root covariance S
-        # Compute S- using QR decomposition of the propagated sigma points and process noise
-        X = np.sqrt(self.Wc[1]) * (sigmas_f[1:] - self.x)
+        # Compute S- using QR decomposition
+        x_pts = np.sqrt(self.Wc[1]) * (sigmas_f[1:] - self.x)
 
         # QR decomposition
-        _, St = qr(np.vstack((X, Qs)), mode="economic")
-        self.S = St[: self.dim_x, : self.dim_x].T
+        _, s_transpose = qr(np.vstack((x_pts, qs_curr)), mode="economic")
+        self.S = s_transpose[: self.dim_x, : self.dim_x].T
 
         # Cholesky rank-1 update for the first weight
-        dx = sigmas_f[0] - self.x
-        self.S = self._cholesky_update(self.S, dx, self.Wc[0])
+        dx_vec = sigmas_f[0] - self.x
+        self.S = self._cholesky_update(self.S, dx_vec, self.Wc[0])
 
-    def update(self, z, hx, Rs=None, **kwargs):
-        """
+    def update(
+        self, z: np.ndarray, hx_func: Callable, rs_mat: np.ndarray | None = None, **kwargs: Any
+    ) -> None:
+        r"""
         Update step.
-        z: Measurement vector
-        hx: Measurement function h(x, **kwargs) -> z_pred
-        Rs: Optional square-root measurement noise covariance (S_R)
+
+        Parameters
+        ----------
+        z : np.ndarray
+            Measurement vector (dim_z,).
+        hx_func : Callable
+            Measurement function $h(x, **kwargs) \to z_{pred}$.
+        rs_mat : np.ndarray, optional
+            Square-root measurement noise covariance (S_R). If None, uses `self.Rs`.
+        **kwargs : Any
+            Additional arguments passed to measurement function.
         """
-        if Rs is None:
-            Rs = self.Rs
+        rs_curr = rs_mat if rs_mat is not None else self.Rs
 
         # Regenerate sigma points
         sigmas_f = self._generate_sigma_points()
@@ -98,38 +132,41 @@ class SRUKF:
         # Transform to measurement space
         sigmas_h = np.zeros((self.num_sigmas, self.dim_z))
         for i in range(self.num_sigmas):
-            sigmas_h[i] = hx(sigmas_f[i], **kwargs)
+            sigmas_h[i] = hx_func(sigmas_f[i], **kwargs)
 
         # Mean measurement
-        zp = np.dot(self.Wm, sigmas_h)
+        zp = self.Wm @ sigmas_h
 
         # Square-root innovation covariance Sy
-        H = np.sqrt(self.Wc[1]) * (sigmas_h[1:] - zp)
-        _, St = qr(np.vstack((H, Rs)), mode="economic")
-        Sy = St[: self.dim_z, : self.dim_z].T
+        h_pts = np.sqrt(self.Wc[1]) * (sigmas_h[1:] - zp)
+        _, s_transpose_y = qr(np.vstack((h_pts, rs_curr)), mode="economic")
+        sy_mat = s_transpose_y[: self.dim_z, : self.dim_z].T
 
         # Rank-1 update for first weight
         dz_0 = sigmas_h[0] - zp
-        Sy = self._cholesky_update(Sy, dz_0, self.Wc[0])
+        sy_mat = self._cholesky_update(sy_mat, dz_0, self.Wc[0])
 
         # Cross-covariance Pxz
-        Pxz = np.zeros((self.dim_x, self.dim_z))
+        pxz = np.zeros((self.dim_x, self.dim_z))
         for i in range(self.num_sigmas):
-            dx = sigmas_f[i] - self.x
-            dz = sigmas_h[i] - zp
-            Pxz += self.Wc[i] * np.outer(dx, dz)
+            dx_vec = sigmas_f[i] - self.x
+            dz_vec = sigmas_h[i] - zp
+            pxz += self.Wc[i] * np.outer(dx_vec, dz_vec)
 
         # Kalman gain
-        K = solve_triangular(Sy, solve_triangular(Sy, Pxz.T, lower=True), lower=True, trans="T").T
+        k_gain = solve_triangular(
+            sy_mat, solve_triangular(sy_mat, pxz.T, lower=True), lower=True, trans="T"
+        ).T
 
         # Correct mean and square-root covariance
-        self.x += np.dot(K, z - zp)
+        self.x += k_gain @ (z - zp)
 
-        U = np.dot(K, Sy)
+        u_mat = k_gain @ sy_mat
         for i in range(self.dim_z):
-            self.S = self._cholesky_update(self.S, U[:, i], -1.0)
+            self.S = self._cholesky_update(self.S, u_mat[:, i], -1.0)
 
-    def _generate_sigma_points(self):
+    def _generate_sigma_points(self) -> np.ndarray:
+        """Generate 2n+1 sigma points using the current Cholesky factor."""
         sigmas = np.zeros((self.num_sigmas, self.dim_x))
         sigmas[0] = self.x
         for i in range(self.dim_x):
@@ -137,26 +174,36 @@ class SRUKF:
             sigmas[i + 1 + self.dim_x] = self.x - self.gamma * self.S[:, i]
         return sigmas
 
-    def _cholesky_update(self, S, v, weight):
+    def _cholesky_update(self, s_mat: np.ndarray, vec: np.ndarray, weight: float) -> np.ndarray:
         """
         Performs rank-1 Cholesky update or downdate.
-        S: Current Cholesky factor (lower triangular)
-        v: Vector to update with
-        weight: Scalar weight (positive for update, negative for downdate)
+
+        Parameters
+        ----------
+        s_mat : np.ndarray
+            Current Cholesky factor (lower triangular).
+        vec : np.ndarray
+            Vector to update with.
+        weight : float
+            Scalar weight (positive for update, negative for downdate).
+
+        Returns
+        -------
+        np.ndarray
+            Updated lower-triangular Cholesky factor.
         """
         if weight > 0:
-            v_scaled = np.sqrt(weight) * v
-            # Use QR to get updated S
-            _, St = qr(np.vstack((S.T, v_scaled)), mode="economic")
-            return St[: S.shape[0], : S.shape[1]].T
+            v_scaled = np.sqrt(weight) * vec
+            _, s_transpose = qr(np.vstack((s_mat.T, v_scaled)), mode="economic")
+            return s_transpose[: s_mat.shape[0], : s_mat.shape[1]].T
         else:
-            P = np.dot(S, S.T) + weight * np.outer(v, v)
+            p_cov = s_mat @ s_mat.T + weight * np.outer(vec, vec)
             try:
-                return cholesky(P, lower=True)
+                return cholesky(p_cov, lower=True)
             except np.linalg.LinAlgError:
-                return cholesky(P + np.eye(S.shape[0]) * 1e-12, lower=True)
+                return cholesky(p_cov + np.eye(s_mat.shape[0]) * 1e-12, lower=True)
 
     @property
-    def P(self):
-        """Returns the full covariance matrix P = S*S.T"""
-        return np.dot(self.S, self.S.T)
+    def P(self) -> np.ndarray:
+        """Full error covariance matrix P = S S^T."""
+        return self.S @ self.S.T

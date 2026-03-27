@@ -3,113 +3,163 @@ Interacting Multiple Model (IMM) Filter for switching-mode systems.
 """
 
 import numpy as np
+import inspect
+from typing import Any
 
 
 class IMM:
     """
     Interacting Multiple Model (IMM) Filter.
-    Estimates the state of a system that can switch between multiple modes (models).
-    Excellent for tracking maneuvering targets (e.g., constant velocity vs. constant acceleration).
+
+    Estimates the state of a system that can switch between multiple discrete
+    modes (models). Ideal for tracking maneuvering targets where dynamics
+    switch between models like constant velocity and constant acceleration.
+
+    Parameters
+    ----------
+    filters : list
+        List of filter objects (e.g., KF, EKF, UKF).
+    transition_matrix : np.ndarray
+        Model transition probability matrix (N x N), where $T_{ij} = P(M_j | M_i)$.
     """
 
-    def __init__(self, filters, transition_matrix):
-        """
-        Initialize the IMM filter.
-        filters: List of filter objects (e.g., KF, EKF, UKF)
-        transition_matrix: Probability of switching between models [N x N]
-        """
+    def __init__(self, filters: list[Any], transition_matrix: np.ndarray):
         self.filters = filters
-        self.N = len(filters)
-        self.Phi = transition_matrix  # Transition probability matrix (Tij = P(Mj|Mi))
+        self.num_models = len(filters)
+        self.transition_matrix = transition_matrix
 
         # Probabilities of each model
-        self.mu = np.ones(self.N) / self.N
+        self.mu_probs = np.ones(self.num_models) / self.num_models
 
         self.dim_x = filters[0].dim_x
         self.x = np.zeros(self.dim_x)
         self.P = np.eye(self.dim_x)
 
-    def predict(self, dt, **kwargs):
+    @property
+    def mu(self) -> np.ndarray:
+        """Alias for mu_probs (backward compatibility)."""
+        return self.mu_probs
+
+    @mu.setter
+    def mu(self, value: np.ndarray) -> None:
+        self.mu_probs = value
+
+    def predict(self, dt: float, **kwargs: Any) -> None:
         """
         Predict step (Mixing and model-specific prediction).
+
+        Parameters
+        ----------
+        dt : float
+            Time step (s).
+        **kwargs : Any
+            Additional arguments passed to the sub-filters' predict methods.
         """
         # Interaction (Mixing)
-        # Calculate mixing probabilities cj = sum(Tij * mui)
-        c = np.dot(self.mu, self.Phi)
+        # Calculate normalization constants cj = sum(Tij * mui)
+        c_norm = self.mu_probs @ self.transition_matrix
 
         # Calculate mixing weights mu_ij = (Tij * mu_i) / cj
-        mu_mixed = np.zeros((self.N, self.N))
-        for i in range(self.N):
-            for j in range(self.N):
-                mu_mixed[i, j] = (self.Phi[i, j] * self.mu[i]) / c[j]
+        mu_mixed = np.zeros((self.num_models, self.num_models))
+        for i in range(self.num_models):
+            for j in range(self.num_models):
+                mu_mixed[i, j] = (self.transition_matrix[i, j] * self.mu_probs[i]) / c_norm[j]
 
-        # Calculate mixed states and covariances
-        x0 = [np.zeros(self.dim_x) for _ in range(self.N)]
-        P0 = [np.zeros((self.dim_x, self.dim_x)) for _ in range(self.N)]
+        # Mixed states and covariances
+        x_mixed = [np.zeros(self.dim_x) for _ in range(self.num_models)]
+        p_mixed = [np.zeros((self.dim_x, self.dim_x)) for _ in range(self.num_models)]
 
-        # Mix states: x0_j = sum(mu_ij * x_i)
-        # Mix covariances: P0_j = sum(mu_ij * (P_i + (x_i-x0_j)(x_i-x0_j).T))
-        for j in range(self.N):
-            for i in range(self.N):
-                x0[j] += mu_mixed[i, j] * self.filters[i].x
+        # Mix states: x_mixed_j = sum(mu_ij * x_i)
+        for j in range(self.num_models):
+            for i in range(self.num_models):
+                x_mixed[j] += mu_mixed[i, j] * self.filters[i].x
 
-            for i in range(self.N):
-                dx = self.filters[i].x - x0[j]
-                P0[j] += mu_mixed[i, j] * (self.filters[i].P + np.outer(dx, dx))
+            for i in range(self.num_models):
+                dx = self.filters[i].x - x_mixed[j]
+                p_mixed[j] += mu_mixed[i, j] * (self.filters[i].P + np.outer(dx, dx))
 
         # Model-specific Prediction
-        for i in range(self.N):
-            self.filters[i].x = x0[i]
-            self.filters[i].P = P0[i]
-            # Use model-specific prediction
-            # Check if filter expects dt
-            import inspect
+        for i in range(self.num_models):
+            self.filters[i].x = x_mixed[i]
+            self.filters[i].P = p_mixed[i]
 
+            # Support both 'fx' and 'fx_func' keywords
+            fx_func = kwargs.get("fx_func", kwargs.get("fx"))
+            
             sig = inspect.signature(self.filters[i].predict)
-            if "dt" in sig.parameters:
+            if "fx_func" in sig.parameters and fx_func is not None:
+                self.filters[i].predict(dt=dt, fx_func=fx_func, **{k: v for k, v in kwargs.items() if k not in ["fx", "fx_func"]})
+            elif "dt" in sig.parameters:
                 self.filters[i].predict(dt=dt, **kwargs)
             else:
                 self.filters[i].predict(**kwargs)
 
-    def update(self, z, **kwargs):
+    def update(self, z: np.ndarray, **kwargs: Any) -> None:
         """
         Update step (Model-specific update and mode probability update).
+
+        Parameters
+        ----------
+        z : np.ndarray
+            Measurement vector (dim_z,).
+        **kwargs : Any
+            Additional arguments passed to the sub-filters' update methods.
         """
-        likelihoods = np.zeros(self.N)
-        for i in range(self.N):
-            self.filters[i].update(z, **kwargs)
+        # Support both 'hx' and 'hx_func' keywords
+        hx_func = kwargs.get("hx_func", kwargs.get("hx"))
+        
+        likelihoods = np.zeros(self.num_models)
+        for i in range(self.num_models):
+            if "hx_func" in inspect.signature(self.filters[i].update).parameters and hx_func is not None:
+                self.filters[i].update(z, hx_func=hx_func, **{k: v for k, v in kwargs.items() if k not in ["hx", "hx_func"]})
+            else:
+                self.filters[i].update(z, **kwargs)
             likelihoods[i] = self._calculate_likelihood(i, z)
 
         # Mode probability update: mu_j = L_j * c_j / sum(L_k * c_k)
-        c = np.dot(self.mu, self.Phi)
-        self.mu = likelihoods * c
-        self.mu /= np.sum(self.mu)
+        c_norm = self.mu_probs @ self.transition_matrix
+        self.mu_probs = likelihoods * c_norm
+        self.mu_probs /= np.sum(self.mu_probs)
 
         # Combined state and covariance estimate
         self.x = np.zeros(self.dim_x)
         self.P = np.zeros((self.dim_x, self.dim_x))
 
-        for i in range(self.N):
-            self.x += self.mu[i] * self.filters[i].x
+        for i in range(self.num_models):
+            self.x += self.mu_probs[i] * self.filters[i].x
 
-        for i in range(self.N):
+        for i in range(self.num_models):
             dx = self.filters[i].x - self.x
-            self.P += self.mu[i] * (self.filters[i].P + np.outer(dx, dx))
+            self.P += self.mu_probs[i] * (self.filters[i].P + np.outer(dx, dx))
 
-    def _calculate_likelihood(self, i, z):
-        """Calculate Gaussian likelihood L(z | filter_i)."""
-        f = self.filters[i]
+    def _calculate_likelihood(self, model_idx: int, z: np.ndarray) -> float:
+        """
+        Calculate Gaussian measurement likelihood for a specific model.
+
+        Parameters
+        ----------
+        model_idx : int
+            Index of the model.
+        z : np.ndarray
+            Measurement vector.
+
+        Returns
+        -------
+        float
+            Likelihood value.
+        """
+        f = self.filters[model_idx]
 
         if hasattr(f, "H") and hasattr(f, "x"):
-            H = f.H
-            y = z - np.dot(H, f.x)
-            S = np.dot(np.dot(H, f.P), H.T) + f.R
+            h_mat = f.H
+            resid = z - (h_mat @ f.x)
+            s_mat = (h_mat @ f.P @ h_mat.T) + f.R
         else:
-            # UKF/CKF fallback: requires refactoring to expose y/S
+            # Fallback for filters that don't expose H (like UKF/CKF)
             return 1.0
 
-        inv_S = np.linalg.inv(S)
-        det_S = np.linalg.det(S)
+        inv_s = np.linalg.inv(s_mat)
+        det_s = np.linalg.det(s_mat)
         dim = len(z)
-        exponent = -0.5 * np.dot(y.T, np.dot(inv_S, y))
-        return (1.0 / np.sqrt((2 * np.pi) ** dim * det_S)) * np.exp(exponent)
+        exponent = -0.5 * (resid.T @ inv_s @ resid)
+        return (1.0 / np.sqrt((2 * np.pi) ** dim * det_s)) * np.exp(exponent)

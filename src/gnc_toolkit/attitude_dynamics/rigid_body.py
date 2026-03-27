@@ -6,21 +6,30 @@ import numpy as np
 
 
 def euler_equations(J: np.ndarray, omega: np.ndarray, torque: np.ndarray) -> np.ndarray:
-    """
-    Computes the angular acceleration of a rigid body using Euler's equations of motion.
+    r"""
+    Compute rigid body angular acceleration via Euler's equations.
 
-    Args:
-        J (np.ndarray): Inertia tensor (3x3 matrix) [kg*m^2].
-        omega (np.ndarray): Angular velocity vector (3,) [rad/s].
-        torque (np.ndarray): External torque vector (3,) [N*m].
+    Equation of Motion:
+    $\mathbf{J} \dot{\omega} + \mathbf{\omega} \times (\mathbf{J} \omega) = \mathbf{\tau}$
+
+    Parameters
+    ----------
+    J : np.ndarray
+        Inertia tensor ($3 \times 3$) ($kg \cdot m^2$).
+    omega : np.ndarray
+        Angular velocity vector (3,) (rad/s).
+    torque : np.ndarray
+        Net external torque vector (3,) (Nm).
 
     Returns
     -------
-        np.ndarray: Angular acceleration vector (3,) [rad/s^2].
+    np.ndarray
+        Angular acceleration $\dot{\omega}$ (3,) (rad/s$^2$).
 
     Raises
     ------
-        ValueError: If input shapes are incorrect.
+    ValueError
+        If input dimensions are invalid.
     """
     # Input validation
     if J.shape != (3, 3):
@@ -30,19 +39,9 @@ def euler_equations(J: np.ndarray, omega: np.ndarray, torque: np.ndarray) -> np.
     if torque.shape != (3,):
         raise ValueError(f"Torque vector must be shape (3,), got {torque.shape}")
 
-    # Euler's equations: J * omega_dot + omega x (J * omega) = torque
-    # omega_dot = J_inv * (torque - omega x (J * omega))
-
-    # Calculate angular momentum
-    H = J @ omega
-
-    # Calculate gyroscopic term (omega x H)
-    gyro_term = np.cross(omega, H)
-
-    # Calculate the right hand side (torque - gyro_term)
+    # Solve for omega_dot: J * omega_dot = torque - omega x (J * omega)
+    h_vec = J @ omega
+    gyro_term = np.cross(omega, h_vec)
     rhs = torque - gyro_term
 
-    # Solve for angular acceleration (omega_dot)
-    omega_dot = np.linalg.solve(J, rhs)
-
-    return omega_dot
+    return np.linalg.solve(J, rhs)

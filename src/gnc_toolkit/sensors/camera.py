@@ -10,24 +10,31 @@ from gnc_toolkit.sensors.sensor import Sensor
 class Camera(Sensor):
     """
     Simple pinhole camera model.
+
     Projects 3D points in the body frame onto a 2D image plane.
+
+    Parameters
+    ----------
+    focal_length : float, optional
+        Focal length (m). Default is 1.0.
+    resolution : tuple[int, int], optional
+        (width, height) in pixels. Default is (1024, 1024).
+    sensor_size : tuple[float, float], optional
+        (width, height) in physical units (e.g., m). Default is (1.0, 1.0).
+    noise_std : float, optional
+        Pixel noise standard deviation. Default is 0.0.
+    name : str, optional
+        Sensor name. Default is "Camera".
     """
 
     def __init__(
         self,
-        focal_length=1.0,
-        resolution=(1024, 1024),
-        sensor_size=(1.0, 1.0),
-        noise_std=0.0,
-        name="Camera",
+        focal_length: float = 1.0,
+        resolution: tuple[int, int] = (1024, 1024),
+        sensor_size: tuple[float, float] = (1.0, 1.0),
+        noise_std: float = 0.0,
+        name: str = "Camera",
     ):
-        """
-        Args:
-            focal_length (float): Focal length [m? or pixels?].
-            resolution (tuple): (width, height) in pixels.
-            sensor_size (tuple): (width, height) in physical units (e.g., m).
-            noise_std (float): Pixel noise standard deviation.
-        """
         super().__init__(name)
         self.focal_length = focal_length
         self.resolution = resolution
@@ -42,15 +49,22 @@ class Camera(Sensor):
         self.cx = resolution[0] / 2
         self.cy = resolution[1] / 2
 
-    def measure(self, true_point_body, **kwargs):
+    def measure(self, true_point_body: np.ndarray, **kwargs) -> np.ndarray | None:
         """
-        Args:
-            true_point_body (np.ndarray): 3D point in the camera/body frame [m].
-                                        Assumes Z is along the optical axis.
+        Project 3D point onto image plane.
+
+        Parameters
+        ----------
+        true_point_body : np.ndarray
+            3D point in the camera/body frame (m).
+            Assumes Z is along the optical axis.
+        **kwargs : dict
+            Additional parameters.
 
         Returns
         -------
-            np.ndarray: (u, v) pixel coordinates, or None if outside FOV.
+        np.ndarray | None
+            (u, v) pixel coordinates, or None if outside FOV or behind camera.
         """
         x, y, z = true_point_body
 

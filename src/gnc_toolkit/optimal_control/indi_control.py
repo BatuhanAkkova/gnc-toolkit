@@ -1,96 +1,132 @@
 import numpy as np
 
 
+from typing import Callable, Optional, Union
+
 class INDIController:
-    """
+    r"""
     Incremental Nonlinear Dynamic Inversion (INDI) Controller.
 
-    Exploits fast control rates and sensor measurements to reduce model dependence.
-    System Model:
-    x_ddot = f(x, x_dot) + g(x, x_dot) * u
+    A sensor-based control method that reduces model dependency by 
+    calculating control increments based on measured accelerations.
 
-    INDI discrete approximation:
-    u = u0 + g(x0, x_dot0)^-1 * (v - x_ddot0)
+    System model: $\ddot{x} = f(x, \dot{x}) + g(x, \dot{x}) u$
+    Discrete Law: $u_k = u_{k-1} + g(x_k, \dot{x}_k)^{-1} (v_k - \ddot{x}_k)$
 
-    where:
-    - u0: Previous control input.
-    - x_ddot0: Measured/estimated acceleration at current step.
-    - v: Desired acceleration (e.g., from outer-loop PD controller).
-    - x0, x_dot0: State measurements at current step.
+    where $\ddot{x}_k$ is the current measured acceleration and $v_k$ is the 
+    desired acceleration command.
+
+    Parameters
+    ----------
+    g_func : Callable[[np.ndarray, np.ndarray], np.ndarray]
+        Nonlinear input matrix function $g(x, \dot{x})$.
     """
 
-    def __init__(self, g_func):
-        """
-        Initialize the INDI Controller.
-
-        Args:
-            g_func (callable): Function returns g(x, x_dot). matrix/scalar [n x m].
-        """
+    def __init__(self, g_func: Callable[[np.ndarray, np.ndarray], np.ndarray]):
+        """Initialize INDI controller with input matrix function."""
         self.g = g_func
 
-    def compute_control(self, u0, x_ddot0, v, x0, x_dot0):
+    def compute_control(
+        self,
+        u0: np.ndarray,
+        x_ddot0: np.ndarray,
+        v: np.ndarray,
+        x0: np.ndarray,
+        x_dot0: np.ndarray,
+    ) -> np.ndarray:
         """
-        Compute control input u.
+        Compute the incremental control input $u$.
 
-        Args:
-            u0 (np.ndarray): Previous control input [m].
-            x_ddot0 (np.ndarray): Measured/estimated acceleration [n].
-            v (np.ndarray): Desired acceleration [n].
-            x0 (np.ndarray): Current state 1 (e.g. position) [n].
-            x_dot0 (np.ndarray): Current state 2 (e.g. velocity) [n].
+        Parameters
+        ----------
+        u0 : np.ndarray
+            Previous control input vector (nu,).
+        x_ddot0 : np.ndarray
+            Current measured/estimated acceleration vector (nx,).
+        v : np.ndarray
+            Desired acceleration pseudo-control vector (nx,).
+        x0 : np.ndarray
+            Current state/position vector (nx,).
+        x_dot0 : np.ndarray
+            Current velocity vector (nx,).
 
         Returns
-        -------
-            np.ndarray: New control effort u [m].
+-------
+        np.ndarray
+            Optimal control input $u$ (nu,).
         """
-        u0 = np.array(u0)
-        x_ddot0 = np.array(x_ddot0)
-        v = np.array(v)
-        x0 = np.array(x0)
-        x_dot0 = np.array(x_dot0)
+        u_prev = np.asarray(u0)
+        acc_meas = np.asarray(x_ddot0)
+        v_cmd = np.asarray(v)
+        x_curr = np.asarray(x0)
+        v_curr = np.asarray(x_dot0)
 
-        g_val = self.g(x0, x_dot0)
+        g_val = self.g(x_curr, v_curr)
 
-        # Incremental control: delta_u = g^-1 (v - x_ddot0)
-        acc_error = v - x_ddot0
+        # Incremental law: delta_u = g^-1 (v - x_ddot_measured)
+        acc_err = v_cmd - acc_meas
 
         if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1, 1):
-            delta_u = acc_error / g_val
+            delta_u = acc_err / g_val
         else:
-            delta_u = np.linalg.pinv(g_val) @ acc_error  # pinv for robustness
+            # Use pseudo-inverse for robust increments
+            delta_u = np.linalg.pinv(g_val) @ acc_err
 
-        return u0 + delta_u
+        return u_prev + delta_u
 
 
 class INDIOuterLoopPD:
     """
-    Helper for outer-loop tracking (computes desired acceleration v).
+    Standard PD Outer-Loop for INDI acceleration command generation.
+
+    Parameters
+    ----------
+    Kp : Union[float, np.ndarray]
+        Proportional gain matrix or scalar.
+    Kd : Union[float, np.ndarray]
+        Derivative gain matrix or scalar.
     """
 
-    def __init__(self, Kp, Kd):
-        """
-        Args:
-            Kp (np.ndarray or float): Proportional gain.
-            Kd (np.ndarray or float): Derivative gain.
-        """
+    def __init__(self, Kp: Union[float, np.ndarray], Kd: Union[float, np.ndarray]):
+        """Initialize outer-loop tracking gains."""
         self.Kp = Kp
         self.Kd = Kd
 
-    def compute_v(self, x, x_dot, x_d, x_dot_d, x_ddot_d=None):
-        x = np.array(x)
-        x_dot = np.array(x_dot)
-        x_d = np.array(x_d)
-        x_dot_d = np.array(x_dot_d)
-        if x_ddot_d is None:
-            x_ddot_d = np.zeros_like(x_d)
-        else:
-            x_ddot_d = np.array(x_ddot_d)
+    def compute_v(
+        self,
+        x: np.ndarray,
+        x_dot: np.ndarray,
+        x_d: np.ndarray,
+        x_dot_d: np.ndarray,
+        x_ddot_d: Optional[np.ndarray] = None,
+    ) -> np.ndarray:
+        """
+        Compute desired acceleration pseudo-control $v$.
 
-        e_x = x - x_d
-        e_v = x_dot - x_dot_d
+        Parameters
+        ----------
+        x, x_dot : np.ndarray
+            Current position and velocity measurements.
+        x_d, x_dot_d : np.ndarray
+            Desired position and velocity trajectories.
+        x_ddot_d : np.ndarray, optional
+            Desired feedforward acceleration. Defaults to zero.
 
-        p_term = self.Kp @ e_x if isinstance(self.Kp, np.ndarray) else self.Kp * e_x
-        d_term = self.Kd @ e_v if isinstance(self.Kd, np.ndarray) else self.Kd * e_v
+        Returns
+-------
+        np.ndarray
+            Acceleration command $v$.
+        """
+        x_val = np.asarray(x)
+        v_val = np.asarray(x_dot)
+        xd_val = np.asarray(x_d)
+        vd_val = np.asarray(x_dot_d)
+        ad_val = np.asarray(x_ddot_d) if x_ddot_d is not None else np.zeros_like(xd_val)
 
-        v = x_ddot_d - p_term - d_term
-        return v
+        err_p = x_val - xd_val
+        err_d = v_val - vd_val
+
+        p_term = self.Kp @ err_p if isinstance(self.Kp, np.ndarray) else self.Kp * err_p
+        d_term = self.Kd @ err_d if isinstance(self.Kd, np.ndarray) else self.Kd * err_d
+
+        return ad_val - p_term - d_term

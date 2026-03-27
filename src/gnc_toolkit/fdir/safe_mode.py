@@ -5,7 +5,7 @@ Safe mode and fault detection logic for system mode transitions.
 import time
 from collections.abc import Callable
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 
 
 class SystemMode(Enum):
@@ -16,68 +16,82 @@ class SystemMode(Enum):
 
 class SafeModeCondition:
     """
-    Defines a condition that triggers safe mode.
+    Trigger logic for Safe Mode state transitions.
+
+    Monitors a specific fault condition and confirms it based on a 
+    time-to-trigger threshold to avoid false positives.
+
+    Parameters
+    ----------
+    check_fn : Callable[[], bool]
+        Function returning True if the condition is currently violated.
+    trigger_time_sec : float, optional
+        Confirmation threshold (s). Default is 0.0 (immediate).
     """
 
     def __init__(self, check_fn: Callable[[], bool], trigger_time_sec: float = 0.0):
-        """
-        Initialize a safe mode condition.
-
-        Args:
-            check_fn: A function that returns True if the condition is violated (faulty state)
-            trigger_time_sec: Duration the condition must be violated before triggering
-        """
+        """Initialize trigger condition."""
         self.check_fn = check_fn
         self.trigger_time_sec = trigger_time_sec
-        self.violated_start_time = None
+        self.violated_start_time: float | None = None
 
     def update(self) -> bool:
         """
-        Update the condition state and check if it should trigger.
+        Evaluate condition and return True if confirmation time is exceeded.
 
         Returns
         -------
-            True if safety condition triggered, False otherwise
+        bool
+            True if safety trigger is active.
         """
         if self.check_fn():
             if self.violated_start_time is None:
                 self.violated_start_time = time.time()
 
             elapsed = time.time() - self.violated_start_time
-            if elapsed >= self.trigger_time_sec:
-                return True
-        else:
-            self.violated_start_time = None
-
+            return elapsed >= self.trigger_time_sec
+        
+        self.violated_start_time = None
         return False
 
 
 class SafeModeLogic:
     """
-    Manages system mode transitions based on fault conditions.
+    Finite State Machine for Spacecraft Mode Management (FDIR).
+
+    Parameters
+    ----------
+    initial_mode : SystemMode, optional
+        Starting mode. Default is NOMINAL.
     """
 
     def __init__(self, initial_mode: SystemMode = SystemMode.NOMINAL):
-        """
-        Initialize safe mode logic.
-        """
+        """Initialize mode logic."""
         self.mode = initial_mode
         self.conditions: dict[str, SafeModeCondition] = {}
         self.history: list[dict[str, Any]] = []
 
-    def add_condition(self, name: str, condition: SafeModeCondition):
+    def add_condition(self, name: str, condition: SafeModeCondition) -> None:
         """
-        Add a trigger condition.
+        Register a new safety trigger.
+
+        Parameters
+        ----------
+        name : str
+            Unique identifier for the condition.
+        condition : SafeModeCondition
+            Trigger implementation.
         """
         self.conditions[name] = condition
 
     def update(self) -> SystemMode:
         """
-        Update mode logic based on conditions.
+        Process all conditions and update system mode.
 
         Returns
         -------
-            Current SystemMode
+        SystemMode
+            Current operating mode.
         """
         if self.mode == SystemMode.SAFE:
             return self.mode
@@ -97,9 +111,16 @@ class SafeModeLogic:
 
         return self.mode
 
-    def force_mode(self, mode: SystemMode, reason: str = "Commanded"):
+    def force_mode(self, mode: SystemMode, reason: str = "Commanded") -> None:
         """
-        Force mode transition.
+        Force a mode transition (e.g., via ground command).
+
+        Parameters
+        ----------
+        mode : SystemMode
+            Target mode.
+        reason : str, optional
+            Rationale for the forced change.
         """
         old_mode = self.mode
         self.mode = mode

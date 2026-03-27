@@ -7,67 +7,94 @@ from scipy.linalg import solve_continuous_are
 
 
 class LQE:
+    r"""
+    Linear Quadratic Estimator (LQE) / Kalman Filter gain designer.
+
+    Computes the optimal steady-state observer gain $L$ for a continuous-time
+    system with additive Gaussian process and measurement noise.
+
+    System Model:
+    $\dot{x} = Ax + Bu + Gw$
+    $y = Cx + v$
+    where $Q = E[ww^T]$ and $R = E[vv^T]$.
+
+    The resulting observer dynamics are:
+    $\dot{\hat{x}} = A\hat{x} + Bu + L(y - C\hat{x})$
+
+    Parameters
+    ----------
+    A : np.ndarray
+        State matrix (nx x nx).
+    G : np.ndarray
+        Process noise input matrix (nx x nw). Often Identity.
+    C : np.ndarray
+        Output matrix (ny x nx).
+    Q : np.ndarray
+        Process noise covariance matrix (nw x nw).
+    R : np.ndarray
+        Measurement noise covariance matrix (ny x ny).
+
+    Attributes
+    ----------
+    P : np.ndarray
+        Steady-state estimation error covariance matrix.
+    L : np.ndarray
+        Optimal observer gain matrix (nx x ny).
     """
-    Linear Quadratic Estimator (LQE) / Kalman Filter.
 
-    Designs an optimal observer gain L for the system:
-    x_dot = Ax + Bu + Gw
-    y = Cx + v
-
-    Where:
-    w is N(0, Q) (Process Noise)
-    v is N(0, R) (Measurement Noise)
-
-    The observer dynamics are:
-    x_hat_dot = A x_hat + B u + L(y - C x_hat)
-    """
-
-    def __init__(self, A, G, C, Q, R):
-        """
-        Initialize the LQE.
-
-        Args:
-            A (np.ndarray): State matrix
-            G (np.ndarray): Process noise input matrix (often Identity)
-            C (np.ndarray): Output matrix
-            Q (np.ndarray): Process noise covariance matrix
-            R (np.ndarray): Measurement noise covariance matrix
-        """
-        self.A = np.array(A)
-        self.G = np.array(G)
-        self.C = np.array(C)
-        self.Q = np.array(Q)
-        self.R = np.array(R)
+    def __init__(
+        self,
+        A: np.ndarray,
+        G: np.ndarray,
+        C: np.ndarray,
+        Q: np.ndarray,
+        R: np.ndarray,
+    ):
+        """Initialize the LQE parameters."""
+        self.A = np.asarray(A)
+        self.G = np.asarray(G)
+        self.C = np.asarray(C)
+        self.Q = np.asarray(Q)
+        self.R = np.asarray(R)
         self.P = None
         self.L = None
 
-    def solve(self):
+    def solve(self) -> np.ndarray:
         """
-        Solve the Continuous Algebraic Riccati Equation (CARE) for estimation.
-        Mapping:
-        X -> P
-        a -> A.T
-        b -> C.T
-        q -> G Q G.T
-        r -> R
-        """
-        a = self.A.T
-        b = self.C.T
-        q = self.G @ self.Q @ self.G.T
-        r = self.R
+        Solve the Estimation Algebraic Riccati Equation (ARE).
 
-        self.P = solve_continuous_are(a, b, q, r)
+        $A P + P A^T - P C^T R^{-1} C P + G Q G^T = 0$
+
+        Returns
+        -------
+        np.ndarray
+            The unique positive-definite solution matrix P.
+        """
+        # Mapping to solve_continuous_are:
+        # A_eff = A.T, B_eff = C.T, Q_eff = G*Q*G.T, R_eff = R
+        a_eff = self.A.T
+        b_eff = self.C.T
+        q_eff = self.G @ self.Q @ self.G.T
+        r_eff = self.R
+
+        self.P = solve_continuous_are(a_eff, b_eff, q_eff, r_eff)
         return self.P
 
-    def compute_gain(self):
+    def compute_gain(self) -> np.ndarray:
         """
-        Compute the observer gain matrix L.
-        L = P C.T inv(R)
+        Compute the optimal observer gain matrix L.
+
+        $L = P C^T R^{-1}$
+
+        Returns
+-------
+        np.ndarray
+            Observer gain matrix L (nx x ny).
         """
         if self.P is None:
             self.solve()
 
-        # For robustness, use R instead of inv(R) since R is square
+        # Numerically stable solve for R*L.T = C*P
         term = np.linalg.solve(self.R, self.C @ self.P)
         self.L = term.T
 

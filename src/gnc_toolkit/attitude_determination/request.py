@@ -7,91 +7,142 @@ import numpy as np
 from gnc_toolkit.utils.quat_utils import quat_normalize
 
 
+from typing import Optional
+
 class RequestFilter:
+    r"""
+    Recursive QUEST (REQUEST) filter.
+
+    Enables recursive attitude estimation by updating the Davenport 
+    K-matrix with a fading memory factor $\rho$:
+    $\mathbf{K}_k = \rho \mathbf{K}_{k-1} + \delta \mathbf{K}_k$
+
+    Parameters
+    ----------
+    initial_k : np.ndarray | None, optional
+        Initial $4 \times 4$ K-matrix. Default zero.
     """
-    Implementation of the REcursive QUEST (REQUEST) algorithm.
 
-    REQUEST allows for recursive attitude estimation by updating the K-matrix
-    over time, incorporating a fading memory factor.
-    """
-
-    def __init__(self, initial_K=None):
-        """
-        Initialize the REQUEST filter.
-
-        Args:
-            initial_K (np.ndarray, optional): Initial 4x4 K-matrix. Defaults to zero if None.
-        """
-        if initial_K is not None:
-            self.K = np.asarray(initial_K, dtype=float)
+    def __init__(self, initial_k: Optional[np.ndarray] = None, **kwargs) -> None:
+        """Initialize filter state."""
+        # Support both 'initial_k' and 'initial_K'
+        k_val = initial_k if initial_k is not None else kwargs.get("initial_K")
+        
+        if k_val is not None:
+            self.k = np.asarray(k_val, dtype=float)
         else:
-            self.K = np.zeros((4, 4))
+            self.k = np.zeros((4, 4))
 
-    def update(self, body_vectors, ref_vectors, weights=None, rho=1.0):
-        """
-        Update the K-matrix with new measurements.
+    @property
+    def K(self) -> np.ndarray:
+        r"""Alias for the accumulated $4 \times 4$ K-matrix."""
+        return self.k
 
-        Args:
-            body_vectors (np.ndarray): N vectors in body frame.
-            ref_vectors (np.ndarray): N vectors in reference frame.
-            weights (np.ndarray, optional): Weights for each measurement.
-            rho (float): Fading memory factor (0 < rho <= 1).
-                         rho=1 means no fading (accumulative).
+    @K.setter
+    def K(self, value: np.ndarray) -> None:
+        self.k = np.asarray(value)
+
+    def update(
+        self,
+        body_vectors: np.ndarray,
+        ref_vectors: np.ndarray,
+        weights: Optional[np.ndarray] = None,
+        rho: float = 1.0,
+    ) -> np.ndarray:
+        r"""
+        Update the accumulated K-matrix with new vector observations.
+
+        Parameters
+        ----------
+        body_vectors : np.ndarray
+            New measurements in the body frame (N, 3).
+        ref_vectors : np.ndarray
+            Corresponding reference vectors in the inertial frame (N, 3).
+        weights : np.ndarray, optional
+            Weights for the new measurements. Defaults to $1/N$.
+        rho : float, optional
+            Fading memory factor $0 < \\rho \\le 1$. Default is 1.0 (no fading).
 
         Returns
         -------
-            np.ndarray: Updated 4x4 K-matrix.
+        np.ndarray
+            The updated $4\\times 4$ K-matrix.
         """
         b_vecs = np.asarray(body_vectors)
         r_vecs = np.asarray(ref_vectors)
-        n = b_vecs.shape[0]
+        n_vecs = b_vecs.shape[0]
 
-        if weights is None:
-            weights = np.ones(n) / n
-        else:
-            weights = np.asarray(weights)
+        w = np.asarray(weights) if weights is not None else np.ones(n_vecs) / n_vecs
 
-        # Normalize input vectors
-        b_vecs_norm = b_vecs / np.linalg.norm(b_vecs, axis=1)[:, np.newaxis]
-        r_vecs_norm = r_vecs / np.linalg.norm(r_vecs, axis=1)[:, np.newaxis]
+        # Normalize and compute incremental profile matrix dB
+        b_norm = b_vecs / np.linalg.norm(b_vecs, axis=1)[:, np.newaxis]
+        r_norm = r_vecs / np.linalg.norm(r_vecs, axis=1)[:, np.newaxis]
 
-        # Compute incremental B matrix
-        dB = np.zeros((3, 3))
-        for i in range(n):
-            dB += weights[i] * np.outer(b_vecs_norm[i], r_vecs_norm[i])
+        db_matrix = np.zeros((3, 3))
+        for i in range(n_vecs):
+            db_matrix += w[i] * np.outer(b_norm[i], r_norm[i])
 
-        dS = dB + dB.T
-        d_sigma = np.trace(dB)
-        dZ = np.array([dB[2, 1] - dB[1, 2], dB[0, 2] - dB[2, 0], dB[1, 0] - dB[0, 1]])
+        ds_matrix = db_matrix + db_matrix.T
+        d_sigma = float(np.trace(db_matrix))
+        dz_vec = np.array([
+            db_matrix[2, 1] - db_matrix[1, 2],
+            db_matrix[0, 2] - db_matrix[2, 0],
+            db_matrix[1, 0] - db_matrix[0, 1]
+        ])
 
-        # Incremental K-matrix
-        dK = np.zeros((4, 4))
-        dK[0:3, 0:3] = dS - d_sigma * np.eye(3)
-        dK[0:3, 3] = dZ
-        dK[3, 0:3] = dZ
-        dK[3, 3] = d_sigma
+        # Form incremental dK matrix
+        dk_matrix = np.zeros((4, 4))
+        dk_matrix[0:3, 0:3] = ds_matrix - d_sigma * np.eye(3)
+        dk_matrix[0:3, 3] = dz_vec
+        dk_matrix[3, 0:3] = dz_vec
+        dk_matrix[3, 3] = d_sigma
 
-        # Update K: K_next = rho * K_prev + dK
-        self.K = rho * self.K + dK
-        return self.K
+        # Update rule: K = rho * K + dK
+        self.k = rho * self.k + dk_matrix
+        return self.k
 
-    def get_quaternion(self):
+    def get_quaternion(self) -> np.ndarray:
         """
-        Extract the optimal quaternion from the current K-matrix.
+        Extract the optimal normalized quaternion from the current K-matrix.
 
         Returns
         -------
-            np.ndarray: Normalized quaternion [x, y, z, w].
+        np.ndarray
+            Optimal quaternion $[x, y, z, w]$ (Inertial -> Body).
         """
-        vals, vecs = np.linalg.eigh(self.K)
+        vals, vecs = np.linalg.eigh(self.k)
         q_opt = vecs[:, np.argmax(vals)]
         return quat_normalize(q_opt)
 
 
-def request(body_vectors, ref_vectors, weights=None, initial_K=None, rho=1.0):
+def request(
+    body_vectors: np.ndarray,
+    ref_vectors: np.ndarray,
+    weights: Optional[np.ndarray] = None,
+    initial_k: Optional[np.ndarray] = None,
+    rho: float = 1.0,
+) -> np.ndarray:
     """
     One-shot REQUEST update helper.
+
+    Parameters
+    ----------
+    body_vectors : np.ndarray
+        New measurements in the body frame (N, 3).
+    ref_vectors : np.ndarray
+        Reference vectors in the inertial frame (N, 3).
+    weights : np.ndarray, optional
+        Weights for new measurements.
+    initial_k : np.ndarray, optional
+        Starting K-matrix.
+    rho : float, optional
+        Fading memory factor.
+
+    Returns
+-------
+    np.ndarray
+        Optimal quaternion $[x, y, z, w]$.
     """
-    rf = RequestFilter(initial_K)
+    rf = RequestFilter(initial_k)
     rf.update(body_vectors, ref_vectors, weights, rho)
     return rf.get_quaternion()

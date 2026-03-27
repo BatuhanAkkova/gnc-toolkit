@@ -1,5 +1,5 @@
 import heapq
-from collections.abc import Callable
+from typing import Callable
 
 
 class Event:

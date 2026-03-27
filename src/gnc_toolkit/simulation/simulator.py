@@ -1,44 +1,48 @@
-from collections.abc import Callable
-from typing import Any
+from typing import Any, Optional, Union, Dict, List, Callable
 
 from .events import EventQueue
 from .logging import SimulationLogger
 
+# Type aliases for simulation callbacks
+PropagatorFunc = Callable[[float, Any, float, Any], Any]
+SensorFunc = Callable[[float, Any], Any]
+EstimatorFunc = Callable[[float, Any], Any]
+ControllerFunc = Callable[[float, Any], Any]
+
 
 class MissionSimulator:
-    """
-    End-to-end mission simulator class.
-    Executes a unified simulation loop: propagate -> sense -> estimate -> control.
+    r"""
+    High-Fidelity Mission Simulator.
+
+    Loop Sequence:
+    1. Update Sense: $\mathbf{y} = h(t, \mathbf{x}) + \mathbf{v}$
+    2. Estimate: $\hat{\mathbf{x}} = f(t, \mathbf{y})$
+    3. Control: $\mathbf{u} = g(t, \hat{\mathbf{x}})$
+    4. Propagate: $\dot{\mathbf{x}} = f(t, \mathbf{x}, \mathbf{u})$
+
+    Parameters
+    ----------
+    propagator : PropagatorFunc
+        Truth propagation: $(t, x, dt, u) \to x_{new}$
+    sensor_model : Optional[SensorFunc]
+        Measurement model: $(t, x) \to y$
+    estimator : Optional[EstimatorFunc]
+        State estimation: $(t, y) \to \hat{x}$
+    controller : Optional[ControllerFunc]
+        Control law: $(t, \hat{x}) \to u$
+    logger : Optional[SimulationLogger]
+        Telemetry recording.
     """
 
     def __init__(
         self,
-        propagator: Callable,
-        sensor_model: Callable,
-        estimator: Callable,
-        controller: Callable,
-        logger: SimulationLogger = None,
+        propagator: PropagatorFunc,
+        sensor_model: Optional[SensorFunc] = None,
+        estimator: Optional[EstimatorFunc] = None,
+        controller: Optional[ControllerFunc] = None,
+        logger: Optional[SimulationLogger] = None,
     ):
-        """
-        Initialize the mission simulator.
-
-        Parameters
-        ----------
-        propagator : Callable
-            Function/method to advance the true state.
-            Signature should be `propagator(t, state, dt, control)` -> `new_state`
-        sensor_model : Callable
-            Function/method to generate measurements from truth.
-            Signature should be `sensor_model(t, state)` -> `measurements`
-        estimator : Callable
-            Function/method to update the state estimate.
-            Signature should be `estimator(t, measurements)` -> `state_estimate`
-        controller : Callable
-            Function/method to calculate control inputs.
-            Signature should be `controller(t, state_estimate)` -> `control`
-        logger : SimulationLogger, optional
-            Logger instance to record the simulation trace.
-        """
+        """Initialize simulator core and event management."""
         self.propagator = propagator
         self.sensor_model = sensor_model
         self.estimator = estimator
@@ -47,46 +51,54 @@ class MissionSimulator:
         self.logger = logger
         self.event_queue = EventQueue()
 
-        self.time = 0.0
-        self.state = None
+        self.time: float = 0.0
+        self.state: Any = None
 
-    def initialize(self, t0: float, initial_state: Any):
+    def initialize(self, t0: float, initial_state: Any) -> None:
         """
-        Sets the initial condition for the simulation.
+        Set the simulation starting epoch and state.
 
         Parameters
         ----------
         t0 : float
-            Start simulation time.
+            Start time (s).
         initial_state : Any
-            Initial truth system state.
+            Initial truth state vector or object.
         """
         self.time = t0
         self.state = initial_state
 
-    def schedule_event(self, t: float, callback: Callable, *args, **kwargs):
+    def schedule_event(self, t: float, callback: Callable, *args, **kwargs) -> None:
         """
-        Schedules a discrete event in the simulation.
+        Register a discrete event for future execution.
 
         Parameters
         ----------
         t : float
-            Event execution time.
+            Target execution time (s).
         callback : Callable
-            Function to call.
+            Function to execute at time $t$.
         """
         self.event_queue.schedule(t, callback, *args, **kwargs)
 
-    def step(self, dt: float):
+    def step(self, dt: float) -> None:
         """
-        Executes a single simulation step.
+        Execute a single fixed-step simulation frame.
+
+        Sequence:
+        1. Process pending discrete events.
+        2. Generate synthetic measurements (Sense).
+        3. Solve for state estimate (Estimate).
+        4. Compute control effort (Control).
+        5. Log data series.
+        6. Advance physics (Propagate).
 
         Parameters
         ----------
         dt : float
-            Time step duration.
+            Simulation time step (s).
         """
-        # 1. Process discrete events up to current time
+        # 1. Process discrete events
         self.event_queue.process_until(self.time)
 
         # 2. Sense
@@ -96,30 +108,37 @@ class MissionSimulator:
         est = self.estimator(self.time, meas) if self.estimator else None
 
         # 4. Control
-        # If no estimator is provided, feed the true state (perfect knowledge)
-        ctrl_input = est if est is not None else self.state
-        u = self.controller(self.time, ctrl_input) if self.controller else None
+        # Fallback to perfect knowledge if no estimator
+        ctrl_ctx = est if est is not None else self.state
+        u = self.controller(self.time, ctrl_ctx) if self.controller else None
 
-        # 5. Log variables
+        # 5. Record
         if self.logger:
             self.logger.log(self.time, self.state, meas, est, u)
 
-        # 6. Propagate truth
-        self.state = (
-            self.propagator(self.time, self.state, dt, u) if self.propagator else self.state
-        )
+        # 6. Propagate Truth
+        if self.propagator:
+            self.state = self.propagator(self.time, self.state, dt, u)
+        
         self.time += dt
 
-    def run(self, t_end: float, dt: float):
+    def run(self, t_end: float, dt: float) -> Any:
         """
-        Runs the simulation loop until the end time.
+        Execute the simulation loop until the termination time.
 
         Parameters
         ----------
         t_end : float
-            Simulation end time.
+            Simulation stop time (s).
         dt : float
-            Simulation time step.
+            Fixed integration step (s).
+
+        Returns
+        -------
+        Any
+            Returns logger history if available, otherwise simulation end state.
         """
         while self.time <= t_end:
             self.step(dt)
+        
+        return self.logger.history if self.logger else self.state

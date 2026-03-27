@@ -1,59 +1,77 @@
 import multiprocessing as mp
-from collections.abc import Callable
-from typing import Any
+from typing import Any, Optional, Callable
 
 
 class MonteCarloSim:
     """
-    Monte Carlo simulation harness for uncertainty quantification and WC analysis.
+    Monte Carlo Simulation Harness.
+
+    Facilitates large-scale robustness analysis by executing multiple 
+    simulation runs with stochastic variations.
+
+    Parameters
+    ----------
+    simulator_factory : Callable[..., MissionSimulator]
+        Generator function to produce specialized simulator instances.
+        Signature: `(seed, **kwargs) -> MissionSimulator`.
     """
 
     def __init__(self, simulator_factory: Callable[..., Any]):
-        """
-        Initialize the Monte Carlo harness.
-
-        Parameters
-        ----------
-        simulator_factory : Callable
-            A factory function that creates and configures a single simulator instance.
-            Signature: `factory_fn(seed: int, kwargs) -> MissionSimulator`
-        """
+        """Initialize the harness with a simulator factory."""
         self.simulator_factory = simulator_factory
         self.results: list[Any] = []
 
-    def _run_single(self, kwargs) -> Any:
+    def _run_single(self, kwargs: dict[str, Any]) -> Any:
+        """Internal worker for a single Monte Carlo trial."""
         seed = kwargs.pop("seed")
         sim = self.simulator_factory(seed, **kwargs)
-        # Assumes sim.run() returns a result object or log
-        # if not, `sim.logger.history` might be returned.
         return sim.run()
 
-    def run_sequential(self, num_runs: int, **kwargs):
+    def run_sequential(self, num_runs: int, **kwargs) -> list[Any]:
         """
-        Executes simulations sequentially.
+        Execute Monte Carlo iterations in a single thread.
 
         Parameters
         ----------
         num_runs : int
-            Number of iterations.
+            Number of trials to execute.
+        **kwargs
+            Variable parameters passed to the simulator factory.
+
+        Returns
+        -------
+        List[Any]
+            Aggregated results from all trials.
         """
         self.results = []
         for i in range(num_runs):
             params = dict(kwargs)
             params["seed"] = i
-            result = self._run_single(params)
-            self.results.append(result)
+            self.results.append(self._run_single(params))
+        return self.results
 
-    def run_parallel(self, num_runs: int, processes: int = None, **kwargs):
+    def run_parallel(
+        self,
+        num_runs: int,
+        processes: Optional[int] = None,
+        **kwargs
+    ) -> list[Any]:
         """
-        Executes simulations in parallel.
+        Execute Monte Carlo iterations across multiple processor cores.
 
         Parameters
         ----------
         num_runs : int
-            Number of iterations.
-        processes : int, optional
-            Number of parallel workers. Defaults to CPU count.
+            Number of trials to execute.
+        processes : Optional[int]
+            Number of parallel workers. Defaults to machine CPU count.
+        **kwargs
+            Parameters for simulation configuration.
+
+        Returns
+        -------
+        List[Any]
+            Aggregated results.
         """
         self.results = []
         pool_kwargs = []
@@ -64,3 +82,5 @@ class MonteCarloSim:
 
         with mp.Pool(processes) as pool:
             self.results = pool.map(self._run_single, pool_kwargs)
+        
+        return self.results

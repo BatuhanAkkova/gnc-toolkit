@@ -3,6 +3,7 @@ Entry, Descent, and Landing (EDL) dynamics and utilities.
 """
 
 import numpy as np
+from typing import Any
 
 from gnc_toolkit.environment.density import Exponential
 
@@ -15,42 +16,54 @@ def ballistic_entry_dynamics(
     mass: float,
     mu: float = 3.986e14,
     r_planet: float = 6371000.0,
-    rho_model=None,
+    rho_model: Any | None = None,
 ) -> np.ndarray:
-    """
-    ODE for ballistic entry dynamics in Cartesian coordinates.
+    r"""
+    Ballistic Atmospheric Entry Dynamics (3-DOF).
 
-    Args:
-        t (float): Time (s).
-        state (np.ndarray): [x, y, z, vx, vy, vz] (m, m/s).
-        cd (float): Drag coefficient.
-        area (float): Reference area (m^2).
-        mass (float): Mass (kg).
-        mu (float): Gravitational parameter (m^3/s^2).
-        r_planet (float): Planet radius (m).
-        rho_model: Object with get_density(r_eci, jd) method.
+    Calculates the ECI state derivative for a non-lifting entry vehicle 
+    subject to spherical gravity and aerodynamic drag.
+
+    Parameters
+    ----------
+    t : float
+        Elapsed time (s).
+    state : np.ndarray
+        ECI State vector $[x, y, z, v_x, v_y, v_z]$ (m, m/s).
+    cd : float
+        Drag coefficient.
+    area : float
+        Reference aerodynamic area ($m^2$).
+    mass : float
+        Vehicle mass (kg).
+    mu : float, optional
+        Gravitational parameter ($m^3/s^2$).
+    r_planet : float, optional
+        Planetary reference radius (m).
+    rho_model : Optional[Any]
+        Atmospheric density model providing `get_density(r, jd)`.
 
     Returns
     -------
-        np.ndarray: State derivative [vx, vy, vz, ax, ay, az].
+    np.ndarray
+        State derivative $[\dot{r}, \dot{v}]$ (m/s, $m/s^2$).
     """
-    r_vec = state[:3]
-    v_vec = state[3:]
+    s = np.asarray(state)
+    r_vec, v_vec = s[:3], s[3:]
     r_mag = np.linalg.norm(r_vec)
     v_mag = np.linalg.norm(v_vec)
 
     if rho_model is None:
-        # Default to simple exponential for Earth if not provided
-        rho_model = Exponential(rho0=1.225, h0=0.0, H=8.5)
+        rho_model = Exponential(rho0=1.225, h0=0.0, H=8500.0)
 
-    rho = rho_model.get_density(r_vec, 0.0)  # jd=0 placeholder for simple models
+    rho = rho_model.get_density(r_vec, 0.0)
 
-    # Aerodynamic Drag
+    # Drag: a_d = -0.5 * rho * v^2 * Cd * A / m * unit(v)
     dynamic_pressure = 0.5 * rho * v_mag**2
     drag_mag = dynamic_pressure * cd * area
     a_drag = -(drag_mag / mass) * (v_vec / v_mag) if v_mag > 1e-6 else np.zeros(3)
 
-    # Gravity (Point mass)
+    # Gravity
     a_grav = -(mu / r_mag**3) * r_vec
 
     return np.concatenate([v_vec, a_grav + a_drag])
@@ -66,49 +79,62 @@ def lifting_entry_dynamics(
     mass: float,
     mu: float = 3.986e14,
     r_planet: float = 6371000.0,
-    rho_model=None,
+    rho_model: Any | None = None,
 ) -> np.ndarray:
     """
-    ODE for lifting entry dynamics in Cartesian coordinates.
+    Lifting Atmospheric Entry Dynamics with Bank Angle Modulation.
 
-    Args:
-        t (float): Time (s).
-        state (np.ndarray): [x, y, z, vx, vy, vz] (m, m/s).
-        cl, cd: Lift and Drag coefficients.
-        bank_angle (float): Bank angle (rad).
-        area (float): Reference area (m^2).
-        mass (float): Mass (kg).
-        mu, r_planet: Planet parameters.
-        rho_model: Density model.
+    Calculates the ECI state derivative for a vehicle with non-zero 
+    Lift-over-Drag (L/D) ratios.
+
+    Parameters
+    ----------
+    t : float
+        Elapsed time (s).
+    state : np.ndarray
+        ECI State vector (m, m/s).
+    cl, cd : float
+        Lift and Drag coefficients.
+    bank_angle : float
+        Rotation of the lift vector about the velocity vector (rad).
+    area : float
+        Reference area ($m^2$).
+    mass : float
+        Mass (kg).
+    mu, r_planet : float
+        Planetary parameters.
+    rho_model : Optional[Any]
+        Density model.
 
     Returns
     -------
-        np.ndarray: State derivative.
+    np.ndarray
+        State derivative.
     """
-    r_vec = state[:3]
-    v_vec = state[3:]
-    r_mag = np.linalg.norm(r_vec)
-    v_mag = np.linalg.norm(v_vec)
+    s = np.asarray(state)
+    r_vec, v_vec = s[:3], s[3:]
+    r_mag, v_mag = np.linalg.norm(r_vec), np.linalg.norm(v_vec)
 
     if rho_model is None:
-        rho_model = Exponential(rho0=1.225, h0=0.0, H=8.5)
+        rho_model = Exponential(rho0=1.225, h0=0.0, H=8500.0)
 
     rho = rho_model.get_density(r_vec, 0.0)
     dynamic_pressure = 0.5 * rho * v_mag**2
 
-    # Unit vectors for Drag, Lift
+    # Coordinate system for forces
     u_v = v_vec / v_mag if v_mag > 1e-6 else np.zeros(3)
     u_h = np.cross(r_vec, v_vec)
-    u_h = u_h / np.linalg.norm(u_h) if np.linalg.norm(u_h) > 1e-6 else np.zeros(3)
-    u_l_vertical = np.cross(u_v, u_h)  # Lift vector in the vertical plane
+    h_mag = np.linalg.norm(u_h)
+    u_h = u_h / h_mag if h_mag > 1e-6 else np.zeros(3)
+    u_l_v = np.cross(u_v, u_h)  # Lift unit vector in the vertical plane
 
-    # Rotate lift vector by bank angle
-    # L = L_mag * (cos(bank) * u_l_vertical + sin(bank) * u_h)
+    # Force magnitudes
     lift_mag = dynamic_pressure * cl * area
     drag_mag = dynamic_pressure * cd * area
 
     a_drag = -(drag_mag / mass) * u_v
-    a_lift = (lift_mag / mass) * (np.cos(bank_angle) * u_l_vertical + np.sin(bank_angle) * u_h)
+    # Lift components modulated by bank angle
+    a_lift = (lift_mag / mass) * (np.cos(bank_angle) * u_l_v + np.sin(bank_angle) * u_h)
 
     # Gravity
     a_grav = -(mu / r_mag**3) * r_vec
@@ -117,124 +143,156 @@ def lifting_entry_dynamics(
 
 
 def sutton_grave_heating(rho: float, v: float, rn: float) -> float:
-    """
-    Stagnation point heat flux estimation (W/m^2) using Sutton-Grave formula.
-    Simplified constant for Earth: k = 1.74153e-4 (for cooling Rn in meters)
-    q = k * sqrt(rho/rn) * v^3
+    r"""
+    Stagnation Point Heat Flux via Sutton-Grave Correlation.
 
-    Args:
-        rho (float): Density (kg/m^3).
-        v (float): Velocity (m/s).
-        rn (float): Nose radius (m).
+    Estimates the convective heat transfer at the vehicle nose during 
+    hypersonic atmospheric entry.
+    Equation: $\dot{q} = k \sqrt{\rho / r_n} v^3$.
+
+    Parameters
+    ----------
+    rho : float
+        Atmospheric density ($kg/m^3$).
+    v : float
+        Relative velocity (m/s).
+    rn : float
+        Nose/Stagnation region radius (m).
 
     Returns
     -------
-        float: Heat flux (W/m^2).
+    float
+        Stagnation heat flux ($W/m^2$).
     """
-    k = 1.74153e-4
+    k = 1.74153e-4  # Constant for Earth atmospheric species
     return k * np.sqrt(rho / rn) * v**3
 
 
 def calculate_g_load(acc_vec: np.ndarray) -> float:
     """
-    Calculates G-load from acceleration vector.
+    Calculate instantaneous G-load.
 
-    Args:
-        acc_vec (np.ndarray): Acceleration (m/s^2).
+    Parameters
+    ----------
+    acc_vec : np.ndarray
+        Net non-gravitational acceleration vector ($m/s^2$).
 
     Returns
     -------
-        float: G-load (multiples of g0).
+    float
+        Load in Earth g-units.
     """
     g0 = 9.80665
-    return np.linalg.norm(acc_vec) / g0
+    return float(np.linalg.norm(acc_vec) / g0)
 
 
-def aerocapture_guidance(state, target_apoapsis, cd, area, mass, planet_params, rho_model, cl=0.0):
+def aerocapture_guidance(
+    state: np.ndarray,
+    target_apoapsis: float,
+    cd: float,
+    area: float,
+    mass: float,
+    planet_params: dict[str, float],
+    rho_model: Any,
+    cl: float = 0.0
+) -> float:
     """
-    Predictive aerocapture guidance.
-    Adjusts bank angle (if cl > 0) to target a specific exit apoapsis using numerical predictor-corrector.
-    Returns: bank_angle (rad)
+    Predictive-Corrector Aerocapture Guidance.
+
+    Determines the required bank angle to achieve a target exit apoapsis 
+    by numerically integrating internal trajectories.
+
+    Parameters
+    ----------
+    state : np.ndarray
+        Current spacecraft state $[r, v]$.
+    target_apoapsis : float
+        Desired apoapsis altitude after atmospheric exit (m).
+    cd, area, mass : float
+        Vehicle ballistic parameters.
+    planet_params : Dict[str, float]
+        Dictionary containing 'mu' and 'r_planet'.
+    rho_model : Any
+        Atmospheric density model.
+    cl : float, optional
+        Lift coefficient. Defaults to 0 (ballistic).
+
+    Returns
+    -------
+    float
+        Optimized bank angle (rad).
     """
     mu = planet_params.get("mu", 3.986e14)
     r_planet = planet_params.get("r_planet", 6371000.0)
-    atm_interface = r_planet + 120000.0  # Assumed 120km interface
+    atm_int = r_planet + 120000.0
 
     from scipy.integrate import solve_ivp
 
-    def get_apoapsis_from_state(s):
-        r_vec, v_vec = s[:3], s[3:]
-        r = np.linalg.norm(r_vec)
-        v = np.linalg.norm(v_vec)
-        energy = v**2 / 2 - mu / r
-        if energy >= 0:
-            return np.inf  # Escape trajectory
-        h_vec = np.cross(r_vec, v_vec)
-        h = np.linalg.norm(h_vec)
+    def get_exit_apoapsis(s):
+        rv, vv = s[:3], s[3:]
+        r, v = np.linalg.norm(rv), np.linalg.norm(vv)
+        energy = 0.5 * v**2 - mu / r
+        if energy >= 0: return np.inf
         a = -mu / (2 * energy)
-        e = np.sqrt(max(0.0, 1 - h**2 / (a * mu)))
+        e = np.sqrt(max(0, 1 - np.linalg.norm(np.cross(rv, vv))**2 / (a * mu)))
         return a * (1 + e) - r_planet
 
     if cl <= 0.0:
-        return 0.0  # Cannot modulate bank angle without lift
+        return 0.0
 
-    def predict_apoapsis(bank_angle):
-        def dynamics(t, s):
-            return lifting_entry_dynamics(
-                t, s, cl, cd, bank_angle, area, mass, mu, r_planet, rho_model
-            )
+    def predict(bank):
+        def dydt(t, y):
+            return lifting_entry_dynamics(t, y, cl, cd, bank, area, mass, mu, r_planet, rho_model)
+        
+        def exit_check(t, y):
+            return np.linalg.norm(y[:3]) - atm_int
+        exit_check.terminal = True
+        exit_check.direction = 1
 
-        def exit_event(t, s):
-            return np.linalg.norm(s[:3]) - atm_interface
+        sol = solve_ivp(dydt, (0, 3600.0), state, events=exit_check, rtol=1e-4)
+        return get_exit_apoapsis(sol.y[:, -1])
 
-        exit_event.terminal = True
-        exit_event.direction = 1
-
-        # Integrate forward to exit
-        sol = solve_ivp(
-            dynamics, (0, 2000.0), state, events=[exit_event], max_step=10.0, rtol=1e-3, atol=1e-3
-        )
-        return get_apoapsis_from_state(sol.y[:, -1])
-
-    bank_up = 0.0
-    bank_down = np.pi
-    best_bank = 0.0
-
-    # Simple bisection search on bank angle
-    for _ in range(10):
-        bank_mid = (bank_up + bank_down) / 2
-        ap_mid = predict_apoapsis(bank_mid)
-        best_bank = bank_mid
-
-        if np.isinf(ap_mid) or ap_mid > target_apoapsis:
-            bank_up = bank_mid  # Need more pull-down (higher atmospheric time)
+    # Simple Bisection
+    b_min, b_max = 0.0, np.pi
+    for _ in range(8):
+        b_mid = (b_min + b_max) / 2
+        ap = predict(b_mid)
+        if ap > target_apoapsis:
+            b_min = b_mid
         else:
-            bank_down = bank_mid
-
-        if not np.isinf(ap_mid) and abs(ap_mid - target_apoapsis) < 1000.0:
-            break
-
-    return best_bank
+            b_max = b_mid
+            
+    return (b_min + b_max) / 2
 
 
-def hazard_avoidance(r, v, hazards, safety_margin=50.0):
-    """
-    Simple hazard avoidance logic.
-    Computes a divert maneuver if a hazard is detected near the landing site.
+def hazard_avoidance(
+    r: np.ndarray,
+    v: np.ndarray,
+    hazards: list[np.ndarray],
+    safety_margin: float = 50.0
+) -> np.ndarray:
+    r"""
+    Reactive Hazard Avoidance Maneuver logic.
 
-    Args:
-        r (np.ndarray): Position (m).
-        v (np.ndarray): Velocity (m/s).
-        hazards (list): List of hazard positions [x, y, z].
+    Parameters
+    ----------
+    r, v : np.ndarray
+        Current spacecraft landing state.
+    hazards : List[np.ndarray]
+        Coordinates of detected obstacles.
+    safety_margin : float, optional
+        Minimum separation distance (m).
 
     Returns
     -------
-        np.ndarray: Correction velocity delta_v (m/s).
+    np.ndarray
+        Correction $\Delta V$ vector (m/s).
     """
+    pos = np.asarray(r)
     for h in hazards:
-        dist = np.linalg.norm(r - h)
+        h_pos = np.asarray(h)
+        dist = np.linalg.norm(pos - h_pos)
         if dist < safety_margin:
-            # Divert away from hazard
-            u_divert = (r - h) / dist
-            return u_divert * 5.0  # 5 m/s nudge
+            u_div = (pos - h_pos) / max(1e-3, dist)
+            return u_div * 5.0
     return np.zeros(3)

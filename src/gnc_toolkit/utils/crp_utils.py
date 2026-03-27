@@ -5,53 +5,110 @@ Classical Rodrigues Parameters (CRP) kinematics and composition.
 import numpy as np
 
 
-def quat_to_crp(q):
-    """
-    Convert quaternion [x, y, z, w] to Classical Rodrigues Parameters (CRP/Gibbs).
+def quat_to_crp(q: np.ndarray) -> np.ndarray:
+    r"""
+    Convert a quaternion to Classical Rodrigues Parameters (CRP/Gibbs).
 
-    q_vec / q_w
+    Mathematical form: $\mathbf{q}_{vec} / q_w$.
+    Singular for 180-degree rotations ($q_w = 0$).
+
+    Parameters
+    ----------
+    q : np.ndarray
+        Quaternion [x, y, z, w].
+
+    Returns
+    -------
+    np.ndarray
+        CRP vector $[q_1, q_2, q_3]^T$.
+
+    Raises
+    ------
+    ValueError
+        If the rotation is 180 degrees.
     """
-    x, y, z, w = q
+    qv = np.asarray(q)
+    x, y, z, w = qv
     if abs(w) < 1e-12:
-        raise ValueError("Classical Rodrigues Parameters are singular for 180-degree rotations.")
+        raise ValueError("CRP is singular for 180-degree rotations.")
     return np.array([x, y, z]) / w
 
 
-def crp_to_quat(q_crp):
+def crp_to_quat(q_crp: np.ndarray) -> np.ndarray:
     """
-    Convert CRP to quaternion [x, y, z, w].
+    Convert Classical Rodrigues Parameters to a quaternion.
 
-    q_w = 1 / sqrt(1 + |q_crp|^2)
-    q_vec = q_crp / sqrt(1 + |q_crp|^2)
+    Parameters
+    ----------
+    q_crp : np.ndarray
+        CRP vector $[q_1, q_2, q_3]^T$.
+
+    Returns
+    -------
+    np.ndarray
+        Unit quaternion [x, y, z, w].
     """
-    norm_sq = np.sum(q_crp**2)
-    den = np.sqrt(1 + norm_sq)
-    return np.array([q_crp[0] / den, q_crp[1] / den, q_crp[2] / den, 1.0 / den])
+    cv = np.asarray(q_crp)
+    norm_sq = np.sum(cv**2)
+    den = np.sqrt(1.0 + norm_sq)
+    return np.array([cv[0] / den, cv[1] / den, cv[2] / den, 1.0 / den])
 
 
-def crp_to_dcm(q_crp):
+def crp_to_dcm(q_crp: np.ndarray) -> np.ndarray:
     """
-    Convert CRP to 3x3 Direction Cosine Matrix.
+    Convert Classical Rodrigues Parameters to a Direction Cosine Matrix.
+
+    Parameters
+    ----------
+    q_crp : np.ndarray
+        CRP vector $[q_1, q_2, q_3]^T$.
+
+    Returns
+    -------
+    np.ndarray
+        3x3 Direction Cosine Matrix.
     """
-    norm_sq = np.sum(q_crp**2)
-    q1, q2, q3 = q_crp
+    cv = np.asarray(q_crp)
+    norm_sq = np.sum(cv**2)
+    q1, q2, q3 = cv
 
-    S = np.array([[0, -q3, q2], [q3, 0, -q1], [-q2, q1, 0]])
+    s_mat = np.array([
+        [0.0, -q3,  q2],
+        [q3,  0.0, -q1],
+        [-q2, q1,  0.0]
+    ])
 
-    I = np.eye(3)
-    R = I + (2 * S @ S - 2 * S) / (1 + norm_sq)
-    return R
+    return np.eye(3) + (2.0 * s_mat @ s_mat + 2.0 * s_mat) / (1.0 + norm_sq)
 
 
-def crp_addition(q1, q2):
+def crp_addition(q1: np.ndarray, q2: np.ndarray) -> np.ndarray:
+    r"""
+    Compose two rotations represented by Classical Rodrigues Parameters.
+
+    $\mathbf{q}_{res} = \frac{\mathbf{q}_1 + \mathbf{q}_2 + \mathbf{q}_2 \times \mathbf{q}_1}{1 - \mathbf{q}_1 \cdot \mathbf{q}_2}$
+
+    Parameters
+    ----------
+    q1 : np.ndarray
+        Initial CRP vector.
+    q2 : np.ndarray
+        Secondary CRP vector.
+
+    Returns
+    -------
+    np.ndarray
+        Resultant CRP vector.
+
+    Raises
+    ------
+    ValueError
+        If the denominator is near zero.
     """
-    Perform CRP addition (rotation composition).
+    qv1 = np.asarray(q1)
+    qv2 = np.asarray(q2)
+    
+    dot = np.dot(qv1, qv2)
+    if abs(1.0 - dot) < 1e-12:
+        raise ValueError("CRP addition is singular (rotation equals 180 degrees).")
 
-    q_res = [q1 + q2 + q2 x q1] / (1 - q1 . q2)
-    """
-    dot = np.dot(q1, q2)
-    if abs(1 - dot) < 1e-12:
-        raise ValueError("CRP addition is singular.")
-
-    cross = np.cross(q2, q1)
-    return (q1 + q2 + cross) / (1 - dot)
+    return (qv1 + qv2 + np.cross(qv2, qv1)) / (1.0 - dot)

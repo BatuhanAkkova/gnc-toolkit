@@ -3,22 +3,32 @@ Residual generation for fault detection using observers.
 """
 
 import numpy as np
+from typing import Optional
 
 
 class ObserverResidualGenerator:
-    """
-    Generates residuals using a Luenberger observer or similar linear observer.
+    r"""
+    Fault Residual Generation via Luenberger Observer.
 
-    System model:
-        x_{k+1} = A x_k + B u_k
-        y_k     = C x_k + D u_k
+    Implements a linear observer to estimate system outputs and generate 
+    innovation-based residuals.
+    Observer Dynamics: $\hat{\mathbf{x}}_{k+1} = \mathbf{A} \hat{\mathbf{x}}_k + \mathbf{B} \mathbf{u}_k + \mathbf{L} (\mathbf{y}_k - \hat{\mathbf{y}}_k)$
+    Residual: $\mathbf{r}_k = \mathbf{y}_k - \mathbf{C} \hat{\mathbf{x}}_k$.
 
-    Observer:
-        x_hat_{k+1} = A x_hat_k + B u_k + L (y_k - y_hat_k)
-        y_hat_k     = C x_hat_k + D u_k
-
-    Residual:
-        r_k = y_k - y_hat_k
+    Parameters
+    ----------
+    A : np.ndarray
+        State transition matrix $(n, n)$.
+    B : np.ndarray
+        Input matrix $(n, m)$.
+    C : np.ndarray
+        Output matrix $(p, n)$.
+    D : np.ndarray, optional
+        Feedthrough matrix $(p, m)$. Defaults to zero.
+    L : np.ndarray
+        Observer gain matrix $(n, p)$.
+    x0 : np.ndarray, optional
+        Initial state estimate.
     """
 
     def __init__(
@@ -26,99 +36,89 @@ class ObserverResidualGenerator:
         A: np.ndarray,
         B: np.ndarray,
         C: np.ndarray,
-        D: np.ndarray | None,
-        L: np.ndarray,
+        D: np.ndarray | None = None,
+        L: np.ndarray = None,
         x0: np.ndarray | None = None,
     ):
-        """
-        Initialize the observer.
+        """Initialize observer state and matrices."""
+        self.A, self.B, self.C = np.asarray(A), np.asarray(B), np.asarray(C)
+        self.D = np.asarray(D) if D is not None else np.zeros((self.C.shape[0], self.B.shape[1]))
+        self.L = np.asarray(L)
 
-        Args:
-            A: State transition matrix (n x n)
-            B: Input matrix (n x m)
-            C: Output matrix (p x n)
-            D: Direct feedthrough matrix (p x m), defaults to zeros if None
-            L: Observer gain matrix (n x p)
-            x0: Initial state estimate (n x 1), defaults to zeros
-        """
-        self.A = A
-        self.B = B
-        self.C = C
-        self.D = D if D is not None else np.zeros((C.shape[0], B.shape[1]))
-        self.L = L
-
-        self.n = A.shape[0]
-        self.m = B.shape[1]
-        self.p = C.shape[0]
-
-        self.x_hat = x0 if x0 is not None else np.zeros((self.n, 1))
+        self.n, self.m, self.p = self.A.shape[0], self.B.shape[1], self.C.shape[0]
+        self.x_hat = np.asarray(x0) if x0 is not None else np.zeros(self.n)
 
     def step(self, u: np.ndarray, y: np.ndarray) -> np.ndarray:
-        """
-        Perform one step of the observer and return the residual.
+        r"""
+        Advance observer and return residual $\mathbf{r}_k$.
 
-        Args:
-            u: Input vector (m x 1)
-            y: Measurement vector (p x 1)
+        Parameters
+        ----------
+        u : np.ndarray
+            Input vector $\mathbf{u}_k$.
+        y : np.ndarray
+            Measurement vector $\mathbf{y}_k$.
 
         Returns
         -------
-            r: Residual vector (p x 1)
+        np.ndarray
+            Residual $\mathbf{r}_k \in \mathbb{R}^p$.
         """
-        # Ensure column vectors
-        u = u.reshape(-1, 1)
-        y = y.reshape(-1, 1)
+        uv, yv = np.asarray(u), np.asarray(y)
 
-        # Calculate estimate output
-        y_hat = self.C @ self.x_hat + self.D @ u
+        # Output estimate
+        y_hat = self.C @ self.x_hat + self.D @ uv
+        resid = yv - y_hat
 
-        # Calculate residual
-        r = y - y_hat
+        # Update estimate
+        self.x_hat = self.A @ self.x_hat + self.B @ uv + self.L @ resid
 
-        # Update state estimate
-        self.x_hat = self.A @ self.x_hat + self.B @ u + self.L @ r
-
-        return r
+        return resid
 
 
 class AnalyticalRedundancy:
-    """
-    Detects faults by comparing two signals that should be algebraically or dynamically related.
-
-    Example: Comparing integrated gyro rates with star tracker quaternions,
-    or comparing two redundant sensor outputs.
-    """
+    """Utilities for Analytical Redundancy-based Fault Detection."""
 
     @staticmethod
     def check_threshold(r: np.ndarray, threshold: float) -> bool:
-        """
-        Checks if the residual exceeds a threshold.
+        r"""
+        Threshold check for a residual vector.
 
-        Args:
-            r: Residual vector
-            threshold: Scalar threshold
+        Parameters
+        ----------
+        r : np.ndarray
+            Residual vector.
+        threshold : float
+            Fault limit.
 
         Returns
-        -------
-            True if fault detected, False otherwise
+-------
+        bool
+            True if $\|\mathbf{r}\| > \text{threshold}$.
         """
         return np.linalg.norm(r) > threshold
 
     @staticmethod
     def gyro_vs_quaternion_residual(
-        q_dot_measured: np.ndarray, q_dot_calculated: np.ndarray
+        q_dot_measured: np.ndarray,
+        q_dot_calculated: np.ndarray
     ) -> np.ndarray:
         r"""
-        Calculates residual between measured quaternion rate (from ST) and calculated from gyro.
+        Residual between attitude rate kinematics and sensor differentiator.
 
-        q_dot_calculated = 0.5 * q \otimes [0, \omega]^T
+        Calculates $\mathbf{r} = \dot{\mathbf{q}}_m - \dot{\mathbf{q}}_c$, 
+        where $\dot{\mathbf{q}}_c = \frac{1}{2} \mathbf{q} \otimes \mathbf{\omega}$.
 
-        Args:
-            q_dot_measured: Measured quaternion rate
-            q_dot_calculated: Calculated quaternion rate
+        Parameters
+        ----------
+        q_dot_measured : np.ndarray
+            Measured quaternion derivative.
+        q_dot_calculated : np.ndarray
+            Calculated derivative from gyros.
 
         Returns
         -------
-            Residual vector
+        np.ndarray
+            Attitude residual vector.
         """
-        return q_dot_measured - q_dot_calculated
+        return np.asarray(q_dot_measured) - np.asarray(q_dot_calculated)

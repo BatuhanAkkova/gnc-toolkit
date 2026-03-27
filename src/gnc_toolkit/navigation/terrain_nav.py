@@ -5,66 +5,105 @@ Terrain-Relative Navigation (TRN) feature matching and localization update.
 import numpy as np
 
 
-class FeatureMatchingTRN:
-    def __init__(self, map_database):
-        """
-        Terrain-Relative Navigation (TRN) feature matcher.
-        """
-        self.map = map_database  # List of (position, descriptor)
+from typing import List, Tuple
 
-    def match_features(self, observed_features):
+class FeatureMatchingTRN:
+    """
+    Terrain-Relative Navigation (TRN) Feature Matcher.
+
+    Correlates observed landmarks (from sensors like LIDAR or cameras) with 
+    a known map database using efficient nearest-neighbor search.
+
+    Parameters
+    ----------
+    map_database : List[np.ndarray]
+        List of absolute landmark coordinates (m).
+    """
+
+    def __init__(self, map_database: List[np.ndarray]):
+        """Initialize TRN map."""
+        self.map = np.stack([np.asarray(m) for m in map_database])
+
+    def match_features(
+        self,
+        observed_features: List[np.ndarray],
+        dist_threshold: float = 10.0
+    ) -> List[Tuple[np.ndarray, np.ndarray]]:
         """
-        Matches observed camera/LIDAR features to the map.
+        Match observed features to the global map.
+
+        Parameters
+        ----------
+        observed_features : List[np.ndarray]
+            Landmarks relative to the current vehicle state (m).
+        dist_threshold : float, optional
+            Max distance for correlation (m). Default is 10.0.
 
         Returns
-        -------
-            list of (map_pos, observed_pos)
+-------
+        List[Tuple[np.ndarray, np.ndarray]]
+            Pairs of (Map Position, Observed Position).
         """
         matches = []
-        for obs_pos in observed_features:
-            # Simple nearest neighbor search
-            best_match = None
-            min_dist = float("inf")
-            for map_pos in self.map:
-                dist = np.linalg.norm(obs_pos - map_pos)
-                if dist < min_dist:
-                    min_dist = dist
-                    best_match = map_pos
-            if min_dist < 10.0:
-                matches.append((best_match, obs_pos))
+        for obs in observed_features:
+            obs_v = np.asarray(obs)
+            # Vectorized distance check
+            dists = np.linalg.norm(self.map - obs_v, axis=1)
+            idx = np.argmin(dists)
+            
+            if dists[idx] < dist_threshold:
+                matches.append((self.map[idx], obs_v))
         return matches
 
 
-def map_relative_localization_update(x, P, matches, R):
-    """
-    EKF measurement update for TRN.
+def map_relative_localization_update(
+    x_state: np.ndarray,
+    p_cov: np.ndarray,
+    matches: List[Tuple[np.ndarray, np.ndarray]],
+    r_noise: np.ndarray
+) -> Tuple[np.ndarray, np.ndarray]:
+    r"""
+    EKF Measurement Update using TRN feature matches.
 
-    Args:
-        x (np.ndarray): State estimate [pos, vel].
-        P (np.ndarray): Covariance.
-        matches (list): (map_pos, observed_pos) pairs.
-        R (np.ndarray): Measurement noise covariance.
+    Corrects the global state estimate using residuals between map-known 
+    landmarks and their estimated positions.
+
+    Parameters
+    ----------
+    x_state : np.ndarray
+        Current filter state $[\mathbf{r}, ...]^T$.
+    p_cov : np.ndarray
+        Estimation covariance matrix.
+    matches : List[Tuple[np.ndarray, np.ndarray]]
+        Landmark correspondences from `match_features`.
+    r_noise : np.ndarray
+        Sensor noise covariance ($3\times 3$).
 
     Returns
-    -------
-        tuple: (updated_x, updated_P)
+-------
+    updated_x : np.ndarray
+        Updated state estimate.
+    updated_p : np.ndarray
+        Updated covariance matrix.
     """
     if not matches:
-        return x, P
+        return x_state, p_cov
 
-    # Z = observed_pos, H = identity (mapping state position to observation)
+    x, p = x_state.copy(), p_cov.copy()
+    rv = np.asarray(r_noise)
+
     for map_pos, obs_pos in matches:
-        z = obs_pos
-        h = map_pos
+        # Observation matrix H (Mapping global position to relative observation)
+        h_mat = np.zeros((3, len(x)))
+        h_mat[:, :3] = np.eye(3)
 
-        H = np.zeros((3, len(x)))
-        H[:, :3] = np.eye(3)
+        resid = np.asarray(obs_pos) - h_mat @ x
+        
+        # Kalman Gain K = P H^T (H P H^T + R)^-1
+        s_mat = h_mat @ p @ h_mat.T + rv
+        k_gain = p @ h_mat.T @ np.linalg.inv(s_mat)
 
-        y = z - H @ x
-        S = H @ P @ H.T + R
-        K = P @ H.T @ np.linalg.inv(S)
+        x += k_gain @ resid
+        p = (np.eye(len(x)) - k_gain @ h_mat) @ p
 
-        x = x + K @ y
-        P = (np.eye(len(x)) - K @ H) @ P
-
-    return x, P
+    return x, p

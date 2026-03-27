@@ -3,66 +3,73 @@ B-Dot controller for spacecraft magnetic detumbling.
 """
 
 import numpy as np
+from typing import Union, List
 
 
 class BDot:
-    """
+    r"""
     B-Dot controller for magnetic detumbling.
 
-    The control law calculates a magnetic dipole moment 'm' to dampen the angular velocity
-    of the spacecraft.
+    Control Law:
+    $\mathbf{m} = -K_{gain} \dot{\mathbf{B}}$
 
-    Control law: m = -K * B_dot
-    where B_dot is the time derivative of the magnetic field vector.
+    Parameters
+    ----------
+    gain : float
+        Feedback gain $K$ ($Am^2 s / T$).
     """
 
-    def __init__(self, gain: float):
-        """
-        Initialize the B-Dot controller.
-
-        Args:
-            gain: The feedback gain K (> 0). [A*m^2 * s / T]
-        """
+    def __init__(self, gain: float) -> None:
+        """Initialize the B-Dot controller."""
         self.gain = gain
 
-    def calculate_control(self, b_dot: np.ndarray | list) -> np.ndarray:
-        """
-        Calculate the required magnetic dipole moment based on the rate of change of B-field.
+    def calculate_control(self, b_dot: Union[np.ndarray, List[float]]) -> np.ndarray:
+        r"""
+        Calculate the required magnetic dipole moment from the B-field rate.
 
-        Args:
-            b_dot: The time derivative of the magnetic field vector (dB/dt) in Body frame. Shape (3,)
+        Parameters
+        ----------
+        b_dot : np.ndarray or list
+            The time derivative of the magnetic field vector ($\dot{B}$) in
+            the Body frame (3,). Units: [T/s].
 
         Returns
         -------
-            Magnetic dipole moment vector (m) in Body frame. Shape (3,)
+        np.ndarray
+            Magnetic dipole moment vector $m$ in Body frame (3,).
+            Units: $[A \cdot m^2]$.
         """
-        b_dot_vec = np.array(b_dot, dtype=float)
-
         # Standard law: m = -K * B_dot
-        dipole_moment = -self.gain * b_dot_vec
-
-        return dipole_moment
+        return -self.gain * np.asarray(b_dot, dtype=float)
 
     def calculate_control_discrete(
-        self, b_field_current: np.ndarray | list, b_field_prev: np.ndarray | list, dt: float
+        self,
+        b_field_curr: Union[np.ndarray, List[float]],
+        b_field_prev: Union[np.ndarray, List[float]],
+        dt: float,
     ) -> np.ndarray:
-        """
-        Calculate control using discrete finite difference of B-field.
+        r"""
+        Calculate B-Dot control using discrete finite differences.
 
-        Args:
-            b_field_current: Current magnetic field vector measurement (Body frame)
-            b_field_prev: Previous magnetic field vector measurement (Body frame)
-            dt: Time step between measurements (seconds)
+        Useful when only B-field measurements are available instead of explicit rates.
+
+        Parameters
+        ----------
+        b_field_curr : np.ndarray or list
+            Current magnetic field vector measurement (Body frame). Units: [T].
+        b_field_prev : np.ndarray or list
+            Previous magnetic field vector measurement (Body frame). Units: [T].
+        dt : float
+            Time step between measurements (s).
 
         Returns
         -------
-            Magnetic dipole moment vector (m) in Body frame.
+        np.ndarray
+            Magnetic dipole moment vector $m$ in Body frame (3,).
         """
-        b_curr = np.array(b_field_current, dtype=float)
-        b_prev = np.array(b_field_prev, dtype=float)
-
         if dt <= 0:
             return np.zeros(3)
 
-        b_dot_est = (b_curr - b_prev) / dt
+        # Estimate B_dot via backward difference
+        b_dot_est = (np.asarray(b_field_curr) - np.asarray(b_field_prev)) / dt
         return self.calculate_control(b_dot_est)

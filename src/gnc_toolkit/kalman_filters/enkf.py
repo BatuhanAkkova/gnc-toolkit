@@ -3,107 +3,146 @@ Ensemble Kalman Filter (EnKF) using Monte Carlo samples for covariance represent
 """
 
 import numpy as np
+from typing import Callable, Any
 
 
 class EnKF:
     """
     Ensemble Kalman Filter (EnKF).
-    Uses an ensemble of states to represent the covariance matrix.
-    Efficient for high-dimensional systems where the full covariance is too large.
+
+    Uses an ensemble of states to represent the error covariance matrix.
+    Highly efficient for high-dimensional systems (e.g., weather/climate models)
+    where the full covariance matrix is too large to compute.
+
+    Parameters
+    ----------
+    dim_x : int
+        Dimension of the state vector.
+    dim_z : int
+        Dimension of the measurement vector.
+    ensemble_size : int, optional
+        Number of ensemble members (N). Default is 50.
     """
 
-    def __init__(self, dim_x, dim_z, ensemble_size=50):
-        """
-        Initialize the EnKF.
-        dim_x: Dimension of the state vector
-        dim_z: Dimension of the measurement vector
-        ensemble_size: Number of ensemble members (N)
-        """
+    def __init__(self, dim_x: int, dim_z: int, ensemble_size: int = 50):
         self.dim_x = dim_x
         self.dim_z = dim_z
-        self.N = ensemble_size
+        self.num_ensemble = ensemble_size
 
         # Ensemble of states: shape (dim_x, N)
-        self.X = np.zeros((dim_x, self.N))
+        self.X = np.zeros((dim_x, self.num_ensemble))
         self.Q = np.eye(dim_x)
         self.R = np.eye(dim_z)
 
-    def initialize_ensemble(self, x_mean, P):
+    def initialize_ensemble(self, x_mean: np.ndarray, p_cov: np.ndarray) -> None:
         """
-        Initialize the ensemble around a mean with covariance P.
-        """
-        self.X = np.random.multivariate_normal(x_mean, P, self.N).T
+        Initialize the ensemble using a multivariate normal distribution.
 
-    def predict(self, dt, fx, Q=None, **kwargs):
+        Parameters
+        ----------
+        x_mean : np.ndarray
+            Mean initial state (dim_x,).
+        p_cov : np.ndarray
+            Initial state error covariance (dim_x, dim_x).
         """
-        Predict step.
-        dt: Time step
-        fx: State transition function f(x, dt, **kwargs) -> x_new
-        Q: Optional process noise covariance
+        self.X = np.random.multivariate_normal(x_mean, p_cov, self.num_ensemble).T
+
+    def predict(
+        self,
+        dt: float,
+        fx_func: Callable,
+        q_mat: np.ndarray | None = None,
+        **kwargs: Any,
+    ) -> None:
+        r"""
+        Predict step (Propagates each ensemble member).
+
+        Parameters
+        ----------
+        dt : float
+            Time step (s).
+        fx_func : Callable
+            Nonlinear state transition function $f(x, dt, **kwargs) \to x_{new}$.
+        q_mat : np.ndarray, optional
+            Process noise covariance (dim_x, dim_x). If None, uses `self.Q`.
+        **kwargs : Any
+            Additional arguments passed to transition function.
         """
-        if Q is None:
-            Q = self.Q
+        q_curr = q_mat if q_mat is not None else self.Q
 
         # Propagate each ensemble member
-        for i in range(self.N):
+        for i in range(self.num_ensemble):
             # Propagate through nonlinear model
-            self.X[:, i] = fx(self.X[:, i], dt, **kwargs)
+            self.X[:, i] = fx_func(self.X[:, i], dt, **kwargs)
 
             # Add process noise to each member
-            noise = np.random.multivariate_normal(np.zeros(self.dim_x), Q)
+            noise = np.random.multivariate_normal(np.zeros(self.dim_x), q_curr)
             self.X[:, i] += noise
 
-    def update(self, z, hx, R=None, **kwargs):
+    def update(
+        self,
+        z: np.ndarray,
+        hx_func: Callable,
+        r_mat: np.ndarray | None = None,
+        **kwargs: Any,
+    ) -> None:
+        r"""
+        Update step (Ensemble transformation).
+
+        Parameters
+        ----------
+        z : np.ndarray
+            Measurement vector (dim_z,).
+        hx_func : Callable
+            Nonlinear measurement function $h(x, **kwargs) \to z_{pred}$.
+        r_mat : np.ndarray, optional
+            Measurement noise covariance (dim_z, dim_z). If None, uses `self.R`.
+        **kwargs : Any
+            Additional arguments passed to measurement function.
         """
-        Update step.
-        z: Measurement vector
-        hx: Measurement function h(x, **kwargs) -> z_pred
-        R: Optional measurement noise covariance
-        """
-        if R is None:
-            R = self.R
+        r_curr = r_mat if r_mat is not None else self.R
 
         # Transform ensemble to measurement space
-        Z_ensemble = np.zeros((self.dim_z, self.N))
-        for i in range(self.N):
-            Z_ensemble[:, i] = hx(self.X[:, i], **kwargs)
+        z_ensemble = np.zeros((self.dim_z, self.num_ensemble))
+        for i in range(self.num_ensemble):
+            z_ensemble[:, i] = hx_func(self.X[:, i], **kwargs)
 
         # Sample mean of measurement ensemble
-        z_mean = np.mean(Z_ensemble, axis=1, keepdims=True)
+        z_mean = np.mean(z_ensemble, axis=1, keepdims=True)
 
         # Calculate ensemble anomalies (perturbations)
-        X_mean = np.mean(self.X, axis=1, keepdims=True)
-        A = self.X - X_mean  # State anomalies
-        B = Z_ensemble - z_mean  # Measurement anomalies
+        x_mean_vec = np.mean(self.X, axis=1, keepdims=True)
+        anomalies_x = self.X - x_mean_vec  # State anomalies
+        anomalies_z = z_ensemble - z_mean  # Measurement anomalies
 
         # Perturbed measurements (adding noise for each ensemble member)
-        Z_perturbed = np.zeros((self.dim_z, self.N))
-        for i in range(self.N):
-            noise = np.random.multivariate_normal(np.zeros(self.dim_z), R)
-            Z_perturbed[:, i] = z + noise
+        z_perturbed = np.zeros((self.dim_z, self.num_ensemble))
+        for i in range(self.num_ensemble):
+            noise = np.random.multivariate_normal(np.zeros(self.dim_z), r_curr)
+            z_perturbed[:, i] = z + noise
 
         # Innovation
-        D = Z_perturbed - Z_ensemble
+        innov_ensemble = z_perturbed - z_ensemble
 
         # Innovation covariance S = (1/(N-1)) * B * B.T + R
-        S = (1.0 / (self.N - 1)) * np.dot(B, B.T) + R
+        s_mat = (1.0 / (self.num_ensemble - 1)) * (anomalies_z @ anomalies_z.T) + r_curr
 
         # Cross-covariance Pxz = (1/(N-1)) * A * B.T
-        Pxz = (1.0 / (self.N - 1)) * np.dot(A, B.T)
+        pxz = (1.0 / (self.num_ensemble - 1)) * (anomalies_x @ anomalies_z.T)
 
         # Kalman Gain K = Pxz * inv(S)
-        K = np.dot(Pxz, np.linalg.inv(S))
+        k_gain = pxz @ np.linalg.inv(s_mat)
 
         # Correct each ensemble member
-        self.X += np.dot(K, D)
+        self.X += k_gain @ innov_ensemble
 
     @property
-    def x(self):
-        """Returns the ensemble mean state."""
+    def x(self) -> np.ndarray:
+        """Ensemble mean state vector."""
         return np.mean(self.X, axis=1)
 
     @property
-    def P(self):
-        """Returns the ensemble covariance matrix."""
-        A = self.X - np.mean(self.X, axis=1, keepdims=True)
-        return (1.0 / (self.N - 1)) * np.dot(A, A.T)
+    def P(self) -> np.ndarray:
+        """Ensemble covariance matrix."""
+        anomalies_x = self.X - np.mean(self.X, axis=1, keepdims=True)
+        return (1.0 / (self.num_ensemble - 1)) * (anomalies_x @ anomalies_x.T)

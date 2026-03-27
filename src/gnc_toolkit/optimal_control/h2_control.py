@@ -5,28 +5,60 @@ H2 Optimal Controller (LQG equivalent).
 from .lqg import LQG
 
 
+import numpy as np
+from typing import Tuple, Optional
+
 class H2Controller(LQG):
     """
-    H2 Optimal Controller.
+    H2-Optimal Controller.
 
-    The H2 control problem is equivalent to the LQG problem for a linear system
-    subject to white Gaussian noise, where the objective is to minimize the
-    H2 norm of the transfer function from disturbances to regulated outputs.
+    Solves the standard H2 control problem for linear state-space systems.
+    For systems with Gaussian noise and quadratic performance indices, the
+    H2-optimal controller is equivalent to the Linear Quadratic Gaussian (LQG)
+    controller.
 
-    This class inherits from LQG as the implementation is identical for standard
-    state-space systems. It provides an alias and can be extended for more
-    general H2 problems.
+    Parameters
+    ----------
+    A : np.ndarray
+        State matrix (nx x nx).
+    B : np.ndarray
+        Control input matrix (nx x nu).
+    C : np.ndarray
+        Output matrix (ny x nx).
+    Q_lqr : np.ndarray
+        State weighting matrix for LQR (nx x nx).
+    R_lqr : np.ndarray
+        Control weighting matrix for LQR (nu x nu).
+    Q_lqe : np.ndarray
+        Process noise covariance matrix for LQE (nw x nw).
+    R_lqe : np.ndarray
+        Measurement noise covariance matrix for LQE (ny x ny).
+    G_lqe : np.ndarray, optional
+        Process noise input matrix (nx x nw). Defaults to Identity.
     """
 
-    def __init__(self, A, B, C, Q_lqr, R_lqr, Q_lqe, R_lqe, G_lqe=None):
-        """
-        Initialize H2 Controller (LQG equivalent).
-        """
+    def __init__(
+        self,
+        A: np.ndarray,
+        B: np.ndarray,
+        C: np.ndarray,
+        Q_lqr: np.ndarray,
+        R_lqr: np.ndarray,
+        Q_lqe: np.ndarray,
+        R_lqe: np.ndarray,
+        G_lqe: Optional[np.ndarray] = None,
+    ):
+        """Initialize H2 controller as an LQG instance."""
         super().__init__(A, B, C, Q_lqr, R_lqr, Q_lqe, R_lqe, G_lqe)
 
-    def solve(self):
+    def solve(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Solve both LQR and LQE sub-problems.
+        Solve LQR and LQE optimal gain design problems.
+
+        Returns
+        -------
+        Tuple[np.ndarray, np.ndarray]
+            Optimal feedback gain K (nu x nx) and observer gain L (nx x ny).
         """
         self.lqr.solve()
         self.lqe.solve()

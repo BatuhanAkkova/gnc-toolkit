@@ -3,6 +3,7 @@ GNSS Receiver sensor model.
 """
 
 import numpy as np
+from typing import Optional, Tuple
 
 from gnc_toolkit.sensors.sensor import Sensor
 
@@ -10,38 +11,66 @@ from gnc_toolkit.sensors.sensor import Sensor
 class GNSSReceiver(Sensor):
     """
     GNSS Receiver sensor model.
-    Measures position and velocity:
-    r_meas = r_true + pos_bias + pos_noise
-    v_meas = v_true + vel_bias + vel_noise
+
+    Simulates position and velocity measurements in ECEF or ECI frame.
+
+    Parameters
+    ----------
+    pos_noise_std : float, optional
+        Position measurement noise standard deviation (m). Default is 10.0.
+    vel_noise_std : float, optional
+        Velocity measurement noise standard deviation (m/s). Default is 0.1.
+    name : str, optional
+        Sensor name. Default is "GNSS".
+    pos_bias : np.ndarray, optional
+        Constant position bias (3,).
+    vel_bias : np.ndarray, optional
+        Constant velocity bias (3,).
     """
 
     def __init__(
-        self, pos_noise_std=1.0, vel_noise_std=0.01, pos_bias=None, vel_bias=None, name="GNSS"
+        self, 
+        pos_noise_std: float = 10.0, 
+        vel_noise_std: float = 0.1, 
+        name: str = "GNSS",
+        pos_bias: Optional[np.ndarray] = None,
+        vel_bias: Optional[np.ndarray] = None,
+        **kwargs
     ):
-        """
-        Args:
-            pos_noise_std (float): Standard deviation of position noise [m].
-            vel_noise_std (float): Standard deviation of velocity noise [m/s].
-            pos_bias (np.ndarray): Constant position bias [m].
-            vel_bias (np.ndarray): Constant velocity bias [m/s].
-        """
         super().__init__(name)
         self.pos_noise_std = pos_noise_std
         self.vel_noise_std = vel_noise_std
-        self.pos_bias = pos_bias if pos_bias is not None else np.zeros(3)
-        self.vel_bias = vel_bias if vel_bias is not None else np.zeros(3)
+        self.pos_bias = np.asarray(pos_bias) if pos_bias is not None else np.zeros(3)
+        self.vel_bias = np.asarray(vel_bias) if vel_bias is not None else np.zeros(3)
 
-    def measure(self, true_r, true_v, **kwargs):
+    def measure(
+        self, true_pos: np.ndarray, true_vel: np.ndarray, **kwargs
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Args:
-            true_r (np.ndarray): True position vector [m].
-            true_v (np.ndarray): True velocity vector [m/s].
+        Generate GNSS position and velocity measurements.
+
+        Measurements are simulated by adding Gaussian noise and bias to the true values.
+        The coordinate frame (ECEF/ECI) is determined by the input `true_pos` and `true_vel`.
+
+        Parameters
+        ----------
+        true_pos : np.ndarray
+            True position vector (m).
+        true_vel : np.ndarray
+            True velocity vector (m/s).
+        **kwargs : dict
+            Additional parameters.
 
         Returns
         -------
-            tuple: (measured_r, measured_v)
+        tuple[np.ndarray, np.ndarray]
+            (meas_pos, meas_vel).
         """
-        meas_r = true_r + self.pos_bias + np.random.normal(0, self.pos_noise_std, 3)
-        meas_v = true_v + self.vel_bias + np.random.normal(0, self.vel_noise_std, 3)
+        meas_pos = self.add_gaussian_noise(true_pos, self.pos_noise_std) + self.pos_bias
+        meas_vel = self.add_gaussian_noise(true_vel, self.vel_noise_std) + self.vel_bias
 
-        return meas_r, meas_v
+        # Apply faults if any
+        meas_pos = self.apply_faults(meas_pos)
+        meas_vel = self.apply_faults(meas_vel)
+
+        return meas_pos, meas_vel

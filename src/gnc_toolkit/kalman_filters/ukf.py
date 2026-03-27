@@ -2,37 +2,75 @@
 Unscented Kalman Filter (UKF) with support for states on manifolds.
 """
 
+from typing import Callable, Any, Optional
 import numpy as np
 from scipy.linalg import cholesky, sqrtm
 
 
 class UKF:
-    """
+    r"""
     Generalized Unscented Kalman Filter (UKF).
-    Supports states on manifolds by providing custom add, subtract, and mean functions.
+
+    Propagates state and covariance through non-linear functions using the 
+    Unscented Transform (UT) with support for manifolds (e.g., $S^3$ for quaternions).
+
+    Parameters
+    ----------
+    dim_x : int
+        Dimension of the full state vector $x$.
+    dim_z : int
+        Dimension of the measurement vector $z$.
+    dim_p : int, optional
+        Dimension of the covariance $P$ in tangent space. Defaults to `dim_x`.
+    alpha : float, optional
+        UT tuning parameter $(10^{-4}, 1)$. Controls spread of sigma points.
+    beta : float, optional
+        UT parameter incorporating prior knowledge of distribution. Default 2.0.
+    kappa : float, optional
+        UT secondary scaling parameter. Usually 0 or $3-L$.
+    subtract_x : Callable, optional
+        Tangent space difference $(x_1, x_2) \to dx$.
+    add_x : Callable, optional
+        Manifold state update $(x, dx) \to x_{new}$.
+    mean_x : Callable, optional
+        Weighted manifold mean $(sigmas, weights) \to x_{mean}$.
     """
 
     def __init__(
         self,
-        dim_x,
-        dim_z,
-        dim_p=None,
-        alpha=1e-3,
-        beta=2.0,
-        kappa=0.0,
-        subtract_x=None,
-        add_x=None,
-        mean_x=None,
-    ):
-        """
-        Initialize the UKF.
-        dim_x: Dimension of the state vector x
-        dim_z: Dimension of the measurement vector z
-        dim_p: Dimension of the covariance matrix P (and tangent space). Defaults to dim_x.
-        alpha, beta, kappa: UKF tuning parameters
-        subtract_x: Function (x1, x2) -> dx (difference in tangent space, vector of size dim_p)
-        add_x: Function (x, dx) -> x_new (add tangent vector dx of size dim_p to state x)
-        mean_x: Function (sigmas, weights) -> x_mean (average sigma points of size dim_x)
+        dim_x: int,
+        dim_z: int,
+        dim_p: Optional[int] = None,
+        alpha: float = 1e-3,
+        beta: float = 2.0,
+        kappa: float = 0.0,
+        subtract_x: Optional[Callable[..., np.ndarray]] = None,
+        add_x: Optional[Callable[..., np.ndarray]] = None,
+        mean_x: Optional[Callable[..., np.ndarray]] = None,
+    ) -> None:
+        r"""
+        Initialize UKF with Unscented Transform parameters.
+
+        Parameters
+        ----------
+        dim_x : int
+            Full state vector dimension.
+        dim_z : int
+            Measurement vector dimension.
+        dim_p : int | None, optional
+            Error covariance dimension (tangent space).
+        alpha : float, optional
+            Sigma point spread tuning. Default 1e-3.
+        beta : float, optional
+            Distribution prior. Default 2.0 (Gaussian).
+        kappa : float, optional
+            Secondary scaling. Default 0.
+        subtract_x : Callable | None, optional
+            Error calculation $(x_1, x_2) \to dx$.
+        add_x : Callable | None, optional
+            State update $(x, dx) \to x_{new}$.
+        mean_x : Callable | None, optional
+            Weighted manifold mean calculation.
         """
         self.dim_x = dim_x
         self.dim_z = dim_z
@@ -42,24 +80,29 @@ class UKF:
         self.beta = beta
         self.kappa = kappa
 
-        # Scaling parameter based on tangent space dimension
+        # 1. UT Scaling Parameters
+        # $\lambda = \alpha^2 (\text{dim_p} + \kappa) - \text{dim_p}$
         self.lambda_ = alpha**2 * (self.dim_p + kappa) - self.dim_p
+        # $\gamma = \sqrt{\text{dim_p} + \lambda}$
         self.gamma = np.sqrt(self.dim_p + self.lambda_)
         self.num_sigmas = 2 * self.dim_p + 1
 
-        # Weights for mean and covariance
+        # 2. Weights for Mean (m) and Covariance (c)
         self.Wm = np.zeros(self.num_sigmas)
         self.Wc = np.zeros(self.num_sigmas)
 
+        # $W_m^{(0)} = \frac{\lambda}{\text{dim_p} + \lambda}$
         self.Wm[0] = self.lambda_ / (self.dim_p + self.lambda_)
+        # $W_c^{(0)} = \frac{\lambda}{\text{dim_p} + \lambda} + (1 - \alpha^2 + \beta)$
         self.Wc[0] = self.lambda_ / (self.dim_p + self.lambda_) + (1 - alpha**2 + beta)
 
+        # $W_m^{(i)} = W_c^{(i)} = \frac{1}{2(\text{dim_p} + \lambda)}$ for $i=1, \dots, 2\text{dim_p}$
         w = 1.0 / (2 * (self.dim_p + self.lambda_))
         for i in range(1, self.num_sigmas):
             self.Wm[i] = w
             self.Wc[i] = w
 
-        # Default vector operations if none provided (assumes dim_p == dim_x)
+        # 3. Default manifold operations (fall back to vector space)
         self.subtract_x = subtract_x if subtract_x is not None else lambda x1, x2: x1 - x2
         self.add_x = add_x if add_x is not None else lambda x, dx: x + dx
         self.mean_x = (
@@ -71,96 +114,133 @@ class UKF:
         self.Q = np.eye(self.dim_p)
         self.R = np.eye(dim_z)
 
-    def predict(self, dt, fx, Q=None, **kwargs):
+    def predict(
+        self,
+        dt: float,
+        fx_func: Callable[..., np.ndarray],
+        q_mat: Optional[np.ndarray] = None,
+        **kwargs: Any
+    ) -> None:
         """
-        Predict step.
-        dt: Time step
-        fx: State transition function f(x, dt, **kwargs) -> x_new
-        Q: Optional process noise covariance
-        """
-        if Q is None:
-            Q = self.Q
+        Unscented transform prediction step.
 
-        # Generate sigma points from current state
+        Parameters
+        ----------
+        dt : float
+            Time step (s).
+        fx_func : Callable
+            Non-linear transition function.
+        q_mat : np.ndarray | None, optional
+            Process noise covariance.
+        **kwargs : Any
+            Additional parameters.
+        """
+        q = np.asarray(q_mat) if q_mat is not None else self.Q
+
+        # 1. Generate sigma points in tangent space
         sigmas = self.generate_sigma_points(self.x, self.P)
 
-        # Propagate sigma points
+        # 2. Transform sigma points
         sigmas_f = []
         for i in range(self.num_sigmas):
-            sigmas_f.append(fx(sigmas[i], dt, **kwargs))
-        sigmas_f = np.array(sigmas_f)
+            sigmas_f.append(fx_func(sigmas[i], dt, **kwargs))
+        sigmas_f_arr = np.array(sigmas_f)
 
-        # Calculate predicted mean
-        self.x = self.mean_x(sigmas_f, self.Wm)
+        # 3. Calculate predicted mean
+        self.x = self.mean_x(sigmas_f_arr, self.Wm)
 
-        # Calculate predicted covariance
+        # 4. Calculate predicted covariance
         self.P = np.zeros((self.dim_p, self.dim_p))
         for i in range(self.num_sigmas):
-            dx = self.subtract_x(sigmas_f[i], self.x)
+            dx = self.subtract_x(sigmas_f_arr[i], self.x)
             self.P += self.Wc[i] * np.outer(dx, dx)
-        self.P += Q * dt
+        self.P += q * dt
 
-    def update(self, z, hx, R=None, **kwargs):
-        """
-        Update step.
-        z: Measurement vector
-        hx: Measurement function h(x, **kwargs) -> z_pred
-        R: Optional measurement noise covariance
-        """
-        if R is None:
-            R = self.R
+    def update(
+        self,
+        z: np.ndarray,
+        hx_func: Callable,
+        r_mat: Optional[np.ndarray] = None,
+        **kwargs: Any
+    ) -> None:
+        r"""
+        Unscented update step.
 
-        # Regenerate sigma points from predicted distribution
+        Parameters
+        ----------
+        z : np.ndarray
+            Measurement vector.
+        hx_func : Callable
+            Non-linear measurement model $h(x, \dots) \to z_{pred}$.
+        r_mat : np.ndarray, optional
+            Measurement noise covariance. Defaults to `self.R`.
+        **kwargs : Any
+            Additional parameters for $h$.
+        """
+        r = np.asarray(r_mat) if r_mat is not None else self.R
+        zv = np.asarray(z)
+
+        # 1. Regenerate sigma points from current prior
         sigmas_f = self.generate_sigma_points(self.x, self.P)
 
-        # Transform sigma points into measurement space
+        # 2. Transform to observation space
         sigmas_h = []
         for i in range(self.num_sigmas):
-            sigmas_h.append(hx(sigmas_f[i], **kwargs))
-        sigmas_h = np.array(sigmas_h)
+            sigmas_h.append(hx_func(sigmas_f[i], **kwargs))
+        sigmas_h_arr = np.array(sigmas_h)
 
-        # Mean measurement
-        zp = np.dot(self.Wm, sigmas_h)
-
-        # Innovation covariance S and Cross-covariance Pxz
-        S = np.zeros((self.dim_z, self.dim_z))
-        Pxz = np.zeros((self.dim_p, self.dim_z))
+        # 3. Compute measurement mean and covariances
+        zp = np.dot(self.Wm, sigmas_h_arr)
+        
+        s_mat = np.zeros((self.dim_z, self.dim_z))
+        pxz = np.zeros((self.dim_p, self.dim_z))
 
         for i in range(self.num_sigmas):
-            dz = sigmas_h[i] - zp
+            dz = sigmas_h_arr[i] - zp
             dx = self.subtract_x(sigmas_f[i], self.x)
 
-            S += self.Wc[i] * np.outer(dz, dz)
-            Pxz += self.Wc[i] * np.outer(dx, dz)
+            s_mat += self.Wc[i] * np.outer(dz, dz)
+            pxz += self.Wc[i] * np.outer(dx, dz)
 
-        S += R
+        s_mat += r
 
-        # Kalman Gain
-        K = np.dot(Pxz, np.linalg.inv(S))
+        # 4. Correct state and covariance
+        k_gain = pxz @ np.linalg.inv(s_mat)
+        self.x = self.add_x(self.x, k_gain @ (zv - zp))
+        self.P = self.P - (k_gain @ s_mat @ k_gain.T)
 
-        # Correct state and covariance
-        innov = z - zp
-        self.x = self.add_x(self.x, np.dot(K, innov))
-        self.P = self.P - np.dot(K, np.dot(S, K.T))
+    def generate_sigma_points(self, x: np.ndarray, p_cov: np.ndarray) -> np.ndarray:
+        """
+        Generates sigma points around $x$ using covariance $P$ in tangent space.
 
-    def generate_sigma_points(self, x, P):
-        """Generates sigma points around x using covariance P in tangent space."""
+        Parameters
+        ----------
+        x : np.ndarray
+            Current state estimate.
+        p_cov : np.ndarray
+            Current estimation error covariance (tangent space).
+
+        Returns
+        -------
+        np.ndarray
+            Sigma points array (num_sigmas, dim_x).
+        """
         sigmas = [x]
 
-        # Ensure symmetry and add small epsilon for stability
-        P_sym = (P + P.T) / 2 + np.eye(self.dim_p) * 1e-12
+        # Ensure symmetry and stability
+        p_sym = (p_cov + p_cov.T) / 2 + np.eye(self.dim_p) * 1e-12
 
         try:
-            L = cholesky((self.dim_p + self.lambda_) * P_sym, lower=True)
+            l_mat = cholesky((self.dim_p + self.lambda_) * p_sym, lower=True)
             for i in range(self.dim_p):
-                sigmas.append(self.add_x(x, L[:, i]))
-                sigmas.append(self.add_x(x, -L[:, i]))
+                sigmas.append(self.add_x(x, l_mat[:, i]))
+                sigmas.append(self.add_x(x, -l_mat[:, i]))
         except np.linalg.LinAlgError:
             # Fallback for non-PSD matrices
-            U = sqrtm((self.dim_p + self.lambda_) * P_sym).real
+            u_mat = sqrtm((self.dim_p + self.lambda_) * p_sym).real
             for i in range(self.dim_p):
-                sigmas.append(self.add_x(x, U[i]))
-                sigmas.append(self.add_x(x, -U[i]))
+                sigmas.append(self.add_x(x, u_mat[i]))
+                sigmas.append(self.add_x(x, -u_mat[i]))
 
         return np.array(sigmas)
 

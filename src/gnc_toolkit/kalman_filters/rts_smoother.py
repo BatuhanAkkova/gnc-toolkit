@@ -5,50 +5,63 @@ Rauch-Tung-Striebel (RTS) Smoother for linear systems.
 import numpy as np
 
 
-def rts_smoother(Xs, Ps, Fs, Qs):
+def rts_smoother(
+    x_filtered_list: list[np.ndarray],
+    p_filtered_list: list[np.ndarray],
+    f_mats: list[np.ndarray],
+    q_mats: list[np.ndarray],
+) -> tuple[np.ndarray, np.ndarray]:
     """
-    Rauch-Tung-Striebel (RTS) Smoother.
-    Performs a backward pass over Kalman filter results to provide optimal
-    estimates given all data in a fixed interval.
+    Rauch-Tung-Striebel (RTS) Smoother for linear systems.
 
-    Args:
-        Xs (list of np.ndarray): List of predicted/updated states from forward pass.
-                                 Length N. Xs[k] is x_{k|k}.
-        Ps (list of np.ndarray): List of predicted/updated covariances from forward pass.
-                                 Length N. Ps[k] is P_{k|k}.
-        Fs (list of np.ndarray): List of state transition matrices.
-                                 Length N-1. Fs[k] is F from k to k+1.
-        Qs (list of np.ndarray): List of process noise covariances.
-                                 Length N-1. Qs[k] is Q from k to k+1.
+    Performs a backward pass over Kalman filter results to provide optimal 
+    minimum-variance estimates utilizing all future information (fixed-interval 
+    smoothing).
+
+    Parameters
+    ----------
+    x_filtered_list : list[np.ndarray]
+        List of filtered state estimates $x_{k|k}$ (N steps).
+    p_filtered_list : list[np.ndarray]
+        List of filtered covariances $P_{k|k}$ (N steps).
+    f_mats : list[np.ndarray]
+        List of state transition matrices $F_k$ from $k$ to $k+1$. (N-1 steps).
+    q_mats : list[np.ndarray]
+        List of process noise covariances $Q_k$ from $k$ to $k+1$. (N-1 steps).
 
     Returns
     -------
-        X_smooth (np.ndarray): Smoothed states, (N, dim_x).
-        P_smooth (np.ndarray): Smoothed covariances, (N, dim_x, dim_x).
+    tuple[np.ndarray, np.ndarray]
+        (x_smoothed, p_smoothed) arrays.
+        - x_smoothed: (N, dim_x)
+        - p_smoothed: (N, dim_x, dim_x)
     """
-    num_steps = len(Xs)
-    dim_x = Xs[0].shape[0]
+    num_steps = len(x_filtered_list)
+    dim_x = x_filtered_list[0].shape[0]
 
-    X_smooth = np.zeros((num_steps, dim_x))
-    P_smooth = np.zeros((num_steps, dim_x, dim_x))
+    x_smoothed = np.zeros((num_steps, dim_x))
+    p_smoothed = np.zeros((num_steps, dim_x, dim_x))
 
-    # Initialize with the last filtered state
-    X_smooth[-1] = Xs[-1]
-    P_smooth[-1] = Ps[-1]
+    # 1. Initialize with terminal filtered state
+    x_smoothed[-1] = x_filtered_list[-1]
+    p_smoothed[-1] = p_filtered_list[-1]
 
-    # Backward pass
+    # 2. Sequential Backward Pass
     for k in range(num_steps - 2, -1, -1):
-        # Forward prediction
-        P_pred = np.dot(np.dot(Fs[k], Ps[k]), Fs[k].T) + Qs[k]
+        f = f_mats[k]
+        q = q_mats[k]
+        xf = x_filtered_list[k]
+        pf = p_filtered_list[k]
 
-        # Smoother gain
-        C = np.dot(np.dot(Ps[k], Fs[k].T), np.linalg.inv(P_pred))
+        # a. Predicted state and covariance at step k
+        x_pred = f @ xf
+        p_pred = (f @ pf @ f.T) + q
 
-        # Smoothed state
-        X_pred = np.dot(Fs[k], Xs[k])
-        X_smooth[k] = Xs[k] + np.dot(C, X_smooth[k + 1] - X_pred)
+        # b. Smoother Gain: C_k = P_k|k * F_k' * [P_k+1|k]^-1
+        gain_c = pf @ f.T @ np.linalg.inv(p_pred)
 
-        # Smoothed covariance
-        P_smooth[k] = Ps[k] + np.dot(np.dot(C, P_smooth[k + 1] - P_pred), C.T)
+        # c. Smooth state and covariance
+        x_smoothed[k] = xf + gain_c @ (x_smoothed[k + 1] - x_pred)
+        p_smoothed[k] = pf + gain_c @ (p_smoothed[k + 1] - p_pred) @ gain_c.T
 
-    return X_smooth, P_smooth
+    return x_smoothed, p_smoothed

@@ -3,12 +3,27 @@ Generic PID controller implementation with anti-windup logic.
 """
 
 
-class PID:
-    """
-    A generic PID controller with anti-windup logic.
+from typing import Optional, Tuple
 
-    The controller output is calculated as:
-    u(t) = Kp * e(t) + Ki * integral(e(t)) + Kd * derivative(e(t))
+class PID:
+    r"""
+    Generic PID controller with anti-windup.
+
+    Control Law:
+    $u(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de(t)}{dt}$
+
+    Parameters
+    ----------
+    kp : float
+        Proportional gain.
+    ki : float
+        Integral gain.
+    kd : float
+        Derivative gain.
+    output_limits : tuple[float, float] | None, optional
+        (min, max) saturation limits.
+    anti_windup_method : str, optional
+        Method (e.g., "clamping"). Default "clamping".
     """
 
     def __init__(
@@ -16,19 +31,10 @@ class PID:
         kp: float,
         ki: float,
         kd: float,
-        output_limits: tuple[float, float] | None = None,
+        output_limits: Optional[Tuple[float, float]] = None,
         anti_windup_method: str = "clamping",
     ):
-        """
-        Initialize the PID controller.
-
-        Args:
-            kp: Proportional gain
-            ki: Integral gain
-            kd: Derivative gain
-            output_limits: Optional tuple (min, max) for output saturation
-            anti_windup_method: Method for anti-windup. Currently supports "clamping".
-        """
+        """Initialize the PID controller instance."""
         self.kp = kp
         self.ki = ki
         self.kd = kd
@@ -39,22 +45,26 @@ class PID:
         self.previous_error = 0.0
         self.reset()
 
-    def reset(self):
-        """Reset the internal state of the controller."""
+    def reset(self) -> None:
+        """Reset the internal integrator and error states to zero."""
         self.integral_error = 0.0
         self.previous_error = 0.0
 
     def update(self, error: float, dt: float) -> float:
         """
-        Update the PID controller.
+        Update the PID control calculation for a single time step.
 
-        Args:
-            error: The current error signal (setpoint - measured)
-            dt: Time step in seconds
+        Parameters
+        ----------
+        error : float
+            The current error signal (setpoint - measured).
+        dt : float
+            Time step since the last update (s).
 
         Returns
         -------
-            Control output
+        float
+            The computed control output signal.
         """
         if dt <= 0:
             return 0.0
@@ -66,7 +76,7 @@ class PID:
         self.integral_error += error * dt
         i_term = self.ki * self.integral_error
 
-        # Derivative term
+        # Derivative term using backward difference
         derivative = (error - self.previous_error) / dt
         d_term = self.kd * derivative
 
@@ -77,6 +87,7 @@ class PID:
         if self.output_limits is not None:
             min_limit, max_limit = self.output_limits
 
+            # Saturation check
             if output > max_limit:
                 output_clamped = max_limit
             elif output < min_limit:
@@ -84,14 +95,13 @@ class PID:
             else:
                 output_clamped = output
 
-            # Anti-windup (Clamping)
-            # If output is saturated and error is driving it further into saturation,
-            # stop integrating.
+            # Anti-windup (Clamping method)
+            # If the output is saturated AND the error has the same sign as the
+            # control signal (driving it further into saturation), stop integrating.
             if self.anti_windup_method == "clamping":
                 if output != output_clamped:
-                    # Classic clamping:
                     if (output > max_limit and error > 0) or (output < min_limit and error < 0):
-                        # Revert integration
+                        # Revert the integration step
                         self.integral_error -= error * dt
 
             output = output_clamped

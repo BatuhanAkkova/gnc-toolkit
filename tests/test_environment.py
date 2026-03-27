@@ -9,6 +9,8 @@ from gnc_toolkit.environment.thermal import ThermalEnvironment
 from gnc_toolkit.environment.wind import AtmosphereCoRotation
 from gnc_toolkit.environment.moon import Moon
 from gnc_toolkit.utils.time_utils import calc_jd
+import sys
+import importlib
 
 def test_exponential_model():
     model = Exponential()
@@ -65,8 +67,9 @@ def test_tilted_dipole_field():
     assert np.linalg.norm(B) > 1e-6
 
 def test_igrf_field_mock(mocker):    
-    # Mock ppigrf.igrf
-    mock_igrf = mocker.patch("ppigrf.igrf")
+    # Mock ppigrf.igrf via the module reference for robustness
+    import gnc_toolkit.environment.mag_field as mag_field
+    mock_igrf = mocker.patch.object(mag_field.ppigrf, "igrf")
     mock_igrf.return_value = [1e-5, 2e-5, 3e-5]
     
     lat = 0.0
@@ -77,7 +80,6 @@ def test_igrf_field_mock(mocker):
     res = igrf_field(lat, lon, alt, date)
     assert len(res) == 3
     assert np.allclose(res, [1e-5, 2e-5, 3e-5])
-    assert np.allclose(res, [1e-5, 2e-5, 3e-5])
     mock_igrf.assert_called_once()
 
 def test_exponential_model_below_sea_level():
@@ -87,6 +89,14 @@ def test_exponential_model_below_sea_level():
     jd = 2451545.0
     rho = model.get_density(r_eci, jd)
     assert rho == model.rho0
+
+def test_density_h_scale_alias_and_low_alt():
+    e = Exponential(h_scale=10.0)
+    assert e.h_scale == 10.0
+    hp = HarrisPriester()
+    r = np.array([6371e3 + 50e3, 0, 0])
+    rho = hp.get_density(r, 2460000.5)
+    assert rho == 4.974e-07
 
 def test_nrlmsise_model_array_output(mocker):
     mock_calc = mocker.patch("pymsis.calculate")
@@ -117,13 +127,26 @@ def test_igrf_field_import_error(mocker):
     with pytest.raises(ImportError, match="ppigrf not installed"):
         mag_field.igrf_field(0, 0, 600, datetime.datetime(2024, 1, 1))
 
+def test_mag_field_small_r():
+    b = tilted_dipole_field(np.array([0.5, 0.0, 0.0]))
+    assert np.allclose(b, 0.0)
+
+def test_mag_field_module_import_error(monkeypatch):
+    monkeypatch.setitem(sys.modules, "ppigrf", None)
+    import gnc_toolkit.environment.mag_field
+    importlib.reload(gnc_toolkit.environment.mag_field)
+    assert gnc_toolkit.environment.mag_field.ppigrf is None
+    del sys.modules["ppigrf"]
+    importlib.reload(gnc_toolkit.environment.mag_field)
+
 
 
 # --- Extended Environment Tests ---
 
 def test_wmm_field_mock(mocker):
-    # Mock ppigrf.igrf since wmm_field uses it as a proxy
-    mock_igrf = mocker.patch("ppigrf.igrf")
+    # Mock ppigrf.igrf via the module reference
+    import gnc_toolkit.environment.mag_field as mag_field
+    mock_igrf = mocker.patch.object(mag_field.ppigrf, "igrf")
     mock_igrf.return_value = [1.1e-5, 2.1e-5, 3.1e-5]
     
     lat, lon, alt = 45.0, -120.0, 500.0
@@ -180,6 +203,10 @@ def test_space_weather_set_solar_flux_avg():
     sw.set_solar_flux(180.0, 170.0)
     assert sw.f107 == 180.0
     assert sw.f107_avg == 170.0
+
+def test_space_weather_ap_zero():
+    sw = SpaceWeather(ap=0.0)
+    assert sw.kp == 0.0
 
 def test_atmosphere_wind_relative_velocity():
     from gnc_toolkit.environment.wind import AtmosphereCoRotation

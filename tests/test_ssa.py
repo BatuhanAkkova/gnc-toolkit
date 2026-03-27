@@ -227,3 +227,12 @@ def test_compute_mahalanobis_distance_singular():
     dist = compute_mahalanobis_distance(x1, x2, cov1, cov2)
     assert np.isclose(dist, np.linalg.norm(x1 - x2))
 
+def test_conjunction_coverage():
+    r1 = np.array([7000e3, 0, 0])
+    v1 = np.array([0, 7500, 0])
+    r2 = r1 + np.array([1, 0.0000000001, 0])
+    v2 = v1 + np.array([7500, 0, 0])
+    hbr = 10.0
+    cov = np.eye(3)
+    pc = compute_pc_foster(r1, v1, cov, r2, v2, cov, hbr)
+    assert pc >= 0

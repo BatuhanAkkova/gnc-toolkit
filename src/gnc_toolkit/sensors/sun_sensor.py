@@ -10,29 +10,52 @@ from gnc_toolkit.sensors.sensor import Sensor
 class SunSensor(Sensor):
     """
     Sun Sensor model.
+
     Measures the sun vector in the body frame.
+
+    Parameters
+    ----------
+    noise_std : float, optional
+        Standard deviation of noise (rad or unitless depending on vector norm). Default is 0.0.
+    bias : np.ndarray, optional
+        Bias vector to add. Default is zero vector.
+    misalignment : np.ndarray, optional
+        3x3 misalignment matrix. Default is None.
+    scale_factor : float | np.ndarray, optional
+        Scale factor error. Default is 1.0.
+    name : str, optional
+        Sensor name. Default is "SunSensor".
     """
 
     def __init__(
-        self, noise_std=0.0, bias=None, misalignment=None, scale_factor=1.0, name="SunSensor"
+        self,
+        noise_std: float = 0.0,
+        bias: np.ndarray | None = None,
+        misalignment: np.ndarray | None = None,
+        scale_factor: float | np.ndarray = 1.0,
+        name: str = "SunSensor",
     ):
-        """
-        Args:
-            noise_std (float): Standard deviation of noise [rad] or unitless depending on vector norm.
-            bias (np.ndarray): Bias vector to add.
-            misalignment (np.ndarray): 3x3 misalignment matrix.
-            scale_factor (float or np.ndarray): Scale factor error.
-        """
         super().__init__(name)
         self.noise_std = noise_std
         self.bias = bias if bias is not None else np.zeros(3)
         self.misalignment = misalignment
         self.scale_factor = scale_factor
 
-    def measure(self, true_sun_vec_body, **kwargs):
+    def measure(self, true_sun_vec_body: np.ndarray, **kwargs) -> np.ndarray:
         """
-        Args:
-            true_sun_vec_body (np.ndarray): True sun vector in body frame.
+        Generate sun vector measurement.
+
+        Parameters
+        ----------
+        true_sun_vec_body : np.ndarray
+            True sun vector in body frame.
+        **kwargs : dict
+            Additional parameters.
+
+        Returns
+        -------
+        np.ndarray
+            Measured (and normalized) sun vector in body frame.
         """
         # Apply calibration
         calibrated = self.apply_calibration(

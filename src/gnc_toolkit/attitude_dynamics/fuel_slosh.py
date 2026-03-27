@@ -5,70 +5,102 @@ Fuel slosh dynamics using equivalent pendulum models.
 import numpy as np
 
 
-def fuel_slosh_dynamics(theta, theta_dot, omega, omega_dot, L, r_base, g_equiv):
-    """
-    Computes the second derivative of the slosh pendulum angle.
+def fuel_slosh_dynamics(
+    theta: float,
+    theta_dot: float,
+    omega: np.ndarray,
+    omega_dot: np.ndarray,
+    L: float,
+    r_base: np.ndarray,
+    g_equiv: np.ndarray,
+) -> float:
+    r"""
+    Compute slosh pendulum angular acceleration $\ddot{\theta}$.
 
-    Model: Pendulum of length L, base at r_base from spacecraft CM.
-    g_equiv: Equivalent acceleration (e.g., from thrust).
+    The pendulum is subject to base acceleration:
+    $\mathbf{a}_{base} = \mathbf{g}_{eq} - \dot{\omega} \times \mathbf{r}_b - \omega \times (\omega \times \mathbf{r}_b)$
 
-    Args:
-        theta (float): Pendulum angle [rad].
-        theta_dot (float): Pendulum angular velocity [rad/s].
-        omega (np.ndarray): Spacecraft angular velocity (3,).
-        omega_dot (np.ndarray): Spacecraft angular acceleration (3,).
-        L (float): Pendulum length [m].
-        r_base (np.ndarray): Location of pendulum base from CM (3,).
-        g_equiv (np.ndarray): Equivalent gravity/acceleration vector (3,).
+    Parameters
+    ----------
+    theta : float
+        Pendulum angle (rad).
+    theta_dot : float
+        Pendulum rate (rad/s).
+    omega : np.ndarray
+        Spacecraft angular velocity (3,) (rad/s).
+    omega_dot : np.ndarray
+        Spacecraft angular acceleration (3,) (rad/s$^2$).
+    L : float
+        Pendulum length (m).
+    r_base : np.ndarray
+        Pivot location relative to spacecraft CM (3,) (m).
+    g_equiv : np.ndarray
+        Effective gravity/acceleration vector (3,) (m/s$^2$).
 
     Returns
     -------
-        float: Pendulum angular acceleration theta_ddot [rad/s^2].
+    float
+        Pendulum acceleration $\ddot{\theta}$ (rad/s$^2$).
     """
-    # Simple pendulum in a non-inertial frame
-    # Accel at base: a_base = g_equiv - omega_dot x r_base - omega x (omega x r_base)
-    a_base = g_equiv - np.cross(omega_dot, r_base) - np.cross(omega, np.cross(omega, r_base))
+    w = np.asarray(omega)
+    odot = np.asarray(omega_dot)
+    rb = np.asarray(r_base)
+    ge = np.asarray(g_equiv)
 
-    # Projection of a_base onto the pendulum's transverse direction
-    # Assume pendulum swings in the x-z plane of its local frame
-    # Local unit vectors:
-    # e_r (radial) = [sin(theta), 0, -cos(theta)]
-    # e_theta (transverse) = [cos(theta), 0, sin(theta)]
+    # 1. Acceleration at the pivot (base) in body frame
+    # a_base = g - omega_dot x r - omega x (omega x r)
+    a_base = ge - np.cross(odot, rb) - np.cross(w, np.cross(w, rb))
+
+    # 2. Transverse unit vector: e_theta = [cos(theta), 0, sin(theta)]
     e_theta = np.array([np.cos(theta), 0, np.sin(theta)])
 
-    # theta_ddot = (a_base . e_theta) / L
-    theta_ddot = np.dot(a_base, e_theta) / L
-
-    return theta_ddot
+    # 3. Torque balance / dynamics: L * theta_ddot = a_base \cdot e_theta
+    return float(np.dot(a_base, e_theta) / L)
 
 
-def fuel_slosh_torque(m_p, L, theta, theta_dot, theta_ddot, r_base):
+def fuel_slosh_torque(
+    m_p: float,
+    L: float,
+    theta: float,
+    theta_dot: float,
+    theta_ddot: float,
+    r_base: np.ndarray
+) -> np.ndarray:
     """
-    Computes the reaction torque from fuel slosh on the spacecraft body.
+    Compute reaction torque from slosh bob.
 
-    Args:
-        m_p (float): Pendulum mass [kg].
-        L (float): Pendulum length [m].
-        theta (float): Pendulum angle [rad].
-        theta_dot (float): Pendulum angular velocity [rad/s].
-        theta_ddot (float): Pendulum angular acceleration [rad/s^2].
-        r_base (np.ndarray): Base location (3,).
+    Parameters
+    ----------
+    m_p : float
+        Slosh mass (kg).
+    L : float
+        Pendulum length (m).
+    theta : float
+        Pendulum angle (rad).
+    theta_dot : float
+        Pendulum rate (rad/s).
+    theta_ddot : float
+        Pendulum acceleration (rad/s$^2$).
+    r_base : np.ndarray
+        Pivot location (3,) (m).
 
     Returns
     -------
-        np.ndarray: Slosh reaction torque (3,).
+    np.ndarray
+        Reaction torque vector (3,) (Nm).
     """
-    # Relative acceleration of bob:
-    # a_rel = L * theta_ddot * e_theta - L * theta_dot^2 * e_r
+    rb = np.asarray(r_base)
+
+    # Relative unit vectors for pendulum bob
     e_r = np.array([np.sin(theta), 0, -np.cos(theta)])
     e_theta = np.array([np.cos(theta), 0, np.sin(theta)])
+    
+    # Bob relative acceleration: a_rel = L*theta_ddot*e_theta - L*theta_dot^2*e_r
     a_rel = L * theta_ddot * e_theta - L * (theta_dot**2) * e_r
 
-    # Reaction force on body: -m_p * a_rel
-    force_slosh = -m_p * a_rel
+    # Reaction force: F_react = -m_p * a_rel
+    force_react = -m_p * a_rel
 
-    # Torque on body: r_bob x force_slosh
-    r_bob = r_base + L * e_r
-    torque_slosh = np.cross(r_bob, force_slosh)
-
-    return torque_slosh
+    # Torque: r_bob x F_react
+    r_bob = rb + L * e_r
+    return np.cross(r_bob, force_react)

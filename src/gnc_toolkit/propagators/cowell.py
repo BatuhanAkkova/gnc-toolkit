@@ -3,6 +3,7 @@ Numerical Cowell Propagator.
 """
 
 import numpy as np
+from typing import Callable
 
 from ..integrators.integrator import Integrator
 from ..integrators.rk4 import RK4
@@ -12,37 +13,52 @@ from .base import Propagator
 class CowellPropagator(Propagator):
     """
     Numerical Cowell Propagator.
+
     Integrates the equations of motion numerically, allowing for perturbations.
+
+    Parameters
+    ----------
+    integrator : Integrator, optional
+        Numerical integrator instance. Defaults to RK4.
+    mu : float, optional
+        Gravitational parameter (m^3/s^2). Default is Earth's.
     """
 
-    def __init__(self, integrator: Integrator = None, mu=398600.4418e9):
-        """
-        Initialize the Cowell Propagator.
-
-        Args:
-            integrator (Integrator): Numerical integrator instance. Defaults to RK4.
-            mu (float): Gravitational parameter [m^3/s^2]. Default is Earth.
-        """
+    def __init__(self, integrator: Integrator | None = None, mu: float = 398600.4418e9):
         self.integrator = integrator if integrator else RK4()
         self.mu = mu
 
     def propagate(
-        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, perturbation_acc_fn=None, **kwargs
-    ):
+        self,
+        r_i: np.ndarray,
+        v_i: np.ndarray,
+        dt: float,
+        perturbation_acc_fn: Callable | None = None,
+        **kwargs,
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagates the state using numerical integration.
 
-        Args:
-            r_i (np.ndarray): Initial position vector [km] or [m].
-            v_i (np.ndarray): Initial velocity vector [km/s] or [m/s].
-            dt (float): Propagation duration [s].
-            perturbation_acc_fn (callable, optional): Function that returns perturbation accelerations.
-                                                      Signature: acc_pert = f(t, r, v)
-            dt_step (float, optional): Step size for the integrator. Default is dt (single step) or 10s if dt is large.
+        Parameters
+        ----------
+        r_i : np.ndarray
+            Initial position vector (m).
+        v_i : np.ndarray
+            Initial velocity vector (m/s).
+        dt : float
+            Propagation duration (s).
+        perturbation_acc_fn : callable, optional
+            Function that returns perturbation accelerations.
+            Signature: acc_pert = f(t, r, v) -> np.ndarray.
+        **kwargs : dict
+            Additional arguments, e.g., 'dt_step' for integration step size.
 
         Returns
         -------
-            tuple: (r_f, v_f) Final position and velocity vectors.
+        tuple[np.ndarray, np.ndarray]
+            (r_f, v_f).
+            r_f : Final position vector (m).
+            v_f : Final velocity vector (m/s).
         """
         # Define the state vector y = [r, v]
         y0 = np.concatenate([r_i, v_i])
@@ -74,7 +90,7 @@ class CowellPropagator(Propagator):
 
         # Integrate
         # We start at t=0 and go to t=dt relative to the epoch of r_i
-        t_span = (0, dt)
+        t_span = (0.0, float(dt))
         t_values, y_values = self.integrator.integrate(
             equations_of_motion, t_span, y0, dt=step_size
         )

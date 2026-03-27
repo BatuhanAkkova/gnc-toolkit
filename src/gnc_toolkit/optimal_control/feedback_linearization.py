@@ -5,54 +5,63 @@ Feedback Linearization Controller for nonlinear systems.
 import numpy as np
 
 
+from typing import Callable
+
 class FeedbackLinearization:
+    r"""
+    Feedback Linearization Controller for nonlinear systems.
+
+    Transforms a nonlinear system into an equivalent linear system through
+    algebraic state feedback.
+
+    System model: $\dot{x} = f(x) + g(x) u$
+
+    By choosing $u = g(x)^{-1} (v - f(x))$, the closed-loop system becomes:
+    $\dot{x} = v$
+    where $v$ is the pseudo-control input (linear command).
+
+    Parameters
+    ----------
+    f_func : Callable[[np.ndarray], np.ndarray]
+        Nonlinear drift function $f(x)$.
+    g_func : Callable[[np.ndarray], np.ndarray]
+        Nonlinear input matrix $g(x)$.
     """
-    Feedback Linearization Controller.
 
-    For a system of the form:
-    dot_x = f(x) + g(x) u
-
-    Computes the control input u that achieves the desired linear dynamics:
-    dot_x = v
-
-    The control law is:
-    u = g(x)^-1 * (v - f(x))
-    """
-
-    def __init__(self, f_func, g_func):
-        """
-        Initialize the Feedback Linearization Controller.
-
-        Args:
-            f_func (callable): Function f(x) returning the drift vector.
-            g_func (callable): Function g(x) returning the input matrix.
-        """
+    def __init__(
+        self,
+        f_func: Callable[[np.ndarray], np.ndarray],
+        g_func: Callable[[np.ndarray], np.ndarray],
+    ):
+        """Initialize the feedback linearization controller."""
         self.f_func = f_func
         self.g_func = g_func
 
-    def compute_control(self, x, v):
+    def compute_control(self, x: np.ndarray, v: np.ndarray) -> np.ndarray:
         """
-        Compute the linearizing control input.
+        Compute the linearizing control input $u$.
 
-        Args:
-            x (np.ndarray): Current state vector.
-            v (np.ndarray): Desired linear dynamics input (pseudo-control).
+        Parameters
+        ----------
+        x : np.ndarray
+            Current state vector (nx,).
+        v : np.ndarray
+            Desired linear acceleration/pseudo-control vector (nx,).
 
         Returns
-        -------
-            np.ndarray: Control input u.
+-------
+        np.ndarray
+            The required control input $u$ (nu,).
         """
-        x = np.array(x)
-        v = np.array(v)
+        x_vec = np.asarray(x)
+        v_vec = np.asarray(v)
 
-        f_val = np.array(self.f_func(x))
-        g_val = np.array(self.g_func(x))
+        f_val = np.asarray(self.f_func(x_vec))
+        g_val = np.asarray(self.g_func(x_vec))
 
-        # Check dimensions
         if g_val.size == 1:
             # Scalar case
-            u = (v - f_val) / g_val
-        else:
-            u = np.linalg.solve(g_val, v - f_val)
-
-        return u
+            return (v_vec - f_val) / g_val
+        
+        # Matrix case: Solve g(x)u = v - f(x)
+        return np.linalg.solve(g_val, v_vec - f_val)

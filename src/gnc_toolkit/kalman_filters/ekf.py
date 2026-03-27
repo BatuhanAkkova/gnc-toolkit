@@ -3,19 +3,34 @@ Extended Kalman Filter (EKF) for non-linear systems using Jacobians.
 """
 
 import numpy as np
+from typing import Callable, Any, Optional
 
 
 class EKF:
     """
-    Extended Kalman Filter (EKF).
-    Suitable for non-linear estimation and navigation.
+    Extended Kalman Filter (EKF) for non-linear systems.
+
+    Linearizes the non-linear state transition and measurement models around the 
+    current estimate using first-order Taylor expansion (Jacobians).
+
+    Parameters
+    ----------
+    dim_x : int
+        Dimension of the state vector $x$.
+    dim_z : int
+        Dimension of the measurement vector $z$.
     """
 
-    def __init__(self, dim_x, dim_z):
+    def __init__(self, dim_x: int, dim_z: int) -> None:
         """
-        Initialize the EKF.
-        dim_x: Dimension of the state vector
-        dim_z: Dimension of the measurement vector
+        Initialize filter dimensions and initial matrices.
+
+        Parameters
+        ----------
+        dim_x : int
+            Dimension of state vector.
+        dim_z : int
+            Dimension of measurement vector.
         """
         self.dim_x = dim_x
         self.dim_z = dim_z
@@ -25,52 +40,94 @@ class EKF:
         self.Q = np.eye(dim_x)
         self.R = np.eye(dim_z)
 
-    def predict(self, fx, F_jac, dt, u=None, Q=None, **kwargs):
+    def predict(
+        self,
+        fx_func: Callable[..., np.ndarray],
+        f_jac_func: Callable[..., np.ndarray],
+        dt: float,
+        u: Optional[np.ndarray] = None,
+        q_mat: Optional[np.ndarray] = None,
+        **kwargs: Any,
+    ) -> None:
+        r"""
+        Non-linear state prediction.
+
+        Equations:
+        - State Predict: $\mathbf{\hat{x}}_{k|k-1} = f(\mathbf{\hat{x}}_{k-1|k-1}, \Delta t, \mathbf{u})$
+        - Covariance Predict: $\mathbf{P}_{k|k-1} = \mathbf{F} \mathbf{P}_{k-1|k-1} \mathbf{F}^T + \mathbf{Q}$
+        where $\mathbf{F}$ is the state transition Jacobian.
+
+        Parameters
+        ----------
+        fx_func : Callable
+            Transition function.
+        f_jac_func : Callable
+            Jacobian of fx_func.
+        dt : float
+            Propagation step (s).
+        u : np.ndarray | None, optional
+            Control input.
+        q_mat : np.ndarray | None, optional
+            Process noise.
+        **kwargs : Any
+            Additional parameters.
         """
-        Predict step.
-        fx: State transition function f(x, dt, u, **kwargs) -> x_new
-        F_jac: Function that returns the Jacobian of f at (x, dt, u) -> F matrix
-        dt: Time step
-        u: Optional control input
-        Q: Optional process noise covariance
+        q = np.asarray(q_mat) if q_mat is not None else self.Q
+
+        # 1. Non-linear state propagation
+        self.x = fx_func(self.x, dt, u, **kwargs)
+
+        # 2. Linearized covariance propagation
+        f_mat = f_jac_func(self.x, dt, u, **kwargs)
+        self.P = (f_mat @ self.P @ f_mat.T) + q
+
+    def update(
+        self,
+        z: np.ndarray,
+        hx_func: Callable[..., np.ndarray],
+        h_jac_func: Callable[..., np.ndarray],
+        r_mat: Optional[np.ndarray] = None,
+        **kwargs: Any,
+    ) -> None:
+        r"""
+        Non-linear measurement update.
+
+        Equations:
+        - Innovation: $\mathbf{y} = \mathbf{z} - h(\mathbf{\hat{x}}_{k|k-1})$
+        - Gain: $\mathbf{K} = \mathbf{P}_{k|k-1} \mathbf{H}^T (\mathbf{H} \mathbf{P}_{k|k-1} \mathbf{H}^T + \mathbf{R})^{-1}$
+        - Update: $\mathbf{\hat{x}}_{k|k} = \mathbf{\hat{x}}_{k|k-1} + \mathbf{K} \mathbf{y}$
+        - Joseph Form Covariance: $\mathbf{P}_{k|k} = (\mathbf{I} - \mathbf{K} \mathbf{H}) \mathbf{P}_{k|k-1} (\mathbf{I} - \mathbf{K} \mathbf{H})^T + \mathbf{K} \mathbf{R} \mathbf{K}^T$
+
+        Parameters
+        ----------
+        z : np.ndarray
+            Measurement vector.
+        hx_func : Callable
+            Measurement model.
+        h_jac_func : Callable
+            Jacobian of hx_func.
+        r_mat : np.ndarray | None, optional
+            Measurement noise.
+        **kwargs : Any
+            Additional parameters.
         """
-        if Q is None:
-            Q = self.Q
+        r = np.asarray(r_mat) if r_mat is not None else self.R
+        zv = np.asarray(z)
 
-        # State Prediction: x = f(x, dt, u)
-        self.x = fx(self.x, dt, u, **kwargs)
+        # 1. Innovation using non-linear model
+        resid = zv - hx_func(self.x, **kwargs)
 
-        # Covariance Prediction: P = FPF' + Q
-        F = F_jac(self.x, dt, u, **kwargs)
-        self.P = np.dot(np.dot(F, self.P), F.T) + Q
+        # 2. Linearized sensitivity matrix
+        h_mat = h_jac_func(self.x, **kwargs)
 
-    def update(self, z, hx, H_jac, R=None, **kwargs):
-        """
-        Update step.
-        z: Measurement vector
-        hx: Measurement function h(x, **kwargs) -> z_pred
-        H_jac: Function that returns the Jacobian of h at x -> H matrix
-        R: Optional measurement noise covariance
-        """
-        if R is None:
-            R = self.R
+        # 3. Innovation covariance
+        s_mat = (h_mat @ self.P @ h_mat.T) + r
 
-        # Innovation: y = z - h(x)
-        y = z - hx(self.x, **kwargs)
+        # 4. Kalman Gain
+        k_gain = self.P @ h_mat.T @ np.linalg.inv(s_mat)
 
-        # Jacobian H
-        H = H_jac(self.x, **kwargs)
-
-        # Innovation Covariance: S = HPH' + R
-        S = np.dot(np.dot(H, self.P), H.T) + R
-
-        # Kalman Gain: K = PH'S^-1
-        K = np.dot(np.dot(self.P, H.T), np.linalg.inv(S))
-
-        # State Correction: x = x + Ky
-        self.x = self.x + np.dot(K, y)
-
-        # Covariance Correction: P = (I - KH)P(I - KH)' + KRK' (Joseph Form)
-        I = np.eye(self.dim_x)
-        I_KH = I - np.dot(K, H)
-        self.P = np.dot(np.dot(I_KH, self.P), I_KH.T) + np.dot(np.dot(K, R), K.T)
+        # 5. Correct state and covariance (Joseph Form)
+        self.x = self.x + (k_gain @ resid)
+        
+        i_kh = np.eye(self.dim_x) - (k_gain @ h_mat)
+        self.P = (i_kh @ self.P @ i_kh.T) + (k_gain @ r @ k_gain.T)

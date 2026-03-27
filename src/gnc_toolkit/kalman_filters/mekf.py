@@ -3,6 +3,7 @@ Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
 """
 
 import numpy as np
+from typing import Optional
 
 from gnc_toolkit.utils.quat_utils import (
     quat_conj,
@@ -16,108 +17,131 @@ from gnc_toolkit.utils.quat_utils import (
 class MEKF:
     """
     Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
-    Reference: Crassidis and Junkins, "Optimal Estimation of Dynamic Systems".
-    State: [q_x, q_y, q_z, q_w, beta_x, beta_y, beta_z] (7x1)
-    Error State: [delta_theta_x, delta_theta_y, delta_theta_z, delta_beta_x, delta_beta_y, delta_beta_z] (6x1)
+
+    Maintains a global quaternion for orientation and an additive 3-component 
+    error vector in the tangent space for bias and local attitude corrections.
+
+    Parameters
+    ----------
+    q_init : np.ndarray, optional
+        Initial quaternion $[q_x, q_y, q_z, q_w]$. Defaults to identity $[0,0,0,1]$.
+    beta_init : np.ndarray, optional
+        Initial gyro bias $[b_x, b_y, b_z]$ (rad/s). Defaults to zeros.
     """
 
-    def __init__(self, q_init=None, beta_init=None):
-        """
-        Initialize the MEKF.
-        q_init: Initial quaternion [q_x, q_y, q_z, q_w]
-        beta_init: Initial gyro bias [bx, by, bz]
-        """
+    def __init__(
+        self,
+        q_init: Optional[np.ndarray] = None,
+        beta_init: Optional[np.ndarray] = None
+    ):
+        """Initialize reference state, error covariance, and noise matrices."""
         if q_init is None:
             self.q = np.array([0.0, 0.0, 0.0, 1.0])
         else:
-            self.q = quat_normalize(q_init)
+            self.q = quat_normalize(np.asarray(q_init))
 
         if beta_init is None:
             self.beta = np.zeros(3)
         else:
             self.beta = np.asarray(beta_init)
 
-        # Covariance (6x6 for error state)
+        # Covariance (6x6 for error state: [d_theta, d_beta])
         self.P = np.eye(6) * 0.1
-
-        # Noise Covariances (standard defaults)
         self.Q = np.eye(6) * 0.001
         self.R = np.eye(3) * 0.01
 
-        # Internal state vector (for consistency with other filters)
+        # Internal state vector (7x1) [quat, bias]
         self.x = np.concatenate([self.q, self.beta])
 
-    def predict(self, omega_meas, dt, Q=None):
+    def predict(self, omega_meas: np.ndarray, dt: float, q_mat: Optional[np.ndarray] = None) -> None:
         """
-        MEKF Prediction Step.
-        omega_meas: Measured angular velocity (3x1)
-        dt: Time step
-        Q: Optional process noise covariance
+        Predict the reference state and propagate error covariance.
+
+        Parameters
+        ----------
+        omega_meas : np.ndarray
+            Measured angular velocity in body frame (rad/s).
+        dt : float
+            Propagation interval (s).
+        q_mat : np.ndarray, optional
+            Process noise covariance (6x6). Defaults to `self.Q`.
         """
-        if Q is None:
-            Q = self.Q
+        qm = np.asarray(q_mat) if q_mat is not None else self.Q
+        w_meas = np.asarray(omega_meas)
 
-        # Reference State Integration (Body frame integration: q_new = q_old * dq)
-        omega = omega_meas - self.beta
-        omega_norm = np.linalg.norm(omega)
+        # 1. Integrate Reference State: q_new = q_old * dq
+        omega = w_meas - self.beta
+        wm = np.linalg.norm(omega)
 
-        if omega_norm > 1e-10:
-            axis = omega / omega_norm
-            angle = omega_norm * dt
+        if wm > 1e-10:
+            axis = omega / wm
+            angle = wm * dt
             dq = np.concatenate([axis * np.sin(angle / 2), [np.cos(angle / 2)]])
-            self.q = quat_mult(self.q, dq)  # Right multiplication
+            self.q = quat_mult(self.q, dq) 
 
         self.q = quat_normalize(self.q)
 
-        # Covariance Prediction (Body frame error state)
+        # 2. Propagate Error Covariance: P = Phi * P * Phi' + Q_dt
         wx = skew_symmetric(omega)
-        F = np.zeros((6, 6))
-        F[0:3, 0:3] = -wx
-        F[0:3, 3:6] = -np.eye(3)
+        f_jac = np.zeros((6, 6))
+        f_jac[0:3, 0:3] = -wx
+        f_jac[0:3, 3:6] = -np.eye(3)
 
-        Phi = np.eye(6) + F * dt
-        self.P = np.dot(np.dot(Phi, self.P), Phi.T) + Q * dt
+        phi = np.eye(6) + f_jac * dt
+        self.P = (phi @ self.P @ phi.T) + (qm * dt)
 
         self.x = np.concatenate([self.q, self.beta])
 
-    def update(self, z, z_ref, R=None):
+    def update(
+        self,
+        z_body: np.ndarray,
+        z_ref: np.ndarray,
+        r_mat: Optional[np.ndarray] = None
+    ) -> None:
         """
-        MEKF Update Step.
-        z: Measured vector in body frame (normalized)
-        z_ref: Reference vector in inertial frame (normalized)
-        R: Optional measurement noise covariance
-        """
-        if R is None:
-            R = self.R
+        Perform a vector measurement update.
 
-        # Predicted measurement in body frame
+        Linearizes the observation of a reference vector (e.g., Sun, Earth) 
+        and applies a multiplicative correction to the quaternion.
+
+        Parameters
+        ----------
+        z_body : np.ndarray
+            Measured vector in spacecraft body frame (normalized).
+        z_ref : np.ndarray
+            Reference vector in inertial frame (normalized).
+        r_mat : np.ndarray, optional
+            Measurement noise covariance (3x3). Defaults to `self.R`.
+        """
+        r = np.asarray(r_mat) if r_mat is not None else self.R
+        zb = np.asarray(z_body)
+        zr = np.asarray(z_ref)
+
+        # 1. Predicted observation: h(x) = C(q) * z_ref
         q_inv = quat_conj(self.q)
-        z_pred = quat_rot(q_inv, z_ref)
+        zp = quat_rot(q_inv, zr)
 
-        # Innovation
-        y = z - z_pred
+        # 2. Sensitivity matrix: H = [ [zp]x | 0_{3x3} ]
+        h_mat = np.zeros((3, 6))
+        h_mat[:, 0:3] = skew_symmetric(zp)
 
-        # Sensitivity matrix
-        H = np.zeros((3, 6))
-        H[:, 0:3] = skew_symmetric(z_pred)
+        # 3. Kalman Gain
+        s_mat = (h_mat @ self.P @ h_mat.T) + r
+        k_gain = self.P @ h_mat.T @ np.linalg.inv(s_mat)
 
-        # Innovation Covariance S and Kalman Gain K
-        S = np.dot(np.dot(H, self.P), H.T) + R
-        K = np.dot(np.dot(self.P, H.T), np.linalg.inv(S))
-
-        # Error state correction
-        dx = np.dot(K, y)
+        # 4. Correct error state
+        dx = k_gain @ (zb - zp)
         dtheta = dx[0:3]
         dbeta = dx[3:6]
 
-        # Apply corrections (Multiplicative for quat, Additive for bias)
+        # 5. Apply corrections
+        # Quat Multiplicative: q = q * dq(dtheta/2)
         dq_corr = np.concatenate([0.5 * dtheta, [1.0]])
-        self.q = quat_normalize(quat_mult(self.q, dq_corr))  # Right correction
+        self.q = quat_normalize(quat_mult(self.q, dq_corr))
         self.beta += dbeta
 
-        # Covariance Update (Joseph Form)
-        I = np.eye(6)
-        I_KH = I - np.dot(K, H)
-        self.P = np.dot(np.dot(I_KH, self.P), I_KH.T) + np.dot(np.dot(K, R), K.T)
+        # 6. Covariance Update (Joseph Form)
+        i_kh = np.eye(6) - (k_gain @ h_mat)
+        self.P = (i_kh @ self.P @ i_kh.T) + (k_gain @ r @ k_gain.T)
 
         self.x = np.concatenate([self.q, self.beta])

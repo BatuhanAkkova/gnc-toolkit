@@ -1,41 +1,48 @@
 from collections.abc import Callable
-from typing import Any
-
-from .logging import SimulationLogger
-from .simulator import MissionSimulator
+from typing import Any, Optional
+from .simulator import (
+    MissionSimulator,
+    PropagatorFunc,
+    SensorFunc,
+    EstimatorFunc,
+    ControllerFunc,
+    SimulationLogger,
+)
 
 
 class ConstellationSimulator:
     """
-    Multi-body / constellation simulator class.
-    Simulates N independent or coupled spacecraft simultaneously.
+    Multi-Agent / Constellation Simulator.
+
+    Manages simultaneous simulation of multiple spacecraft, enabling 
+    coordinated formation flying or large network analysis.
+
+    Parameters
+    ----------
+    num_satellites : int
+        Total spacecraft count.
+    propagator : PropagatorFunc
+        Joint or vectorized propagator function.
+    sensor_model : Optional[SensorFunc]
+        Measurement model.
+    estimator : Optional[EstimatorFunc]
+        Centralized or multi-state estimator.
+    controller : Optional[ControllerFunc]
+        Coordinating control logic.
+    logger : Optional[SimulationLogger]
+        Data recording utility.
     """
 
     def __init__(
         self,
         num_satellites: int,
-        propagator: Callable,
-        sensor_model: Callable = None,
-        estimator: Callable = None,
-        controller: Callable = None,
-        logger: SimulationLogger = None,
+        propagator: PropagatorFunc,
+        sensor_model: Optional[SensorFunc] = None,
+        estimator: Optional[EstimatorFunc] = None,
+        controller: Optional[ControllerFunc] = None,
+        logger: Optional[SimulationLogger] = None,
     ):
-        """
-        Initialize constellation simulator.
-
-        Parameters
-        ----------
-        num_satellites : int
-            Number of spacecraft in the simulation.
-        propagator : Callable
-            Propagator that can advance multiple states or take a joint state vector.
-        sensor_model : Callable
-            Global sensor model.
-        estimator : Callable
-            Global estimator (e.g. tracking multiline).
-        controller : Callable
-            Global controller coordinating formation/constellation.
-        """
+        """Initialize simulation for spacecraft N members."""
         self.num_satellites = num_satellites
         self.simulator = MissionSimulator(
             propagator=propagator,
@@ -45,16 +52,16 @@ class ConstellationSimulator:
             logger=logger,
         )
 
-    def initialize(self, t0: float, initial_states: list[Any]):
+    def initialize(self, t0: float, initial_states: list[Any]) -> None:
         """
-        Initialize constellation simulation.
+        Initialize starting conditions for all members.
 
         Parameters
         ----------
         t0 : float
-            Start time.
+            Start simulation time (s).
         initial_states : List[Any]
-            List of initial states for each spacecraft.
+            Container of starting states for each spacecraft.
         """
         if len(initial_states) != self.num_satellites:
             raise ValueError(
@@ -63,15 +70,20 @@ class ConstellationSimulator:
 
         self.simulator.initialize(t0, initial_states)
 
-    def run(self, t_end: float, dt: float):
+    def run(self, t_end: float, dt: float) -> Any:
         """
-        Runs the full constellation simulation.
+        Execute the constrained multi-body simulation.
 
         Parameters
         ----------
         t_end : float
-            Stop time.
+            Termination time (s).
         dt : float
-            Time step.
+            Physics update rate (s).
+
+        Returns
+-------
+        Any
+            Aggregate simulation results.
         """
-        self.simulator.run(t_end, dt)
+        return self.simulator.run(t_end, dt)

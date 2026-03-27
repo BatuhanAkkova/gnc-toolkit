@@ -3,39 +3,71 @@ Abstract base class for all sensors.
 """
 
 from abc import ABC, abstractmethod
+from typing import Any # Added for **kwargs: Any
 
 import numpy as np
 
 
 class Sensor(ABC):
     """
-    Abstract base class for all sensors.
+    Abstract Base Class for all sensors.
+
+    Parameters
+    ----------
+    name : str, optional
+        Sensor name. Default "Sensor".
     """
 
-    def __init__(self, name="Sensor"):
+    def __init__(self, name: str = "Sensor") -> None:
+        """Initialize sensor base."""
         self.name = name
-        self.fault_state = None  # None, "stuck", "spike", "noise_increase"
-        self.stuck_value = None
+        self.fault_state: str | None = None
+        self.stuck_value: np.ndarray | float | None = None
 
     @abstractmethod
-    def measure(self, true_state, **kwargs):
+    def measure(self, true_state: np.ndarray | float, **kwargs: Any) -> np.ndarray | float:
         """
-        Generate a measurement based on the true state.
+        Generate a measurement.
 
-        Args:
-            true_state: The true physical state (format depends on sensor type).
-            **kwargs: Additional parameters (e.g., time, environment).
+        Parameters
+        ----------
+        true_state : np.ndarray | float
+            Actual physical state.
+        **kwargs : Any
+            Additional parameters.
 
         Returns
         -------
-            Measured value with noise/bias applied.
+        np.ndarray | float
+            Measured value.
         """
         pass
 
-    def apply_calibration(self, value, misalignment=None, scale_factor=1.0, bias=None):
+    def apply_calibration(
+        self,
+        value: np.ndarray | float,
+        misalignment: np.ndarray | None = None,
+        scale_factor: np.ndarray | float = 1.0,
+        bias: np.ndarray | float | None = None,
+    ) -> np.ndarray | float:
         """
-        Applies calibration residuals:
-        val_cal = (I + M) * S * val_true + b
+        Apply calibration residuals: val_cal = (I + M) * S * val_true + b.
+
+        Parameters
+        ----------
+        value : np.ndarray | float
+            True value to be calibrated.
+        misalignment : np.ndarray, optional
+            Skew/misalignment matrix (3x3 for vectors).
+        scale_factor : np.ndarray | float, optional
+            Scale factor error (scalar or vector). Default is 1.0.
+        bias : np.ndarray | float, optional
+            Constant bias vector or scalar.
+
+        Returns
+        -------
+        np.ndarray | float
+            Calibrated value.
         """
         if isinstance(value, np.ndarray):
             # Misalignment (M)
@@ -44,10 +76,7 @@ class Sensor(ABC):
                 value = (np.eye(len(value)) + misalignment) @ value
 
             # Scale Factor (S)
-            if isinstance(scale_factor, np.ndarray):
-                value = scale_factor * value
-            else:
-                value = scale_factor * value
+            value = scale_factor * value
 
             # Bias (b)
             if bias is not None:
@@ -60,10 +89,29 @@ class Sensor(ABC):
 
         return value
 
-    def apply_fogm_noise(self, current_val, sigma, tau, dt):
+    def apply_fogm_noise(
+        self, current_val: np.ndarray | float, sigma: float, tau: float, dt: float
+    ) -> np.ndarray | float:
         """
-        Applies First-Order Gauss-Markov (FOGM) noise.
+        Apply First-Order Gauss-Markov (FOGM) noise.
+
         x[k+1] = exp(-dt/tau) * x[k] + sigma * sqrt(1 - exp(-2*dt/tau)) * w[k]
+
+        Parameters
+        ----------
+        current_val : np.ndarray | float
+            Current noise state value.
+        sigma : float
+            Steady-state standard deviation.
+        tau : float
+            Correlation time constant (s).
+        dt : float
+            Time step (s).
+
+        Returns
+        -------
+        np.ndarray | float
+            Updated noise state.
         """
         if sigma == 0 or tau <= 0:
             return current_val
@@ -74,9 +122,19 @@ class Sensor(ABC):
         noise = np.random.normal(0, q, size=np.shape(current_val))
         return phi * current_val + noise
 
-    def apply_faults(self, value):
+    def apply_faults(self, value: np.ndarray | float) -> np.ndarray | float:
         """
-        Injects faults into the measurement.
+        Inject faults into the measurement.
+
+        Parameters
+        ----------
+        value : np.ndarray | float
+            Clean measurement value.
+
+        Returns
+        -------
+        np.ndarray | float
+            Faulted measurement value.
         """
         if self.fault_state == "stuck":
             return self.stuck_value if self.stuck_value is not None else value
@@ -95,9 +153,21 @@ class Sensor(ABC):
 
         return value
 
-    def add_gaussian_noise(self, value, std_dev):
+    def add_gaussian_noise(self, value: np.ndarray | float, std_dev: float) -> np.ndarray | float:
         """
         Helper to add zero-mean Gaussian noise.
+
+        Parameters
+        ----------
+        value : np.ndarray | float
+            Nominal value.
+        std_dev : float
+            Standard deviation of noise.
+
+        Returns
+        -------
+        np.ndarray | float
+            Noisy value.
         """
         if std_dev is None or std_dev == 0:
             return value

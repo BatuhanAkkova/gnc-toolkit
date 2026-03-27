@@ -15,6 +15,7 @@ from gnc_toolkit.utils.state_conversion import (
     euler_to_quat, euler_to_dcm, rot_x, rot_y, rot_z
 )
 from gnc_toolkit.utils.mean_elements import osculating2mean, get_j2_secular_rates
+from gnc_toolkit.utils.mrp_utils import quat_to_mrp
 
 # MEAN ELEMENTS
 def test_osculating2mean_identity():
@@ -147,6 +148,14 @@ def test_convert_time():
     res = convert_time(2024, 1, 1, 12, 0, 0, 0, 0, 0, 37)
     assert isinstance(res, tuple)
     assert len(res) == 15
+
+def test_time_utils_coverage():
+    jd1, _ = calc_jd(2024, 1, 1)
+    jd2, _ = calc_jd(2024, 3, 1)
+    assert jd1 < jd2
+    jd_neg = 2451545.0 - 100000.0
+    val = calc_gmst(jd_neg)
+    assert val >= 0
 
 # STATE TRANSFORM
 
@@ -290,6 +299,15 @@ def test_quat_dcm_roundtrip():
         q_res = -q_res
     np.testing.assert_allclose(q_res, q_rot, atol=1e-10)
 
+def test_state_to_elements_parabolic():
+    mu = 398600.4415e9
+    r_mag = 7000e3
+    v_mag = np.sqrt(2 * mu / r_mag)
+    r = np.array([r_mag, 0, 0])
+    v = np.array([0, v_mag, 0])
+    elements = eci2kepler(r, v)
+    assert elements[0] == float('inf')
+
 # FRAME CONVERSIONS
 
 def test_euler_dcm_roundtrip():
@@ -342,6 +360,27 @@ def test_calc_last():
     last = calc_last(2451545.0, 0.5)
     assert 0 <= last < 2*np.pi
 
+def test_axis_angle_to_quat_zero_axis_with_angle():
+    axis = np.zeros(3)
+    angle = 0.5
+    q = axis_angle_to_quat(axis, angle)
+    np.testing.assert_array_equal(q, np.array([0, 0, 0, 1]))
+
+def test_axis_angle_to_quat_nonzero_axis_with_angle():
+    axis = np.array([0, 0, 1.0])
+    angle = 0.5
+    q = axis_angle_to_quat(axis, angle)
+    assert q is not None
+
+def test_calc_gmst_negative_wrap():
+    # JD that results in negative value before modulo in calc_gmst
+    # ut1 = (jd - 2451545) / 36525
+    # expression is roughly 67310 + 3e9 * ut1
+    # For a very negative JD, ut1 is very negative.
+    val = calc_gmst(-1e11) 
+    assert 0 <= val < 2*np.pi
+
+# STATE TRANSFORM
 def test_eci_icrf_conversions():
     from gnc_toolkit.utils.frame_conversion import eci2icrf, icrf2eci, eci2eme2000, eme20002eci
     reci = np.array([7000.0, 0, 0])
@@ -593,3 +632,12 @@ def test_state_conversion_singularities():
     ])
     d4 = dcm_to_quat(R4)
     np.testing.assert_allclose(np.abs(d4), [0, 0, 1, 0], atol=1e-7)
+
+def test_mrp_utils_coverage():
+    q = np.array([0, 0, 1, -1.0])
+    m = quat_to_mrp(q)
+    assert m[2] > 1e11
+
+def test_euler_utils_coverage():
+    with pytest.raises(ValueError, match="Invalid axis"):
+        euler_to_dcm([0, 0, 0], sequence="421")

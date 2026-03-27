@@ -6,99 +6,100 @@ import numpy as np
 
 
 class ParitySpaceDetector:
-    """
-    Implements Parity Space methods for Fault Detection and Isolation (FDI)
-    in redundant sensor systems.
+    r"""
+    Fault Detection and Isolation (FDI) via Parity Space.
 
-    Measurement model:
-        y = M * x + v + f
-    where:
-        y: Measurement vector (p x 1)
-        M: Geometry/Mixing matrix (p x n, p > n)
-        x: True state (n x 1)
-        v: Measurement noise
-        f: Fault vector
+    Measurement Model:
+    $\mathbf{y} = \mathbf{M}\mathbf{x} + \mathbf{v} + \mathbf{f}$
 
-    Parity space matrix P satisfies:
-        P * M = 0
-        P * P^T = I
-    Parity vector:
-        p_vec = P * y
+    The Parity Matrix $\mathbf{P}$ satisfies $\mathbf{P}\mathbf{M} = \mathbf{0}$.
+    The Parity Vector is $\mathbf{p} = \mathbf{P}\mathbf{y}$.
+
+    Parameters
+    ----------
+    M : np.ndarray
+        Geometry matrix $(p \times n)$, $p > n$.
     """
 
     def __init__(self, M: np.ndarray):
-        """
-        Initialize the parity space detector.
-
-        Args:
-            M: Measurement matrix (p x n) with p > n
-        """
-        self.M = M
-        self.p_dim, self.n_dim = M.shape
+        """Initialize FDI detector using SVD to find the null space of M."""
+        self.M = np.asarray(M)
+        self.p_dim, self.n_dim = self.M.shape
 
         if self.p_dim <= self.n_dim:
             raise ValueError("Parity space requires redundant measurements (p > n)")
 
-        # Compute P matrix using SVD
-        U, S, Vh = np.linalg.svd(M)
-        self.P = U[:, self.n_dim :].T  # Shape: (p-n) x p
+        # P is the left null space of M (from U matrix of SVD)
+        u, _, _ = np.linalg.svd(self.M)
+        self.P = u[:, self.n_dim:].T  # Shape: (p-n, p)
 
     def get_parity_vector(self, y: np.ndarray) -> np.ndarray:
-        """
-        Calculate the parity vector for a given measurement.
+        r"""
+        Compute the parity vector $\mathbf{p} = \mathbf{P} \mathbf{y}$.
 
-        Args:
-            y: Measurement vector (p x 1)
+        Parameters
+        ----------
+        y : np.ndarray
+            Measurement vector $(p, 1)$ or $(p,)$.
 
         Returns
         -------
-            p_vec: Parity vector (p-n x 1)
+        np.ndarray
+            Parity vector of shape $(p-n,)$.
         """
-        y = y.reshape(-1, 1)
-        return self.P @ y
+        y_vec = np.asarray(y).flatten()
+        return self.P @ y_vec
 
     def detect_fault(self, y: np.ndarray, threshold: float) -> bool:
-        """
-        Detect if a fault is present.
+        r"""
+        Detect fault by checking if $\|\mathbf{p}\| > \epsilon$.
 
-        Args:
-            y: Measurement vector
-            threshold: Magnitude threshold for the parity vector norm
+        Parameters
+        ----------
+        y : np.ndarray
+            Measurement vector.
+        threshold : float
+            Fault detection threshold.
 
         Returns
-        -------
-            True if fault detected, False otherwise
+-------
+        bool
+            True if a fault is detected.
         """
         p_vec = self.get_parity_vector(y)
         return np.linalg.norm(p_vec) > threshold
 
     def isolate_fault(self, y: np.ndarray) -> int:
-        """
-        Isolate which sensor is faulty by finding the column of P
-        that best aligns with the parity vector.
+        r"""
+        Isolate the faulty sensor by identifying the column of $\mathbf{P}$ 
+        most aligned with the parity vector $\mathbf{p}$.
 
-        Args:
-            y: Measurement vector
+        Parameters
+        ----------
+        y : np.ndarray
+            Measurement vector.
 
         Returns
-        -------
-            Isolated sensor index (0 to p-1)
+-------
+        int
+            Index of the faulty sensor (0 to $p-1$), or -1 if no fault.
         """
-        p_vec = self.get_parity_vector(y).flatten()
+        p_vec = self.get_parity_vector(y)
+        p_mag = np.linalg.norm(p_vec)
 
-        if np.linalg.norm(p_vec) == 0:
-            return -1  # No fault
+        if p_mag < 1e-12:
+            return -1
 
-        # Normalize parity vector
-        p_norm = p_vec / np.linalg.norm(p_vec)
+        # Normalize parity vector for directional comparison
+        p_u = p_vec / p_mag
 
-        # Calculate alignment with columns of P
+        # Column alignment: argmax(|p_u^T * P_col_u|)
         alignments = []
         for i in range(self.p_dim):
-            P_col = self.P[:, i]
-            if np.linalg.norm(P_col) > 0:
-                P_col_norm = P_col / np.linalg.norm(P_col)
-                alignments.append(np.abs(np.dot(p_norm, P_col_norm)))
+            p_col = self.P[:, i]
+            col_mag = np.linalg.norm(p_col)
+            if col_mag > 1e-12:
+                alignments.append(np.abs(np.dot(p_u, p_col / col_mag)))
             else:
                 alignments.append(0.0)
 

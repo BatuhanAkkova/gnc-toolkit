@@ -5,42 +5,86 @@ Space weather index management (F10.7, Ap, Kp) for disturbance models.
 import numpy as np
 
 
+from typing import Any, Optional, Dict
+
 class SpaceWeather:
     """
-    Model for managing space weather indices like F10.7, Ap, and Kp.
-    Used for atmospheric density and radiation models.
+    Solar and Geomagnetic Activity Indices Manager.
+
+    Coordinates F10.7 (solar flux) and Ap/Kp (geomagnetic) indices used by
+    thermospheric and radiation models.
+
+    Parameters
+    ----------
+    f107 : float, optional
+        Daily solar flux index at 10.7cm (sfu). Default 150.0.
+    f107_avg : float, optional
+        81-day centered mean solar flux (sfu). Default 150.0.
+    ap : float, optional
+        Planetary equivalent amplitude index (geomagnetic). Default 15.0.
     """
 
-    def __init__(self, f107=150.0, f107_avg=150.0, ap=15.0):
-        """
-        Initialize with default solar flux and geomagnetic indices.
-
-        Args:
-            f107 (float): Daily solar flux index (10.7 cm) [sfu]
-            f107_avg (float): 81-day average solar flux index [sfu]
-            ap (float): Planetary equivalent amplitude index
-        """
+    def __init__(
+        self,
+        f107: float = 150.0,
+        f107_avg: float = 150.0,
+        ap: float = 15.0
+    ) -> None:
+        """Initialize indices and compute derived Kp."""
         self.f107 = f107
         self.f107_avg = f107_avg
         self.ap = ap
         self.kp = self._ap_to_kp(ap)
 
-    def _ap_to_kp(self, ap):
-        """Approximate conversion from Ap to Kp index."""
+    def _ap_to_kp(self, ap: float) -> float:
+        """
+        Convert planetary Ap to Kp index.
+
+        Parameters
+        ----------
+        ap : float
+            Ap index.
+
+        Returns
+        -------
+        float
+            Estimated Kp index [0, 9].
+        """
         if ap <= 0:
             return 0.0
-        return 0.5 * np.log2(ap / 2.0 + 1.0) * 3.0
+        return float(3.0 * np.log2(ap / 2.0 + 1.0) / 2.0)
 
-    def get_indices(self, date=None):
+    def get_indices(self, date: Optional[Any] = None) -> Dict[str, float]:
         """
-        Get indices for a specific date.
-        Currently returns static values, but can be extended for database lookup.
-        """
-        return {"f107": self.f107, "f107_avg": self.f107_avg, "ap": self.ap, "kp": self.kp}
+        Retrieve indices for a given epoch.
 
-    def set_solar_flux(self, f107, f107_avg=None):
-        self.f107 = f107
-        if f107_avg is not None:
-            self.f107_avg = f107_avg
-        else:
-            self.f107_avg = f107
+        Parameters
+        ----------
+        date : Optional[Any], optional
+            Target epoch. Currently returns static values.
+
+        Returns
+        -------
+        Dict[str, float]
+            Indices dictionary.
+        """
+        return {
+            "f107": self.f107,
+            "f107_avg": self.f107_avg,
+            "ap": self.ap,
+            "kp": self.kp
+        }
+
+    def set_solar_flux(self, f107: float, f107_avg: Optional[float] = None) -> None:
+        """
+        Update local solar flux parameters.
+
+        Parameters
+        ----------
+        f107 : float
+            Daily solar flux (sfu).
+        f107_avg : Optional[float], optional
+            Average solar flux. Defaults to `f107` if None.
+        """
+        self.f107 = float(f107)
+        self.f107_avg = float(f107_avg) if f107_avg is not None else self.f107

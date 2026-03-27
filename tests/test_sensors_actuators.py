@@ -178,6 +178,12 @@ class TestSensors:
         assert r_meas >= 0
         assert np.allclose(los_meas, np.zeros(3))
 
+    def test_sun_sensor_array_coverage(self):
+        ssa = CoarseSunSensorArray(boresights=[np.array([1, 0, 0])])
+        assert len(ssa.boresights) == 1
+        res = ssa.measure(np.array([1, 0, 0]))
+        assert res.shape == (1,)
+
 class TestActuators:
     def test_rw_friction(self):
         # RW with friction
@@ -394,9 +400,6 @@ class TestActuators:
         torque2_no_limit = vscmg2.command((0.1, 5.0))
         np.testing.assert_allclose(torque2_no_limit, [0, 0, 5.0], atol=1e-7)
     
-    
-
-
     def test_reaction_wheel(self):
         rw = ReactionWheel(max_torque=0.1, max_momentum=1.0, inertia=0.1)
         
@@ -430,3 +433,11 @@ class TestActuators:
         ethr = ElectricThruster(max_thrust=0.1, isp=1500, power_efficiency=0.5)
         p = ethr.get_power_consumption(0.1)
         assert 1400 < p < 1500
+
+    def test_thruster_efficiency_zero(self):
+        t = ElectricThruster(power_efficiency=0.0, isp=1500, max_thrust=0.1)
+        assert t.get_power_consumption(0.1) == float('inf')
+        
+        t_neg = ElectricThruster(power_efficiency=-0.1, isp=1500, max_thrust=0.1)
+        assert t_neg.get_power_consumption(0.1) == float('inf')
+

@@ -6,96 +6,129 @@ import numpy as np
 from scipy.linalg import solve_continuous_lyapunov
 
 
+from typing import Callable, Optional
+
 class ModelReferenceAdaptiveControl:
-    """
-    Model Reference Adaptive Controller (MRAC) for state-space systems.
+    r"""
+    Model Reference Adaptive Controller (MRAC) for linear state-space systems.
+
+    Implements a direct MRAC scheme where controller parameters are updated to
+    minimize the error between the plant and a stable reference model.
 
     Plant with parametric uncertainty:
-    dx/dt = A * x + B * (u + theta^T * phi(x))
+    $\dot{x} = Ax + B(u + \Theta^T \Phi(x))$
 
     Reference Model:
-    dx_m/dt = A_m * x_m + B_m * r
+    $\dot{x}_m = A_m x_m + B_m r$
 
-    Adaptive estimate update law:
-    d_theta_hat/dt = Gamma * phi(x) * e^T * P * B
+    Adaptation Law (Lyapunov-based):
+    $\dot{\hat{\Theta}} = \Gamma \Phi(x) e^T P B$
+    where $e = x - x_m$, and $P$ solves $A_m^T P + P A_m = -Q$.
 
-    where e = x - x_m, and P solves A_m^T * P + P * A_m = -Q.
+    Parameters
+    ----------
+    A_m : np.ndarray
+        Reference model state matrix (nx x nx).
+    B_m : np.ndarray
+        Reference model input matrix (nx x nu).
+    B : np.ndarray
+        Plant input matrix (nx x nu).
+    Gamma : np.ndarray
+        Adaptation gain matrix (nk x nk).
+    Q_lyap : np.ndarray
+        Positive-definite matrix for the Lyapunov equation (nx x nx).
+    phi_func : Callable[[np.ndarray], np.ndarray]
+        Regressor function $\Phi(x)$ returning a vector of basis functions (nk,).
     """
 
-    def __init__(self, A_m, B_m, B, Gamma, Q_lyap, phi_func):
-        """
-        Initialize the MRAC.
-
-        Args:
-            A_m (np.ndarray): Reference model system matrix [n x n].
-            B_m (np.ndarray): Reference model input matrix [n x m].
-            B (np.ndarray): Plant input matrix [n x m].
-            Gamma (np.ndarray): Adaptation rate matrix [k x k] where k is num parameters.
-            Q_lyap (np.ndarray): positive-definite Q for Lyapunov equation [n x n].
-            phi_func (callable): Regressor function phi(x) -> vector of size [k].
-        """
-        self.A_m = np.array(A_m)
-        self.B_m = np.array(B_m)
-        self.B = np.array(B)
-        self.Gamma = np.array(Gamma)
+    def __init__(
+        self,
+        A_m: np.ndarray,
+        B_m: np.ndarray,
+        B: np.ndarray,
+        Gamma: np.ndarray,
+        Q_lyap: np.ndarray,
+        phi_func: Callable[[np.ndarray], np.ndarray],
+    ):
+        """Initialize the MRAC parameters and solve the Lyapunov equation."""
+        self.A_m = np.asarray(A_m)
+        self.B_m = np.asarray(B_m)
+        self.B = np.asarray(B)
+        self.Gamma = np.asarray(Gamma)
         self.phi = phi_func
 
-        # Solve Lyapunov Equation: A_m.T * P + P * A_m = -Q
-        self.P = solve_continuous_lyapunov(self.A_m.T, -np.array(Q_lyap))
+        # Solve for P in A_m.T * P + P * A_m = -Q
+        self.P = solve_continuous_lyapunov(self.A_m.T, -np.asarray(Q_lyap))
 
-        # Initial estimate of theta (unknown parameters)
         self.nx = self.A_m.shape[0]
         self.nu = self.B_m.shape[1]
 
-        # Verify dimension of phi
-        test_x = np.zeros(self.nx)
-        test_phi = self.phi(test_x)
-        self.k_params = len(test_phi)
+        # Determine number of parameters from phi
+        dummy_x = np.zeros(self.nx)
+        dummy_phi = self.phi(dummy_x)
+        self.nk = len(dummy_phi)
 
-        # Parameter estimate matrix [k_params, nu]
-        self.theta_hat = np.zeros((self.k_params, self.nu))
+        # Parameter estimate \hat{\Theta} (nk x nu)
+        self.theta_hat = np.zeros((self.nk, self.nu))
+        self.d_theta_hat = np.zeros_like(self.theta_hat)
 
-    def compute_control(self, x, x_m, r, kx=None, kr=None):
+    def compute_control(
+        self,
+        x: np.ndarray,
+        x_m: np.ndarray,
+        r: np.ndarray,
+        kx: Optional[np.ndarray] = None,
+        kr: Optional[np.ndarray] = None,
+    ) -> np.ndarray:
         """
-        Compute control input u.
+        Compute the adaptive control input and the parameter update rate.
 
-        Args:
-            x (np.ndarray): Current plant state [n].
-            x_m (np.ndarray): Current reference model state [n].
-            r (np.ndarray): Reference input [m].
-            kx (np.ndarray, optional): Optimal gain for A + B*kx = A_m. Defaults to using values that assume A=A_m.
-            kr (np.ndarray, optional): Optimal gain for B*kr = B_m. Defaults to ones.
+        Parameters
+        ----------
+        x : np.ndarray
+            Current plant state vector (nx,).
+        x_m : np.ndarray
+            Current reference model state vector (nx,).
+        r : np.ndarray
+            Reference command input (nu,).
+        kx : np.ndarray, optional
+            Nominal feedback gain s.t. A + B*Kx = Am. Default is zero.
+        kr : np.ndarray, optional
+            Nominal feedforward gain s.t. B*Kr = Bm. Default is Identity.
 
         Returns
         -------
-            np.ndarray: Control effort u [m].
+        np.ndarray
+            Control input vector $u$ (nu,).
         """
-        x = np.array(x)
-        x_m = np.array(x_m)
-        r = np.array(r)
+        x_vec = np.asarray(x)
+        xm_vec = np.asarray(x_m)
+        r_vec = np.asarray(r).flatten()
 
-        # Defaults if not provided (ideal matching gains)
-        if kx is None:
-            kx = np.zeros((self.nu, self.nx))  # Assume A = A_m
-        if kr is None:
-            kr = np.eye(self.nu)  # Assume B = B_m
+        # Defaults for matching gains
+        k_x = kx if kx is not None else np.zeros((self.nu, self.nx))
+        k_r = kr if kr is not None else np.eye(self.nu)
 
-        phi_x = self.phi(x).reshape(-1, 1)  # [k x 1]
+        phi_x = self.phi(x_vec).reshape(-1, 1)  # (nk, 1)
         adaptive_term = (self.theta_hat.T @ phi_x).flatten()
-        u = kx @ x + kr @ r - adaptive_term
+        
+        u = (k_x @ x_vec) + (k_r @ r_vec) - adaptive_term
 
-        # Parameter derivative for Euler update: d_theta = Gamma * phi(x) * e.T * P * B
-        e = x - x_m
-        error_term = e.reshape(1, -1) @ self.P @ self.B  # [1 x m]
-        d_theta = self.Gamma @ phi_x @ error_term  # [k x m]
-        self.d_theta_hat = d_theta
+        # Compute adaptation rate: Gamma * Phi(x) * e^T * P * B
+        e = (x_vec - xm_vec).reshape(1, -1)
+        self.d_theta_hat = self.Gamma @ phi_x @ (e @ self.P @ self.B)
 
         return u
 
-    def update_theta(self, dt):
+    def update_theta(self, dt: float) -> None:
         """
-        Update the parameter estimate using Euler integration.
-        Should be called after compute_control and plant simulation step.
+        Integrate the parameter estimates using the computed update rate.
+
+        Should be called once per simulation step after compute_control.
+
+        Parameters
+        ----------
+        dt : float
+            Simulation time step (s).
         """
-        if hasattr(self, "d_theta_hat"):
-            self.theta_hat += self.d_theta_hat * dt
+        self.theta_hat += self.d_theta_hat * dt

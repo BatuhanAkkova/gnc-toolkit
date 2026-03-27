@@ -3,76 +3,107 @@ Particle Filter (Sequential Importance Resampling) for non-Gaussian/non-linear s
 """
 
 import numpy as np
+from typing import Callable, Any
 
 
 class ParticleFilter:
     """
     Bootstrap Particle Filter (Sequential Importance Resampling).
-    Handles non-Gaussian distributions and highly non-linear models.
+
+    Estimated non-Gaussian distributions and handles highly non-linear dynamics
+    by propagating a set of discrete particles (samples).
+
+    Parameters
+    ----------
+    dim_x : int
+        Dimension of the state vector.
+    dim_z : int
+        Dimension of the measurement vector.
+    num_particles : int, optional
+        Number of particles (N). Default is 1000.
     """
 
-    def __init__(self, dim_x, dim_z, num_particles=1000):
-        """
-        Initialize the Particle Filter.
-        dim_x: Dimension of the state vector
-        dim_z: Dimension of the measurement vector
-        num_particles: Number of particles (N)
-        """
+    def __init__(self, dim_x: int, dim_z: int, num_particles: int = 1000):
         self.dim_x = dim_x
         self.dim_z = dim_z
-        self.N = num_particles
+        self.num_particles = num_particles
 
         # Particles: shape (num_particles, dim_x)
-        self.particles = np.zeros((self.N, dim_x))
+        self.particles = np.zeros((num_particles, dim_x))
         # Weights: shape (num_particles,)
-        self.weights = np.ones(self.N) / self.N
+        self.weights = np.ones(num_particles) / num_particles
 
         self.Q = np.eye(dim_x)
         self.R = np.eye(dim_z)
 
-    def initialize_particles(self, x_mean, P):
+    def initialize_particles(self, x_mean: np.ndarray, p_cov: np.ndarray) -> None:
         """
-        Initialize particles from a Gaussian distribution.
-        """
-        self.particles = np.random.multivariate_normal(x_mean, P, self.N)
-        self.weights = np.ones(self.N) / self.N
+        Initialize particles from a multivariate Gaussian distribution.
 
-    def predict(self, dt, fx, Q=None, **kwargs):
+        Parameters
+        ----------
+        x_mean : np.ndarray
+            Mean initial state (dim_x,).
+        p_cov : np.ndarray
+            Initial covariance (dim_x, dim_x).
         """
+        self.particles = np.random.multivariate_normal(x_mean, p_cov, self.num_particles)
+        self.weights = np.ones(self.num_particles) / self.num_particles
+
+    def predict(
+        self, dt: float, fx_func: Callable, q_mat: np.ndarray | None = None, **kwargs: Any
+    ) -> None:
+        r"""
         Predict step (Proposal distribution).
-        dt: Time step
-        fx: State transition function f(x, dt, **kwargs) -> x_new
-        Q: Optional process noise covariance
+
+        Parameters
+        ----------
+        dt : float
+            Time step (s).
+        fx_func : Callable
+            State transition function $f(x, dt, **kwargs) \to x_{new}$.
+        q_mat : np.ndarray, optional
+            Process noise covariance (dim_x, dim_x). If None, uses `self.Q`.
+        **kwargs : Any
+            Additional arguments passed to transition function.
         """
-        if Q is None:
-            Q = self.Q
+        q_curr = q_mat if q_mat is not None else self.Q
 
         # Propagate each particle through the model and add noise
-        for i in range(self.N):
-            self.particles[i] = fx(self.particles[i], dt, **kwargs)
-            noise = np.random.multivariate_normal(np.zeros(self.dim_x), Q)
+        for i in range(self.num_particles):
+            self.particles[i] = fx_func(self.particles[i], dt, **kwargs)
+            noise = np.random.multivariate_normal(np.zeros(self.dim_x), q_curr)
             self.particles[i] += noise
 
-    def update(self, z, hx, R=None, **kwargs):
-        """
+    def update(
+        self, z: np.ndarray, hx_func: Callable, r_mat: np.ndarray | None = None, **kwargs: Any
+    ) -> None:
+        r"""
         Update step (Weighting and Resampling).
-        z: Measurement vector
-        hx: Measurement function h(x, **kwargs) -> z_pred
-        R: Optional measurement noise covariance
+
+        Parameters
+        ----------
+        z : np.ndarray
+            Measurement vector (dim_z,).
+        hx_func : Callable
+            Measurement function $h(x, **kwargs) \to z_{pred}$.
+        r_mat : np.ndarray, optional
+            Measurement noise covariance (dim_z, dim_z). If None, uses `self.R`.
+        **kwargs : Any
+            Additional arguments passed to measurement function.
         """
-        if R is None:
-            R = self.R
+        r_curr = r_mat if r_mat is not None else self.R
 
         # Update weights based on measurement likelihood
-        inv_R = np.linalg.inv(R)
-        det_R = np.linalg.det(R)
-        norm_factor = 1.0 / np.sqrt((2 * np.pi) ** self.dim_z * det_R)
+        inv_r = np.linalg.inv(r_curr)
+        det_r = np.linalg.det(r_curr)
+        norm_factor = 1.0 / np.sqrt((2 * np.pi) ** self.dim_z * det_r)
 
-        for i in range(self.N):
-            zp = hx(self.particles[i], **kwargs)
+        for i in range(self.num_particles):
+            zp = hx_func(self.particles[i], **kwargs)
             diff = z - zp
             # Multivariate Gaussian likelihood
-            prob = norm_factor * np.exp(-0.5 * np.dot(diff.T, np.dot(inv_R, diff)))
+            prob = norm_factor * np.exp(-0.5 * (diff.T @ inv_r @ diff))
             self.weights[i] *= prob
 
         # Normalize weights
@@ -80,41 +111,48 @@ class ParticleFilter:
         self.weights /= np.sum(self.weights)
 
         # Resample if effective number of particles is too low
-        if self.neff() < self.N / 2:
+        if self.neff() < self.num_particles / 2:
             self.resample()
 
-    def resample(self):
+    def resample(self) -> None:
         """Resample particles using Systematic Resampling."""
-        cumulative_sum = np.cumsum(self.weights)
-        cumulative_sum[-1] = 1.0  # Ensure last element is 1
+        cum_sum = np.cumsum(self.weights)
+        cum_sum[-1] = 1.0  # Ensure last element is exactly 1
 
         # Systematic Resampling
-        positions = (np.arange(self.N) + np.random.random()) / self.N
-        indexes = np.zeros(self.N, "i")
+        positions = (np.arange(self.num_particles) + np.random.random()) / self.num_particles
+        indices = np.zeros(self.num_particles, dtype=int)
 
         i, j = 0, 0
-        while i < self.N:
-            if positions[i] < cumulative_sum[j]:
-                indexes[i] = j
+        while i < self.num_particles:
+            if positions[i] < cum_sum[j]:
+                indices[i] = j
                 i += 1
             else:
                 j += 1
 
-        self.particles = self.particles[indexes]
-        self.weights = np.ones(self.N) / self.N
+        self.particles = self.particles[indices]
+        self.weights = np.ones(self.num_particles) / self.num_particles
 
-    def neff(self):
-        """Returns the effective number of particles."""
+    def neff(self) -> float:
+        """
+        Calculate effective number of particles.
+
+        Returns
+        -------
+        float
+            Effective sample size.
+        """
         return 1.0 / np.sum(np.square(self.weights))
 
     @property
-    def x(self):
-        """Returns the weighted mean state."""
+    def x(self) -> np.ndarray:
+        """Weighted mean state vector."""
         return np.average(self.particles, weights=self.weights, axis=0)
 
     @property
-    def P(self):
-        """Returns the weighted covariance matrix."""
+    def P(self) -> np.ndarray:
+        """Weighted error covariance matrix."""
         x_mean = self.x
         diff = self.particles - x_mean
-        return np.dot(self.weights * diff.T, diff)
+        return (self.weights * diff.T) @ diff

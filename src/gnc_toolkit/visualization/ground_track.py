@@ -1,45 +1,63 @@
 import numpy as np
+from typing import Union, Optional, List
 import plotly.graph_objects as go
 
 
-def plot_ground_track(latitudes, longitudes, times=None, title="Satellite Ground Track"):
+def plot_ground_track(
+    latitudes: Union[np.ndarray, List[float]],
+    longitudes: Union[np.ndarray, List[float]],
+    times: Optional[Union[np.ndarray, List[float]]] = None,
+    title: str = "Satellite Ground Track"
+) -> go.Figure:
     """
-    Plots sub-satellite points on an Earth map to visualize the ground track.
+    2D Sub-Satellite Point (SSP) Visualization.
+
+    Projects the spacecraft trajectory onto a 2D equirectangular map tracking 
+    latitude and longitude evolution over time.
 
     Parameters
     ----------
-        latitudes (numpy.ndarray or list): Geodetic/Geocentric Latitudes in [deg] (from -90 to 90).
-        longitudes (numpy.ndarray or list): Geodetic/Geocentric Longitudes in [deg] (from -180 to 180).
-        times (numpy.ndarray or list, optional): Timestamps or seconds for the trajectory.
-        title (str): Title for the plot.
+    latitudes : Union[np.ndarray, List[float]]
+        Geodetic or geocentric latitudes (deg). Range: $[-90, 90]$.
+    longitudes : Union[np.ndarray, List[float]]
+        Geodetic or geocentric longitudes (deg). Range: $[-180, 180]$.
+    times : Optional[Union[np.ndarray, List[float]]], optional
+        Simulation timestamps (s) for hover metadata.
+    title : str, optional
+        Plot main heading.
 
     Returns
     -------
-        plotly.graph_objects.Figure: The plotly figure object.
-    """
-    latitudes = np.array(latitudes)
-    longitudes = np.array(longitudes)
+    plotly.graph_objects.Figure
+        Interactive 2D map plot.
 
-    if latitudes.shape != longitudes.shape:
+    Raises
+    ------
+    ValueError
+        If coordinate arrays have mismatched lengths.
+    """
+    lats = np.asarray(latitudes)
+    lons = np.asarray(longitudes)
+
+    if lats.shape != lons.shape:
         raise ValueError("Latitudes and longitudes must have the same length.")
 
     fig = go.Figure()
 
-    # 1. Plot GeoScatter trace
-
+    # 1. Build Hover Metadata
     hover_text = []
     if times is not None:
-        times = np.array(times)
-        for t, lat, lon in zip(times, latitudes, longitudes):
-            hover_text.append(f"T: {t:.1f}s<br>Lat: {lat:.2f}°<br>Lon: {lon:.2f}°")
+        t_vals = np.asarray(times)
+        for t, lat, lon in zip(t_vals, lats, lons):
+            hover_text.append(f"T: {t:.1f}s<br>Lat: {lat:.2f}\u00b0<br>Lon: {lon:.2f}\u00b0")
     else:
-        for lat, lon in zip(latitudes, longitudes):
-            hover_text.append(f"Lat: {lat:.2f}°<br>Lon: {lon:.2f}°")
+        for lat, lon in zip(lats, lons):
+            hover_text.append(f"Lat: {lat:.2f}\u00b0<br>Lon: {lon:.2f}\u00b0")
 
+    # 2. Main Ground Track Trace
     fig.add_trace(
         go.Scattergeo(
-            lat=latitudes,
-            lon=longitudes,
+            lat=lats, lon=lons,
             mode="lines+markers",
             line=dict(width=2, color="darkorange"),
             marker=dict(size=4, color="darkorange", opacity=0.8),
@@ -49,11 +67,10 @@ def plot_ground_track(latitudes, longitudes, times=None, title="Satellite Ground
         )
     )
 
-    # 2. Add Start and End Point Markers
+    # 3. Markers
     fig.add_trace(
         go.Scattergeo(
-            lat=[latitudes[0]],
-            lon=[longitudes[0]],
+            lat=[lats[0]], lon=[lons[0]],
             mode="markers",
             marker=dict(size=8, color="green", symbol="circle"),
             name="Start",
@@ -62,21 +79,20 @@ def plot_ground_track(latitudes, longitudes, times=None, title="Satellite Ground
 
     fig.add_trace(
         go.Scattergeo(
-            lat=[latitudes[-1]],
-            lon=[longitudes[-1]],
+            lat=[lats[-1]], lon=[lons[-1]],
             mode="markers",
             marker=dict(size=8, color="red", symbol="square"),
             name="End",
         )
     )
 
-    # 3. Update Layout
+    # 4. Map Layout configuration
     fig.update_layout(
         title=title,
         geo=dict(
             showland=True,
             showcoastlines=True,
-            projection_type="equirectangular",  # Standard 2D flat map projection
+            projection_type="equirectangular",
             coastlinecolor="gray",
             landcolor="white",
             lakecolor="lightblue",

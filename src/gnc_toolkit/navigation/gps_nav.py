@@ -3,44 +3,67 @@ Navigation using GNSS (GPS) position and velocity measurements.
 """
 
 import numpy as np
+from typing import Optional
 
 from .orbit_determination import OrbitDeterminationEKF
 
 
 class GPSNavigation(OrbitDeterminationEKF):
-    """
-    Navigation using GNSS (GPS) measurements.
-    Processes position and velocity updates.
+    r"""
+    GNSS-based Navigation using absolute Position and Velocity measurements.
+
+    Processes PVT (Position, Velocity, Time) solutions from a receiver 
+    to correct the integrated orbital state. Inherits dynamics from 
+    `OrbitDeterminationEKF`.
     """
 
-    def update_gps(self, r_meas, v_meas=None, R_gps=None):
-        """
-        Update state using GPS measurements.
+    def update_gps(
+        self,
+        r_meas: np.ndarray,
+        v_meas: Optional[np.ndarray] = None,
+        gps_cov: Optional[np.ndarray] = None,
+        **kwargs
+    ) -> None:
+        r"""
+        Update state estimate using GNSS Cartesian measurements.
 
-        Args:
-            r_meas (np.ndarray): Measured position [x, y, z] in ECI [m].
-            v_meas (np.ndarray, optional): Measured velocity [vx, vy, vz] in ECI [m/s].
-            R_gps (np.ndarray, optional): Custom measurement noise covariance.
+        Parameters
+        ----------
+        r_meas : np.ndarray
+            Measured ECI position (m).
+        v_meas : np.ndarray, optional
+            Measured ECI velocity (m/s).
+        gps_cov : np.ndarray, optional
+            Direct measurement covariance matrix.
+        **kwargs : dict
+            Additional parameters (e.g., R_gps).
         """
+        rv = np.asarray(r_meas)
+        
+        # Handle custom R passed via kwargs or gps_cov
+        r_custom = gps_cov if gps_cov is not None else kwargs.get("R_gps")
+
         if v_meas is not None:
-            # Update with both position and velocity (6D measurement)
-            z = np.concatenate([r_meas, v_meas])
+            vv = np.asarray(v_meas)
+            z_vec = np.concatenate([rv, vv])
 
-            def hx(x):
-                return x  # Measurement is the full state (pos, vel)
+            def hx(x: np.ndarray) -> np.ndarray:
+                return x  # Identity mapping
 
-            def H_jac(x):
+            def h_jac(x: np.ndarray) -> np.ndarray:
                 return np.eye(6)
 
-            if R_gps is None:
-                # Default GPS R: 3x3 for pos, 3x3 for vel
-                R = np.eye(6)
-                R[:3, :3] = self.ekf.R
-                R[3:, 3:] = self.ekf.R * 0.01
+            if r_custom is not None:
+                r_mat = np.asarray(r_custom)
             else:
-                R = R_gps
+                # Scaled default covariance
+                r_mat = np.eye(6)
+                # Ensure self.ekf.R is captured correctly even if not initialized as expected
+                r_pos = self.ekf.R if (hasattr(self.ekf, 'R') and self.ekf.R.size > 0) else np.eye(3)
+                r_mat[:3, :3] = r_pos
+                r_mat[3:, 3:] = r_pos * 0.1  # Velocity noise heuristic
 
-            self.ekf.update(z, hx, H_jac, R=R)
+            self.ekf.update(z_vec, hx, h_jac, r_mat=r_mat)
         else:
-            # Fallback to position-only update (defined in base class)
-            self.update(r_meas)
+            # Position only update
+            self.update(rv)

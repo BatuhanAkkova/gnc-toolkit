@@ -4,48 +4,58 @@ Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.
 
 import casadi as ca
 import numpy as np
+from typing import Callable, Any, Optional, Dict, Union
 
 
 class CasadiNMPC:
     """
-    Production-grade Nonlinear Model Predictive Controller (NMPC) using CasADi.
+    High-performance Nonlinear Model Predictive Controller (NMPC) using CasADi.
 
-    Optimizes a finite horizon cost function subject to nonlinear dynamics and constraints.
-    Uses Multiple Shooting formulation for numerical stability and faster convergence.
+    Optimizes a finite-horizon cost function subject to nonlinear dynamics and
+    algebraic constraints using a Multiple Shooting formulation for numerical
+    stability and parallelism.
+
+    Parameters
+    ----------
+    nx : int
+        State dimension.
+    nu : int
+        Input dimension.
+    horizon : int
+        Prediction horizon N.
+    dt : float
+        Time step (s).
+    dynamics_func : Callable[[ca.MX, ca.MX], ca.MX]
+        System dynamics $f(x, u)$. Returns $x_{next}$ if discrete, else $dx/dt$.
+    cost_func : Callable[[ca.MX, ca.MX], ca.MX]
+        Stage cost function $L(x, u)$.
+    terminal_cost_func : Callable[[ca.MX], ca.MX]
+        Terminal cost function $V(x)$.
+    u_min, u_max : float or np.ndarray, optional
+        Control input constraints.
+    x_min, x_max : float or np.ndarray, optional
+        State trajectory constraints.
+    discrete : bool, optional
+        If True, the dynamics function is assumed discrete. If False, RK4
+        integration is performed internally. Default is False.
     """
 
     def __init__(
         self,
-        nx,
-        nu,
-        horizon,
-        dt,
-        dynamics_func,
-        cost_func,
-        terminal_cost_func,
-        u_min=None,
-        u_max=None,
-        x_min=None,
-        x_max=None,
-        discrete=False,
+        nx: int,
+        nu: int,
+        horizon: int,
+        dt: float,
+        dynamics_func: Callable[[ca.MX, ca.MX], ca.MX],
+        cost_func: Callable[[ca.MX, ca.MX], ca.MX],
+        terminal_cost_func: Callable[[ca.MX], ca.MX],
+        u_min: Optional[Union[float, np.ndarray]] = None,
+        u_max: Optional[Union[float, np.ndarray]] = None,
+        x_min: Optional[Union[float, np.ndarray]] = None,
+        x_max: Optional[Union[float, np.ndarray]] = None,
+        discrete: bool = False,
     ):
-        """
-        Initialize the Casadi NMPC.
-
-        Args:
-            nx (int): State dimension.
-            nu (int): Input dimension.
-            horizon (int): Prediction horizon N.
-            dt (float): Time step.
-            dynamics_func (callable): Function f(x, u) -> x_next (if discrete) or dx/dt (if continuous).
-            cost_func (callable): Function L(x, u) -> scalar cost.
-            terminal_cost_func (callable): Function V(x) -> scalar terminal cost.
-            u_min (float/array): Minimum control input.
-            u_max (float/array): Maximum control input.
-            x_min (float/array): Minimum state bounds.
-            x_max (float/array): Maximum state bounds.
-            discrete (bool): If True, dynamics_func returns x_next. If False, returns dx/dt and RK4 integration is used.
-        """
+        """Initialize and formulate the CasADi NLP problem."""
         self.nx = int(nx)
         self.nu = int(nu)
         self.N = int(horizon)
@@ -62,8 +72,8 @@ class CasadiNMPC:
 
         self._setup_solver()
 
-    def _setup_bounds(self, bound, dim, default_val):
-        """Helper to convert bounds to continuous array of correct dimension."""
+    def _setup_bounds(self, bound: Optional[Union[float, np.ndarray]], dim: int, default_val: float) -> np.ndarray:
+        """Helper to convert scalar or array bounds to full-dimension arrays."""
         if bound is None:
             return np.full(dim, default_val)
         bound_arr = np.array(bound).flatten()
@@ -73,123 +83,96 @@ class CasadiNMPC:
             raise ValueError(f"Bound dimension mismatch. Expected {dim}, got {len(bound_arr)}")
         return bound_arr
 
-    def _rk4_step(self, x, u):
-        """Runge-Kutta 4th order integration step for continuous systems."""
+    def _rk4_step(self, x: ca.MX, u: ca.MX) -> ca.MX:
+        """Perform a 4th-order Runge-Kutta integration step."""
         k1 = self.f(x, u)
         k2 = self.f(x + self.dt / 2.0 * k1, u)
         k3 = self.f(x + self.dt / 2.0 * k2, u)
         k4 = self.f(x + self.dt * k3, u)
         return x + (self.dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
 
-    def _setup_solver(self):
-        """Formulate the Multiple Shooting NLP and create solver."""
-        # Symbolic variables
-        X = ca.MX.sym("X", self.nx, self.N + 1)  # State trajectory
-        U = ca.MX.sym("U", self.nu, self.N)  # Control trajectory
-        X0 = ca.MX.sym("X0", self.nx)  # Parameter: Initial state
+    def _setup_solver(self) -> None:
+        """Formulate the NLP and instantiate the IPOPT solver."""
+        # Symbolic decision variables
+        X = ca.MX.sym("X", self.nx, self.N + 1)  # State variables
+        U = ca.MX.sym("U", self.nu, self.N)       # Control variables
+        X0 = ca.MX.sym("X0", self.nx)             # Initial state parameter
 
-        # Objective and Constraints
-        obj = 0.0
-        g = []  # Inequality/Equality constraints
-
-        # Multiple Shooting Equality Constraints
-        # X[:,0] = X0
-        g.append(X[:, 0] - X0)
+        cost = 0.0
+        g = []  # Constraints (Multiple Shooting)
+        g.append(X[:, 0] - X0)  # Initial condition constraint
 
         for k in range(self.N):
-            # Stage cost
-            obj += self.L(X[:, k], U[:, k])
+            cost += self.L(X[:, k], U[:, k])
+            
+            x_next_sim = self._rk4_step(X[:, k], U[:, k]) if not self.discrete else self.f(X[:, k], U[:, k])
+            g.append(X[:, k + 1] - x_next_sim)
 
-            # Dynamics propagates X[:,k] -> X_next
-            if self.discrete:
-                X_next = self.f(X[:, k], U[:, k])
-            else:
-                X_next = self._rk4_step(X[:, k], U[:, k])
+        cost += self.V(X[:, self.N])
 
-            # Shooting constraint: X[:,k+1] must equal propagated X_next
-            g.append(X[:, k + 1] - X_next)
+        # Formulate decision vector and symbolic NLP
+        v_decision = ca.vertcat(ca.reshape(X, -1, 1), ca.reshape(U, -1, 1))
+        g_constraints = ca.vertcat(*g)
+        nlp = {"x": v_decision, "f": cost, "g": g_constraints, "p": X0}
 
-        # Terminal cost
-        obj += self.V(X[:, self.N])
-
-        # State constraints setup
-        # For State constraints inside g, we need to enforce bounds on X directly or via g
-        # For multiple shooting, X is a variable, so we set bounds on X directly in variable bounds.
-        # So g only contains dynamic equality constraints.
-
-        # Flatten variables for solver
-        # vars = [X_0, X_1, ..., X_N, U_0, ..., U_{N-1}]
-        V_vars = ca.vertcat(ca.reshape(X, -1, 1), ca.reshape(U, -1, 1))
-        g_vars = ca.vertcat(*g)
-
-        # NLP formulation
-        nlp = {"x": V_vars, "f": obj, "g": g_vars, "p": X0}
-
-        # Solver options
-        opts = {"ipopt.print_level": 0, "print_time": 0, "ipopt.tol": 1e-6, "ipopt.max_iter": 100}
+        # Solver configuration (IPOPT)
+        opts = {
+            "ipopt.print_level": 0,
+            "print_time": 0,
+            "ipopt.tol": 1e-6,
+            "ipopt.max_iter": 150
+        }
         self.solver = ca.nlpsol("solver", "ipopt", nlp, opts)
 
-        # Setup variable bounds lists
+        # Build concatenated bound vectors for X and U
         self.lbx = []
         self.ubx = []
-
-        # Bounds on X (States)
-        # For Multiple shooting, we bound ALL states X_0 to X_N
         for _ in range(self.N + 1):
             self.lbx.extend(self.x_min)
             self.ubx.extend(self.x_max)
-
-        # Bounds on U (Controls)
         for _ in range(self.N):
             self.lbx.extend(self.u_min)
             self.ubx.extend(self.u_max)
 
         self.lbx = np.array(self.lbx)
         self.ubx = np.array(self.ubx)
-
-        # Bounds on g (Dynamics constraints)
-        # All equal to 0 for shooting constraints
-        # g contains: X_0 - X0 (nx), X_1 - X_next_0 (nx), ..., X_N - X_next_{N-1} (nx)
-        # Total size: nx * (N + 1)
         self.lbg = np.zeros(self.nx * (self.N + 1))
         self.ubg = np.zeros(self.nx * (self.N + 1))
 
-    def solve(self, x0, u_guess=None):
+    def solve(self, x0: np.ndarray, u_guess: Optional[np.ndarray] = None) -> np.ndarray:
         """
-        Solve the NMPC optimization problem.
+        Solve the NMPC problem for the given initial state.
 
-        Args:
-            x0 (np.ndarray): Initial state.
-            u_guess (np.ndarray, optional): Initial guess for control inputs [N, nu].
+        Parameters
+        ----------
+        x0 : np.ndarray
+            Current system state (nx,).
+        u_guess : np.ndarray, optional
+            Initial guess for control trajectory (N, nu).
 
         Returns
-        -------
-            np.ndarray: Optimal control sequence [N, nu].
+-------
+        np.ndarray
+            Optimal control trajectory (N, nu).
         """
-        x0 = np.array(x0).flatten()
-
-        # Initial guess for solver variables
-        # Set X values to x0, U to u_guess or 0
-        x_guess = np.tile(x0, (self.N + 1, 1)).flatten()
+        x_init = np.asarray(x0).flatten()
+        
+        # Warm start guess
+        x_start = np.tile(x_init, (self.N + 1, 1)).flatten()
         if u_guess is not None:
-            u_guess = np.array(u_guess).flatten()
-            if len(u_guess) != self.N * self.nu:
-                u_guess = np.zeros(self.N * self.nu)
+            u_start = np.asarray(u_guess).flatten()
+            if u_start.size != self.N * self.nu:
+                # Resize to match solver expectation if possible, or repeat
+                u_start = np.resize(u_start, self.N * self.nu)
         else:
-            u_guess = np.zeros(self.N * self.nu)
+            u_start = np.zeros(self.N * self.nu)
+        v_start = np.concatenate([x_start, u_start])
 
-        v_guess = np.concatenate([x_guess, u_guess])
-
-        # Call solver
-        sol = self.solver(x0=v_guess, p=x0, lbx=self.lbx, ubx=self.ubx, lbg=self.lbg, ubg=self.ubg)
-
-        # Extract solution
+        sol = self.solver(
+            x0=v_start, p=x_init, lbx=self.lbx, ubx=self.ubx, lbg=self.lbg, ubg=self.ubg
+        )
+        
         v_opt = sol["x"].full().flatten()
-
-        # State optimal (skip X0 ... X_N)
-        # States are from index 0 to nx*(N+1)
-        # Controls are from nx*(N+1) to end
-        u_opt_flat = v_opt[self.nx * (self.N + 1) :]
-        u_opt = u_opt_flat.reshape((self.N, self.nu))
-
-        return u_opt
+        # Extract controls (located after all state variables in decision vector)
+        u_opt_flat = v_opt[self.nx * (self.N + 1):]
+        return u_opt_flat.reshape((self.N, self.nu))

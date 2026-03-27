@@ -179,3 +179,16 @@ def test_quest_with_weights():
     if np.dot(q_est, q_true_scipy) < 0:
         q_est = -q_est
     np.testing.assert_allclose(q_est, q_true_scipy, atol=1e-6)
+
+def test_quest_weight_mismatch():
+    b = np.eye(3)
+    r = np.eye(3)
+    w = np.array([0.5, 0.5])
+    with pytest.raises(ValueError, match="Weight vector dimension mismatch."):
+        quest(b, r, weights=w)
+
+def test_request_k_setter():
+    rf = RequestFilter()
+    new_k = np.eye(4) * 2
+    rf.K = new_k
+    assert np.allclose(rf.k, new_k)

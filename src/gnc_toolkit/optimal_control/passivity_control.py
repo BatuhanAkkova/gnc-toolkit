@@ -5,89 +5,102 @@ Passivity-Based Controller for Euler-Lagrange mechanical systems.
 import numpy as np
 
 
+from typing import Callable, Optional, Union
+
 class PassivityBasedController:
-    """
+    r"""
     Passivity-Based Controller for Euler-Lagrange mechanical systems.
 
-    Exploits the energy properties and skew-symmetric property of (M_dot - 2C).
-    Commonly known as the Slotine & Li controller.
-    System: M(q) * q_ddot + C(q, q_dot) * q_dot + G(q) = u
+    Exploits the energy and passivity properties of mechanical systems to 
+    ensure global stability. This implementation is based on the Slotine & Li 
+    adaptive/passivity scheme.
+
+    System model: $M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q) = u$
+
+    Parameters
+    ----------
+    M_func : Callable[[np.ndarray], np.ndarray]
+        Inertia matrix function $M(q)$ (n x n).
+    C_func : Callable[[np.ndarray, np.ndarray], np.ndarray]
+        Coriolis and centrifugal matrix function $C(q, \dot{q})$ (n x n).
+    G_func : Callable[[np.ndarray], np.ndarray]
+        Gravity/damping vector function $G(q)$ (n,).
+    K_d : Union[float, np.ndarray]
+        Dissipative (damping) gain matrix (n x n).
+    Lambda : Union[float, np.ndarray]
+        Proportional error convergence matrix (n x n).
     """
 
-    def __init__(self, M_func, C_func, G_func, K_d, Lambda):
-        """
-        Initialize the Passivity-Based Controller.
-
-        Args:
-            M_func (callable): Function returns Inertia matrix M(q) [n x n].
-            C_func (callable): Function returns Coriolis matrix C(q, q_dot) [n x n].
-            G_func (callable): Function returns Gravity vector G(q) [n].
-            K_d (np.ndarray): Derivative gain matrix [n x n] or scalar.
-            Lambda (np.ndarray): Proportional error weight matrix [n x n] or scalar.
-        """
+    def __init__(
+        self,
+        M_func: Callable[[np.ndarray], np.ndarray],
+        C_func: Callable[[np.ndarray, np.ndarray], np.ndarray],
+        G_func: Callable[[np.ndarray], np.ndarray],
+        K_d: Union[float, np.ndarray],
+        Lambda: Union[float, np.ndarray],
+    ):
+        """Initialize controller gains and model functions."""
         self.M = M_func
         self.C = C_func
         self.G = G_func
         self.K_d = K_d
         self.Lambda = Lambda
 
-    def compute_control(self, q, q_dot, q_d, q_dot_d, q_ddot_d=None):
+    def compute_control(
+        self,
+        q: np.ndarray,
+        q_dot: np.ndarray,
+        q_d: np.ndarray,
+        q_dot_d: np.ndarray,
+        q_ddot_d: Optional[np.ndarray] = None,
+    ) -> np.ndarray:
         """
-        Compute control input.
+        Compute the passivity-based control torque output.
 
-        Args:
-            q (np.ndarray): Current positions [n].
-            q_dot (np.ndarray): Current velocities [n].
-            q_d (np.ndarray): Desired positions [n].
-            q_dot_d (np.ndarray): Desired velocities [n].
-            q_ddot_d (np.ndarray, optional): Desired accelerations [n]. Defaults to zeros.
+        Parameters
+        ----------
+        q, q_dot : np.ndarray
+            Current generalized coordinates and velocities (n,).
+        q_d, q_dot_d : np.ndarray
+            Desired coordinate and velocity trajectories (n,).
+        q_ddot_d : np.ndarray, optional
+            Desired feedforward acceleration (n,). Defaults to zero.
 
         Returns
-        -------
-            np.ndarray: Control effort u [n].
+-------
+        np.ndarray
+            Control input vector $u$ (n,).
         """
-        q = np.array(q)
-        q_dot = np.array(q_dot)
-        q_d = np.array(q_d)
-        q_dot_d = np.array(q_dot_d)
-        if q_ddot_d is None:
-            q_ddot_d = np.zeros_like(q_d)
-        else:
-            q_ddot_d = np.array(q_ddot_d)
+        q_vec = np.asarray(q)
+        v_vec = np.asarray(q_dot)
+        qd_vec = np.asarray(q_d)
+        vd_vec = np.asarray(q_dot_d)
+        ad_vec = np.asarray(q_ddot_d) if q_ddot_d is not None else np.zeros_like(qd_vec)
 
-        # 1. Compute Errors
-        e_q = q - q_d
-        e_q_dot = q_dot - q_dot_d
+        # 1. Coordinate errors
+        e_q = q_vec - qd_vec
+        e_v = v_vec - vd_vec
 
-        # 2. Reference Velocity v_r
+        # 2. Reference velocity trajectory (v_r)
+        # v_r defines the manifold for asymptotic convergence
         # v_r = q_dot_d - Lambda * e_q
-        v_r = (
-            q_dot_d - self.Lambda @ e_q
-            if isinstance(self.Lambda, np.ndarray)
-            else q_dot_d - self.Lambda * e_q
-        )
+        v_r = vd_vec - (self.Lambda @ e_q if isinstance(self.Lambda, np.ndarray) else self.Lambda * e_q)
 
-        # 3. Reference Acceleration v_r_dot
-        # v_r_dot = q_ddot_d - Lambda * e_q_dot
-        v_r_dot = (
-            q_ddot_d - self.Lambda @ e_q_dot
-            if isinstance(self.Lambda, np.ndarray)
-            else q_ddot_d - self.Lambda * e_q_dot
-        )
+        # 3. Reference acceleration trajectory (v_r_dot)
+        v_r_dot = ad_vec - (self.Lambda @ e_v if isinstance(self.Lambda, np.ndarray) else self.Lambda * e_v)
 
-        # 4. Sliding Surface / Velocity Error s
-        # s = q_dot - v_r = e_q_dot + Lambda * e_q
-        s = q_dot - v_r
+        # 4. Tracking surface / sliding error (s)
+        # s = q_dot - v_r = e_dot + Lambda * e
+        s = v_vec - v_r
 
-        # 5. Get System Dynamics Matrices
-        M_mat = self.M(q)
-        C_mat = self.C(q, q_dot)
-        G_vec = self.G(q)
+        # 5. Evaluate System Matrices at current configuration
+        M_mat = self.M(q_vec)
+        C_mat = self.C(q_vec, v_vec)
+        G_vec = self.G(q_vec)
 
-        # 6. Control Law
-        # u = M * v_r_dot + C * v_r + G - K_d * s
-        feedforward = M_mat @ v_r_dot + C_mat @ v_r + G_vec
-        damping = self.K_d @ s if isinstance(self.K_d, np.ndarray) else self.K_d * s
+        # 6. Control Law: Feedforward + Damping
+        # u = M*v_r_dot + C*v_r + G - K_d*s
+        ff_term = M_mat @ v_r_dot + C_mat @ v_r + G_vec
+        damp_term = self.K_d @ s if isinstance(self.K_d, np.ndarray) else self.K_d * s
 
-        u = feedforward - damping
-        return u
+        return ff_term - damp_term

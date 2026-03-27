@@ -10,28 +10,35 @@ from gnc_toolkit.utils.quat_utils import axis_angle_to_quat, quat_normalize
 def nadir_pointing_reference(pos_eci: np.ndarray, vel_eci: np.ndarray) -> np.ndarray:
     """
     Generate a reference quaternion for Nadir pointing.
-    Target frame: Z-axis points towards Earth center, Y-axis along orbit normal,
-    X-axis completes the right-handed frame (approximately velocity direction).
 
-    Args:
-        pos_eci: ECI position vector [m] (3,)
-        vel_eci: ECI velocity vector [m/s] (3,)
+    The target frame is defined as:
+    - Z-axis: Points towards Earth center (Nadir).
+    - Y-axis: Aligned with the negative of the orbit normal.
+    - X-axis: Completes the right-handed frame (approximately velocity direction).
+
+    Parameters
+    ----------
+    pos_eci : np.ndarray
+        ECI position vector [m] (3,).
+    vel_eci : np.ndarray
+        ECI velocity vector [m/s] (3,).
 
     Returns
     -------
-        Reference quaternion [x, y, z, w]
+    np.ndarray
+        Reference quaternion [x, y, z, w].
     """
-    pos_eci = np.asarray(pos_eci)
-    vel_eci = np.asarray(vel_eci)
+    pos_vec = np.asarray(pos_eci)
+    vel_vec = np.asarray(vel_eci)
 
     # Z-axis (Nadir): Towards Earth center
-    z_axis = -pos_eci / np.linalg.norm(pos_eci)
+    z_axis = -pos_vec / np.linalg.norm(pos_vec)
 
-    # Y-axis: Negative of Orbit normal (to align with negative Z_eci for equatorial)
-    orb_normal = np.cross(pos_eci, vel_eci)
+    # Y-axis: Negative of Orbit normal
+    orb_normal = np.cross(pos_vec, vel_vec)
     y_axis = -orb_normal / np.linalg.norm(orb_normal)
 
-    # X-axis: Complete the frame (approximates velocity direction in circular orbit)
+    # X-axis: Complete the frame
     x_axis = np.cross(y_axis, z_axis)
     x_axis /= np.linalg.norm(x_axis)
 
@@ -44,54 +51,64 @@ def nadir_pointing_reference(pos_eci: np.ndarray, vel_eci: np.ndarray) -> np.nda
 def sun_pointing_reference(sun_vec_eci: np.ndarray) -> np.ndarray:
     """
     Generate a reference quaternion for Sun pointing.
-    Primary objective: Align Body X-axis with Sun vector.
-    Secondary objective: Minimize rotation about Sun vector (constrained pointing).
 
-    Args:
-        sun_vec_eci: ECI Sun direction vector (3,)
+    Primary objective is to align the spacecraft body X-axis with the Sun vector.
+    Secondary objective is to minimize rotation about the Sun vector.
+
+    Parameters
+    ----------
+    sun_vec_eci : np.ndarray
+        ECI Sun direction vector (3,).
 
     Returns
     -------
-        Reference quaternion [x, y, z, w]
+    np.ndarray
+        Reference quaternion [x, y, z, w].
     """
-    s = sun_vec_eci / np.linalg.norm(sun_vec_eci)
+    sun_dir = sun_vec_eci / np.linalg.norm(sun_vec_eci)
 
-    # Simple algorithm: find shortest rotation from ECI X to Sun vector
+    # Shortest rotation from ECI X to Sun vector
     eci_x = np.array([1.0, 0.0, 0.0])
 
-    dot = np.dot(eci_x, s)
-    if dot > 0.999999:
+    dot_prod = np.dot(eci_x, sun_dir)
+    if dot_prod > 0.999999:
         return np.array([0.0, 0.0, 0.0, 1.0])
-    if dot < -0.999999:
+    if dot_prod < -0.999999:
         return np.array([0.0, 1.0, 0.0, 0.0])
 
-    axis = np.cross(eci_x, s)
-    angle = np.arccos(dot)
+    rot_axis = np.cross(eci_x, sun_dir)
+    rot_angle = np.arccos(dot_prod)
 
-    return axis_angle_to_quat(axis / np.linalg.norm(axis) * angle)
+    return axis_angle_to_quat(rot_axis / np.linalg.norm(rot_axis) * rot_angle)
 
 
 def target_tracking_reference(pos_eci: np.ndarray, target_pos_eci: np.ndarray) -> np.ndarray:
     """
     Generate a reference quaternion to track a target position.
-    Target frame: Z-axis aligned with boresight (towards target).
 
-    Args:
-        pos_eci: ECI position vector of spacecraft [m] (3,)
-        target_pos_eci: ECI position vector of target [m] (3,)
+    The target frame is defined with the Z-axis aligned with the boresight (towards target).
+
+    Parameters
+    ----------
+    pos_eci : np.ndarray
+        ECI position vector of the spacecraft [m] (3,).
+    target_pos_eci : np.ndarray
+        ECI position vector of the target [m] (3,).
 
     Returns
     -------
-        Reference quaternion [x, y, z, w]
+    np.ndarray
+        Reference quaternion [x, y, z, w].
     """
     rel_pos = target_pos_eci - pos_eci
     z_axis = rel_pos / np.linalg.norm(rel_pos)
 
-    eci_z = np.array([0.0, 0.0, 1.0])
-    if abs(np.dot(z_axis, eci_z)) > 0.99:
-        eci_z = np.array([1.0, 0.0, 0.0])
+    # Auxiliary vector for frame construction
+    aux_z = np.array([0.0, 0.0, 1.0])
+    if abs(np.dot(z_axis, aux_z)) > 0.99:
+        aux_z = np.array([1.0, 0.0, 0.0])
 
-    y_axis = np.cross(z_axis, eci_z)
+    y_axis = np.cross(z_axis, aux_z)
     y_axis /= np.linalg.norm(y_axis)
     x_axis = np.cross(y_axis, z_axis)
 
@@ -103,91 +120,108 @@ def eigenaxis_slew_path_planning(
     q_initial: np.ndarray, q_final: np.ndarray, time_span: np.ndarray
 ) -> list[np.ndarray]:
     """
-    Generate an eigenaxis slew profile between two orientations.
-    Using SLERP (Spherical Linear Interpolation).
+    Generate an eigenaxis slew profile using Spherical Linear Interpolation (SLERP).
 
-    Args:
-        q_initial: Initial quaternion [x, y, z, w]
-        q_final: Final quaternion [x, y, z, w]
-        time_span: Normalized time values [0, 1] (N,)
+    Parameters
+    ----------
+    q_initial : np.ndarray
+        Initial quaternion [x, y, z, w].
+    q_final : np.ndarray
+        Final quaternion [x, y, z, w].
+    time_span : np.ndarray
+        Normalized time values [0, 1] (N,).
 
     Returns
     -------
-        List of quaternions along the path
+    list[np.ndarray]
+        List of interpolated quaternions along the path.
     """
-    path = []
-    for t in time_span:
-        path.append(attitude_blending(q_initial, q_final, t))
-    return path
+    return [attitude_blending(q_initial, q_final, float(t)) for t in time_span]
 
 
 def attitude_blending(q1: np.ndarray, q2: np.ndarray, alpha: float) -> np.ndarray:
     """
-    SLERP (Spherical Linear Interpolation) between two quaternions.
+    SLERP (Spherical Linear Interpolation) between two orientation quaternions.
 
-    Args:
-        q1: First quaternion [x, y, z, w]
-        q2: Second quaternion [x, y, z, w]
-        alpha: Blending factor [0, 1]
+    Parameters
+    ----------
+    q1 : np.ndarray
+        First quaternion [x, y, z, w].
+    q2 : np.ndarray
+        Second quaternion [x, y, z, w].
+    alpha : float
+        Blending factor [0, 1].
 
     Returns
     -------
-        Blended quaternion [x, y, z, w]
+    np.ndarray
+        Blended/interpolated quaternion [x, y, z, w].
     """
-    q1 = quat_normalize(q1)
-    q2 = quat_normalize(q2)
+    quat1 = quat_normalize(q1)
+    quat2 = quat_normalize(q2)
 
-    dot = np.dot(q1, q2)
+    dot_prod = np.dot(quat1, quat2)
 
-    if dot < 0.0:
-        q1 = -q1
-        dot = -dot
+    # Ensure shortest path
+    if dot_prod < 0.0:
+        quat1 = -quat1
+        dot_prod = -dot_prod
 
-    if dot > 0.9995:
-        res = q1 + alpha * (q2 - q1)
+    if dot_prod > 0.9995:
+        # Linear interpolation for very small angles
+        res = quat1 + alpha * (quat2 - quat1)
         return quat_normalize(res)
 
-    theta_0 = np.arccos(dot)
+    theta_0 = np.arccos(dot_prod)
     theta = theta_0 * alpha
 
     sin_theta_0 = np.sin(theta_0)
     sin_theta = np.sin(theta)
 
-    s0 = np.cos(theta) - dot * sin_theta / sin_theta_0
+    s0 = np.cos(theta) - dot_prod * sin_theta / sin_theta_0
     s1 = sin_theta / sin_theta_0
 
-    return (s0 * q1) + (s1 * q2)
+    return (s0 * quat1) + (s1 * quat2)
 
 
-def _rmat_to_quat(R: np.ndarray) -> np.ndarray:
+def _rmat_to_quat(r_mat: np.ndarray) -> np.ndarray:
     """
-    Internal helper to convert 3x3 rotation matrix to quaternion [x, y, z, w].
-    Robust implementation (Shepperd's algorithm).
+    Convert a 3x3 rotation matrix to a quaternion using Shepperd's algorithm.
+
+    Parameters
+    ----------
+    r_mat : np.ndarray
+        3x3 rotation matrix.
+
+    Returns
+    -------
+    np.ndarray
+        Quaternion [x, y, z, w].
     """
-    tr = np.trace(R)
-    if tr > 0:
-        S = np.sqrt(tr + 1.0) * 2
-        w = 0.25 * S
-        x = (R[2, 1] - R[1, 2]) / S
-        y = (R[0, 2] - R[2, 0]) / S
-        z = (R[1, 0] - R[0, 1]) / S
-    elif (R[0, 0] > R[1, 1]) and (R[0, 0] > R[2, 2]):
-        S = np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2]) * 2
-        w = (R[2, 1] - R[1, 2]) / S
-        x = 0.25 * S
-        y = (R[0, 1] + R[1, 0]) / S
-        z = (R[0, 2] + R[2, 0]) / S
-    elif R[1, 1] > R[2, 2]:
-        S = np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2]) * 2
-        w = (R[0, 2] - R[2, 0]) / S
-        x = (R[0, 1] + R[1, 0]) / S
-        y = 0.25 * S
-        z = (R[1, 2] + R[2, 1]) / S
+    tr_val = np.trace(r_mat)
+    if tr_val > 0:
+        scale_s = np.sqrt(tr_val + 1.0) * 2
+        quat_w = 0.25 * scale_s
+        quat_x = (r_mat[2, 1] - r_mat[1, 2]) / scale_s
+        quat_y = (r_mat[0, 2] - r_mat[2, 0]) / scale_s
+        quat_z = (r_mat[1, 0] - r_mat[0, 1]) / scale_s
+    elif (r_mat[0, 0] > r_mat[1, 1]) and (r_mat[0, 0] > r_mat[2, 2]):
+        scale_s = np.sqrt(1.0 + r_mat[0, 0] - r_mat[1, 1] - r_mat[2, 2]) * 2
+        quat_w = (r_mat[2, 1] - r_mat[1, 2]) / scale_s
+        quat_x = 0.25 * scale_s
+        quat_y = (r_mat[0, 1] + r_mat[1, 0]) / scale_s
+        quat_z = (r_mat[0, 2] + r_mat[2, 0]) / scale_s
+    elif r_mat[1, 1] > r_mat[2, 2]:
+        scale_s = np.sqrt(1.0 + r_mat[1, 1] - r_mat[0, 0] - r_mat[2, 2]) * 2
+        quat_w = (r_mat[0, 2] - r_mat[2, 0]) / scale_s
+        quat_x = (r_mat[0, 1] + r_mat[1, 0]) / scale_s
+        quat_y = 0.25 * scale_s
+        quat_z = (r_mat[1, 2] + r_mat[2, 1]) / scale_s
     else:
-        S = np.sqrt(1.0 + R[2, 2] - R[0, 0] - R[1, 1]) * 2
-        w = (R[1, 0] - R[0, 1]) / S
-        x = (R[0, 2] + R[2, 0]) / S
-        y = (R[1, 2] + R[2, 1]) / S
-        z = 0.25 * S
+        scale_s = np.sqrt(1.0 + r_mat[2, 2] - r_mat[0, 0] - r_mat[1, 1]) * 2
+        quat_w = (r_mat[1, 0] - r_mat[0, 1]) / scale_s
+        quat_x = (r_mat[0, 2] + r_mat[2, 0]) / scale_s
+        quat_y = (r_mat[1, 2] + r_mat[2, 1]) / scale_s
+        quat_z = 0.25 * scale_s
 
-    return np.array([x, y, z, w])
+    return np.array([quat_x, quat_y, quat_z, quat_w])

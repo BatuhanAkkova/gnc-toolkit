@@ -7,42 +7,72 @@ import numpy as np
 
 class RadiationModel:
     """
-    Basic radiation environment models for spacecraft.
+    Parametric Space Radiation Environment Models.
+
+    Estimates Total Ionizing Dose (TID) and Single Event Upset (SEU) rates
+    for spacecraft electronic components in Low Earth Orbit (LEO).
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize radiation model."""
         pass
 
-    def estimate_tid(self, altitude_km, inclination_deg, duration_days):
+    def estimate_tid(
+        self,
+        altitude_km: float,
+        inclination_deg: float,
+        duration_days: float
+    ) -> float:
         """
-        Estimate Total Ionising Dose (TID) in kRad(Si).
-        Rough parametric model for LEO.
-        """
-        # Simplified parametric model for 0.1" Al shielding
-        base_rate = 1.0e-4  # kRad/day base for low LEO
+        Estimate cumulative Total Ionizing Dose (TID).
 
-        # Altitude factor
-        alt_factor = np.exp((altitude_km - 400) / 500)
+        Uses a parametric fit for LEO orbits assuming 2.5 mm Aluminum shielding.
 
-        # Inclination factor
-        inc_factor = 1.0 + 0.5 * np.sin(np.radians(inclination_deg))
-
-        tid = base_rate * alt_factor * inc_factor * duration_days
-        return tid
-
-    def estimate_seu_rate(self, altitude_km, device_cross_section=1.0e-12):
-        """
-        Estimate Single Event Upset (SEU) rate.
-
-        Args:
-            altitude_km (float): Orbit altitude
-            device_cross_section (float): Sensitive area [cm^2/bit]
+        Parameters
+        ----------
+        altitude_km : float
+            Orbit altitude (km).
+        inclination_deg : float
+            Orbit inclination (deg).
+        duration_days : float
+            Mission duration (days).
 
         Returns
         -------
-            float: SEUs per bit-day
+        float
+            Estimated TID in kRad(Si).
         """
-        # Simplified proton flux model
-        flux = 100 * np.exp((altitude_km - 400) / 600)  # protons/cm^2/s > 10MeV
-        rate = flux * device_cross_section * 86400  # per bit-day
-        return rate
+        # Base rate (400km)
+        base_rate = 1.0e-4
+        # Altitude scaling (Van Allen belt proxy)
+        alt_factor = np.exp((float(altitude_km) - 400.0) / 500.0)
+        # Inclination scaling (SAA/Poles)
+        inc_factor = 1.0 + 0.5 * np.sin(np.radians(float(inclination_deg)))
+
+        return float(base_rate * alt_factor * inc_factor * duration_days)
+
+    def estimate_seu_rate(
+        self,
+        altitude_km: float,
+        device_cross_section: float = 1.0e-12
+    ) -> float:
+        """
+        Estimate Single Event Upset (SEU) rate from proton flux.
+
+        Parameters
+        ----------
+        altitude_km : float
+            Orbit altitude (km).
+        device_cross_section : float, optional
+            Device sensitive area ($cm^2/bit$). Default 1e-12.
+
+        Returns
+        -------
+        float
+            Estimated SEUs per bit-day.
+        """
+        # Proton flux proxy (> 10 MeV)
+        flux_p = 100.0 * np.exp((float(altitude_km) - 400.0) / 600.0)
+        # 86400 s/day
+        rate = flux_p * device_cross_section * 86400.0
+        return float(rate)

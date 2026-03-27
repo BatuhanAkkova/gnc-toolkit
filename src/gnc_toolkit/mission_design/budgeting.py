@@ -10,17 +10,25 @@ from gnc_toolkit.utils.frame_conversion import eci2geodetic
 
 
 def calculate_propellant_mass(initial_mass: float, dv: float, isp: float) -> float:
-    """
-    Calculates the required propellant mass using the Tsiolkovsky rocket equation.
+    r"""
+    Calculate required propellant mass via the Rocket Equation.
 
-    Args:
-        initial_mass (float): Initial mass of the spacecraft (kg).
-        dv (float): Delta-V required (km/s).
-        isp (float): Specific impulse (s).
+    Equation:
+    $m_p = m_0 \left( 1 - \exp\left(-\frac{\Delta V}{I_{sp} g_0}\right) \right)$
+
+    Parameters
+    ----------
+    initial_mass : float
+        Initial spacecraft mass $m_0$ (kg).
+    dv : float
+        Required Delta-V (km/s).
+    isp : float
+        Specific impulse (s).
 
     Returns
     -------
-        float: Propellant mass required (kg).
+    float
+        Required propellant mass (kg).
     """
     g0 = 0.00980665  # km/s^2
     if isp <= 0:
@@ -31,17 +39,25 @@ def calculate_propellant_mass(initial_mass: float, dv: float, isp: float) -> flo
 
 
 def calculate_delta_v(initial_mass: float, propellant_mass: float, isp: float) -> float:
-    """
-    Calculates the Delta-V available from a given propellant mass.
+    r"""
+    Calculate available Delta-V from propellant mass.
 
-    Args:
-        initial_mass (float): Initial mass of the spacecraft (kg).
-        propellant_mass (float): Mass of the propellant to be consumed (kg).
-        isp (float): Specific impulse (s).
+    Equation:
+    $\Delta V = I_{sp} g_0 \ln\left(\frac{m_0}{m_f}\right)$
+
+    Parameters
+    ----------
+    initial_mass : float
+        Initial mass $m_0$ (kg).
+    propellant_mass : float
+        Mass of propellant to burn (kg).
+    isp : float
+        Specific impulse (s).
 
     Returns
     -------
-        float: Delta-V available (km/s).
+    float
+        Available Delta-V (km/s).
     """
     g0 = 0.00980665  # km/s^2
     if propellant_mass >= initial_mass:
@@ -53,20 +69,22 @@ def calculate_delta_v(initial_mass: float, propellant_mass: float, isp: float) -
 
 
 def calculate_staged_delta_v(stages: list[dict]) -> float:
-    """
-    Calculates the total Delta-V for a multi-stage rocket.
+    r"""
+    Calculate total Delta-V for a multi-stage system.
 
-    Args:
-        stages (list[dict]): List of dictionaries ordered from first stage (bottom) to last (top).
-                             Each dict must contain:
-                             - 'm_dry' (float): Dry mass of the stage (kg).
-                             - 'm_prop' (float): Propellant mass of the stage (kg).
-                             - 'isp' (float): Specific impulse of the stage (s).
-                             - 'm0_payload' (float, optional): Payload mass above this stage (kg). If omitted, it's calculated from subsequent stages.
+    Summation:
+    $\Delta V_{total} = \sum_{i=1}^n I_{sp,i} g_0 \ln\left(\frac{m_{0,i}}{m_{f,i}}\right)$
+
+    Parameters
+    ----------
+    stages : list[dict]
+        List of stage definitions (ordered 1 to N).
+        Each dict requires 'm_dry', 'm_prop', 'isp'.
 
     Returns
     -------
-        float: Total Delta-V (km/s).
+    float
+        Total Delta-V (km/s).
     """
     # Calculate masses from top to bottom
     total_dv = 0.0

@@ -5,69 +5,127 @@ Modified Rodrigues Parameters (MRP) kinematics and math utilities.
 import numpy as np
 
 
-def quat_to_mrp(q):
-    """
-    Convert quaternion [x, y, z, w] to Modified Rodrigues Parameters (MRP).
+def quat_to_mrp(q: np.ndarray) -> np.ndarray:
+    r"""
+    Convert a quaternion to Modified Rodrigues Parameters (MRP).
 
-    sigma = q_vec / (1 + q_w)
-    """
-    x, y, z, w = q
-    return np.array([x, y, z]) / (1 + w)
+    Mathematical form: $\sigma = \mathbf{q}_{vec} / (1 + q_w)$.
+    Singular for 360-degree rotations ($q_w = -1$).
 
-
-def mrp_to_quat(sigma):
-    """
-    Convert Modified Rodrigues Parameters (MRP) to quaternion [x, y, z, w].
-
-    q_w = (1 - |sigma|^2) / (1 + |sigma|^2)
-    q_vec = 2 * sigma / (1 + |sigma|^2)
-    """
-    sigma_sq = np.sum(sigma**2)
-    w = (1 - sigma_sq) / (1 + sigma_sq)
-    xyz = 2 * sigma / (1 + sigma_sq)
-    return np.array([xyz[0], xyz[1], xyz[2], w])
-
-
-def mrp_to_dcm(sigma):
-    """
-    Convert MRP to 3x3 Direction Cosine Matrix.
-    """
-    sigma_sq = np.sum(sigma**2)
-    s_x = sigma[0]
-    s_y = sigma[1]
-    s_z = sigma[2]
-
-    S = np.array([[0, -s_z, s_y], [s_z, 0, -s_x], [-s_y, s_x, 0]])
-
-    I = np.eye(3)
-    R = I + (8 * S @ S + 4 * (1 - sigma_sq) * S) / (1 + sigma_sq) ** 2
-    return R
-
-
-def get_shadow_mrp(sigma):
-    """
-    Return the shadow set for the given MRP.
-
-    sigma_shadow = -sigma / |sigma|^2
-    """
-    sigma_sq = np.sum(sigma**2)
-    if sigma_sq < 1e-12:
-        return np.zeros(3)
-    return -sigma / sigma_sq
-
-
-def check_mrp_switching(sigma, threshold=1.0):
-    """
-    Check if the MRP should be switched to its shadow set to avoid singularity.
-
-    Args:
-        sigma (np.ndarray): Current MRP.
-        threshold (float): Switching threshold (typically 1.0).
+    Parameters
+    ----------
+    q : np.ndarray
+        Quaternion [x, y, z, w].
 
     Returns
     -------
-        np.ndarray: Switched (or original) MRP.
+    np.ndarray
+        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.
     """
-    if np.linalg.norm(sigma) > threshold:
-        return get_shadow_mrp(sigma)
-    return sigma
+    qv = np.asarray(q)
+    x, y, z, w = qv
+    # Handle singularity by adding a small epsilon or implying shadow set
+    den = 1.0 + w
+    if abs(den) < 1e-12:
+        # Fallback to a very large but finite MRP or notify
+        # In practice, we use shadow sets before this happens.
+        return np.array([x, y, z]) * 1e12 
+    return np.array([x, y, z]) / den
+
+
+def mrp_to_quat(sigma: np.ndarray) -> np.ndarray:
+    r"""
+    Convert Modified Rodrigues Parameters to a quaternion.
+
+    Parameters
+    ----------
+    sigma : np.ndarray
+        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.
+
+    Returns
+    -------
+    np.ndarray
+        Unit quaternion [x, y, z, w].
+    """
+    sv = np.asarray(sigma)
+    sigma_sq = np.sum(sv**2)
+    w = (1.0 - sigma_sq) / (1.0 + sigma_sq)
+    xyz = 2.0 * sv / (1.0 + sigma_sq)
+    return np.array([xyz[0], xyz[1], xyz[2], w])
+
+
+def mrp_to_dcm(sigma: np.ndarray) -> np.ndarray:
+    r"""
+    Convert Modified Rodrigues Parameters to a Direction Cosine Matrix.
+
+    Parameters
+    ----------
+    sigma : np.ndarray
+        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.
+
+    Returns
+    -------
+    np.ndarray
+        3x3 Direction Cosine Matrix.
+    """
+    sv = np.asarray(sigma)
+    sigma_sq = np.sum(sv**2)
+    s1, s2, s3 = sv
+
+    s_mat = np.array([
+        [0.0, -s3,  s2],
+        [s3,  0.0, -s1],
+        [-s2, s1,  0.0]
+    ])
+
+    den = (1.0 + sigma_sq)**2
+    return np.eye(3) + (8.0 * s_mat @ s_mat + 4.0 * (1.0 - sigma_sq) * s_mat) / den
+
+
+def get_shadow_mrp(sigma: np.ndarray) -> np.ndarray:
+    r"""
+    Return the shadow set for the given MRP.
+
+    The shadow set represents the same rotation but stays within the 
+    unit sphere ($|\sigma| \le 1$).
+    $\sigma_{shadow} = -\sigma / \|\sigma\|^2$.
+
+    Parameters
+    ----------
+    sigma : np.ndarray
+        MRP vector $[\sigma_1, \sigma_2, \sigma_3]^T$.
+
+    Returns
+    -------
+    np.ndarray
+        Shadow MRP vector.
+    """
+    sv = np.asarray(sigma)
+    sigma_sq = np.sum(sv**2)
+    if sigma_sq < 1e-15:
+        return np.zeros(3)
+    return -sv / sigma_sq
+
+
+def check_mrp_switching(sigma: np.ndarray, threshold: float = 1.0) -> np.ndarray:
+    """
+    Ensure the MRP magnitude remains below a threshold by switching to the shadow set.
+
+    Typically used to maintain the MRP within the unit sphere ($threshold=1.0$).
+
+    Parameters
+    ----------
+    sigma : np.ndarray
+        Current MRP vector.
+    threshold : float, optional
+        Magnitude threshold for switching. Default is 1.0.
+
+    Returns
+    -------
+    np.ndarray
+        Standard or shadow MRP vector.
+    """
+    sv = np.asarray(sigma)
+    if np.linalg.norm(sv) > threshold:
+        return get_shadow_mrp(sv)
+    return sv

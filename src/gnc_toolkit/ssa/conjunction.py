@@ -16,100 +16,90 @@ def compute_pc_foster(
     cov2: np.ndarray,
     hbr: float,
 ) -> float:
-    """
-    Computes the Probability of Collision (Pc) using Foster's method.
-    Assumes Gaussian distribution for states.
-    Projects covariance matrices into the collision plane perpendicular to relative velocity.
+    r"""
+    Compute Probability of Collision (Pc) via Foster's method.
 
-    Args:
-        r1 (np.ndarray): Position of object 1 [m], shape (3,)
-        v1 (np.ndarray): Velocity of object 1 [m/s], shape (3,)
-        cov1 (np.ndarray): Covariance matrix of object 1 [m^2], shape (3,3)
-        r2 (np.ndarray): Position of object 2 [m], shape (3,)
-        v2 (np.ndarray): Velocity of object 2 [m/s], shape (3,)
-        cov2 (np.ndarray): Covariance matrix of object 2 [m^2], shape (3,3)
-        hbr (float): Hard Body Radius [m]
+    Projects the encounter into a 2D plane and integrates the PDF:
+    $P_c = \iint_{HBR} \frac{1}{2\pi \sqrt{|\mathbf{C}|}} \exp\left(-\frac{1}{2} \mathbf{x}^T \mathbf{C}^{-1} \mathbf{x}\right) dA$
+
+    Parameters
+    ----------
+    r1, v1 : np.ndarray
+        ECI state of Object 1 at TCA (m, m/s).
+    cov1 : np.ndarray
+        $3 \times 3$ covariance of Object 1 ($m^2$).
+    r2, v2 : np.ndarray
+        ECI state of Object 2 at TCA (m, m/s).
+    cov2 : np.ndarray
+        $3 \times 3$ covariance of Object 2 ($m^2$).
+    hbr : float
+        Combined Hard Body Radius (m).
 
     Returns
     -------
-        float: Probability of collision (0 to 1).
+    float
+        Probability of collision $P_c \in [0, 1]$.
     """
-    # 1. Relative State at Encounter
-    r_rel = r1 - r2
-    v_rel = v1 - v2
+    rv1, rv2 = np.asarray(r1), np.asarray(r2)
+    vv1, vv2 = np.asarray(v1), np.asarray(v2)
+    cv1, cv2 = np.asarray(cov1), np.asarray(cov2)
+
+    r_rel = rv1 - rv2
+    v_rel = vv1 - vv2
     v_mag = np.linalg.norm(v_rel)
 
     if v_mag < 1e-6:
-        raise ValueError("Relative velocity is too small for encounter plane projection.")
+        raise ValueError("Relative velocity is too small for encounter projection.")
 
-    # 2. Combined Covariance
-    cov_comb = cov1 + cov2
+    combined_cov = cv1 + cv2
 
-    # 3. Encounter Frame Definition (Collision Plane)
-    # z-axis along relative velocity
-    z_axis = v_rel / v_mag
-
-    # x-axis and y-axis spanning the plane perpendicular to z
-    # At TCA, r_rel is perpendicular to v_rel. If not, use cross products.
-    if np.abs(np.dot(r_rel, z_axis)) > 1e-3:
-        # Standardize encounter plane
-        x_axis = np.cross(z_axis, [1, 0, 0])
-        if np.linalg.norm(x_axis) < 1e-6:
-            x_axis = np.cross(z_axis, [0, 1, 0])
-        x_axis = x_axis / np.linalg.norm(x_axis)
-    else:
-        # If at TCA, r_rel is already in the plane
-        if np.linalg.norm(r_rel) > 1e-6:
-            x_axis = r_rel / np.linalg.norm(r_rel)
+    # Define Encounter Frame (Equinoctial/Collision Plane)
+    z_hat = v_rel / v_mag
+    
+    # x-hat is along the projected relative position (impact parameter)
+    if np.linalg.norm(r_rel) > 1e-4:
+        x_hat = r_rel - np.dot(r_rel, z_hat) * z_hat
+        x_mag = np.linalg.norm(x_hat)
+        if x_mag > 1e-6:
+            x_hat /= x_mag
         else:
-            # Identical position collision
-            x_axis = np.array([1, 0, 0]) - z_axis * z_axis[0]
-            if np.linalg.norm(x_axis) < 1e-6:
-                x_axis = np.array([0, 1, 0]) - z_axis * z_axis[1]
-            x_axis = x_axis / np.linalg.norm(x_axis)
+            x_hat = np.array([1.0, 0.0, 0.0]) if abs(z_hat[0]) < 0.9 else np.array([0.0, 1.0, 0.0])
+            x_hat -= np.dot(x_hat, z_hat) * z_hat
+            x_hat /= np.linalg.norm(x_hat)
+    else:
+        # Direct collision at TCA
+        x_hat = np.array([1.0, 0.0, 0.0]) if abs(z_hat[0]) < 0.9 else np.array([0.0, 1.0, 0.0])
+        x_hat -= np.dot(x_hat, z_hat) * z_hat
+        x_hat /= np.linalg.norm(x_hat)
 
-    y_axis = np.cross(z_axis, x_axis)
-    y_axis = y_axis / np.linalg.norm(y_axis)
+    y_hat = np.cross(z_hat, x_hat)
+    m_rot = np.vstack([x_hat, y_hat, z_hat])
 
-    # Rotation matrix from Reference to Encounter Frame (R_E_R)
-    R = np.vstack([x_axis, y_axis, z_axis])
+    # Project to 2D
+    r_enc = m_rot @ r_rel
+    cov_enc = m_rot @ combined_cov @ m_rot.T
+    cov_2d = cov_enc[:2, :2]
+    det_c = np.linalg.det(cov_2d)
 
-    # 4. Project relative position and covariance to encounter plane (2D)
-    r_encounter = R @ r_rel
-    x_c = r_encounter[0]
-    y_c = r_encounter[1]
+    if det_c < 1e-15:
+        return 0.0
 
-    # Project covariance
-    cov_encounter = R @ cov_comb @ R.T
-    cov_2d = cov_encounter[:2, :2]
+    inv_c = np.linalg.inv(cov_2d)
+    x_c, y_c = r_enc[0], r_enc[1]
 
-    # 5. Integration over the Hard Body Circle (Radius HBR)
-    det_cov = det(cov_2d)
-    if det_cov < 1e-12:
-        return 0.0  # Singular covariance
+    def pdf_2d(x: float, y: float) -> float:
+        d = np.array([x - x_c, y - y_c])
+        arg = -0.5 * d.T @ inv_c @ d
+        return (1.0 / (2.0 * np.pi * np.sqrt(det_c))) * np.exp(arg)
 
-    inv_cov = inv(cov_2d)
-
-    def integrand(x, y):
-        dx = x - x_c
-        dy = y - y_c
-        vec = np.array([dx, dy])
-        # exponent: -0.5 * vec^T * inv_cov * vec
-        exp_val = -0.5 * np.dot(vec, np.dot(inv_cov, vec))
-        return (1.0 / (2 * np.pi * np.sqrt(det_cov))) * np.exp(exp_val)
-
-    # Limits of integration:
-    # x goes from -sqrt(hbr^2 - y^2) to sqrt(hbr^2 - y^2)
-    # y goes from -hbr to hbr
-    val, err = dblquad(
-        integrand,
-        -hbr,
-        hbr,
-        lambda y: -np.sqrt(np.maximum(0, hbr**2 - y**2)),
-        lambda y: np.sqrt(np.maximum(0, hbr**2 - y**2)),
+    pc, _ = dblquad(
+        pdf_2d,
+        -hbr, hbr,
+        lambda y: -np.sqrt(max(0, hbr**2 - y**2)),
+        lambda y: np.sqrt(max(0, hbr**2 - y**2))
     )
 
-    return val
+    return pc
 
 
 def compute_pc_chan(
@@ -121,97 +111,76 @@ def compute_pc_chan(
     cov2: np.ndarray,
     hbr: float,
 ) -> float:
+    r"""
+    Probability of Collision (Pc) via Chan's Analytical Approximation.
+
+    Provides a fast, series-based solution to the 2D Gaussian integral over 
+    a circular region. Most accurate when the HBR is small compared to 
+    the standard deviation of the covariance.
+
+    Parameters
+    ----------
+    r1, r2 : np.ndarray
+        ECI Position vectors at TCA (m).
+    v1, v2 : np.ndarray
+        ECI Velocity vectors at TCA (m/s).
+    cov1, cov2 : np.ndarray
+        $3\times 3$ error covariance matrices ($m^2$).
+    hbr : float
+        Combined Hard Body Radius (m).
+
+    Returns
+    -------
+    float
+        Computed probability of collision.
     """
-    Computes Probability of Collision using Chan's analytical approximation.
-    Usually faster and applicable when HBR is small relative to state errors.
-    """
-    # 1. Relative State at Encounter
-    r_rel = r1 - r2
-    v_rel = v1 - v2
+    rv1, rv2 = np.asarray(r1), np.asarray(r2)
+    vv1, vv2 = np.asarray(v1), np.asarray(v2)
+    cv1, cv2 = np.asarray(cov1), np.asarray(cov2)
+
+    r_rel = rv1 - rv2
+    v_rel = vv1 - vv2
     v_mag = np.linalg.norm(v_rel)
 
     if v_mag < 1e-6:
-        raise ValueError("Relative velocity is too small for encounter plane projection.")
+        raise ValueError("Relative velocity is too small.")
 
-    # 2. Combined Covariance
-    cov_comb = cov1 + cov2
+    # Frame projection (same as Foster)
+    z_hat = v_rel / v_mag
+    x_hat = np.array([1.0, 0.0, 0.0]) if abs(z_hat[0]) < 0.9 else np.array([0.0, 1.0, 0.0])
+    x_hat -= np.dot(x_hat, z_hat) * z_hat
+    x_hat /= np.linalg.norm(x_hat)
+    y_hat = np.cross(z_hat, x_hat)
+    m_rot = np.vstack([x_hat, y_hat, z_hat])
 
-    # 3. Encounter Frame Definition (Collision Plane)
-    z_axis = v_rel / v_mag
+    r_enc = m_rot @ r_rel
+    cov_2d = (m_rot @ (cv1 + cv2) @ m_rot.T)[:2, :2]
 
-    if np.abs(np.dot(r_rel, z_axis)) > 1e-3:
-        x_axis = np.cross(z_axis, [1, 0, 0])
-        if np.linalg.norm(x_axis) < 1e-6:
-            x_axis = np.cross(z_axis, [0, 1, 0])
-        x_axis = x_axis / np.linalg.norm(x_axis)
-    else:
-        if np.linalg.norm(r_rel) > 1e-6:
-            x_axis = r_rel / np.linalg.norm(r_rel)
-        else:
-            x_axis = np.array([1, 0, 0]) - z_axis * z_axis[0]
-            if np.linalg.norm(x_axis) < 1e-6:
-                x_axis = np.array([0, 1, 0]) - z_axis * z_axis[1]
-            x_axis = x_axis / np.linalg.norm(x_axis)
-
-    y_axis = np.cross(z_axis, x_axis)
-    y_axis = y_axis / np.linalg.norm(y_axis)
-
-    R = np.vstack([x_axis, y_axis, z_axis])
-
-    # 4. Project relative position and covariance to encounter plane (2D)
-    r_encounter = R @ r_rel
-    cov_encounter = R @ cov_comb @ R.T
-    cov_2d = cov_encounter[:2, :2]
-
-    # Diagonalize cov_2d to find principal axes
-    eigvals, eigvecs = np.linalg.eigh(cov_2d)
-
-    # Check for singular covariance
-    if np.any(eigvals <= 0) or np.prod(eigvals) < 1e-12:
+    # Diagonalize covariance
+    vals, vecs = np.linalg.eigh(cov_2d)
+    if np.any(vals <= 0):
         return 0.0
 
-    # Rotate relative position to principal axes
-    r_principal = eigvecs.T @ r_encounter[:2]
-    x_c = r_principal[0]
-    y_c = r_principal[1]
+    # Principal components
+    r_p = vecs.T @ r_enc[:2]
+    sig_x, sig_y = np.sqrt(vals[0]), np.sqrt(vals[1])
+    
+    u = (r_p[0]**2 / vals[0]) + (r_p[1]**2 / vals[1])
+    v = hbr**2 / (sig_x * sig_y)
 
-    var_x = eigvals[0]
-    var_y = eigvals[1]
-
-    # Chan variables
-    u = (x_c**2 / var_x) + (y_c**2 / var_y)
-    v = (hbr**2) / np.sqrt(var_x * var_y)
-
-    A = u / 2.0
-    B = v / 2.0
-
-    max_terms = 100
-    tol = 1e-12
-
-    try:
-        exp_A = np.exp(-A)
-        exp_B = np.exp(-B)
-    except:  # pragma: no cover
-        return 0.0
-
-    if exp_A < 1e-100:
-        return 0.0
-
-    term_A = exp_A
-    term_B = exp_B
-    sum_B = term_B
-
+    # Chan series: Pc = exp(-u/2) * sum(...)
     pc = 0.0
-
-    for n in range(max_terms):
-        current_term = term_A * (1.0 - sum_B)
-        pc += current_term
-
-        if n > A and current_term < tol:
+    term_u = np.exp(-u / 2.0)
+    term_v = np.exp(-v / 2.0)
+    sum_v = term_v
+    
+    for n in range(50):
+        inc = term_u * (1.0 - sum_v)
+        pc += inc
+        if inc < 1e-15:
             break
-
-        term_A = term_A * A / (n + 1)
-        term_B = term_B * B / (n + 1)
-        sum_B += term_B
+        term_u *= (u / 2.0) / (n + 1)
+        term_v *= (v / 2.0) / (n + 1)
+        sum_v += term_v
 
     return pc

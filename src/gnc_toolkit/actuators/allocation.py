@@ -5,74 +5,122 @@ Control allocation algorithms mapping generalized forces to actuator commands.
 from abc import ABC, abstractmethod
 
 import numpy as np
+from typing import Any
 
 
 class ControlAllocator(ABC):
     """
-    Abstract base class for control allocation.
-    Maps a desired generalized force (force/torque) to actuator commands.
+    Abstract base class for control allocation logic.
+
+    Maps desired generalized forces (force/torque) to individual actuator commands.
+
+    Parameters
+    ----------
+    actuator_matrix : np.ndarray
+        The (m x n) matrix A where Y = A * u.
+        m = degrees of freedom (e.g., 3 for torque).
+        n = number of actuators.
     """
 
-    def __init__(self, actuator_matrix):
-        """
-        Args:
-            actuator_matrix (np.array): Matrix A (m x n) where Y = A * u.
-                                       m = degrees of freedom (e.g. 3 for torque).
-                                       n = number of actuators.
-        """
+    def __init__(self, actuator_matrix: np.ndarray):
         self.A = np.array(actuator_matrix)
         self.m, self.n = self.A.shape
 
     @abstractmethod
-    def allocate(self, desired_output):
+    def allocate(self, force_torque_cmd: np.ndarray) -> np.ndarray:
         """
-        Args:
-            desired_output (np.array): Desired force/torque (m,).
+        Allocate generalized force/torque to individual actuators.
+
+        Parameters
+        ----------
+        force_torque_cmd : np.ndarray
+            Desired 6-DOF force and torque vector.
 
         Returns
         -------
-            np.array: Actuator commands (n,).
+        np.ndarray
+            Individual actuator commands.
         """
         pass
 
 
 class PseudoInverseAllocator(ControlAllocator):
     """
-    Standard pseudo-inverse allocator: u = A^T * (A * A^T)^-1 * Y.
-    Minimizes the L2-norm of the actuator commands (energy optimal).
+    Control allocation using the Moore-Penrose pseudo-inverse.
+
+    Suitable for over-determined systems (more actuators than DOFs).
+    Minimizes the L2-norm of the actuator commands: u = A^# * f.
+
+    Parameters
+    ----------
+    effectiveness_matrix : np.ndarray
+        The (m x n) matrix mapping actuator outputs to forces/torques.
     """
 
-    def __init__(self, actuator_matrix):
-        super().__init__(actuator_matrix)
-        # Precompute pseudo-inverse: A+ = A^T (A A^T)^-1
+    def __init__(self, effectiveness_matrix: np.ndarray):
+        self.A = effectiveness_matrix
+        # Precompute pseudo-inverse
         self.A_pinv = np.linalg.pinv(self.A)
 
-    def allocate(self, desired_output):
-        return self.A_pinv @ np.array(desired_output)
+    def allocate(self, force_torque_cmd: np.ndarray) -> np.ndarray:
+        """
+        Perform allocation using pseudo-inverse.
+
+        Parameters
+        ----------
+        force_torque_cmd : np.ndarray
+            Desired force/torque vector.
+
+        Returns
+        -------
+        np.ndarray
+            Actuator commands vector.
+        """
+        return self.A_pinv @ force_torque_cmd
 
 
 class SingularRobustAllocator(ControlAllocator):
     """
-    Singular Robust Inverse (SR-Inverse) for CMGs.
-    Adds a regularization term to avoid high gimbal rates near singularities.
-    u = A^T * (A * A^T + lambda * I)^-1 * Y
+    Singular Robust Inverse (SR-Inverse) allocator for CMGs.
+
+    Adds a regularization term to avoid extremely high actuator rates near singularities.
+    u = A^T * (A * A^T + lambda * I)^-1 * Y.
+
+    Parameters
+    ----------
+    actuator_matrix : np.ndarray
+        The control effectiveness matrix.
+    epsilon : float, optional
+        Threshold for manipulability measure. Default is 0.01.
+    lambda0 : float, optional
+        Maximum regularization weight. Default is 0.01.
     """
 
-    def __init__(self, actuator_matrix, epsilon=0.01, lambda0=0.01):
+    def __init__(self, actuator_matrix: np.ndarray, epsilon: float = 0.01, lambda0: float = 0.01):
         super().__init__(actuator_matrix)
         self.epsilon = epsilon
         self.lambda0 = lambda0
 
-    def allocate(self, desired_output, A_current=None):
+    def allocate(self, desired_output: np.ndarray, A_current: np.ndarray | None = None) -> np.ndarray:
         """
-        Args:
-            desired_output (np.array): Desired torque.
-            A_current (np.array): Current Jacobian matrix if time-varying.
+        Perform SR-Inverse allocation.
+
+        Parameters
+        ----------
+        desired_output : np.ndarray
+            Desired torque or force.
+        A_current : np.ndarray, optional
+            Current Jacobian matrix if time-varying. Defaults to self.A.
+
+        Returns
+        -------
+        np.ndarray
+            Actuator rate commands.
         """
         A = A_current if A_current is not None else self.A
 
         # Calculate manipulability measure (determinant of AA^T)
-        m_measure = np.linalg.det(A @ A.T)
+        m_measure = float(np.linalg.det(A @ A.T))
 
         # Regularization parameter lambda
         if m_measure < self.epsilon:
@@ -90,29 +138,56 @@ class SingularRobustAllocator(ControlAllocator):
 class NullMotionManager:
     """
     Manages null-motion to redistribute actuator states without affecting net output.
+
     u_net = u_alloc + u_null
     u_null = (I - A+ * A) * z
+
+    Parameters
+    ----------
+    actuator_matrix : np.ndarray
+        The control effectiveness matrix.
     """
 
-    def __init__(self, actuator_matrix):
+    def __init__(self, actuator_matrix: np.ndarray):
         self.A = np.array(actuator_matrix)
         self.m, self.n = self.A.shape
         self.I = np.eye(self.n)
 
-    def get_null_projection(self, A_current=None):
-        """Returns the null-space projection matrix (I - A+ * A)."""
+    def get_null_projection(self, A_current: np.ndarray | None = None) -> np.ndarray:
+        """
+        Calculate the null-space projection matrix (I - A+ * A).
+
+        Parameters
+        ----------
+        A_current : np.ndarray, optional
+            Current Jacobian/effectiveness matrix.
+
+        Returns
+        -------
+        np.ndarray
+            Null-space projection matrix.
+        """
         A = A_current if A_current is not None else self.A
         A_pinv = np.linalg.pinv(A)
         return self.I - A_pinv @ A
 
-    def apply_null_command(self, u_base, z, A_current=None):
+    def apply_null_command(self, u_base: np.ndarray, z: np.ndarray, A_current: np.ndarray | None = None) -> np.ndarray:
         """
-        Adds null-motion component to base command.
+        Add null-motion component to base command.
 
-        Args:
-            u_base (np.array): Base actuator commands (e.g. from pseudo-inverse).
-            z (np.array): Desired secondary goal (e.g. move gimbals away from limits).
-            A_current (np.array): Current Jacobian.
+        Parameters
+        ----------
+        u_base : np.ndarray
+            Base actuator commands (e.g., from pseudo-inverse).
+        z : np.ndarray
+            Desired secondary goal (e.g., move gimbals away from limits).
+        A_current : np.ndarray, optional
+            Current Jacobian.
+
+        Returns
+        -------
+        np.ndarray
+            Combined actuator command.
         """
         P = self.get_null_projection(A_current)
         return u_base + P @ z

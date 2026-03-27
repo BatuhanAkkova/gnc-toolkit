@@ -5,61 +5,76 @@ Attitude dynamics with time-varying inertia tensors.
 import numpy as np
 
 
-def variable_inertia_euler_equations(J, J_dot, omega, torque):
-    """
-    Computes angular acceleration for a body with time-varying inertia.
+def variable_inertia_euler_equations(
+    J: np.ndarray,
+    J_dot: np.ndarray,
+    omega: np.ndarray,
+    torque: np.ndarray
+) -> np.ndarray:
+    r"""
+    Compute $\dot{\omega}$ for a body with time-varying inertia.
 
-    The equation of motion is:
-    J * omega_dot + J_dot * omega + omega x (J * omega) = torque
+    Equation of Motion:
+    $\mathbf{J} \dot{\omega} + \dot{\mathbf{J}} \omega + \omega \times (\mathbf{J} \omega) = \mathbf{\tau}$
 
-    Args:
-        J (np.ndarray): Inertia tensor (3, 3) [kg*m^2].
-        J_dot (np.ndarray): Time derivative of inertia tensor (3, 3) [kg*m^2/s].
-        omega (np.ndarray): Angular velocity vector (3,) [rad/s].
-        torque (np.ndarray): External torque vector (3,) [N*m].
-
-    Returns
-    -------
-        np.ndarray: Angular acceleration vector (3,) [rad/s^2].
-    """
-    # Angular momentum: H = J * omega
-    H = J @ omega
-
-    # Gyroscopic term: omega x H
-    gyro_term = np.cross(omega, H)
-
-    # Inertia change term: J_dot * omega
-    inertia_change_term = J_dot @ omega
-
-    # RHS for solving J * omega_dot = torque - inertia_change - gyro
-    rhs = torque - inertia_change_term - gyro_term
-
-    # Solve for angular acceleration
-    omega_dot = np.linalg.solve(J, rhs)
-
-    return omega_dot
-
-
-def mass_depletion_J_dot(J_nominal, m_initial, dm_dt, r_point):
-    """
-    A simple model for J_dot due to point-mass depletion (e.g., fuel at r_point).
-
-    J = J_rigid + m(t) * [ (r'r)I - rr' ]
-    J_dot = m_dot * [ (r'r)I - rr' ]
-
-    Args:
-        J_nominal (np.ndarray): Nominal inertia (unused here, placeholder).
-        m_initial (float): Initial mass of segment [kg].
-        dm_dt (float): Mass flow rate [kg/s] (usually negative).
-        r_point (np.ndarray): Position of mass segment from CM (3,).
+    Parameters
+    ----------
+    J : np.ndarray
+        Current inertia tensor ($3 \times 3$) ($kg \cdot m^2$).
+    J_dot : np.ndarray
+        Inertia derivative ($3 \times 3$) ($kg \cdot m^2 / s$).
+    omega : np.ndarray
+        Angular velocity (3,) (rad/s).
+    torque : np.ndarray
+        External torque (3,) (Nm).
 
     Returns
     -------
-        np.ndarray: J_dot (3, 3).
+    np.ndarray
+        Angular acceleration $\dot{\omega}$ (3,) (rad/s$^2$).
     """
-    r_sq = np.dot(r_point, r_point)
-    r_outer = np.outer(r_point, r_point)
+    j_mat = np.asarray(J)
+    jd_mat = np.asarray(J_dot)
+    w = np.asarray(omega)
+    tq = np.asarray(torque)
 
-    J_dot = dm_dt * (r_sq * np.eye(3) - r_outer)
+    # 1. Right-hand side: RHS = tau - J_dot*omega - omega x (J*omega)
+    rhs = tq - jd_mat @ w - np.cross(w, j_mat @ w)
 
-    return J_dot
+    # 2. Solve for omega_dot: J * omega_dot = RHS
+    return np.linalg.solve(j_mat, rhs)
+
+
+def mass_depletion_J_dot(
+    J_nominal: np.ndarray,
+    m_initial: float,
+    dm_dt: float,
+    r_point: np.ndarray
+) -> np.ndarray:
+    r"""
+    Model $\dot{\mathbf{J}}$ due to point-mass depletion.
+
+    $\dot{\mathbf{J}} = \dot{m} [ (\mathbf{r}^T \mathbf{r}) \mathbf{I} - \mathbf{r} \mathbf{r}^T ]$
+
+    Parameters
+    ----------
+    J_nominal : np.ndarray
+        Nominal system inertia (3, 3).
+    m_initial : float
+        Initial segment mass (kg).
+    dm_dt : float
+        Mass flow rate (kg/s). Negative for depletion.
+    r_point : np.ndarray
+        Position of mass segment relative to system CM (3,) (m).
+
+    Returns
+    -------
+    np.ndarray
+        Inertia derivative $\dot{\mathbf{J}}$ (3, 3) ($kg \cdot m^2 / s$).
+    """
+    r_vec = np.asarray(r_point)
+    r_sq = float(np.dot(r_vec, r_vec))
+    r_outer = np.outer(r_vec, r_vec)
+
+    # dot(J) = dot(m) * [ (r^2 * I) - (r outer r) ]
+    return dm_dt * (r_sq * np.eye(3) - r_outer)

@@ -10,26 +10,35 @@ from gnc_toolkit.actuators.cmg import ControlMomentGyro
 class VariableSpeedCMG(ControlMomentGyro):
     """
     Variable Speed Control Moment Gyro (VSCMG).
+
     Allows wheel speed to change (Reaction Wheel effect) while gimbaling (CMG effect).
-    Torque = I_w * alpha * s + gimbal_rate * h * t
+    Torque = I_w * alpha * s + gimbal_rate * h * t.
+
+    Parameters
+    ----------
+    wheel_inertia : float
+        Moment of inertia of the wheel (kg*m^2).
+    gimbal_axis : np.ndarray
+        Gimbal axis vector (3,).
+    spin_axis_init : np.ndarray
+        Initial spin axis vector (3,).
+    name : str, optional
+        Actuator name. Default is "VSCMG".
+    max_gimbal_rate : float, optional
+        Maximum gimbal angular velocity (rad/s).
+    max_wheel_torque : float, optional
+        Maximum torque for wheel acceleration (Nm).
     """
 
     def __init__(
         self,
-        wheel_inertia,
-        gimbal_axis,
-        spin_axis_init,
-        name="VSCMG",
-        max_gimbal_rate=None,
-        max_wheel_torque=None,
+        wheel_inertia: float,
+        gimbal_axis: np.ndarray,
+        spin_axis_init: np.ndarray,
+        name: str = "VSCMG",
+        max_gimbal_rate: float | None = None,
+        max_wheel_torque: float | None = None,
     ):
-        """
-        Args:
-            wheel_inertia (float): Moment of inertia of the wheel [kg*m^2].
-            gimbal_axis (np.array): Gimbal axis (3,).
-            spin_axis_init (np.array): Initial spin axis (3,).
-            max_wheel_torque (float): Max torque for wheel acceleration.
-        """
         super().__init__(
             wheel_momentum=0.0,
             gimbal_axis=gimbal_axis,
@@ -42,26 +51,32 @@ class VariableSpeedCMG(ControlMomentGyro):
         self.wheel_speed = 0.0
         self.max_wheel_torque = max_wheel_torque
 
-    def command(self, cmd_vec, dt=None):
+    def command(self, cmd_vec: tuple[float, float] | list[float], dt: float | None = None) -> np.ndarray:
         """
-        Calculate combined torque.
+        Calculate combined torque from gimbaling and wheel acceleration.
 
-        Args:
-            cmd_vec (tuple/list): (gimbal_rate_cmd, wheel_torque_cmd)
-            dt (float, optional): Time step [s].
+        Parameters
+        ----------
+        cmd_vec : tuple[float, float] | list[float]
+            (gimbal_rate_cmd, wheel_torque_cmd).
+            - gimbal_rate_cmd : Commanded gimbal rate (rad/s).
+            - wheel_torque_cmd : Commanded wheel torque (Nm).
+        dt : float, optional
+            Time step (s) for state integration.
 
         Returns
         -------
-            np.array: Net torque vector [Nm] (3,).
+        np.ndarray
+            Net torque vector (Nm) (3,).
         """
         g_rate_cmd, w_torque_cmd = cmd_vec
 
         # Apply saturation
-        g_rate = self.apply_saturation(g_rate_cmd)
+        g_rate = float(self.apply_saturation(g_rate_cmd))
         if self.max_wheel_torque is not None:
-            w_torque = np.clip(w_torque_cmd, -self.max_wheel_torque, self.max_wheel_torque)
+            w_torque = float(np.clip(w_torque_cmd, -self.max_wheel_torque, self.max_wheel_torque))
         else:
-            w_torque = w_torque_cmd
+            w_torque = float(w_torque_cmd)
 
         # Update momentum magnitude for parent logic
         self.h_mag = self.inertia * self.wheel_speed
@@ -81,13 +96,19 @@ class VariableSpeedCMG(ControlMomentGyro):
 
         return torque_vec
 
-    def get_jacobian(self, angle=None):
+    def get_jacobian(self, angle: float | None = None) -> np.ndarray:
         """
         Returns full Jacobian matrix mapping [g_rate, w_torque]^T to torque vector.
 
+        Parameters
+        ----------
+        angle : float, optional
+            Gimbal angle to evaluate at (rad).
+
         Returns
         -------
-            np.array: (3, 2) matrix.
+        np.ndarray
+            (3, 2) Jacobian matrix.
         """
         s, t = self.get_axes(angle)
         h = self.inertia * self.wheel_speed

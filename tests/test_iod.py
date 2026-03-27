@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from gnc_toolkit.navigation.iod import gibbs_iod, herrick_gibbs_iod, laplace_iod, laplace_iod_from_observations, gauss_iod, _stumpff
+from gnc_toolkit.navigation.iod import gibbs_iod, herrick_gibbs_iod, laplace_iod, laplace_iod_from_observations, gauss_iod, _stumpff, _kepler_U
 from gnc_toolkit.utils.state_to_elements import kepler2eci
 from unittest.mock import patch
 
@@ -255,3 +255,31 @@ def test_gauss_iod_divergence_break_high():
         res = gauss_iod(rho_hats[0], rho_hats[1], rho_hats[2], times[0], times[1], times[2], Rs[0], Rs[1], Rs[2], mu)
         assert res is not None
 
+def test_iod_stumpff_high_z():
+    c2, c3 = _stumpff(1.0)
+    assert c2 > 0 and c3 > 0
+    assert np.isclose(c2, (1 - np.cos(1)) / 1.0)
+
+def test_iod_kepler_U_no_converge():
+    dt = 1e12 
+    r0 = 7000e3
+    v0 = 7500.0
+    mu = 3.986e14
+    alpha = 2/r0 - v0**2/mu
+    with patch('gnc_toolkit.navigation.iod._stumpff', return_value=(0.5, 0.16666)):
+        chi = _kepler_U(dt, r0, v0, alpha, mu)
+        assert chi is not None
+
+def test_iod_kepler_U_converge():
+    dt = 1000.0
+    r0 = 7000e3
+    v0 = 7500.0
+    mu = 3.986e14
+    alpha = 2/r0 - v0**2/mu
+    chi = _kepler_U(dt, r0, v0, alpha, mu)
+    assert chi > 0
+
+def test_gauss_iod_no_physical_roots():
+    with patch('numpy.roots', return_value=np.array([-1.0, -2.0])):
+        with pytest.raises(ValueError, match="No physical radius solution found"):
+            gauss_iod(np.eye(3)[0], np.eye(3)[1], np.eye(3)[2], 0, 1, 2, np.zeros(3), np.zeros(3), np.zeros(3))

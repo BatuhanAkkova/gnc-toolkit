@@ -8,41 +8,66 @@ from .orbit_determination import OrbitDeterminationEKF
 
 
 class AngleOnlyNavigation(OrbitDeterminationEKF):
+    r"""
+    Angles-Only Navigation (AON) using Line-of-Sight (LOS) unit vectors.
+
+    Estimates the spacecraft state by tracking unit vectors to known celestial 
+    or terrestrial targets. Inherits dynamics from `OrbitDeterminationEKF`.
+
+    Parameters
+    ----------
+    x_initial : np.ndarray
+        Initial 6D state vector $[\mathbf{r}, \mathbf{v}]^T$ (m, m/s).
+    p_initial : np.ndarray
+        Initial estimation error covariance ($6\times 6$).
+    q_mat : np.ndarray
+        Process noise covariance ($6\times 6$).
+    r_mat : np.ndarray
+        Measurement noise covariance for the unit vector ($3\times 3$).
+    mu : float, optional
+        Gravitational parameter ($m^3/s^2$).
     """
-    Navigation using Line-of-Sight (LOS) measurements (unit vectors).
-    Inherits orbital dynamics from OrbitDeterminationEKF.
-    """
 
-    def update_unit_vector(self, u_meas, target_pos_eci):
+    def update_unit_vector(self, u_meas: np.ndarray, target_pos_eci: np.ndarray) -> None:
+        r"""
+        Update the state estimate using a measured LOS unit vector $\mathbf{u}$.
+
+        Measurement Model:
+        $\mathbf{z} = \frac{\mathbf{r}_t - \mathbf{r}}{\rho} + \nu$
+        Jacobian:
+        $\mathbf{H}_r = -\frac{1}{\rho} (\mathbf{I} - \mathbf{u}\mathbf{u}^T)$
+
+        Parameters
+        ----------
+        u_meas : np.ndarray
+            Measured unit vector in ECI frame.
+        target_pos_eci : np.ndarray
+            Known coordinates of the target (m).
         """
-        Update state using a unit vector measurement to a target.
+        r_target = np.asarray(target_pos_eci)
 
-        Args:
-            u_meas (np.ndarray): Measured unit vector [ux, uy, uz] in ECI.
-            target_pos_eci (np.ndarray): Position of the target being tracked in ECI [m].
-        """
-
-        def hx(x):
+        def hx(x: np.ndarray) -> np.ndarray:
             r = x[:3]
-            rel_r = target_pos_eci - r
-            rel_r_mag = np.linalg.norm(rel_r)
-            if rel_r_mag < 1e-3:
+            rel_r = r_target - r
+            rho = np.linalg.norm(rel_r)
+            if rho < 1.0: 
                 return np.zeros(3)
-            return rel_r / rel_r_mag
+            return rel_r / rho
 
-        def H_jac(x):
+        def h_jac(x: np.ndarray) -> np.ndarray:
             r = x[:3]
-            rel_r = target_pos_eci - r
-            rel_r_mag = np.linalg.norm(rel_r)
+            rel_r = r_target - r
+            rho = np.linalg.norm(rel_r)
 
-            if rel_r_mag < 1e-3:
+            if rho < 1.0:
                 return np.zeros((3, 6))
 
-            u = rel_r / rel_r_mag
-            H_rel = (np.eye(3) - np.outer(u, u)) / rel_r_mag
+            u = rel_r / rho
+            # Projection matrix (I - uu^T)
+            h_rel = -(np.eye(3) - np.outer(u, u)) / rho
 
-            H = np.zeros((3, 6))
-            H[:, :3] = -H_rel
-            return H
+            h_mat = np.zeros((3, 6))
+            h_mat[:, :3] = h_rel
+            return h_mat
 
-        self.ekf.update(u_meas, hx, H_jac)
+        self.ekf.update(np.asarray(u_meas), hx, h_jac)

@@ -5,51 +5,52 @@ Proportional rate damping controller for torque-based detumbling.
 import numpy as np
 
 
+from typing import Optional, Union
+
 class RateDampingControl:
+    r"""
+    Proportional angular rate damping controller for spacecraft detumbling.
+
+    Generates torque commands to reduce the spacecraft's angular rates,
+    typically using thrusters or other active actuators.
+
+    Control law: $T = -K \omega$
+
+    Parameters
+    ----------
+    gain : float
+        Proportional damping gain $K$ ($K > 0$).
+    max_torque : float, optional
+        Maximum torque command magnitude allowed (N-m). Default is None.
     """
-    Simple proportional rate damping control.
 
-    This controller generates torque commands to reduce the angular
-    velocity of the spacecraft.
-
-    The control law is:
-    T = -k * omega
-    where:
-        T is the commanded torque
-        k is the proportional gain (scalar or 3x3 diagonal matrix)
-        omega is the measured angular velocity
-    """
-
-    def __init__(self, gain: float, max_torque: float | None = None):
-        """
-        Initialize the Rate Damping controller.
-
-        Args:
-            gain: Proportional gain (damping coefficient)
-            max_torque: Maximum torque command (saturation per axis or total norm)
-        """
+    def __init__(self, gain: float, max_torque: Optional[float] = None):
+        """Initialize the rate damping controller."""
         self.gain = gain
         self.max_torque = max_torque
 
     def compute_torque(self, omega: np.ndarray) -> np.ndarray:
         """
-        Compute the damping torque.
+        Compute the commanded damping torque.
 
-        Args:
-            omega: Angular velocity in body frame [rad/s] (3,)
+        Parameters
+        ----------
+        omega : np.ndarray
+            Measured angular velocity vector in the body frame (3,).
+            Units: [rad/s].
 
         Returns
-        -------
-            Commanded torque [Nm] (3,)
+-------
+        np.ndarray
+            Commanded torque vector in the body frame (3,). Units: [N-m].
         """
-        omega = np.asarray(omega)
+        # Linear damping: T = -k * omega
+        torque_raw = -self.gain * np.asarray(omega)
 
-        # T = -k * omega
-        torque_raw = -self.gain * omega
-
+        # Apply torque saturation
         if self.max_torque is not None:
-            norm_torque = np.linalg.norm(torque_raw)
-            if norm_torque > self.max_torque:
-                return torque_raw * (self.max_torque / norm_torque)
+            norm_t = np.linalg.norm(torque_raw)
+            if norm_t > self.max_torque:
+                return torque_raw * (self.max_torque / norm_t)
 
         return torque_raw

@@ -14,6 +14,7 @@ from gnc_toolkit.disturbances.drag import LumpedDrag
 from gnc_toolkit.disturbances.srp import Canonball
 from gnc_toolkit.environment.density import Exponential
 from gnc_toolkit.utils.time_utils import calc_jd
+from unittest.mock import MagicMock
 
 MU = 398600.4418e9 # m^3/s^2
 
@@ -99,6 +100,16 @@ def test_drag_with_co_rotation(ephemeris):
     acc_no_rot = model_no_rot.get_acceleration(r_eci, v_eci, jd, mass, area, cd)
     
     assert not np.allclose(acc, acc_no_rot)
+
+def test_drag_low_velocity():
+    mock_density = MagicMock()
+    mock_density.get_density.return_value = 1.0
+    drag = LumpedDrag(mock_density)
+    r = np.array([7000e3, 0, 0])
+    w_earth = np.array([0, 0, 7.2921159e-5])
+    v = np.cross(w_earth, r)
+    acc = drag.get_acceleration(r, v, 2460000.5, 1000, 1, 2.2)
+    assert np.allclose(acc, 0.0)
 
 def test_srp_eclipse(ephemeris):
     r_eci, _, jd = ephemeris

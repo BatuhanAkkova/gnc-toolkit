@@ -155,6 +155,11 @@ class TestRendezvous(unittest.TestCase):
         axis = np.array([1, 0, 0])
         self.assertTrue(is_within_corridor(r_rel, axis, 10))
 
+    def test_rendezvous_safety_lines(self):
+        r1 = np.array([7000, 0, 0])
+        r2 = np.array([0, 7000, 0])
+        solve_lambert(r1, r2, 1000.0)
+
 def test_virtual_structure_control():
     state_actual = np.array([[1.0, 2.0], [0.5, 1.5]])
     state_desired = np.array([[1.0, 2.0], [1.0, 2.0]])

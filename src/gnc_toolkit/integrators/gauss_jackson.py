@@ -81,7 +81,7 @@ class GaussJacksonIntegrator(Integrator):
         )
 
     def _calc_differences(self, history):
-        """
+        r"""
         Calculate backward differences \nabla^j a_n.
         history is a list of N elements [a_0, a_1, ..., a_n] where index -1 is current.
         Returns array of differences at current step: [a_n, \nabla a_n, \nabla^2 a_n, ...]

@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
-from gnc_toolkit.propagators.kepler import KeplerPropagator
-from gnc_toolkit.propagators.cowell import CowellPropagator
-from gnc_toolkit.propagators.encke import EnckePropagator
+from opengnc.propagators.kepler import KeplerPropagator
+from opengnc.propagators.cowell import CowellPropagator
+from opengnc.propagators.encke import EnckePropagator
 from unittest.mock import patch
 
 def test_kepler_circular_period():
@@ -143,3 +143,6 @@ def test_encke_step_size_adjustments():
     
     r_f, v_f = encke.propagate(r_i, v_i, dt=15.0, dt_step=10.0)
     assert r_f is not None
+
+
+

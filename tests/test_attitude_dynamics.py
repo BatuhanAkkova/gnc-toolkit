@@ -1,11 +1,11 @@
 import numpy as np
 import pytest
-from gnc_toolkit.attitude_dynamics.rigid_body import euler_equations
-from gnc_toolkit.attitude_dynamics.fuel_slosh import fuel_slosh_dynamics, fuel_slosh_torque
-from gnc_toolkit.attitude_dynamics.flexible_body import flexible_body_dynamics, coupled_flexible_rigid_dynamics
-from gnc_toolkit.attitude_dynamics.variable_inertia import variable_inertia_euler_equations, mass_depletion_J_dot
+from opengnc.attitude_dynamics.rigid_body import euler_equations
+from opengnc.attitude_dynamics.fuel_slosh import fuel_slosh_dynamics, fuel_slosh_torque
+from opengnc.attitude_dynamics.flexible_body import flexible_body_dynamics, coupled_flexible_rigid_dynamics
+from opengnc.attitude_dynamics.variable_inertia import variable_inertia_euler_equations, mass_depletion_J_dot
 
-from gnc_toolkit.attitude_dynamics.fuel_slosh import fuel_slosh_dynamics, fuel_slosh_torque
+from opengnc.attitude_dynamics.fuel_slosh import fuel_slosh_dynamics, fuel_slosh_torque
 
 def test_euler_equations_zero_values():
     J = np.eye(3)
@@ -129,3 +129,7 @@ def test_mass_depletion_J_dot():
     assert np.isclose(J_dot[0, 0], 0.0)
     assert np.isclose(J_dot[1, 1], -0.1)
     assert np.isclose(J_dot[2, 2], -0.1)
+
+
+
+

@@ -1,11 +1,11 @@
 import pytest
 import numpy as np
-from gnc_toolkit.classical_control.pid import PID
-from gnc_toolkit.classical_control.bdot import BDot
-from gnc_toolkit.classical_control.pid import PID
-from gnc_toolkit.classical_control.bdot import BDot
-from gnc_toolkit.classical_control.momentum_dumping import CrossProductLaw
-from gnc_toolkit.classical_control import RateDampingControl
+from opengnc.classical_control.pid import PID
+from opengnc.classical_control.bdot import BDot
+from opengnc.classical_control.pid import PID
+from opengnc.classical_control.bdot import BDot
+from opengnc.classical_control.momentum_dumping import CrossProductLaw
+from opengnc.classical_control import RateDampingControl
 
 
 class TestPID:
@@ -159,3 +159,7 @@ def test_rate_damping():
     
     assert np.linalg.norm(torque_sat) == pytest.approx(0.5)
     assert torque_sat[0] == -0.5
+
+
+
+

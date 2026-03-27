@@ -68,13 +68,13 @@
 
 ### From PyPI (Recommended)
 ```bash
-pip install gnc_toolkit
+pip install opengnc
 ```
 
 ### From Source (Development)
 ```bash
-git clone https://github.com/BatuhanAkkova/gnc_toolkit.git
-cd gnc_toolkit
+git clone https://github.com/BatuhanAkkova/opengnc.git
+cd opengnc
 pip install -e ".[dev]"
 ```
 
@@ -84,9 +84,9 @@ pip install -e ".[dev]"
 
 ```python
 import numpy as np
-from gnc_toolkit.environment.mag_field import igrf_field
-from gnc_toolkit.kalman_filters.mekf import MEKF
-from gnc_toolkit.utils.quat_utils import quat_rot
+from opengnc.environment.mag_field import igrf_field
+from opengnc.kalman_filters.mekf import MEKF
+from opengnc.utils.quat_utils import quat_rot
 
 # Get Earth's magnetic field at a specific ECI position
 B_vec = igrf_field(pos_eci=np.array([7000e3, 0, 0]), time="2024-01-01")
@@ -117,3 +117,7 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. 
 For support or feedback, please contact [Batuhan Akkova](mailto:batuhanakkova1@gmail.com).
+
+
+
+

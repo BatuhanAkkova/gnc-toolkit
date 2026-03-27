@@ -1,13 +1,13 @@
 import pytest
 import numpy as np
-from gnc_toolkit.mission_design.budgeting import (
+from opengnc.mission_design.budgeting import (
     calculate_propellant_mass,
     calculate_delta_v,
     calculate_staged_delta_v,
     ManeuverSequence,
     predict_lifetime
 )
-from gnc_toolkit.environment.density import Exponential
+from opengnc.environment.density import Exponential
 
 def test_calculate_propellant_mass():
     m0 = 1000.0 # kg
@@ -111,7 +111,7 @@ def test_predict_lifetime_fast_decay():
 
 
 def test_budgeting_exceptions():
-    from gnc_toolkit.mission_design.budgeting import calculate_propellant_mass, calculate_delta_v, ManeuverSequence
+    from opengnc.mission_design.budgeting import calculate_propellant_mass, calculate_delta_v, ManeuverSequence
     import pytest
 
     with pytest.raises(ValueError, match="Isp must be positive"):
@@ -124,4 +124,8 @@ def test_budgeting_exceptions():
     seq = ManeuverSequence(1000, 300)
     with pytest.raises(ValueError, match="Delta-V must be non-negative"):
         seq.add_maneuver("test", -1.0)
+
+
+
+
 

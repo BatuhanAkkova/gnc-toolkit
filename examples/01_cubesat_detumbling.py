@@ -25,19 +25,19 @@ import sys
 import os
 import datetime
 
-# Add src to path to ensure we can import gnc_toolkit
+# Add src to path to ensure we can import opengnc
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.attitude_dynamics.rigid_body import euler_equations
-from gnc_toolkit.environment.mag_field import tilted_dipole_field
-from gnc_toolkit.disturbances.gravity import GradientTorque
-from gnc_toolkit.sensors.magnetometer import Magnetometer
-from gnc_toolkit.actuators.magnetorquer import Magnetorquer
-from gnc_toolkit.classical_control.bdot import BDot
-from gnc_toolkit.integrators.rk4 import RK4
-from gnc_toolkit.utils.quat_utils import quat_rot, quat_normalize, quat_conj, quat_to_rmat
-from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci
-from gnc_toolkit.utils.time_utils import calc_jd
+from opengnc.attitude_dynamics.rigid_body import euler_equations
+from opengnc.environment.mag_field import tilted_dipole_field
+from opengnc.disturbances.gravity import GradientTorque
+from opengnc.sensors.magnetometer import Magnetometer
+from opengnc.actuators.magnetorquer import Magnetorquer
+from opengnc.classical_control.bdot import BDot
+from opengnc.integrators.rk4 import RK4
+from opengnc.utils.quat_utils import quat_rot, quat_normalize, quat_conj, quat_to_rmat
+from opengnc.utils.frame_conversion import eci2ecef, ecef2eci
+from opengnc.utils.time_utils import calc_jd
 
 def simulation():
     # -------------------------------------------------------------------------
@@ -206,3 +206,7 @@ def simulation():
 
 if __name__ == "__main__":
     simulation()
+
+
+
+

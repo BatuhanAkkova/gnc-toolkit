@@ -6,10 +6,10 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-from gnc_toolkit.simulation.events import EventQueue
-from gnc_toolkit.simulation.logging import SimulationLogger
-from gnc_toolkit.simulation.simulator import MissionSimulator
-from gnc_toolkit.simulation.realtime import RealTimeSimulator
+from opengnc.simulation.events import EventQueue
+from opengnc.simulation.logging import SimulationLogger
+from opengnc.simulation.simulator import MissionSimulator
+from opengnc.simulation.realtime import RealTimeSimulator
 
 def test_event_queue():
     eq = EventQueue()
@@ -168,7 +168,7 @@ def test_realtime_simulator(mock_time, mock_sleep):
 @patch("time.time")
 def test_realtime_simulator_missed_deadline(mock_time, mock_sleep):
     from unittest.mock import patch
-    from gnc_toolkit.simulation.realtime import RealTimeSimulator
+    from opengnc.simulation.realtime import RealTimeSimulator
     
     mock_time.side_effect = [0.0, 10.0, 11.0] 
     sim = RealTimeSimulator(dummy_propagator, None, None, None, rtf=1.0)
@@ -181,4 +181,8 @@ def test_realtime_simulator_missed_deadline(mock_time, mock_sleep):
         sim.run(1.0, dt=1.0)
     
     assert "Real-time deadline missed" in f.getvalue()
+
+
+
+
 

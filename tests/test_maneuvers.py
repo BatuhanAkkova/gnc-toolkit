@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from gnc_toolkit.guidance.maneuvers import (
+from opengnc.guidance.maneuvers import (
     delta_v_budget,
     raan_change,
     optimal_combined_maneuver,
@@ -45,7 +45,7 @@ class TestManeuversExtended(unittest.TestCase):
         
         self.assertLess(dv_opt, total_non_opt)
         
-        from gnc_toolkit.guidance.maneuvers import combined_plane_change
+        from opengnc.guidance.maneuvers import combined_plane_change
         a_trans = (r1 + r2) / 2.0
         v_trans_a = np.sqrt(mu * (2/r2 - 1/a_trans))
         dv2_combined = combined_plane_change(v_trans_a, v_c2, delta_i)
@@ -55,3 +55,7 @@ class TestManeuversExtended(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+

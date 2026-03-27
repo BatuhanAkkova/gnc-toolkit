@@ -1,7 +1,7 @@
-Welcome to the GNC Toolkit Documentation!
+Welcome to the OpenGNC Documentation!
 ==========================================
 
-This is the comprehensive guide to using the GNC Toolkit.
+This is the comprehensive guide to using the OpenGNC.
 
 .. toctree::
    :maxdepth: 2

@@ -1,15 +1,15 @@
 import numpy as np
 import pytest
-from gnc_toolkit.kalman_filters.kf import KF
-from gnc_toolkit.kalman_filters.ekf import EKF
-from gnc_toolkit.kalman_filters.mekf import MEKF
-from gnc_toolkit.kalman_filters.ukf import UKF, UKF_Attitude
-from gnc_toolkit.kalman_filters import SRUKF, EnKF, CKF, ParticleFilter, AKF, IMM
-from gnc_toolkit.kalman_filters.fixed_interval_smoother import fixed_interval_smoother
+from opengnc.kalman_filters.kf import KF
+from opengnc.kalman_filters.ekf import EKF
+from opengnc.kalman_filters.mekf import MEKF
+from opengnc.kalman_filters.ukf import UKF, UKF_Attitude
+from opengnc.kalman_filters import SRUKF, EnKF, CKF, ParticleFilter, AKF, IMM
+from opengnc.kalman_filters.fixed_interval_smoother import fixed_interval_smoother
 from unittest.mock import patch
 
-from gnc_toolkit.utils.quat_utils import quat_mult, quat_normalize, axis_angle_to_quat, quat_rot, quat_conj
-from gnc_toolkit.sensors.sun_sensor import SunSensor
+from opengnc.utils.quat_utils import quat_mult, quat_normalize, axis_angle_to_quat, quat_rot, quat_conj
+from opengnc.sensors.sun_sensor import SunSensor
 
 def test_kf_initialization():
     dim_x = 2
@@ -195,7 +195,7 @@ def test_ukf_attitude_update():
     assert np.isclose(np.linalg.norm(ukf.x[:4]), 1.0)
 
 def test_rts_smoother():
-    from gnc_toolkit.kalman_filters.rts_smoother import rts_smoother
+    from opengnc.kalman_filters.rts_smoother import rts_smoother
     
     dt = 0.5
     num_steps = 50
@@ -496,7 +496,7 @@ def test_ukf_attitude_branches():
     assert np.allclose(x_mean[:4], np.array([0, 0, 0, 1.0]))
 
 def test_imm_mu_setter():
-    from gnc_toolkit.kalman_filters.ekf import EKF
+    from opengnc.kalman_filters.ekf import EKF
     kf1 = EKF(3, 3)
     kf2 = EKF(3, 3)
     imm = IMM([kf1, kf2], np.eye(2))
@@ -515,3 +515,7 @@ def test_imm_predict_dt_branch():
     imm = IMM([mf], np.array([[1.0]]))
     imm.predict(dt=10.0)
     assert mf.predict_called_with_dt == 10.0
+
+
+
+

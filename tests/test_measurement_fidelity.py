@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
-from gnc_toolkit.sensors.gyroscope import Gyroscope
-from gnc_toolkit.sensors.magnetometer import Magnetometer
-from gnc_toolkit.sensors.sensor import Sensor
+from opengnc.sensors.gyroscope import Gyroscope
+from opengnc.sensors.magnetometer import Magnetometer
+from opengnc.sensors.sensor import Sensor
 
 class MockSensor(Sensor):
     def measure(self, true_state, **kwargs):
@@ -93,3 +93,7 @@ def test_gyroscope_fidelity():
     # S * w_true = [1.1, 0, 0]
     # (I + M) * [1.1, 0, 0] = [1.1, 0.11, 0]
     assert np.allclose(w_meas, np.array([1.1, 0.11, 0.0]))
+
+
+
+

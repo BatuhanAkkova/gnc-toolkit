@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
-from gnc_toolkit.navigation.iod import gibbs_iod, herrick_gibbs_iod, laplace_iod, laplace_iod_from_observations, gauss_iod, _stumpff, _kepler_U
-from gnc_toolkit.utils.state_to_elements import kepler2eci
+from opengnc.navigation.iod import gibbs_iod, herrick_gibbs_iod, laplace_iod, laplace_iod_from_observations, gauss_iod, _stumpff, _kepler_U
+from opengnc.utils.state_to_elements import kepler2eci
 from unittest.mock import patch
 
 def solve_kepler(M, e):
@@ -212,8 +212,8 @@ def test_gauss_iod_herrick_gibbs_fail():
         r, v = kepler2eci(a, ecc, incl, raan, argp, f)
         rho = r - R_obs; rho_hats.append(rho/np.linalg.norm(rho)); Rs.append(R_obs)
 
-    with patch('gnc_toolkit.navigation.iod._kepler_U', return_value=1.0): # mock loop execution or use real one
-        with patch('gnc_toolkit.navigation.iod.herrick_gibbs_iod', side_effect=Exception("HG Fail")):
+    with patch('opengnc.navigation.iod._kepler_U', return_value=1.0): # mock loop execution or use real one
+        with patch('opengnc.navigation.iod.herrick_gibbs_iod', side_effect=Exception("HG Fail")):
             res = gauss_iod(rho_hats[0], rho_hats[1], rho_hats[2], times[0], times[1], times[2], Rs[0], Rs[1], Rs[2], mu)
             assert res is not None
 
@@ -266,7 +266,7 @@ def test_iod_kepler_U_no_converge():
     v0 = 7500.0
     mu = 3.986e14
     alpha = 2/r0 - v0**2/mu
-    with patch('gnc_toolkit.navigation.iod._stumpff', return_value=(0.5, 0.16666)):
+    with patch('opengnc.navigation.iod._stumpff', return_value=(0.5, 0.16666)):
         chi = _kepler_U(dt, r0, v0, alpha, mu)
         assert chi is not None
 
@@ -283,3 +283,6 @@ def test_gauss_iod_no_physical_roots():
     with patch('numpy.roots', return_value=np.array([-1.0, -2.0])):
         with pytest.raises(ValueError, match="No physical radius solution found"):
             gauss_iod(np.eye(3)[0], np.eye(3)[1], np.eye(3)[2], 0, 1, 2, np.zeros(3), np.zeros(3), np.zeros(3))
+
+
+

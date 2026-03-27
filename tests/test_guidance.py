@@ -2,21 +2,21 @@ import unittest
 import numpy as np
 import pytest
 from unittest.mock import patch, MagicMock
-from gnc_toolkit.guidance.maneuvers import (
+from opengnc.guidance.maneuvers import (
     hohmann_transfer,
     bi_elliptic_transfer,
     phasing_maneuver,
     plane_change,
     combined_plane_change
 )
-from gnc_toolkit.guidance.rendezvous import solve_lambert, cw_equations, cw_targeting, solve_lambert_multi_rev, is_within_corridor
-from gnc_toolkit.guidance.formation_flying import (
+from opengnc.guidance.rendezvous import solve_lambert, cw_equations, cw_targeting, solve_lambert_multi_rev, is_within_corridor
+from opengnc.guidance.formation_flying import (
     virtual_structure_control,
     leader_follower_control,
     fuel_balanced_formation_keeping,
     distributed_consensus_control
 )
-from gnc_toolkit.guidance.continuous_thrust import (
+from opengnc.guidance.continuous_thrust import (
     q_law_guidance,
     zem_zev_guidance,
     gravity_turn_guidance,
@@ -24,7 +24,7 @@ from gnc_toolkit.guidance.continuous_thrust import (
     indirect_optimal_guidance,
     direct_collocation_guidance
 )
-from gnc_toolkit.utils.state_to_elements import eci2kepler
+from opengnc.utils.state_to_elements import eci2kepler
 
 class TestManeuvers(unittest.TestCase):
     def test_hohmann_transfer(self):
@@ -324,7 +324,7 @@ class TestContinuousThrust(unittest.TestCase):
             np.testing.assert_allclose(traj[-1, :3], rf, atol=1e-3)
 
     def test_direct_collocation_success(self):
-        with patch('gnc_toolkit.guidance.continuous_thrust.minimize') as mock_min:
+        with patch('opengnc.guidance.continuous_thrust.minimize') as mock_min:
             ret = MagicMock()
             ret.success = True
             n_nodes = 10
@@ -335,7 +335,7 @@ class TestContinuousThrust(unittest.TestCase):
             self.assertEqual(res.shape, (n_nodes, 9))
 
     def test_indirect_optimal_fail(self):
-        with patch('gnc_toolkit.guidance.continuous_thrust.solve_bvp') as mock_solve:
+        with patch('opengnc.guidance.continuous_thrust.solve_bvp') as mock_solve:
             ret = MagicMock()
             ret.success = False
             mock_solve.return_value = ret
@@ -343,7 +343,7 @@ class TestContinuousThrust(unittest.TestCase):
             self.assertIsNone(t)
 
     def test_direct_collocation_fail(self):
-        with patch('gnc_toolkit.guidance.continuous_thrust.minimize') as mock_min:
+        with patch('opengnc.guidance.continuous_thrust.minimize') as mock_min:
             ret = MagicMock()
             ret.success = False
             mock_min.return_value = ret
@@ -352,3 +352,7 @@ class TestContinuousThrust(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+

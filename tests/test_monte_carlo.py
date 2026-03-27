@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from gnc_toolkit.simulation.monte_carlo import MonteCarloSim
+from opengnc.simulation.monte_carlo import MonteCarloSim
 
 class DummySimulator:
     def __init__(self, seed, **kwargs):
@@ -21,7 +21,7 @@ def test_monte_carlo_sequential():
     for i in range(3):
         assert mc.results[i] == {"seed": i, "param": "test"}
 
-@patch("gnc_toolkit.simulation.monte_carlo.mp.Pool")
+@patch("opengnc.simulation.monte_carlo.mp.Pool")
 def test_monte_carlo_parallel(mock_pool_class):
     mock_pool = MagicMock()
     mock_pool_class.return_value.__enter__.return_value = mock_pool
@@ -38,3 +38,7 @@ def test_monte_carlo_parallel(mock_pool_class):
     results = sorted(mc.results, key=lambda x: x["seed"])
     for i in range(4):
         assert results[i] == {"seed": i, "param": "parallel"}
+
+
+
+

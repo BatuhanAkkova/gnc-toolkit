@@ -2,7 +2,7 @@ import pytest
 import json
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-from gnc_toolkit.simulation.scenario import ScenarioConfig
+from opengnc.simulation.scenario import ScenarioConfig
 
 def test_scenario_config_json(tmp_path):
     config_file = tmp_path / "scenario.json"
@@ -43,3 +43,7 @@ def test_scenario_config_yaml_success(tmp_path):
     with patch.dict('sys.modules', {'yaml': mock_yaml}):
         cfg = ScenarioConfig(config_file)
         assert cfg.get("sat.mass") == 500.0
+
+
+
+

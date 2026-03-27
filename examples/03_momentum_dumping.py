@@ -22,8 +22,8 @@ import os
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.environment.mag_field import tilted_dipole_field
-from gnc_toolkit.classical_control.momentum_dumping import CrossProductLaw
+from opengnc.environment.mag_field import tilted_dipole_field
+from opengnc.classical_control.momentum_dumping import CrossProductLaw
 
 def simulation():
     # -------------------------------------------------------------------------
@@ -172,3 +172,7 @@ def simulation():
 
 if __name__ == "__main__":
     simulation()
+
+
+
+

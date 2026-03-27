@@ -1,4 +1,4 @@
-# GNC Toolkit Examples
+# OpenGNC Examples
 
 This directory contains a suite of high-fidelity simulations designed to showcase the **Guidance, Navigation, and Control (GNC)** capabilities of the toolkit. Each example focuses on a specific aspect of satellite operations, from low-level stabilization to high-level mission planning.
 
@@ -99,3 +99,7 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 *   **Verification:** Comparing estimated $r, v$ against ground truth orbits.
 
 ![Gauss IOD Results](../assets/gauss_iod_results.png)
+
+
+
+

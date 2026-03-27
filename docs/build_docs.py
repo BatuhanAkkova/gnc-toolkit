@@ -13,7 +13,7 @@ def build():
     
     # 2. Run sphinx-apidoc to generate API structure
     print("Running sphinx-apidoc...")
-    subprocess.run(["sphinx-apidoc", "-o", "api", os.path.abspath("../src/gnc_toolkit"), "-f"], check=True)
+    subprocess.run(["sphinx-apidoc", "-o", "api", os.path.abspath("../src/opengnc"), "-f"], check=True)
     
     # 3. Run sphinx-build to generate HTML output
     print("Running sphinx-build...")
@@ -24,3 +24,7 @@ if __name__ == "__main__":
     # Ensure working directory is the docs folder
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     build()
+
+
+
+

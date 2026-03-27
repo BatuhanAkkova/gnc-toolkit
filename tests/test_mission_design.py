@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from gnc_toolkit.mission_design import (
+from opengnc.mission_design import (
     calculate_access_windows,
     calculate_ground_track,
     calculate_lighting_conditions,
@@ -12,9 +12,9 @@ from gnc_toolkit.mission_design import (
     calculate_atmospheric_attenuation,
     calculate_friis_link_budget
 )
-from gnc_toolkit.utils.frame_conversion import llh2ecef, ecef2eci
+from opengnc.utils.frame_conversion import llh2ecef, ecef2eci
 from unittest.mock import patch
-from gnc_toolkit.environment.solar import Sun
+from opengnc.environment.solar import Sun
 
 def test_calculate_access_windows():
     t_array = np.array([0, 100, 200])
@@ -154,23 +154,23 @@ def test_coverage_other_branches():
     res = calculate_lighting_conditions(np.array([0]), r, v)
     assert res['beta_angle_deg'][0] == 0.0
 
-    with patch('gnc_toolkit.mission_design.coverage.eci2llh', return_value=(0, 4.0, 0)):
+    with patch('opengnc.mission_design.coverage.eci2llh', return_value=(0, 4.0, 0)):
         res = calculate_ground_track(np.array([0]), np.array([[1,0,0]]))
         assert res['lon_deg'][0] < 180.0
     
-    with patch('gnc_toolkit.mission_design.coverage.eci2llh', return_value=(0, -4.0, 0)):
+    with patch('opengnc.mission_design.coverage.eci2llh', return_value=(0, -4.0, 0)):
         res = calculate_ground_track(np.array([0]), np.array([[1,0,0]]))
         assert res['lon_deg'][0] > -180.0
 
     t_array = np.array([0, 10, 20, 30])
     sats = [np.array([ [7000e3,0,0],[7000e3,0,0],[7000e3,0,0],[7000e3,0,0] ])]
     targets = np.array([[0, 0]])
-    with patch('gnc_toolkit.mission_design.coverage.eci2ecef', return_value=(np.array([1,1,1]), None)):
+    with patch('opengnc.mission_design.coverage.eci2ecef', return_value=(np.array([1,1,1]), None)):
         calculate_constellation_coverage(t_array, sats, targets)
 
 def test_launch_azimuth_edge():
     jd = 2451545.0
-    with patch('gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper') as mock_wrapper:
+    with patch('opengnc.mission_design.launch.eci2_ecef_or_inverse_wrapper') as mock_wrapper:
         mock_wrapper.side_effect = lambda r, jd: (np.array([0, 1e6 if int(jd * 1e5) % 2 == 0 else -1e6, 0]), None)
         
         res = calculate_launch_windows(jd, jd+0.1, 10.0, 0, 45.0, 0)
@@ -178,7 +178,7 @@ def test_launch_azimuth_edge():
 
 def test_launch_pole_edge():
     jd = 2451545.0
-    with patch('gnc_toolkit.mission_design.launch.eci2_ecef_or_inverse_wrapper') as mock_wrapper:
+    with patch('opengnc.mission_design.launch.eci2_ecef_or_inverse_wrapper') as mock_wrapper:
         mock_wrapper.side_effect = lambda r, jd: (np.array([0, 1e6 if int(jd * 10) % 2 == 0 else -1e6, 0]), None)
         res = calculate_launch_windows(jd, jd+0.1, 45.0, 0, 90.0, 0)
         assert res is not None
@@ -192,7 +192,7 @@ def test_calculate_access_windows_rho_zero():
     
     r_gs_ecef = llh2ecef(0, 0, 0)
     
-    with patch('gnc_toolkit.mission_design.coverage.eci2ecef', return_value=(r_gs_ecef, None)):
+    with patch('opengnc.mission_design.coverage.eci2ecef', return_value=(r_gs_ecef, None)):
         res = calculate_access_windows(t_array, r_eci_array, gs_lat, gs_lon, gs_alt)
         assert res['elevation_history'][0] == 90.0
         assert res['visible_intervals'][0]['start_time'] == 0
@@ -225,7 +225,7 @@ def test_calculate_constellation_coverage_gap_transitions():
         (r_ecef_0, None),
     ]
     
-    with patch('gnc_toolkit.mission_design.coverage.eci2ecef', side_effect=mock_returns):
+    with patch('opengnc.mission_design.coverage.eci2ecef', side_effect=mock_returns):
         res = calculate_constellation_coverage(t_array, r_eci_list, targets, min_elevation_deg=0.0)
         assert len(res) == 1
         assert res[0]['total_coverage_time'] > 0
@@ -238,7 +238,7 @@ def test_calculate_constellation_coverage_rho_zero():
     
     r_gs_ecef = llh2ecef(0, 0, 0)
     
-    with patch('gnc_toolkit.mission_design.coverage.eci2ecef', return_value=(r_gs_ecef, None)):
+    with patch('opengnc.mission_design.coverage.eci2ecef', return_value=(r_gs_ecef, None)):
         res = calculate_constellation_coverage(t_array, r_eci_list, targets)
         assert len(res) == 1
         assert res[0]['total_coverage_time'] == 0.0 # Just one point, dt=0
@@ -347,3 +347,7 @@ def test_communications_invalid_inputs():
     # Doppler shape error
     with pytest.raises(ValueError):
         calculate_doppler_shift(1e9, np.array([1, 2]), np.array([1, 2, 3]), np.array([1, 2, 3]), np.array([1, 2, 3]))
+
+
+
+

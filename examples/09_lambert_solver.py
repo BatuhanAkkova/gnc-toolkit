@@ -19,7 +19,7 @@ import os
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.guidance.rendezvous import solve_lambert
+from opengnc.guidance.rendezvous import solve_lambert
 
 def run_example():
     mu = 398600.4418 # Earth [km^3/s^2]
@@ -93,3 +93,7 @@ def run_example():
 
 if __name__ == "__main__":
     run_example()
+
+
+
+

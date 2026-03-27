@@ -3,7 +3,7 @@ import numpy as np
 import plotly.graph_objects as go
 import dash
 
-from gnc_toolkit.visualization import (
+from opengnc.visualization import (
     plot_orbit_3d, 
     plot_attitude_sphere, 
     plot_ground_track, 
@@ -59,3 +59,7 @@ def test_plot_attitude_sphere_invalid():
 def test_plot_coverage_heatmap_mismatch():
     with pytest.raises(ValueError):
         plot_coverage_heatmap([10, 20], [45, 90], [1.0]) # Shape mismatch
+
+
+
+

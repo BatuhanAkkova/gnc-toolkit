@@ -1,6 +1,6 @@
 import numpy as np
-from gnc_toolkit.navigation.iod import gauss_iod
-from gnc_toolkit.utils.state_to_elements import kepler2eci, eci2kepler
+from opengnc.navigation.iod import gauss_iod
+from opengnc.utils.state_to_elements import kepler2eci, eci2kepler
 import datetime
 
 def main():
@@ -137,3 +137,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+

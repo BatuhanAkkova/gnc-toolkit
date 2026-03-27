@@ -8,9 +8,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../s
 
 # Try to import, handle error if not found (though it should be there)
 try:
-    from gnc_toolkit.utils.state_conversion import quat_to_dcm, euler_to_dcm
+    from opengnc.utils.state_conversion import quat_to_dcm, euler_to_dcm
 except ImportError:
-    print("Error: Could not import gnc_toolkit. Ensure it is installed or in PYTHONPATH.")
+    print("Error: Could not import opengnc. Ensure it is installed or in PYTHONPATH.")
     sys.exit(1)
 
 def run_benchmark(name, setup, stmt, number=10000):
@@ -26,7 +26,7 @@ def run_benchmark(name, setup, stmt, number=10000):
         return None
 
 def main():
-    print("# GNC Toolkit Benchmarks")
+    print("# OpenGNC Benchmarks")
     print("\n## Attitude Conversions\n")
     print("| Operation                 | Iterations | Total Time (s) | Avg Time (µs) |")
     print("|---------------------------|------------|----------------|---------------|")
@@ -34,7 +34,7 @@ def main():
     # Benchmark quat_to_dcm
     setup_quat = (
         "import numpy as np; "
-        "from gnc_toolkit.utils.state_conversion import quat_to_dcm; "
+        "from opengnc.utils.state_conversion import quat_to_dcm; "
         "q = np.array([0.0, 0.0, 0.0, 1.0])"
     )
     run_benchmark("quat_to_dcm", setup_quat, "quat_to_dcm(q)")
@@ -42,7 +42,7 @@ def main():
     # Benchmark euler_to_dcm
     setup_euler = (
         "import numpy as np; "
-        "from gnc_toolkit.utils.state_conversion import euler_to_dcm; "
+        "from opengnc.utils.state_conversion import euler_to_dcm; "
         "angle = np.array([0.1, 0.2, 0.3]); "
         "seq = '123'"
     )
@@ -50,3 +50,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+

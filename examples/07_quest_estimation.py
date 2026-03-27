@@ -21,18 +21,18 @@ from datetime import datetime
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.attitude_determination.quest import quest
-from gnc_toolkit.utils.quat_utils import quat_rot, quat_conj
-from gnc_toolkit.utils.state_conversion import quat_to_euler
-from gnc_toolkit.sensors.magnetometer import Magnetometer
-from gnc_toolkit.sensors.sun_sensor import SunSensor
+from opengnc.attitude_determination.quest import quest
+from opengnc.utils.quat_utils import quat_rot, quat_conj
+from opengnc.utils.state_conversion import quat_to_euler
+from opengnc.sensors.magnetometer import Magnetometer
+from opengnc.sensors.sun_sensor import SunSensor
 
 def run_example():
     # Truth Attitude (Random)
     # Roll=10, Pitch=20, Yaw=30 deg
     euler_true = np.radians([10, 20, 30])
     # For simplicity, let's just define a rotation matrix or quaternion
-    from gnc_toolkit.utils.state_conversion import euler_to_quat
+    from opengnc.utils.state_conversion import euler_to_quat
     q_true = euler_to_quat(euler_true, sequence="321")
     
     # Reference Vectors (Inertial Frame)
@@ -101,3 +101,7 @@ def run_example():
 
 if __name__ == "__main__":
     run_example()
+
+
+
+

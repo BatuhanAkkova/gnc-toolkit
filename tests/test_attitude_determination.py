@@ -4,12 +4,12 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from scipy.spatial.transform import Rotation as R
-from gnc_toolkit.attitude_determination.triad import triad
-from gnc_toolkit.attitude_determination.quest import quest
-from gnc_toolkit.attitude_determination.davenport_q import davenport_q
-from gnc_toolkit.attitude_determination.foam import foam
-from gnc_toolkit.attitude_determination.request import RequestFilter, request
-from gnc_toolkit.utils.quat_utils import quat_to_rmat, quat_mult, quat_inv
+from opengnc.attitude_determination.triad import triad
+from opengnc.attitude_determination.quest import quest
+from opengnc.attitude_determination.davenport_q import davenport_q
+from opengnc.attitude_determination.foam import foam
+from opengnc.attitude_determination.request import RequestFilter, request
+from opengnc.utils.quat_utils import quat_to_rmat, quat_mult, quat_inv
 
 def test_triad_identity():
     r1 = np.array([1, 0, 0])
@@ -192,3 +192,7 @@ def test_request_k_setter():
     new_k = np.eye(4) * 2
     rf.K = new_k
     assert np.allclose(rf.k, new_k)
+
+
+
+

@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import os
-from gnc_toolkit.disturbances.gravity import (
+from opengnc.disturbances.gravity import (
     TwoBodyGravity, 
     J2Gravity, 
     HarmonicsGravity, 
@@ -10,10 +10,10 @@ from gnc_toolkit.disturbances.gravity import (
     OceanTidesGravity,
     GradientTorque
 )
-from gnc_toolkit.disturbances.drag import LumpedDrag
-from gnc_toolkit.disturbances.srp import Canonball
-from gnc_toolkit.environment.density import Exponential
-from gnc_toolkit.utils.time_utils import calc_jd
+from opengnc.disturbances.drag import LumpedDrag
+from opengnc.disturbances.srp import Canonball
+from opengnc.environment.density import Exponential
+from opengnc.utils.time_utils import calc_jd
 from unittest.mock import MagicMock
 
 MU = 398600.4418e9 # m^3/s^2
@@ -72,7 +72,7 @@ def test_drag_opposes_velocity(ephemeris):
 
 def test_srp_with_mocked_sun(mocker, ephemeris):
     r_eci, _, jd = ephemeris
-    mock_sun = mocker.patch("gnc_toolkit.environment.solar.Sun.calculate_sun_eci")
+    mock_sun = mocker.patch("opengnc.environment.solar.Sun.calculate_sun_eci")
     mock_sun.return_value = np.array([1.496e11, 0, 0]) 
     
     model = Canonball()
@@ -240,3 +240,7 @@ def test_gravity_gradient_torque():
 
     t_gg_zero = model.gravity_gradient_torque(J, np.zeros(3), q_body2eci)
     assert np.allclose(t_gg_zero, 0.0)
+
+
+
+

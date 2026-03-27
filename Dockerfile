@@ -1,4 +1,4 @@
-# Dockerfile for GNC Toolkit Reproducibility
+# Dockerfile for OpenGNC Reproducibility
 
 # Use official Python lightweight image
 FROM python:3.10-slim

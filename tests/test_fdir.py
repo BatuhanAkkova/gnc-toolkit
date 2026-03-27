@@ -6,10 +6,10 @@ import numpy as np
 import pytest
 import time
 
-from gnc_toolkit.fdir.residual_generation import ObserverResidualGenerator, AnalyticalRedundancy
-from gnc_toolkit.fdir.parity_space import ParitySpaceDetector
-from gnc_toolkit.fdir.safe_mode import SafeModeLogic, SafeModeCondition, SystemMode
-from gnc_toolkit.fdir.failure_accommodation import ActuatorAccommodation
+from opengnc.fdir.residual_generation import ObserverResidualGenerator, AnalyticalRedundancy
+from opengnc.fdir.parity_space import ParitySpaceDetector
+from opengnc.fdir.safe_mode import SafeModeLogic, SafeModeCondition, SystemMode
+from opengnc.fdir.failure_accommodation import ActuatorAccommodation
 
 def test_observer_residual_generator():
     A = np.array([[1.0]])
@@ -164,3 +164,7 @@ def test_analytical_redundancy():
     q2 = np.array([0, 1, 0, 0])
     res = AnalyticalRedundancy.gyro_vs_quaternion_residual(q1, q2)
     assert np.allclose(res, q1 - q2)
+
+
+
+

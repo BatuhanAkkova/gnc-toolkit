@@ -1,6 +1,6 @@
 import pytest
-from gnc_toolkit.simulation.multibody import ConstellationSimulator
-from gnc_toolkit.simulation.simulator import MissionSimulator
+from opengnc.simulation.multibody import ConstellationSimulator
+from opengnc.simulation.simulator import MissionSimulator
 
 def dummy_propagator(t, state_list, dt, control):
     return [s + dt for s in state_list]
@@ -23,3 +23,7 @@ def test_constellation_simulator():
     
     assert sim.simulator.time == 3.0
     assert sim.simulator.state == [4.0, 5.0, 6.0]
+
+
+
+

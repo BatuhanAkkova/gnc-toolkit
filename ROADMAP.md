@@ -1,4 +1,4 @@
-# GNC Toolkit — Open-Source Roadmap
+# OpenGNC — Open-Source Roadmap
 
 > **Mission**: Become the definitive open-source Guidance, Navigation & Control toolkit for spacecraft engineers, scientists, and researchers — covering the full mission lifecycle from concept to operations.
 
@@ -33,3 +33,7 @@ For validation, all new modules should be cross-verified against:
 ---
 
 *Last updated: March 2026 | Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)*
+
+
+
+

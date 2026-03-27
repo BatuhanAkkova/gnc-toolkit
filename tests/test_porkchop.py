@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from gnc_toolkit.guidance.porkchop import generate_porkchop_grid
+from opengnc.guidance.porkchop import generate_porkchop_grid
 
 class TestPorkchop(unittest.TestCase):
     def test_generate_porkchop_grid(self):
@@ -49,10 +49,14 @@ class TestPorkchop(unittest.TestCase):
         departure_dates = np.array([1000.0])
         arrival_dates = np.array([2000.0])
         
-        with unittest.mock.patch('gnc_toolkit.guidance.porkchop.solve_lambert') as mock_lambert:
+        with unittest.mock.patch('opengnc.guidance.porkchop.solve_lambert') as mock_lambert:
             mock_lambert.side_effect = Exception("Lambert Failed")
             res = generate_porkchop_grid(departure_dates, arrival_dates, r_dep_func, v_dep_func, r_dep_func, v_dep_func)
             self.assertTrue(np.all(np.isnan(res['c3'])))
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+

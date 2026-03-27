@@ -1,21 +1,21 @@
 import pytest
 import numpy as np
-from gnc_toolkit.utils.quat_utils import (
+from opengnc.utils.quat_utils import (
     quat_normalize, quat_conj, quat_norm, quat_inv,
     quat_mult, quat_rot, quat_to_rmat, axis_angle_to_quat
 )
-from gnc_toolkit.utils.time_utils import (
+from opengnc.utils.time_utils import (
     calc_jd, jd_to_datetime, day_to_mdtime, calc_gmst,
     calc_last, calc_lst, calc_doy, is_leap_year, convert_time
 )
-from gnc_toolkit.utils.state_to_elements import eci2kepler, kepler2eci, anomalies
-from gnc_toolkit.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, elements2perifocal_dcm
-from gnc_toolkit.utils.state_conversion import (
+from opengnc.utils.state_to_elements import eci2kepler, kepler2eci, anomalies
+from opengnc.utils.frame_conversion import eci2ecef, ecef2eci, eci2lvlh_dcm, eci2llh, elements2perifocal_dcm
+from opengnc.utils.state_conversion import (
     quat_to_dcm, quat_to_euler, dcm_to_quat, dcm_to_euler,
     euler_to_quat, euler_to_dcm, rot_x, rot_y, rot_z
 )
-from gnc_toolkit.utils.mean_elements import osculating2mean, get_j2_secular_rates
-from gnc_toolkit.utils.mrp_utils import quat_to_mrp
+from opengnc.utils.mean_elements import osculating2mean, get_j2_secular_rates
+from opengnc.utils.mrp_utils import quat_to_mrp
 
 # MEAN ELEMENTS
 def test_osculating2mean_identity():
@@ -382,7 +382,7 @@ def test_calc_gmst_negative_wrap():
 
 # STATE TRANSFORM
 def test_eci_icrf_conversions():
-    from gnc_toolkit.utils.frame_conversion import eci2icrf, icrf2eci, eci2eme2000, eme20002eci
+    from opengnc.utils.frame_conversion import eci2icrf, icrf2eci, eci2eme2000, eme20002eci
     reci = np.array([7000.0, 0, 0])
     veci = np.array([0, 7.5, 0])
     jd = 2451545.0
@@ -396,7 +396,7 @@ def test_eci_icrf_conversions():
     np.testing.assert_allclose(reci, r_back_eme)
 
 def test_mrp_utils():
-    from gnc_toolkit.utils.mrp_utils import quat_to_mrp, mrp_to_quat, mrp_to_dcm, get_shadow_mrp, check_mrp_switching
+    from opengnc.utils.mrp_utils import quat_to_mrp, mrp_to_quat, mrp_to_dcm, get_shadow_mrp, check_mrp_switching
     
     q = np.array([0, 0, 0, 1])
     mrp = quat_to_mrp(q)
@@ -425,7 +425,7 @@ def test_jd_to_datetime_edge_negative():
     assert isinstance(res, tuple)
 
 def test_state_to_elements_edge_cases():
-    from gnc_toolkit.utils.state_to_elements import rot_y as s_rot_y
+    from opengnc.utils.state_to_elements import rot_y as s_rot_y
     Ry = s_rot_y(0.0)
     assert np.allclose(Ry, np.eye(3))
 
@@ -482,7 +482,7 @@ def test_state_to_elements_edge_cases():
 
 # KINEMATICS TESTS
 def test_euler_sequences():
-    from gnc_toolkit.utils.euler_utils import euler_to_dcm, dcm_to_euler
+    from opengnc.utils.euler_utils import euler_to_dcm, dcm_to_euler
     sequences = ['321', '313', '123', '121', '232', '213']
     angles = np.array([0.1, 0.2, 0.3]) # radians
     
@@ -492,8 +492,8 @@ def test_euler_sequences():
         np.testing.assert_allclose(angles_est, angles, atol=1e-10)
 
 def test_mrp_conversions_kinematics():
-    from gnc_toolkit.utils.mrp_utils import quat_to_mrp, mrp_to_quat, mrp_to_dcm
-    from gnc_toolkit.utils.state_conversion import quat_to_dcm
+    from opengnc.utils.mrp_utils import quat_to_mrp, mrp_to_quat, mrp_to_dcm
+    from opengnc.utils.state_conversion import quat_to_dcm
     q = np.array([0.1, 0.2, 0.3, 0.911])
     q = q / np.linalg.norm(q)
     
@@ -506,7 +506,7 @@ def test_mrp_conversions_kinematics():
     np.testing.assert_allclose(dcm_mrp, dcm_quat, atol=1e-10)
 
 def test_mrp_shadow_kinematics():
-    from gnc_toolkit.utils.mrp_utils import mrp_to_quat, get_shadow_mrp
+    from opengnc.utils.mrp_utils import mrp_to_quat, get_shadow_mrp
     sigma = np.array([0.8, 0.0, 0.0])
     sigma_shadow = get_shadow_mrp(sigma)
     
@@ -518,7 +518,7 @@ def test_mrp_shadow_kinematics():
     np.testing.assert_allclose(q, q_shadow, atol=1e-10)
 
 def test_crp_conversions():
-    from gnc_toolkit.utils.crp_utils import quat_to_crp, crp_to_quat
+    from opengnc.utils.crp_utils import quat_to_crp, crp_to_quat
     q = np.array([0.1, 0.1, 0.1, 0.98])
     q = q / np.linalg.norm(q)
     
@@ -527,8 +527,8 @@ def test_crp_conversions():
     np.testing.assert_allclose(q_est, q, atol=1e-10)
 
 def test_crp_addition():
-    from gnc_toolkit.utils.crp_utils import crp_to_quat, crp_addition
-    from gnc_toolkit.utils.quat_utils import quat_mult
+    from opengnc.utils.crp_utils import crp_to_quat, crp_addition
+    from opengnc.utils.quat_utils import quat_mult
     q1_crp = np.array([0.1, 0.0, 0.0])
     q2_crp = np.array([0.0, 0.1, 0.0])
     
@@ -544,7 +544,7 @@ def test_crp_addition():
     np.testing.assert_allclose(q_est, q_ref, atol=1e-10)
 
 def test_cayley_klein():
-    from gnc_toolkit.utils.cayley_klein_utils import quat_to_cayley_klein, cayley_klein_to_quat
+    from opengnc.utils.cayley_klein_utils import quat_to_cayley_klein, cayley_klein_to_quat
     q = np.array([0.1, 0.2, 0.3, 0.911])
     q = q / np.linalg.norm(q)
     
@@ -554,14 +554,14 @@ def test_cayley_klein():
     np.testing.assert_allclose(U @ np.conj(U).T, np.eye(2), atol=1e-10)
 
 def test_cayley_klein_mult():
-    from gnc_toolkit.utils.cayley_klein_utils import quat_to_cayley_klein, cayley_klein_mult
+    from opengnc.utils.cayley_klein_utils import quat_to_cayley_klein, cayley_klein_mult
     U1 = quat_to_cayley_klein(np.array([0, 0, 0, 1.0]))
     U2 = quat_to_cayley_klein(np.array([0.1, 0, 0, 0.995]))
     res = cayley_klein_mult(U1, U2)
     np.testing.assert_allclose(res, U2, atol=1e-10)
 
 def test_crp_singularities():
-    from gnc_toolkit.utils.crp_utils import quat_to_crp, crp_to_dcm, crp_addition
+    from opengnc.utils.crp_utils import quat_to_crp, crp_to_dcm, crp_addition
     with pytest.raises(ValueError):
         quat_to_crp(np.array([1.0, 0.0, 0.0, 0.0]))
         
@@ -572,8 +572,8 @@ def test_crp_singularities():
         crp_addition(np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
 
 def test_euler_singularities():
-    from gnc_toolkit.utils.euler_utils import euler_to_dcm, dcm_to_euler
-    from gnc_toolkit.utils.state_conversion import rot_y
+    from opengnc.utils.euler_utils import euler_to_dcm, dcm_to_euler
+    from opengnc.utils.state_conversion import rot_y
     with pytest.raises(ValueError):
         euler_to_dcm([0.1, 0.2, 0.3], '32')
         
@@ -586,7 +586,7 @@ def test_euler_singularities():
     assert angles_asym.shape == (3,)
 
 def test_mrp_edge_cases_kinematics():
-    from gnc_toolkit.utils.mrp_utils import get_shadow_mrp, check_mrp_switching
+    from opengnc.utils.mrp_utils import get_shadow_mrp, check_mrp_switching
     
     sigma_zero = np.zeros(3)
     res_shadow = get_shadow_mrp(sigma_zero)
@@ -597,12 +597,12 @@ def test_mrp_edge_cases_kinematics():
     np.testing.assert_allclose(res_switch, get_shadow_mrp(sigma_large))
 
 def test_quat_inv_singularity_kinematics():
-    from gnc_toolkit.utils.quat_utils import quat_inv
+    from opengnc.utils.quat_utils import quat_inv
     with pytest.raises(ValueError):
         quat_inv(np.zeros(4))
 
 def test_state_conversion_singularities():
-    from gnc_toolkit.utils.state_conversion import quat_to_euler, dcm_to_euler, dcm_to_quat
+    from opengnc.utils.state_conversion import quat_to_euler, dcm_to_euler, dcm_to_quat
 
     with pytest.raises(ValueError):
         quat_to_euler(np.array([0,0,0,1]), '12')
@@ -641,3 +641,6 @@ def test_mrp_utils_coverage():
 def test_euler_utils_coverage():
     with pytest.raises(ValueError, match="Invalid axis"):
         euler_to_dcm([0, 0, 0], sequence="421")
+
+
+

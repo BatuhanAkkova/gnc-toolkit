@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from gnc_toolkit.propagators.cowell import CowellPropagator
+from opengnc.propagators.cowell import CowellPropagator
 
 def test_end_to_end_scenario():
     """
@@ -25,3 +25,7 @@ def test_end_to_end_scenario():
     # Calculate radius to ensure it stays somewhat physical (e.g. LEO)
     final_r = np.linalg.norm(r_f)
     assert final_r > 6000.0 and final_r < 40000.0
+
+
+
+

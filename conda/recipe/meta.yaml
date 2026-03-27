@@ -1,6 +1,6 @@
-# Conda recipe for gnc-toolkit
+# Conda recipe for OpenGNC
 
-{% set name = "gnc_toolkit" %}
+{% set name = "opengnc" %}
 {% set version = "0.1.0" %}
 
 package:
@@ -33,12 +33,16 @@ requirements:
 
 test:
   imports:
-    - gnc_toolkit
+    - opengnc
   commands:
     - pytest --help # Simple verification
 
 about:
-  home: https://github.com/BatuhanAkkova/gnc-toolkit
+  home: https://github.com/BatuhanAkkova/OpenGNC
   summary: A Guidance, Navigation, and Control toolkit for spacecraft.
   license: MIT
   license_file: LICENSE
+
+
+
+

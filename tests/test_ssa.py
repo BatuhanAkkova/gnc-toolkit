@@ -1,9 +1,9 @@
 import pytest
 import numpy as np
-from gnc_toolkit.ssa.conjunction import compute_pc_foster, compute_pc_chan
-from gnc_toolkit.ssa.tle_interface import TLECatalog, TLEEntity
-from gnc_toolkit.ssa.tracking import correlate_tracks, compute_mahalanobis_distance
-from gnc_toolkit.ssa.maneuver import plan_avoidance_maneuver
+from opengnc.ssa.conjunction import compute_pc_foster, compute_pc_chan
+from opengnc.ssa.tle_interface import TLECatalog, TLEEntity
+from opengnc.ssa.tracking import correlate_tracks, compute_mahalanobis_distance
+from opengnc.ssa.maneuver import plan_avoidance_maneuver
 
 def test_compute_pc_foster_high():
     r1 = np.array([7000000.0, 0.0, 0.0])
@@ -236,3 +236,7 @@ def test_conjunction_coverage():
     cov = np.eye(3)
     pc = compute_pc_foster(r1, v1, cov, r2, v2, cov, hbr)
     assert pc >= 0
+
+
+
+

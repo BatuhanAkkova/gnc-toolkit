@@ -23,13 +23,13 @@ import datetime
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.propagators.cowell import CowellPropagator
-from gnc_toolkit.environment.density import HarrisPriester
+from opengnc.propagators.cowell import CowellPropagator
+from opengnc.environment.density import HarrisPriester
 
-from gnc_toolkit.disturbances.gravity import J2Gravity
-from gnc_toolkit.disturbances.drag import LumpedDrag
-from gnc_toolkit.actuators.thruster import ElectricThruster
-from gnc_toolkit.utils.time_utils import calc_jd
+from opengnc.disturbances.gravity import J2Gravity
+from opengnc.disturbances.drag import LumpedDrag
+from opengnc.actuators.thruster import ElectricThruster
+from opengnc.utils.time_utils import calc_jd
 
 # Helper for SMA calculation if utility missing
 def get_sma(r, v, mu):
@@ -204,3 +204,7 @@ def simulation():
 
 if __name__ == "__main__":
     simulation()
+
+
+
+

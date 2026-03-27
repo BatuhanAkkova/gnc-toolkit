@@ -17,7 +17,7 @@ import os
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.guidance.maneuvers import hohmann_transfer, plane_change, combined_plane_change
+from opengnc.guidance.maneuvers import hohmann_transfer, plane_change, combined_plane_change
 
 def run_example():
     mu = 398600.4418 # Earth's Gravitational Parameter [km^3/s^2]
@@ -102,3 +102,7 @@ def run_example():
 
 if __name__ == "__main__":
     run_example()
+
+
+
+

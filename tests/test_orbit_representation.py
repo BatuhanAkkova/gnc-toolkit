@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
-from gnc_toolkit.utils.equinoctial_utils import kepler2equinoctial, equinoctial2eci
-from gnc_toolkit.utils.mee_utils import kepler2mee, mee2eci
-from gnc_toolkit.utils.state_to_elements import eci2kepler
+from opengnc.utils.equinoctial_utils import kepler2equinoctial, equinoctial2eci
+from opengnc.utils.mee_utils import kepler2mee, mee2eci
+from opengnc.utils.state_to_elements import eci2kepler
 
 def test_equinoctial_round_trip():
     a = 7000e3
@@ -39,7 +39,7 @@ def test_mee_round_trip():
     assert incl == pytest.approx(incl_f, abs=1e-6)
 
 def test_equinoctial2kepler():
-    from gnc_toolkit.utils.equinoctial_utils import equinoctial2kepler
+    from opengnc.utils.equinoctial_utils import equinoctial2kepler
     
     a_in = 7000e3
     h = 0.01
@@ -53,7 +53,7 @@ def test_equinoctial2kepler():
     assert ecc > 0
 
 def test_eci2mee():
-    from gnc_toolkit.utils.mee_utils import eci2mee
+    from opengnc.utils.mee_utils import eci2mee
     reci = np.array([7000e3, 0.0, 0.0])
     veci = np.array([0.0, 7500.0, 0.0])
     
@@ -61,7 +61,7 @@ def test_eci2mee():
     assert p > 0
 
 def test_anomalies_singularities():
-    from gnc_toolkit.utils.state_to_elements import anomalies
+    from opengnc.utils.state_to_elements import anomalies
     
     E_h, M_h = anomalies(1.5, np.radians(30))
     assert np.isfinite(E_h) and np.isfinite(M_h)
@@ -76,7 +76,7 @@ def test_state_to_elements_edge_cases():
     assert np.isfinite(elements[0])
 
 def test_circular_equatorial_edge_cases():
-    from gnc_toolkit.utils.state_to_elements import eci2kepler
+    from opengnc.utils.state_to_elements import eci2kepler
     
     mu = 398600.4415e9
     r_mag = 7000e3
@@ -96,4 +96,8 @@ def test_circular_equatorial_edge_cases():
     elements2 = eci2kepler(reci2, veci2)
     assert elements2[1] < 1e-5 # ecc
     assert np.isclose(elements2[2], np.pi) # incl ~ 180 deg
+
+
+
+
 

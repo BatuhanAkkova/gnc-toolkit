@@ -1,6 +1,6 @@
-# Contributing to GNC Toolkit
+# Contributing to OpenGNC
 
-First off, thank you for considering contributing to the GNC Toolkit! It's people like you who make this a great tool for the spacecraft engineering community.
+First off, thank you for considering contributing to the OpenGNC! It's people like you who make this a great tool for the spacecraft engineering community.
 
 ## Code of Conduct
 
@@ -69,3 +69,7 @@ Please be respectful and professional in all interactions.
 
 ---
 *Thank you for your contributions!*
+
+
+
+

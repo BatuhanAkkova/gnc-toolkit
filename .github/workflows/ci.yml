@@ -31,7 +31,7 @@ jobs:
         
     - name: Run tests with coverage
       run: |
-        pytest --cov=src/gnc_toolkit --cov-report=xml
+        pytest --cov=src/opengnc --cov-report=xml
         
     - name: Upload coverage to Codecov
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'

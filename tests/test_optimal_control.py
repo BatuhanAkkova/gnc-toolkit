@@ -6,7 +6,7 @@ import numpy as np
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.optimal_control import (
+from opengnc.optimal_control import (
     LinearMPC,
     NonlinearMPC,
     SlidingModeController,
@@ -568,3 +568,6 @@ class TestNewControllers(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+

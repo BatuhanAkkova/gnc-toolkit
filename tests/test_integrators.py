@@ -3,10 +3,10 @@ import numpy as np
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from gnc_toolkit.integrators import RK4, RK45, RK853, GaussJacksonIntegrator
-from gnc_toolkit.integrators.ab_moulton import AdamsBashforthMoultonIntegrator
-from gnc_toolkit.integrators.symplectic import SymplecticIntegrator
-from gnc_toolkit.integrators.dop853_coeffs import A, C, B, E3, E5
+from opengnc.integrators import RK4, RK45, RK853, GaussJacksonIntegrator
+from opengnc.integrators.ab_moulton import AdamsBashforthMoultonIntegrator
+from opengnc.integrators.symplectic import SymplecticIntegrator
+from opengnc.integrators.dop853_coeffs import A, C, B, E3, E5
 
 
 @pytest.mark.parametrize("IntegratorClass", [RK4, RK45, RK853])
@@ -324,3 +324,7 @@ def test_symplectic_boundary():
 
     t_values, y_values = sym_integrator.integrate(f, (0, 15), np.zeros(6), dt=10)
     assert np.isclose(t_values[-1], 15.0)
+
+
+
+

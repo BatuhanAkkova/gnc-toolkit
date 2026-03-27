@@ -1,26 +1,26 @@
 import pytest
 import numpy as np
-from gnc_toolkit.sensors.star_tracker import StarTracker
-from gnc_toolkit.sensors.sun_sensor import SunSensor
-from gnc_toolkit.sensors.magnetometer import Magnetometer
-from gnc_toolkit.sensors.gyroscope import Gyroscope
-from gnc_toolkit.sensors.gnss_receiver import GNSSReceiver
-from gnc_toolkit.sensors.imu import Accelerometer, IMU
-from gnc_toolkit.sensors.sun_sensor_array import CoarseSunSensorArray
-from gnc_toolkit.sensors.horizon_sensor import HorizonSensor
-from gnc_toolkit.sensors.altimeter import Altimeter
-from gnc_toolkit.sensors.lidar import Lidar
-from gnc_toolkit.sensors.camera import Camera
-from gnc_toolkit.sensors.star_catalog import StarCatalog
-from gnc_toolkit.sensors.sensor import Sensor
+from opengnc.sensors.star_tracker import StarTracker
+from opengnc.sensors.sun_sensor import SunSensor
+from opengnc.sensors.magnetometer import Magnetometer
+from opengnc.sensors.gyroscope import Gyroscope
+from opengnc.sensors.gnss_receiver import GNSSReceiver
+from opengnc.sensors.imu import Accelerometer, IMU
+from opengnc.sensors.sun_sensor_array import CoarseSunSensorArray
+from opengnc.sensors.horizon_sensor import HorizonSensor
+from opengnc.sensors.altimeter import Altimeter
+from opengnc.sensors.lidar import Lidar
+from opengnc.sensors.camera import Camera
+from opengnc.sensors.star_catalog import StarCatalog
+from opengnc.sensors.sensor import Sensor
 
-from gnc_toolkit.actuators.reaction_wheel import ReactionWheel
-from gnc_toolkit.actuators.magnetorquer import Magnetorquer
-from gnc_toolkit.actuators.thruster import Thruster, ChemicalThruster, ElectricThruster
-from gnc_toolkit.actuators.cmg import ControlMomentGyro
-from gnc_toolkit.actuators.vscmg import VariableSpeedCMG
-from gnc_toolkit.actuators.solar_sail import SolarSail
-from gnc_toolkit.actuators.allocation import PseudoInverseAllocator, SingularRobustAllocator, NullMotionManager
+from opengnc.actuators.reaction_wheel import ReactionWheel
+from opengnc.actuators.magnetorquer import Magnetorquer
+from opengnc.actuators.thruster import Thruster, ChemicalThruster, ElectricThruster
+from opengnc.actuators.cmg import ControlMomentGyro
+from opengnc.actuators.vscmg import VariableSpeedCMG
+from opengnc.actuators.solar_sail import SolarSail
+from opengnc.actuators.allocation import PseudoInverseAllocator, SingularRobustAllocator, NullMotionManager
 
 
 class TestSensors:
@@ -259,7 +259,7 @@ class TestActuators:
         assert u_net[1] < 0.5
     
     def test_actuator_base_features(self):
-        from gnc_toolkit.actuators.actuator import Actuator
+        from opengnc.actuators.actuator import Actuator
         
         class TestActuator(Actuator):
             def command(self, signal, **kwargs):
@@ -357,7 +357,7 @@ class TestActuators:
     
     
     def test_thruster_cluster_all(self):
-        from gnc_toolkit.actuators.thruster import ThrusterCluster, ChemicalThruster
+        from opengnc.actuators.thruster import ThrusterCluster, ChemicalThruster
         
         thrusters = [ChemicalThruster(max_thrust=1.0) for _ in range(4)]
         positions = [
@@ -440,4 +440,8 @@ class TestActuators:
         
         t_neg = ElectricThruster(power_efficiency=-0.1, isp=1500, max_thrust=0.1)
         assert t_neg.get_power_consumption(0.1) == float('inf')
+
+
+
+
 

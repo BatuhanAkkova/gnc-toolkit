@@ -4,7 +4,11 @@
 set -e
 
 # Insert initialization logic here (e.g., config generation, setup verification)
-echo "Starting environment for gnc-toolkit"
+echo "Starting environment for OpenGNC"
 
 # Execute the main container command (e.g., pytest, bash)
 exec "$@"
+
+
+
+

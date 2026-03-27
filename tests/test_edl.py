@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from gnc_toolkit.edl import (
+from opengnc.edl import (
     ballistic_entry_dynamics,
     lifting_entry_dynamics,
     sutton_grave_heating,
@@ -8,7 +8,7 @@ from gnc_toolkit.edl import (
     aerocapture_guidance,
     hazard_avoidance
 )
-from gnc_toolkit.environment.density import Exponential
+from opengnc.environment.density import Exponential
 from unittest.mock import patch, MagicMock
 
 class TestEDL(unittest.TestCase):
@@ -126,3 +126,7 @@ class TestEDL(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+

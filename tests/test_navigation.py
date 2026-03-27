@@ -1,20 +1,20 @@
 import numpy as np
 import pytest
 from unittest.mock import MagicMock, patch
-from gnc_toolkit.navigation import (
+from opengnc.navigation import (
     OrbitDeterminationEKF,
     AngleOnlyNavigation,
     GPSNavigation,
     RelativeNavigationEKF,
     SurfaceNavigationEKF
 )
-from gnc_toolkit.navigation.terrain_nav import (
+from opengnc.navigation.terrain_nav import (
     FeatureMatchingTRN,
     map_relative_localization_update
 )
-from gnc_toolkit.navigation.batch_ls import BatchLeastSquaresOD
-from gnc_toolkit.navigation.iod import gauss_iod
-from gnc_toolkit.utils.state_to_elements import kepler2eci
+from opengnc.navigation.batch_ls import BatchLeastSquaresOD
+from opengnc.navigation.iod import gauss_iod
+from opengnc.utils.state_to_elements import kepler2eci
 
 def test_orbit_determination_ekf():
     r0 = np.array([7000e3, 0, 0])
@@ -218,3 +218,6 @@ def test_batch_ls_od():
     
     assert x_est[:3] == pytest.approx(x0_true[:3], rel=1e-3)
     assert x_est[3:] == pytest.approx(x0_true[3:], rel=1e-3)
+
+
+

@@ -1,3 +1,0 @@
-"""
-GNC Toolkit package.
-"""

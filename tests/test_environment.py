@@ -1,14 +1,14 @@
 import pytest
 import numpy as np
 import datetime
-from gnc_toolkit.environment.density import Exponential, HarrisPriester, NRLMSISE00, JB2008, CIRA72
-from gnc_toolkit.environment.mag_field import tilted_dipole_field, igrf_field, wmm_field
-from gnc_toolkit.environment.space_weather import SpaceWeather
-from gnc_toolkit.environment.radiation import RadiationModel
-from gnc_toolkit.environment.thermal import ThermalEnvironment
-from gnc_toolkit.environment.wind import AtmosphereCoRotation
-from gnc_toolkit.environment.moon import Moon
-from gnc_toolkit.utils.time_utils import calc_jd
+from opengnc.environment.density import Exponential, HarrisPriester, NRLMSISE00, JB2008, CIRA72
+from opengnc.environment.mag_field import tilted_dipole_field, igrf_field, wmm_field
+from opengnc.environment.space_weather import SpaceWeather
+from opengnc.environment.radiation import RadiationModel
+from opengnc.environment.thermal import ThermalEnvironment
+from opengnc.environment.wind import AtmosphereCoRotation
+from opengnc.environment.moon import Moon
+from opengnc.utils.time_utils import calc_jd
 import sys
 import importlib
 
@@ -68,7 +68,7 @@ def test_tilted_dipole_field():
 
 def test_igrf_field_mock(mocker):    
     # Mock ppigrf.igrf via the module reference for robustness
-    import gnc_toolkit.environment.mag_field as mag_field
+    import opengnc.environment.mag_field as mag_field
     mock_igrf = mocker.patch.object(mag_field.ppigrf, "igrf")
     mock_igrf.return_value = [1e-5, 2e-5, 3e-5]
     
@@ -111,7 +111,7 @@ def test_nrlmsise_model_array_output(mocker):
     assert rho == 1.5e-12 # Should take output[0]
 
 def test_cira72_model_low_altitude():
-    from gnc_toolkit.environment.density import CIRA72
+    from opengnc.environment.density import CIRA72
     model = CIRA72()
     # Altitude < 100 km (e.g., 50 km) -> h_km = 50
     # geodetic height h above Re
@@ -121,7 +121,7 @@ def test_cira72_model_low_altitude():
     assert rho > 0
 
 def test_igrf_field_import_error(mocker):
-    import gnc_toolkit.environment.mag_field as mag_field
+    import opengnc.environment.mag_field as mag_field
     mocker.patch.object(mag_field, 'ppigrf', None)
     
     with pytest.raises(ImportError, match="ppigrf not installed"):
@@ -133,11 +133,11 @@ def test_mag_field_small_r():
 
 def test_mag_field_module_import_error(monkeypatch):
     monkeypatch.setitem(sys.modules, "ppigrf", None)
-    import gnc_toolkit.environment.mag_field
-    importlib.reload(gnc_toolkit.environment.mag_field)
-    assert gnc_toolkit.environment.mag_field.ppigrf is None
+    import opengnc.environment.mag_field
+    importlib.reload(opengnc.environment.mag_field)
+    assert opengnc.environment.mag_field.ppigrf is None
     del sys.modules["ppigrf"]
-    importlib.reload(gnc_toolkit.environment.mag_field)
+    importlib.reload(opengnc.environment.mag_field)
 
 
 
@@ -145,7 +145,7 @@ def test_mag_field_module_import_error(monkeypatch):
 
 def test_wmm_field_mock(mocker):
     # Mock ppigrf.igrf via the module reference
-    import gnc_toolkit.environment.mag_field as mag_field
+    import opengnc.environment.mag_field as mag_field
     mock_igrf = mocker.patch.object(mag_field.ppigrf, "igrf")
     mock_igrf.return_value = [1.1e-5, 2.1e-5, 3.1e-5]
     
@@ -209,7 +209,7 @@ def test_space_weather_ap_zero():
     assert sw.kp == 0.0
 
 def test_atmosphere_wind_relative_velocity():
-    from gnc_toolkit.environment.wind import AtmosphereCoRotation
+    from opengnc.environment.wind import AtmosphereCoRotation
     model = AtmosphereCoRotation()
     r_eci = np.array([7000e3, 0.0, 0.0])
     v_eci = np.array([0.0, 7500.0, 0.0])
@@ -265,3 +265,7 @@ def test_moon_position():
     # Moon distance is approx 384,400 km
     dist = np.linalg.norm(r_moon) / 1000.0
     assert dist > 350000 and dist < 410000
+
+
+
+

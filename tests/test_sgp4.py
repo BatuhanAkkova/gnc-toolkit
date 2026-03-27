@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from gnc_toolkit.propagators.sgp4_propagator import Sgp4Propagator
+from opengnc.propagators.sgp4_propagator import Sgp4Propagator
 
 def test_sgp4_init_and_propagate():
     # ISS TLE (Sample)
@@ -39,7 +39,7 @@ def test_sgp4_propagate_to_jd():
 
 def test_sgp4_errors():
     from unittest.mock import patch, MagicMock
-    from gnc_toolkit.propagators.sgp4_propagator import Sgp4Propagator
+    from opengnc.propagators.sgp4_propagator import Sgp4Propagator
     import pytest
     
     line1 = "1 25544U 98067A   20325.43545139  .00001564  00000-0  36550-4 0  9997"
@@ -50,7 +50,7 @@ def test_sgp4_errors():
     mock_sat.jdsatepochF = 0.5
     mock_sat.sgp4.return_value = (1, [0,0,0], [0,0,0])
     
-    with patch('gnc_toolkit.propagators.sgp4_propagator.Satrec.twoline2rv', return_value=mock_sat):
+    with patch('opengnc.propagators.sgp4_propagator.Satrec.twoline2rv', return_value=mock_sat):
         prop = Sgp4Propagator(line1, line2)
         
         with pytest.raises(RuntimeError):
@@ -58,3 +58,7 @@ def test_sgp4_errors():
             
         with pytest.raises(RuntimeError):
             prop.propagate_to_jd(2451545.0)
+
+
+
+

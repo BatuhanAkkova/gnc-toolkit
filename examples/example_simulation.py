@@ -1,6 +1,6 @@
 import os
 import json
-from gnc_toolkit.simulation import MissionSimulator, SimulationLogger, ScenarioConfig
+from opengnc.simulation import MissionSimulator, SimulationLogger, ScenarioConfig
 
 # Example Dynamics (1D Double Integrator)
 def propagator(t, state, dt, control):
@@ -91,3 +91,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+

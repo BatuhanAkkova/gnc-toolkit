@@ -25,7 +25,7 @@ import os
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.guidance.rendezvous import cw_equations, cw_targeting
+from opengnc.guidance.rendezvous import cw_equations, cw_targeting
 
 def simulation():
     # -------------------------------------------------------------------------
@@ -222,3 +222,7 @@ def simulation():
 
 if __name__ == "__main__":
     simulation()
+
+
+
+

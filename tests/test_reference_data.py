@@ -24,3 +24,7 @@ def test_regression_reference_data():
     # Check that difference is within small tolerance
     err = np.linalg.norm(np.array(ref_data["final_state"]) - simulated_final_state)
     assert err < 1.0  # Allow some small numerical difference
+
+
+
+

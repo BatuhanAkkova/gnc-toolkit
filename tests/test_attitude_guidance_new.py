@@ -1,13 +1,13 @@
 import numpy as np
 import pytest
-from gnc_toolkit.guidance import (
+from opengnc.guidance import (
     nadir_pointing_reference,
     sun_pointing_reference,
     target_tracking_reference,
     attitude_blending,
     eigenaxis_slew_path_planning
 )
-from gnc_toolkit.utils.quat_utils import quat_norm, quat_rot, quat_conj
+from opengnc.utils.quat_utils import quat_norm, quat_rot, quat_conj
 
 def test_nadir_pointing():
     pos = np.array([7000e3, 0.0, 0.0]) # 7000 km on X
@@ -96,7 +96,7 @@ def test_attitude_blending_edge_cases():
     np.testing.assert_allclose(quat_norm(q_blend), 1.0)
 
 def test_rmat_to_quat():
-    from gnc_toolkit.guidance.attitude_guidance import _rmat_to_quat
+    from opengnc.guidance.attitude_guidance import _rmat_to_quat
     
     # tr > 0
     R1 = np.eye(3)
@@ -134,3 +134,7 @@ def test_rmat_to_quat():
     ])
     q4 = _rmat_to_quat(R4)
     np.testing.assert_allclose(np.abs(q4), [0, 0, 1, 0], atol=1e-7)
+
+
+
+

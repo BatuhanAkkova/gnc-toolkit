@@ -24,11 +24,11 @@ import os
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.kalman_filters.mekf import MEKF
-from gnc_toolkit.attitude_dynamics.rigid_body import euler_equations
-from gnc_toolkit.sensors.gyroscope import Gyroscope
-from gnc_toolkit.sensors.star_tracker import StarTracker
-from gnc_toolkit.utils.quat_utils import quat_rot, quat_mult, quat_conj, quat_normalize, axis_angle_to_quat
+from opengnc.kalman_filters.mekf import MEKF
+from opengnc.attitude_dynamics.rigid_body import euler_equations
+from opengnc.sensors.gyroscope import Gyroscope
+from opengnc.sensors.star_tracker import StarTracker
+from opengnc.utils.quat_utils import quat_rot, quat_mult, quat_conj, quat_normalize, axis_angle_to_quat
 
 def simulation():
     # -------------------------------------------------------------------------
@@ -175,3 +175,7 @@ def simulation():
 
 if __name__ == "__main__":
     simulation()
+
+
+
+

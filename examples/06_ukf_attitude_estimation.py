@@ -20,10 +20,10 @@ from datetime import datetime
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.kalman_filters.ukf import UKF_Attitude
-from gnc_toolkit.sensors.gyroscope import Gyroscope
-from gnc_toolkit.sensors.star_tracker import StarTracker
-from gnc_toolkit.utils.quat_utils import quat_mult, quat_normalize, axis_angle_to_quat, quat_rot, quat_conj
+from opengnc.kalman_filters.ukf import UKF_Attitude
+from opengnc.sensors.gyroscope import Gyroscope
+from opengnc.sensors.star_tracker import StarTracker
+from opengnc.utils.quat_utils import quat_mult, quat_normalize, axis_angle_to_quat, quat_rot, quat_conj
 
 def run_example():
     # Configuration
@@ -131,3 +131,7 @@ def run_example():
 
 if __name__ == "__main__":
     run_example()
+
+
+
+

@@ -2,10 +2,10 @@ import numpy as np
 import sys
 import os
 
-# Add src to path to ensure we can import gnc_toolkit
+# Add src to path to ensure we can import opengnc
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from gnc_toolkit.visualization import (
+from opengnc.visualization import (
     plot_orbit_3d, 
     plot_attitude_sphere, 
     plot_ground_track, 
@@ -94,3 +94,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+

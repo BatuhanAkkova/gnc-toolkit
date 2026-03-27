@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gnc_toolkit"
-version = "0.1.0"
+name = "OpenGNC"
+version = "1.0.0"
 description = "A Guidance, Navigation, and Control toolkit for spacecraft."
 readme = "README.md"
 requires-python = ">=3.10"

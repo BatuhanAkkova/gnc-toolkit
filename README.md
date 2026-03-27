@@ -1,118 +1,119 @@
-# GNC Toolkit
+# OpenGNC
 
+[![PyPI version](https://img.shields.io/pypi/v/OpenGNC.svg)](https://pypi.org/project/OpenGNC/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-A comprehensive Guidance, Navigation, and Control (GNC) toolkit for spacecraft simulation, mission analysis, and state estimation. Built with Python, this toolkit provides high-fidelity environment models, disturbance calculations, and advanced control/estimation algorithms.
+**OpenGNC** is a professional-grade, high-fidelity Guidance, Navigation, and Control (GNC) library for spacecraft simulation, orbital mechanics, and mission analysis. Built with SI units and aerospace standards, it provides a comprehensive suite of tools for satellite engineers and researchers.
 
-**[Read the Documentation](https://BatuhanAkkova.github.io/gnc-toolkit/)**
+**[Explore the Documentation](https://BatuhanAkkova.github.io/OpenGNC/)** | **[View Examples](examples/)** | **[Contributing](CONTRIBUTING.md)**
 
-## Getting Started
+---
 
-### Installation
+## Key Highlights
 
-To use this toolkit in your own projects, you can install it in editable mode:
+- **SI Unit Compliance**: All calculations strictly use SI units (meters, kilograms, seconds, radians) unless otherwise explicitly suffixed.
+- **High-Fidelity Environment**: Integrated models for NRLMSISE-00 density, IGRF-13 magnetic fields, and EGM2008 gravity harmonics.
+- **Validated Algorithms**: Implementations of industry-standard filters (MEKF, UKF) and deterministic methods (QUEST, TRIAD).
+- **Optimization Ready**: Built-in support for Optimal Control (LQR) and Model Predictive Control (MPC) using CasADi.
+- **Modular Architecture**: Easily swap integrators, disturbance models, or sensors for customized simulations.
 
+---
+
+## Extensive Features
+
+### Environment & Space Weather
+- **Atmospheric Models**: NRLMSISE-00 (high-fidelity), Harris-Priester (diurnal bulge), and Exponential density.
+- **Geomagnetic Models**: IGRF-13 (International Geomagnetic Reference Field) and Tilted Dipole models.
+- **Solar & Ephemeris**: Analytical solar position, shadow models (Umbra/Penumbra), and Planetary ephemeris.
+- **Gravity Field**: Recursive EGM2008 Spherical Harmonics (up to N-degree), J2, and Two-body attraction.
+
+### Orbital Mechanics & Propagators
+- **Propagators**: Cowell’s Method, Keplerian elements, and SGP4 for TLE propagation.
+- **Numerical Integrators**: High-order fixed and adaptive steps: RK4, RK45 (Runge-Kutta-Fehlberg), and DOP853.
+- **Orbital Maneuvers**: Hohmann transfer, Bi-elliptic, Phasing, Plane changes, and Lambert Targeting.
+- **Initial Orbit Determination (IOD)**: Robust Gauss, Laplace, and universal variable methods.
+
+### Attitude Dynamics & Determination
+- **Kinematics**: Quaternion, Euler Angle, and DCM (Direction Cosine Matrix) transformations.
+- **Dynamics**: Euler's equations for rigid body rotation, including variable inertia and disturbances.
+- **Determination**: Deterministic TRIAD and QUEST algortihms for attitude from vector observations.
+
+### Guidance, Navigation & Control (GNC)
+- **State Estimation**: 
+  - **MEKF**: Multiplicative Extended Kalman Filter for attitude.
+  - **UKF**: Unscented Kalman Filter for non-linear state estimation.
+  - **EKF/KF**: Standard and Extended Kalman Filters for orbital state mapping.
+- **Control Law Design**:
+  - **Classic**: PID controllers and B-Dot detumbling logic.
+  - **Optimal**: LQR (Linear Quadratic Regulator) and LQE (Kalman Filter design).
+  - **Advanced**: Nonlinear MPC (Model Predictive Control) and Sliding Mode Control.
+- **Sensors**: Realistic Star Tracker, Sun Sensor, Magnetometer, and Gyroscope models with bias/noise.
+- **Actuators**: Model Reaction Wheels (saturation/jitter) and Thrusters (Chemical/Electric).
+
+### FDIR & Mission Design
+- **FDIR (Fault Detection)**: Parity Space methods, Residual Generation, and Safe Mode logic.
+- **SSA (Space Situational Awareness)**: Conjunction Assessment (CAT), Maneuver Detection, and TLE interface.
+- **Mission Design**: $\Delta v$ Budgeting, Communication Link Budgets, and Ground Station Coverage tools.
+
+### Visualization & Analysis
+- **3D Trajectories**: Interactive Plotly-based orbital trajectory and attitude visualization.
+- **Telemetry Dashboards**: Web-based GNC dashboards using Dash for real-time like simulation monitoring.
+- **Coordinate Frames**: Visualizers for ECI, ECEF, Hill (RSW), and Body frame transformations.
+
+---
+
+## Installation
+
+### From PyPI (Recommended)
+```bash
+pip install gnc_toolkit
+```
+
+### From Source (Development)
 ```bash
 git clone https://github.com/BatuhanAkkova/gnc_toolkit.git
 cd gnc_toolkit
-pip install -e .
+pip install -e ".[dev]"
 ```
 
-### Dependencies
+---
 
-The following packages are required:
-- **NumPy**: Linear algebra and array operations.
-- **SciPy**: Numerical integration and optimization.
-- **PyMSIS**: NRLMSISE-00 atmospheric density model.
-- **PPIGRF**: IGRF-13 geomagnetic field model.
-
-### Quick Start Guide
-
-The package is structured for easy access to its submodules. Here are some common use cases:
+## Quick Start
 
 ```python
-# Import estimation filters
-from gnc_toolkit.kalman_filters.mekf import MEKF
-from gnc_toolkit.kalman_filters.ukf import UKF_Attitude
-
-# Import high-fidelity environment models
-from gnc_toolkit.environment.density import NRLMSISE00, HarrisPriester
+import numpy as np
 from gnc_toolkit.environment.mag_field import igrf_field
+from gnc_toolkit.kalman_filters.mekf import MEKF
+from gnc_toolkit.utils.quat_utils import quat_rot
 
-# Calculate disturbances
-from gnc_toolkit.disturbances.gravity import HarmonicsGravity
-from gnc_toolkit.disturbances.drag import LumpedDrag
+# Get Earth's magnetic field at a specific ECI position
+B_vec = igrf_field(pos_eci=np.array([7000e3, 0, 0]), time="2024-01-01")
 
-# Attitude utilities
-from gnc_toolkit.utils.quat_utils import quat_rot, quat_mult
+# Initialize a Multiplicative Extended Kalman Filter
+mekf = MEKF(q_init=np.array([0, 0, 0, 1]), covariance=1e-3 * np.eye(6))
 ```
 
-## Examples
+---
 
-The [examples/](examples/) directory contains demonstration scripts showcasing high-fidelity simulations. Key highlights:
+## Example Simulations
 
-### Control Systems & Stability
-| Analysis | Visualization |
-| :--- | :--- |
-| **CubeSat Detumbling**<br>B-Dot magnetic control for kinetic energy dissipation using noisy magnetometer data. | ![CubeSat Detumbling](assets/detumbling.png)<br>[01_cubesat_detumbling.py](examples/01_cubesat_detumbling.py) |
-| **Momentum Dumping**<br>Reaction wheel desaturation using magnetorquers to manage accumulated angular momentum. | ![Momentum Dumping](assets/dumping.png)<br>[03_momentum_dumping.py](examples/03_momentum_dumping.py) |
+| Application | Description | Visualization | Script |
+| :--- | :--- | :--- | :--- |
+| **CubeSat Detumbling** | B-Dot magnetic control using noisy magnetometer data. | ![CubeSat Detumbling](assets/detumbling.png) | [01_cubesat_detumbling.py](examples/01_cubesat_detumbling.py) |
+| **MPC Rendezvous** | Optimal multi-burn approach in GEO using NMPC. | ![Autonomous Rendezvous](assets/rendezvous.png) | [04_autonomous_rendezvous.py](examples/04_autonomous_rendezvous.py) |
+| **MEKF Estimation** | High-fidelity orientation tracking fusing star tracker & gyro. | ![Attitude Estimation](assets/attitude_est.png) | [05_attitude_estimation_mekf.py](examples/05_attitude_estimation_mekf.py) |
+| **VLEO Maintenance** | Altitude keeping in high-drag orbits using electric propulsion. | ![VLEO Orbit Maintenance](assets/vleo_maintenance.png) | [02_vleo_orbit_maintenance.py](examples/02_vleo_orbit_maintenance.py) |
+| **Gauss IOD** | Initial Orbit Determination from 3-LoS vectors. | ![Gauss IOD](assets/gauss_iod_results.png) | [10_gauss_iod_determination.py](examples/10_gauss_iod_determination.py) |
 
-### State Estimation & Navigation
-| Method | Visualization |
-| :--- | :--- |
-| **MEKF Attitude Estimation**<br>High-fidelity orientation tracking fusing star tracker and gyroscope data using Multiplicative Extended Kalman Filter. | ![Attitude Estimation](assets/attitude_est.png)<br>[05_attitude_estimation_mekf.py](examples/05_attitude_estimation_mekf.py) |
-
-### Mission Operations & Guidance
-| Tool | Visualization |
-| :--- | :--- |
-| **Autonomous Rendezvous**<br>Precise multi-burn approach in GEO using Clohessy-Wiltshire relative targeting. | ![Autonomous Rendezvous](assets/rendezvous.png)<br>[04_autonomous_rendezvous.py](examples/04_autonomous_rendezvous.py) |
-| **VLEO Orbit Maintenance**<br>Maintaining altitude in high-drag environments using electric propulsion and hysteresis logic. | ![VLEO Orbit Maintenance](assets/vleo_maintenance.png)<br>[02_vleo_orbit_maintenance.py](examples/02_vleo_orbit_maintenance.py) |
-| **UKF Attitude Estimation**<br>Advanced orientation tracking using Unscented Kalman Filter for nonlinear systems. | ![UKF Attitude Estimation](assets/ukf_attitude.png)<br>[06_ukf_attitude_estimation.py](examples/06_ukf_attitude_estimation.py) |
-| **QUEST Determination**<br>Deterministic attitude solution from vector measurements. | ![QUEST Determination](assets/quest_results.png)<br>[07_quest_estimation.py](examples/07_quest_estimation.py) |
-| **Orbital Maneuvers**<br>Hohmann transfer and plane change calculation. | ![Orbital Maneuvers](assets/hohmann_transfer.png)<br>[08_orbital_maneuvers.py](examples/08_orbital_maneuvers.py) |
-| **Lambert Solver**<br>Orbit targeting between two points. | ![Lambert Solver](assets/lambert_transfer.png)<br>[09_lambert_solver.py](examples/09_lambert_solver.py) |
-| **Gauss IOD**<br>Initial Orbit Determination from 3-LoS vectors using robust universal variables. | ![Gauss IOD](assets/gauss_iod_results.png)<br>[10_gauss_iod_determination.py](examples/10_gauss_iod_determination.py) |
-
-## Project Overview
-
-The **GNC Toolkit** is designed to support the full lifecycle of small satellite missions, with a particular focus on Very Low Earth Orbit (VLEO) environments and complex attitude control scenarios.
-
-- **High-Fidelity Environment**: Accurate models for atmospheric density (NRLMSISE-00), geomagnetic fields (IGRF-13), and solar ephemeris.
-- **Physical Disturbances**: Modeling of J2 and EGM2008 Spherical Harmonics, atmospheric drag with co-rotating atmosphere, and Solar Radiation Pressure (SRP).
-- **Advanced State Estimation**: Multiplicative Extended Kalman Filter (MEKF) for attitude, and various filters (EKF, UKF) for orbit and state determination.
-- **Optimal & Nonlinear Control**: Support for LQR, MPC (Linear/Nonlinear), Sliding Mode Control, and B-dot detumbling.
-
-## Core Features
-
-### Environment & Physical Models
-- **Gravity**: Two-body, J2, and EGM2008 Spherical Harmonics (recursive implementation).
-- **Atmosphere**: Exponential, Harris-Priester (diurnal bulge), and NRLMSISE-00.
-- **Magnetic Field**: Tilted Dipole and IGRF-13.
-- **Solar**: Analytical solar position and shadow models (umbra/penumbra).
-
-### Estimation & Navigation
-- **Kalman Filtering**: KF, EKF, MEKF (for quaternions), and UKF.
-- **Attitude Determination**: Deterministic TRIAD and QUEST algorithms.
-- **Initial Orbit Determination (IOD)**: Robust Gauss and Laplace methods.
-- **Sensors**: Realistic Star Tracker, Sun Sensor, Magnetometer, and Gyroscope models with bias and noise.
-
-### Guidance & Mission Analysis
-- **Orbital Maneuvers**: Hohmann, Bi-elliptic, Phasing, and Inclination changes.
-- **Rendezvous**: Lambert Solver (Universal Variables), Clohessy-Wiltshire (CW) equations, and CW targeting.
-- **Propagators**: High-order Keplerian and Cowell numerical propagators (RK4, RK45, DOP853).
-
-### Control Systems
-- **Classical**: PID controllers and B-dot detumbling logic.
-- **Optimal**: LQR (Algebraic Riccati Equation solver) and LQE.
-- **Robust/Modern**: Sliding Mode Control and Model Predictive Control (MPC).
-- **Actuators**: Reaction Wheels (momentum management) and Thrusters (Chemical/Electric).
+---
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
-## Author
+## Contributing & Support
 
-**Batuhan Akkova**
-[Email](mailto:batuhanakkova1@gmail.com)
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. 
+For support or feedback, please contact [Batuhan Akkova](mailto:batuhanakkova1@gmail.com).

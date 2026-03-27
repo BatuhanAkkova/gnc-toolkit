@@ -2,6 +2,9 @@
 Symplectic integrator (Yoshida 4th order) for conservative systems.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 
 from .integrator import Integrator

@@ -3,6 +3,7 @@ Feedback Linearization Controller for nonlinear systems.
 """
 
 from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 

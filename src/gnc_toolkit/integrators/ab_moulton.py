@@ -2,6 +2,9 @@
 Adams-Bashforth-Moulton 8th order predictor-corrector integrator.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 
 from .integrator import Integrator

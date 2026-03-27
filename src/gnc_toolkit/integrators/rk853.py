@@ -2,6 +2,9 @@
 Adaptive-step Dormand-Prince 8(5,3) integrator (DOP853).
 """
 
+from collections.abc import Callable
+from typing import Any, Optional
+
 import numpy as np
 
 from . import dop853_coeffs as coeffs

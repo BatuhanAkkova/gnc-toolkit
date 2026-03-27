@@ -2,6 +2,9 @@
 Gauss-Jackson 8th order predictor-corrector integrator for second-order ODEs.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 
 from .integrator import Integrator

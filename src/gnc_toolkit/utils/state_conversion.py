@@ -6,6 +6,7 @@ import numpy as np
 
 from gnc_toolkit.utils import euler_utils as eu
 from gnc_toolkit.utils import quat_utils as qu
+from gnc_toolkit.utils.euler_utils import rot_x, rot_y, rot_z
 
 
 def quat_to_dcm(q: np.ndarray) -> np.ndarray:

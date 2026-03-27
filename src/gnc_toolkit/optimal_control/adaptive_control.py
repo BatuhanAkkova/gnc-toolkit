@@ -3,6 +3,7 @@ Model Reference Adaptive Control (MRAC) for state-space systems.
 """
 
 from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 from scipy.linalg import solve_continuous_lyapunov

@@ -3,6 +3,7 @@ Launch window and injection state computation utilities.
 """
 
 import numpy as np
+from typing import Any
 
 from gnc_toolkit.utils.frame_conversion import ecef2eci, llh2ecef
 

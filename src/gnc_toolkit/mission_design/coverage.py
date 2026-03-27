@@ -3,6 +3,7 @@ Ground station access and lighting conditions analysis utilities.
 """
 
 import numpy as np
+from typing import Any
 
 from gnc_toolkit.environment.solar import Sun
 from gnc_toolkit.utils.frame_conversion import eci2ecef, eci2llh, llh2ecef

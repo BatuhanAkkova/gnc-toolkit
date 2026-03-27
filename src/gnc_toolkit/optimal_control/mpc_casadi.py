@@ -3,6 +3,7 @@ Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.
 """
 
 from collections.abc import Callable
+from typing import Any
 
 import casadi as ca
 import numpy as np

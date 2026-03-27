@@ -5,6 +5,9 @@ Extended Kalman Filter (EKF) for non-linear systems using Jacobians.
 from collections.abc import Callable
 from typing import Any
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 
 

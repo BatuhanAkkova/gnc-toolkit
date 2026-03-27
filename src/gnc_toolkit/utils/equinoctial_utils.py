@@ -169,7 +169,7 @@ def equinoctial2eci(
 
     n = np.sqrt(mu / a**3)
     r = a * (1.0 - k * cos_f - h * sin_f)
-    
+
     x_dot_eq = (n * a**2 / r) * (h * k * beta * cos_f - (1.0 - h**2 * beta) * sin_f)
     y_dot_eq = (n * a**2 / r) * ((1.0 - k**2 * beta) * cos_f - h * k * beta * sin_f)
 

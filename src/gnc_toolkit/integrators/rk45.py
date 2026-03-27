@@ -2,8 +2,10 @@
 Adaptive-step Runge-Kutta-Fehlberg 4(5) integrator.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
-from typing import Callable, Any, Optional
 
 from .integrator import Integrator
 
@@ -36,7 +38,7 @@ class RK45(Integrator):
         safety_factor: float = 0.9,
         min_factor: float = 0.2,
         max_factor: float = 10.0,
-    ):
+    ) -> None:
         """Initialize RK45 coefficients and tolerances."""
         self.rtol = rtol
         self.atol = atol
@@ -54,7 +56,7 @@ class RK45(Integrator):
             [439 / 216, -8, 3680 / 513, -845 / 4104],
             [-8 / 27, 2, -3544 / 2565, 1859 / 4104, -11 / 40],
         ]
-        
+
         # y: 4-th order weights, z: 5-th order weights
         self.b4 = np.array([25 / 216, 0, 1408 / 2565, 2197 / 4104, -1 / 5, 0])
         self.b5 = np.array([16 / 135, 0, 6656 / 12825, 28561 / 56430, -9 / 50, 2 / 55])
@@ -122,13 +124,13 @@ class RK45(Integrator):
             if error_ratio < 1.0:
                 # Acceptance
                 t_next = t + dt_current
-                
+
                 # Predict next optimal step size
                 if error_ratio < 1e-10:
                     dt_new = dt_current * self.max_factor
                 else:
                     dt_new = dt_current * self.safety_factor * (error_ratio**-0.2)
-                
+
                 dt_new = max(dt_current * self.min_factor, min(dt_new, dt_current * self.max_factor))
                 return y_next, t_next, dt_new
             else:
@@ -142,7 +144,7 @@ class RK45(Integrator):
         f: Callable,
         t_span: tuple[float, float],
         y0: np.ndarray,
-        dt: Optional[float] = None,
+        dt: float | None = None,
         **kwargs: Any
     ) -> tuple[np.ndarray, np.ndarray]:
         """

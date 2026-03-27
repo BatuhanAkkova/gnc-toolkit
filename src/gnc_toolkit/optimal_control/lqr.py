@@ -27,7 +27,7 @@ class LQR:
         Weight matrix ($m \times m$, PD).
     """
 
-    def __init__(self, A: np.ndarray, B: np.ndarray, Q: np.ndarray, R: np.ndarray):
+    def __init__(self, A: np.ndarray, B: np.ndarray, Q: np.ndarray, R: np.ndarray) -> None:
         """Initialize the LQR controller with system and cost matrices."""
         self.A = np.asarray(A)
         self.B = np.asarray(B)

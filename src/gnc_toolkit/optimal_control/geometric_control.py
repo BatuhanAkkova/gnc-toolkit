@@ -2,10 +2,9 @@
 Geometric Controller on SO(3) for attitude tracking.
 """
 
+
 import numpy as np
 
-
-from typing import Optional, Tuple
 
 def vee_map(R: np.ndarray) -> np.ndarray:
     r"""
@@ -67,7 +66,7 @@ class GeometricController:
         Angular velocity error gain (derivative).
     """
 
-    def __init__(self, J: np.ndarray, kR: float, kW: float):
+    def __init__(self, J: np.ndarray, kR: float, kW: float) -> None:
         """Initialize geometric controller gains and inertia."""
         self.J = np.asarray(J)
         self.kR = float(kR)
@@ -79,7 +78,7 @@ class GeometricController:
         omega: np.ndarray,
         R_d: np.ndarray,
         omega_d: np.ndarray,
-        d_omega_d: Optional[np.ndarray] = None,
+        d_omega_d: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Compute the optimal control torque on SO(3).
@@ -98,7 +97,7 @@ class GeometricController:
             Desired angular acceleration (3,). Defaults to zero.
 
         Returns
--------
+        -------
         np.ndarray
             Control torque vector M (3,) [N*m].
         """
@@ -120,7 +119,7 @@ class GeometricController:
         # term = J * (hat(omega) * R^T * Rd * omega_d - R^T * Rd * d_omega_d)
         w_skew = hat_map(omega_vec)
         acc_term = w_skew @ R_rel @ wd_vec - R_rel @ dwd_vec
-        
+
         M_ff = self.J @ acc_term
         M_gyro = np.cross(omega_vec, self.J @ omega_vec)
 

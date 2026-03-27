@@ -21,7 +21,7 @@ class ParitySpaceDetector:
         Geometry matrix $(p \times n)$, $p > n$.
     """
 
-    def __init__(self, M: np.ndarray):
+    def __init__(self, M: np.ndarray) -> None:
         """Initialize FDI detector using SVD to find the null space of M."""
         self.M = np.asarray(M)
         self.p_dim, self.n_dim = self.M.shape
@@ -62,7 +62,7 @@ class ParitySpaceDetector:
             Fault detection threshold.
 
         Returns
--------
+        -------
         bool
             True if a fault is detected.
         """
@@ -80,7 +80,7 @@ class ParitySpaceDetector:
             Measurement vector.
 
         Returns
--------
+        -------
         int
             Index of the faulty sensor (0 to $p-1$), or -1 if no fault.
         """

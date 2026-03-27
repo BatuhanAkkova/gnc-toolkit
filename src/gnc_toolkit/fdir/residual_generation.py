@@ -2,8 +2,8 @@
 Residual generation for fault detection using observers.
 """
 
+
 import numpy as np
-from typing import Optional
 
 
 class ObserverResidualGenerator:
@@ -39,7 +39,7 @@ class ObserverResidualGenerator:
         D: np.ndarray | None = None,
         L: np.ndarray = None,
         x0: np.ndarray | None = None,
-    ):
+    ) -> None:
         """Initialize observer state and matrices."""
         self.A, self.B, self.C = np.asarray(A), np.asarray(B), np.asarray(C)
         self.D = np.asarray(D) if D is not None else np.zeros((self.C.shape[0], self.B.shape[1]))
@@ -92,7 +92,7 @@ class AnalyticalRedundancy:
             Fault limit.
 
         Returns
--------
+        -------
         bool
             True if $\|\mathbf{r}\| > \text{threshold}$.
         """

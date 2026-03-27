@@ -86,15 +86,15 @@ def get_j2_secular_rates(
     """
     p = a * (1.0 - ecc**2)
     n0 = np.sqrt(mu / a**3)
-    
+
     j2_coeff = 1.5 * n0 * j2 * (re / p)**2
-    
+
     # 1. RAAN rate (Regression of Nodes)
     raan_dot = -j2_coeff * np.cos(incl)
-    
+
     # 2. Argument of Perigee rate (Apsidal Rotation)
     argp_dot = 0.5 * j2_coeff * (4.0 - 5.0 * np.sin(incl)**2)
-    
+
     # 3. Mean Anomaly rate (Mean Motion Correction)
     m_dot = n0 + 0.5 * j2_coeff * np.sqrt(1.0 - ecc**2) * (2.0 - 3.0 * np.sin(incl)**2)
 

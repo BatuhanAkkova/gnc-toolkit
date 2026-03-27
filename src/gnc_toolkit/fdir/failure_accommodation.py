@@ -2,8 +2,8 @@
 Actuator accommodation and control allocation weight adjustment.
 """
 
+
 import numpy as np
-from typing import Optional
 
 
 class ActuatorAccommodation:
@@ -23,7 +23,7 @@ class ActuatorAccommodation:
         Can be $(m, m)$ or diagonal $(m,)$. Defaults to identity.
     """
 
-    def __init__(self, B: np.ndarray, initial_weights: np.ndarray | None = None):
+    def __init__(self, B: np.ndarray, initial_weights: np.ndarray | None = None) -> None:
         """Initialize allocation matrix and baseline weights."""
         self.B = np.asarray(B)
         self.k, self.m = self.B.shape

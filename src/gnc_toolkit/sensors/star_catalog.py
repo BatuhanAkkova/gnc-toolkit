@@ -10,7 +10,7 @@ class StarCatalog:
     Utility for managing and searching star catalogs (e.g., Hipparcos).
     """
 
-    def __init__(self, catalog_path=None):
+    def __init__(self, catalog_path: str | None = None) -> None:
         """
         Args:
             catalog_path (str): Path to the catalog file (CSV/DAT).
@@ -19,7 +19,7 @@ class StarCatalog:
         if catalog_path:
             self.load_catalog(catalog_path)
 
-    def load_catalog(self, path):
+    def load_catalog(self, path: str) -> None:
         """
         Dummy implementation for catalog loading.
         In a real scenario, this would parse Hipparcos or similar data.
@@ -32,7 +32,7 @@ class StarCatalog:
             {"id": 4, "mag": 0.1, "vec": np.array([-1, 0, 0])},
         ]
 
-    def get_stars_in_fov(self, boresight, fov_deg, min_mag=None):
+    def get_stars_in_fov(self, boresight: np.ndarray, fov_deg: float, min_mag: float | None = None) -> list:
         """
         Filters stars within a given Field of View (FOV).
 

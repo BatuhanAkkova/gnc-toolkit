@@ -2,8 +2,8 @@
 Earth magnetic field models (IGRF, WMM, Tilted Dipole).
 """
 
-from typing import Any, Union, Optional
 from datetime import datetime
+
 import numpy as np
 
 try:
@@ -16,7 +16,7 @@ def igrf_field(
     lat: float,
     lon: float,
     alt: float,
-    time: Union[datetime, float]
+    time: datetime | float
 ) -> np.ndarray:
     """
     Get the International Geomagnetic Reference Field (IGRF) vector.
@@ -44,7 +44,7 @@ def igrf_field(
     """
     if ppigrf is None:
         raise ImportError("ppigrf not installed")
-    
+
     # ppigrf expects (lon, lat, alt, time)
     return np.array(ppigrf.igrf(lon, lat, alt, time))
 
@@ -53,7 +53,7 @@ def wmm_field(
     lat: float,
     lon: float,
     alt: float,
-    date: Union[datetime, float]
+    date: datetime | float
 ) -> np.ndarray:
     """
     Get the World Magnetic Model (WMM) field vector.
@@ -104,7 +104,7 @@ def tilted_dipole_field(r_ecef: np.ndarray) -> np.ndarray:
     re_m = 6371200.0  # Earth's mean magnetic radius (m)
 
     # 2. Magnetic Pole location
-    mag_lat = np.deg2rad(78.3) 
+    mag_lat = np.deg2rad(78.3)
     mag_lon = np.deg2rad(-71.8)
 
     theta_p = np.pi / 2 - mag_lat
@@ -122,10 +122,10 @@ def tilted_dipole_field(r_ecef: np.ndarray) -> np.ndarray:
 
     rv = np.asarray(r_ecef)
     r_mag = np.linalg.norm(rv)
-    
+
     if r_mag < 1.0:
         return np.zeros(3)
-    
+
     r_unit = rv / r_mag
 
     # 5. Dipole Field Equation

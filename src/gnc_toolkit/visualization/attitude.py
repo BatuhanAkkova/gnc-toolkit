@@ -1,6 +1,6 @@
+
 import numpy as np
 import plotly.graph_objects as go
-from typing import Union, List
 
 
 def plot_attitude_sphere(

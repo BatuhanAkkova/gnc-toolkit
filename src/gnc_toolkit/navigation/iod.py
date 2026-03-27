@@ -2,8 +2,8 @@
 Initial Orbit Determination (IOD) methods (Gibbs, Gauss, Laplace).
 """
 
+
 import numpy as np
-from typing import Dict, Tuple, List, Any, Callable
 
 
 def gibbs_iod(
@@ -42,7 +42,7 @@ def gibbs_iod(
         return np.zeros(3)
 
     s_vec = rv1 * (r2m - r3m) + rv2 * (r3m - r1m) + rv3 * (r1m - r2m)
-    
+
     v2 = np.sqrt(mu / (np.linalg.norm(n_vec) * l_mag)) * (np.cross(d_vec, rv2) / r2m + s_vec)
     return v2
 
@@ -82,7 +82,7 @@ def herrick_gibbs_iod(
     n1, n2, n3 = np.linalg.norm(p1), np.linalg.norm(p2), np.linalg.norm(p3)
     if n1 < 1e-12 or n2 < 1e-12 or n3 < 1e-12:
         raise ValueError("Position vectors must be non-zero.")
-    
+
     term1 = -dt32 * (1.0 / (dt21 * dt31) + mu / (12.0 * n1**3)) * p1
     term2 = (dt32 - dt21) * (1.0 / (dt21 * dt32) + mu / (12.0 * n2**3)) * p2
     term3 = dt21 * (1.0 / (dt32 * dt31) + mu / (12.0 * n3**3)) * p3
@@ -138,34 +138,34 @@ def gauss_iod(
     d12, d22, d32 = float(np.dot(R1, p2)), float(np.dot(R2, p2)), float(np.dot(R3, p2))
 
     c1_init, c3_init = tau3 / tau, -tau1 / tau
-    
+
     # Range equation coefficients: rho2*d0 = a + b/r2^3
     a_term = (1.0 / d0) * (d22 - c1_init * d12 - c3_init * d32)
     term_b1 = c1_init * (tau**2 - tau3**2) * d12
     term_b3 = c3_init * (tau**2 - tau1**2) * d32
     b_term = (1.0 / (6.0 * d0)) * (-term_b1 - term_b3)
-    
+
     e_dot = float(np.dot(R2, l2))
     R2_sq = np.dot(R2, R2)
 
     poly_coeffs = [
-        1.0, 0.0, 
-        -(a_term**2 + 2.0 * a_term * e_dot + R2_sq), 
-        0.0, 0.0, 
-        -2.0 * mu * b_term * (a_term + e_dot), 
-        0.0, 0.0, 
+        1.0, 0.0,
+        -(a_term**2 + 2.0 * a_term * e_dot + R2_sq),
+        0.0, 0.0,
+        -2.0 * mu * b_term * (a_term + e_dot),
+        0.0, 0.0,
         -(mu**2) * b_term**2
     ]
     roots = np.roots(poly_coeffs)
     real_positive_roots = sorted(roots[np.isreal(roots) & (roots.real > 0)].real)
-    
+
     if not real_positive_roots:
         raise ValueError("No physical radius solution found.")
 
     r2_mag = real_positive_roots[-1]
     if r2_mag > 1e11:
         raise ValueError("Radius out of bounds.")
-    
+
     # Pick root that gives positive range
     for r in reversed(real_positive_roots):
         if (a_term + mu * b_term / r**3) > 0:
@@ -180,7 +180,7 @@ def gauss_iod(
     u = mu / r2_mag**3
     c1 = c1_init * (1 + u/6 * (tau**2 - tau3**2))
     c3 = c3_init * (1 + u/6 * (tau**2 - tau1**2))
-    
+
     try:
         mat = np.array([c1 * l1, -l2, c3 * l3]).T
         rhs = R2 - c1 * R1 - c3 * R3
@@ -189,7 +189,7 @@ def gauss_iod(
         r1_vec = R1 + rhos[0] * l1
         r2_vec = R2 + rhos[1] * l2
         r3_vec = R3 + rhos[2] * l3
-        
+
         # Use Herrick-Gibbs for velocity (much more stable than f,g for most arcs)
         v2_vec = herrick_gibbs_iod(r1_vec, r2_vec, r3_vec, -tau1, tau3, mu)
         r2_final, v2_final = r2_vec, v2_vec
@@ -244,9 +244,9 @@ def laplace_iod(
     cos_phi = np.dot(l, r_o) / r_mag_o
 
     # Solve radius equation
-    poly = [1.0, 0.0, -(a_lap**2 + 2.0*r_mag_o*a_lap*cos_phi + r_mag_o**2), 
+    poly = [1.0, 0.0, -(a_lap**2 + 2.0*r_mag_o*a_lap*cos_phi + r_mag_o**2),
             0.0, 0.0, -(2.0*a_lap*b_lap + 2.0*r_mag_o*b_lap*cos_phi), 0.0, 0.0, -(b_lap**2)]
-    
+
     roots = np.roots(poly)
     real_positive_roots = roots[np.isreal(roots) & (roots.real > 0)].real
     if len(real_positive_roots) == 0:
@@ -255,7 +255,7 @@ def laplace_iod(
     rho_mag = a_lap + b_lap / r_mag**3
 
     rv = rho_mag * l + r_o
-    
+
     d3 = np.linalg.det(np.array([l, a_o, ldd]))
     d4 = np.linalg.det(np.array([l, r_o, ldd]))
     rho_mag_dot = -(d3 + (mu / r_mag**3) * d4) / (2.0 * det_d)
@@ -266,9 +266,9 @@ def laplace_iod(
 
 
 def laplace_iod_from_observations(
-    rho_hats: List[np.ndarray],
-    rs_obs: List[np.ndarray],
-    times: List[float],
+    rho_hats: list[np.ndarray],
+    rs_obs: list[np.ndarray],
+    times: list[float],
     mu: float = 398600.4415e9
 ) -> np.ndarray:
     r"""
@@ -316,7 +316,7 @@ def laplace_iod_from_observations(
     return laplace_iod(l2, l_dot, l_ddot, R2, R_dot, R_ddot, mu)
 
 
-def _stumpff(z: float) -> Tuple[float, float]:
+def _stumpff(z: float) -> tuple[float, float]:
     r"""
     Stumpff functions c2(z) and c3(z) for universal variable Kepler solution.
     """

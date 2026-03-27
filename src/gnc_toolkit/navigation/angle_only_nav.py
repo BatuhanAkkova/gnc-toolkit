@@ -50,7 +50,7 @@ class AngleOnlyNavigation(OrbitDeterminationEKF):
             r = x[:3]
             rel_r = r_target - r
             rho = np.linalg.norm(rel_r)
-            if rho < 1.0: 
+            if rho < 1.0:
                 return np.zeros(3)
             return rel_r / rho
 

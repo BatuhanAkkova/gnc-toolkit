@@ -4,12 +4,8 @@ State and attitude representation conversion utilities.
 
 import numpy as np
 
-
-import numpy as np
-
-from gnc_toolkit.utils import quat_utils as qu
 from gnc_toolkit.utils import euler_utils as eu
-from gnc_toolkit.utils.euler_utils import rot_x, rot_y, rot_z
+from gnc_toolkit.utils import quat_utils as qu
 
 
 def quat_to_dcm(q: np.ndarray) -> np.ndarray:
@@ -67,7 +63,7 @@ def dcm_to_quat(dcm: np.ndarray) -> np.ndarray:
     """
     mat = np.asarray(dcm)
     tr = np.trace(mat)
-    
+
     if tr > 0:
         s = np.sqrt(tr + 1.0) * 2
         w = 0.25 * s
@@ -92,7 +88,7 @@ def dcm_to_quat(dcm: np.ndarray) -> np.ndarray:
         x = (mat[0, 2] + mat[2, 0]) / s
         y = (mat[1, 2] + mat[2, 1]) / s
         z = 0.25 * s
-        
+
     return np.array([x, y, z, w])
 
 

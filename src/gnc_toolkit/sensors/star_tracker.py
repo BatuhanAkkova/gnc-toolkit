@@ -2,8 +2,9 @@
 Star Tracker sensor model.
 """
 
+from typing import Any
+
 import numpy as np
-from typing import Any, Optional
 
 from gnc_toolkit.sensors.sensor import Sensor
 from gnc_toolkit.utils.quat_utils import quat_mult

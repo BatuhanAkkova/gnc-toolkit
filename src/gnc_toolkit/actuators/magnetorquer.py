@@ -2,8 +2,9 @@
 Magnetorquer actuator model.
 """
 
-from gnc_toolkit.actuators.actuator import Actuator
 from typing import Any
+
+from gnc_toolkit.actuators.actuator import Actuator
 
 
 class Magnetorquer(Actuator):
@@ -34,7 +35,7 @@ class Magnetorquer(Actuator):
             Additional parameters.
 
         Returns
--------
+        -------
         float
             Delivered dipole moment (Am^2).
         """

@@ -2,17 +2,16 @@
 Davenport's q-method for optimal attitude determination (Wahba's problem).
 """
 
+
 import numpy as np
 
 from gnc_toolkit.utils.quat_utils import quat_normalize
 
 
-from typing import Optional
-
 def davenport_q(
     body_vectors: np.ndarray,
     ref_vectors: np.ndarray,
-    weights: Optional[np.ndarray] = None,
+    weights: np.ndarray | None = None,
 ) -> np.ndarray:
     r"""
     Solve for the optimal attitude quaternion using Davenport's q-method.

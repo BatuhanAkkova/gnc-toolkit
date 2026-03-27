@@ -2,11 +2,11 @@
 Model Reference Adaptive Control (MRAC) for state-space systems.
 """
 
+from collections.abc import Callable
+
 import numpy as np
 from scipy.linalg import solve_continuous_lyapunov
 
-
-from typing import Callable, Optional
 
 class ModelReferenceAdaptiveControl:
     r"""
@@ -49,7 +49,7 @@ class ModelReferenceAdaptiveControl:
         Gamma: np.ndarray,
         Q_lyap: np.ndarray,
         phi_func: Callable[[np.ndarray], np.ndarray],
-    ):
+    ) -> None:
         """Initialize the MRAC parameters and solve the Lyapunov equation."""
         self.A_m = np.asarray(A_m)
         self.B_m = np.asarray(B_m)
@@ -77,8 +77,8 @@ class ModelReferenceAdaptiveControl:
         x: np.ndarray,
         x_m: np.ndarray,
         r: np.ndarray,
-        kx: Optional[np.ndarray] = None,
-        kr: Optional[np.ndarray] = None,
+        kx: np.ndarray | None = None,
+        kr: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Compute the adaptive control input and the parameter update rate.
@@ -111,7 +111,7 @@ class ModelReferenceAdaptiveControl:
 
         phi_x = self.phi(x_vec).reshape(-1, 1)  # (nk, 1)
         adaptive_term = (self.theta_hat.T @ phi_x).flatten()
-        
+
         u = (k_x @ x_vec) + (k_r @ r_vec) - adaptive_term
 
         # Compute adaptation rate: Gamma * Phi(x) * e^T * P * B

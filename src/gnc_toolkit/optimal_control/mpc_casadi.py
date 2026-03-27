@@ -2,9 +2,10 @@
 Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.
 """
 
+from collections.abc import Callable
+
 import casadi as ca
 import numpy as np
-from typing import Callable, Any, Optional, Dict, Union
 
 
 class CasadiNMPC:
@@ -49,12 +50,12 @@ class CasadiNMPC:
         dynamics_func: Callable[[ca.MX, ca.MX], ca.MX],
         cost_func: Callable[[ca.MX, ca.MX], ca.MX],
         terminal_cost_func: Callable[[ca.MX], ca.MX],
-        u_min: Optional[Union[float, np.ndarray]] = None,
-        u_max: Optional[Union[float, np.ndarray]] = None,
-        x_min: Optional[Union[float, np.ndarray]] = None,
-        x_max: Optional[Union[float, np.ndarray]] = None,
+        u_min: float | np.ndarray | None = None,
+        u_max: float | np.ndarray | None = None,
+        x_min: float | np.ndarray | None = None,
+        x_max: float | np.ndarray | None = None,
         discrete: bool = False,
-    ):
+    ) -> None:
         """Initialize and formulate the CasADi NLP problem."""
         self.nx = int(nx)
         self.nu = int(nu)
@@ -72,7 +73,7 @@ class CasadiNMPC:
 
         self._setup_solver()
 
-    def _setup_bounds(self, bound: Optional[Union[float, np.ndarray]], dim: int, default_val: float) -> np.ndarray:
+    def _setup_bounds(self, bound: float | np.ndarray | None, dim: int, default_val: float) -> np.ndarray:
         """Helper to convert scalar or array bounds to full-dimension arrays."""
         if bound is None:
             return np.full(dim, default_val)
@@ -104,7 +105,7 @@ class CasadiNMPC:
 
         for k in range(self.N):
             cost += self.L(X[:, k], U[:, k])
-            
+
             x_next_sim = self._rk4_step(X[:, k], U[:, k]) if not self.discrete else self.f(X[:, k], U[:, k])
             g.append(X[:, k + 1] - x_next_sim)
 
@@ -139,7 +140,7 @@ class CasadiNMPC:
         self.lbg = np.zeros(self.nx * (self.N + 1))
         self.ubg = np.zeros(self.nx * (self.N + 1))
 
-    def solve(self, x0: np.ndarray, u_guess: Optional[np.ndarray] = None) -> np.ndarray:
+    def solve(self, x0: np.ndarray, u_guess: np.ndarray | None = None) -> np.ndarray:
         """
         Solve the NMPC problem for the given initial state.
 
@@ -151,12 +152,12 @@ class CasadiNMPC:
             Initial guess for control trajectory (N, nu).
 
         Returns
--------
+        -------
         np.ndarray
             Optimal control trajectory (N, nu).
         """
         x_init = np.asarray(x0).flatten()
-        
+
         # Warm start guess
         x_start = np.tile(x_init, (self.N + 1, 1)).flatten()
         if u_guess is not None:
@@ -171,7 +172,7 @@ class CasadiNMPC:
         sol = self.solver(
             x0=v_start, p=x_init, lbx=self.lbx, ubx=self.ubx, lbg=self.lbg, ubg=self.ubg
         )
-        
+
         v_opt = sol["x"].full().flatten()
         # Extract controls (located after all state variables in decision vector)
         u_opt_flat = v_opt[self.nx * (self.N + 1):]

@@ -2,8 +2,10 @@
 Extended Kalman Filter (EKF) for non-linear systems using Jacobians.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
-from typing import Callable, Any, Optional
 
 
 class EKF:
@@ -45,8 +47,8 @@ class EKF:
         fx_func: Callable[..., np.ndarray],
         f_jac_func: Callable[..., np.ndarray],
         dt: float,
-        u: Optional[np.ndarray] = None,
-        q_mat: Optional[np.ndarray] = None,
+        u: np.ndarray | None = None,
+        q_mat: np.ndarray | None = None,
         **kwargs: Any,
     ) -> None:
         r"""
@@ -86,7 +88,7 @@ class EKF:
         z: np.ndarray,
         hx_func: Callable[..., np.ndarray],
         h_jac_func: Callable[..., np.ndarray],
-        r_mat: Optional[np.ndarray] = None,
+        r_mat: np.ndarray | None = None,
         **kwargs: Any,
     ) -> None:
         r"""
@@ -128,6 +130,6 @@ class EKF:
 
         # 5. Correct state and covariance (Joseph Form)
         self.x = self.x + (k_gain @ resid)
-        
+
         i_kh = np.eye(self.dim_x) - (k_gain @ h_mat)
         self.P = (i_kh @ self.P @ i_kh.T) + (k_gain @ r @ k_gain.T)

@@ -2,12 +2,11 @@
 Recursive QUEST (REQUEST) algorithm for recursive attitude estimation.
 """
 
+
 import numpy as np
 
 from gnc_toolkit.utils.quat_utils import quat_normalize
 
-
-from typing import Optional
 
 class RequestFilter:
     r"""
@@ -23,11 +22,11 @@ class RequestFilter:
         Initial $4 \times 4$ K-matrix. Default zero.
     """
 
-    def __init__(self, initial_k: Optional[np.ndarray] = None, **kwargs) -> None:
+    def __init__(self, initial_k: np.ndarray | None = None, **kwargs) -> None:
         """Initialize filter state."""
         # Support both 'initial_k' and 'initial_K'
         k_val = initial_k if initial_k is not None else kwargs.get("initial_K")
-        
+
         if k_val is not None:
             self.k = np.asarray(k_val, dtype=float)
         else:
@@ -46,7 +45,7 @@ class RequestFilter:
         self,
         body_vectors: np.ndarray,
         ref_vectors: np.ndarray,
-        weights: Optional[np.ndarray] = None,
+        weights: np.ndarray | None = None,
         rho: float = 1.0,
     ) -> np.ndarray:
         r"""
@@ -118,8 +117,8 @@ class RequestFilter:
 def request(
     body_vectors: np.ndarray,
     ref_vectors: np.ndarray,
-    weights: Optional[np.ndarray] = None,
-    initial_k: Optional[np.ndarray] = None,
+    weights: np.ndarray | None = None,
+    initial_k: np.ndarray | None = None,
     rho: float = 1.0,
 ) -> np.ndarray:
     """
@@ -139,7 +138,7 @@ def request(
         Fading memory factor.
 
     Returns
--------
+    -------
     np.ndarray
         Optimal quaternion $[x, y, z, w]$.
     """

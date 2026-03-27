@@ -2,7 +2,9 @@
 Unscented Kalman Filter (UKF) with support for states on manifolds.
 """
 
-from typing import Callable, Any, Optional
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 from scipy.linalg import cholesky, sqrtm
 
@@ -40,13 +42,13 @@ class UKF:
         self,
         dim_x: int,
         dim_z: int,
-        dim_p: Optional[int] = None,
+        dim_p: int | None = None,
         alpha: float = 1e-3,
         beta: float = 2.0,
         kappa: float = 0.0,
-        subtract_x: Optional[Callable[..., np.ndarray]] = None,
-        add_x: Optional[Callable[..., np.ndarray]] = None,
-        mean_x: Optional[Callable[..., np.ndarray]] = None,
+        subtract_x: Callable[..., np.ndarray] | None = None,
+        add_x: Callable[..., np.ndarray] | None = None,
+        mean_x: Callable[..., np.ndarray] | None = None,
     ) -> None:
         r"""
         Initialize UKF with Unscented Transform parameters.
@@ -118,7 +120,7 @@ class UKF:
         self,
         dt: float,
         fx_func: Callable[..., np.ndarray],
-        q_mat: Optional[np.ndarray] = None,
+        q_mat: np.ndarray | None = None,
         **kwargs: Any
     ) -> None:
         """
@@ -160,7 +162,7 @@ class UKF:
         self,
         z: np.ndarray,
         hx_func: Callable,
-        r_mat: Optional[np.ndarray] = None,
+        r_mat: np.ndarray | None = None,
         **kwargs: Any
     ) -> None:
         r"""
@@ -191,7 +193,7 @@ class UKF:
 
         # 3. Compute measurement mean and covariances
         zp = np.dot(self.Wm, sigmas_h_arr)
-        
+
         s_mat = np.zeros((self.dim_z, self.dim_z))
         pxz = np.zeros((self.dim_p, self.dim_z))
 
@@ -255,7 +257,7 @@ class UKF_Attitude(UKF):
     Covariance/Error: 6 dim (tangent space)
     """
 
-    def __init__(self, q_init=None, bias_init=None, dim_z=3, **kwargs):
+    def __init__(self, q_init: np.ndarray | None = None, bias_init: np.ndarray | None = None, dim_z: int = 3, **kwargs: Any) -> None:
         self._quat_mult = quat_mult
         self._quat_conj = quat_conj
         self._axis_angle_to_quat = axis_angle_to_quat

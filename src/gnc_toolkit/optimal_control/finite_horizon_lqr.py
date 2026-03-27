@@ -2,11 +2,11 @@
 Finite-Horizon Linear Quadratic Regulator (LQR).
 """
 
+from collections.abc import Callable
+
 import numpy as np
 from scipy.integrate import solve_ivp
 
-
-from typing import Callable, Tuple
 
 class FiniteHorizonLQR:
     r"""
@@ -41,7 +41,7 @@ class FiniteHorizonLQR:
         R_fn: Callable[[float], np.ndarray],
         Pf: np.ndarray,
         T: float,
-    ):
+    ) -> None:
         """Initialize the Finite-Horizon LQR problem."""
         self.A_fn = A_fn
         self.B_fn = B_fn
@@ -52,7 +52,7 @@ class FiniteHorizonLQR:
         self.P_trajectory = None
         self.t_span = None
 
-    def solve(self, num_points: int = 100) -> Tuple[np.ndarray, np.ndarray]:
+    def solve(self, num_points: int = 100) -> tuple[np.ndarray, np.ndarray]:
         r"""
         Solve the Differential Riccati Equation (DRE) backwards in time.
 
@@ -102,7 +102,7 @@ class FiniteHorizonLQR:
             Current time (s).
 
         Returns
--------
+        -------
         np.ndarray
             Feedback gain matrix K (nu x nx).
         """
@@ -132,7 +132,7 @@ class FiniteHorizonLQR:
             Current time (s).
 
         Returns
--------
+        -------
         np.ndarray
             Optimal control input u (nu,).
         """

@@ -2,10 +2,9 @@
 Proportional rate damping controller for torque-based detumbling.
 """
 
+
 import numpy as np
 
-
-from typing import Optional, Union
 
 class RateDampingControl:
     r"""
@@ -24,7 +23,7 @@ class RateDampingControl:
         Maximum torque command magnitude allowed (N-m). Default is None.
     """
 
-    def __init__(self, gain: float, max_torque: Optional[float] = None):
+    def __init__(self, gain: float, max_torque: float | None = None) -> None:
         """Initialize the rate damping controller."""
         self.gain = gain
         self.max_torque = max_torque
@@ -40,7 +39,7 @@ class RateDampingControl:
             Units: [rad/s].
 
         Returns
--------
+        -------
         np.ndarray
             Commanded torque vector in the body frame (3,). Units: [N-m].
         """

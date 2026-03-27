@@ -15,7 +15,7 @@ class GaussJacksonIntegrator(Integrator):
     Assumes state y = [r, v] where r, v are 3D vectors.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Predictor Coefficients (Position) - Full series from index 0
         self.p_pos = np.array(
             [
@@ -80,7 +80,7 @@ class GaussJacksonIntegrator(Integrator):
             ]
         )
 
-    def _calc_differences(self, history):
+    def _calc_differences(self, history: list[np.ndarray]) -> np.ndarray:
         r"""
         Calculate backward differences \nabla^j a_n.
         history is a list of N elements [a_0, a_1, ..., a_n] where index -1 is current.
@@ -100,7 +100,7 @@ class GaussJacksonIntegrator(Integrator):
 
         return diff
 
-    def integrate(self, f, t_span, y0, dt=10.0, **kwargs):
+    def integrate(self, f: Callable, t_span: tuple[float, float], y0: np.ndarray, dt: float = 10.0, **kwargs: Any) -> tuple[np.ndarray, np.ndarray]:
         """
         Integrate over a time span using Gauss-Jackson 8th order.
         """
@@ -242,7 +242,7 @@ class GaussJacksonIntegrator(Integrator):
         # Convert back to arrays to maintain interface consistency
         return np.array(t_values), np.array(y_values)
 
-    def step(self, f, t, y, dt, **kwargs):
+    def step(self, f: Callable, t: float, y: np.ndarray, dt: float, **kwargs: Any) -> tuple[np.ndarray, float, float]:
         """
         Single step interface.
         """

@@ -39,17 +39,17 @@ def eci2ecef(
     """
     reci = np.asarray(r_eci)
     veci = np.asarray(v_eci)
-    
+
     gmst = calc_gmst(jd_ut1, dut1)
     # Omega vector of the Earth in ECI
-    omega_e = np.array([0.0, 0.0, 7.2921151467e-5]) 
-    
+    omega_e = np.array([0.0, 0.0, 7.2921151467e-5])
+
     r_mat = rot_z(gmst)
-    
+
     r_ecef = r_mat @ reci
     # v_ecef = R * (v_eci - omega x r_eci)
     v_ecef = r_mat @ (veci - np.cross(omega_e, reci))
-    
+
     return r_ecef, v_ecef
 
 
@@ -80,16 +80,16 @@ def ecef2eci(
     """
     recef = np.asarray(r_ecef)
     vecef = np.asarray(v_ecef)
-    
+
     gmst = calc_gmst(jd_ut1, dut1)
-    omega_e = np.array([0.0, 0.0, 7.2921151467e-5]) 
-    
+    omega_e = np.array([0.0, 0.0, 7.2921151467e-5])
+
     r_mat_inv = rot_z(-gmst)
-    
+
     r_eci = r_mat_inv @ recef
     # v_eci = R_inv * v_ecef + omega x r_eci
     v_eci = r_mat_inv @ vecef + np.cross(omega_e, r_eci)
-    
+
     return r_eci, v_eci
 
 
@@ -116,12 +116,12 @@ def eci2lvlh_dcm(r_eci: np.ndarray, v_eci: np.ndarray) -> np.ndarray:
     """
     reci = np.asarray(r_eci)
     veci = np.asarray(v_eci)
-    
+
     z_u = -reci / np.linalg.norm(reci)
     h_vec = np.cross(reci, veci)
     y_u = -h_vec / np.linalg.norm(h_vec)
     x_u = np.cross(y_u, z_u)
-    
+
     return np.vstack((x_u, y_u, z_u))
 
 

@@ -2,8 +2,9 @@
 Entry, Descent, and Landing (EDL) dynamics and utilities.
 """
 
-import numpy as np
 from typing import Any
+
+import numpy as np
 
 from gnc_toolkit.environment.density import Exponential
 
@@ -228,7 +229,7 @@ def aerocapture_guidance(
 
     from scipy.integrate import solve_ivp
 
-    def get_exit_apoapsis(s):
+    def get_exit_apoapsis(s: np.ndarray) -> float:
         rv, vv = s[:3], s[3:]
         r, v = np.linalg.norm(rv), np.linalg.norm(vv)
         energy = 0.5 * v**2 - mu / r
@@ -240,11 +241,11 @@ def aerocapture_guidance(
     if cl <= 0.0:
         return 0.0
 
-    def predict(bank):
-        def dydt(t, y):
+    def predict(bank: float) -> float:
+        def dydt(t: float, y: np.ndarray) -> np.ndarray:
             return lifting_entry_dynamics(t, y, cl, cd, bank, area, mass, mu, r_planet, rho_model)
-        
-        def exit_check(t, y):
+
+        def exit_check(t: float, y: np.ndarray) -> float:
             return np.linalg.norm(y[:3]) - atm_int
         exit_check.terminal = True
         exit_check.direction = 1
@@ -261,7 +262,7 @@ def aerocapture_guidance(
             b_min = b_mid
         else:
             b_max = b_mid
-            
+
     return (b_min + b_max) / 2
 
 

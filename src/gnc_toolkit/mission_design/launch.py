@@ -7,7 +7,7 @@ import numpy as np
 from gnc_toolkit.utils.frame_conversion import ecef2eci, llh2ecef
 
 
-def calculate_launch_windows(jd_start, jd_end, inc_deg, raan_deg, lat_deg, lon_deg, step_sec=60):
+def calculate_launch_windows(jd_start: float, jd_end: float, inc_deg: float, raan_deg: float, lat_deg: float, lon_deg: float, step_sec: float = 60) -> list[dict[str, Any]]:
     """
     Calculates launch windows by finding times when the launch site intersects the target orbit plane.
 
@@ -82,14 +82,14 @@ def calculate_launch_windows(jd_start, jd_end, inc_deg, raan_deg, lat_deg, lon_d
     return windows
 
 
-def eci2_ecef_or_inverse_wrapper(recef, jd):
+def eci2_ecef_or_inverse_wrapper(recef: np.ndarray, jd: float) -> tuple[np.ndarray, np.ndarray]:
     """Temporary local wrapper to use ecef2eci avoiding import loop or correct usage"""
     return ecef2eci(recef, np.zeros(3), jd)
 
 
 def compute_injection_state(
-    lat_deg, lon_deg, alt_m, azimuth_deg, flight_path_angle_deg, speed_mps, jd
-):
+    lat_deg: float, lon_deg: float, alt_m: float, azimuth_deg: float, flight_path_angle_deg: float, speed_mps: float, jd: float
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Computes ECI state vector at insertion.
 
@@ -146,8 +146,8 @@ def compute_injection_state(
 
 
 def calculate_deployment_sequence(
-    planes, sats_per_plane, phasing_parameter_f, inc_deg, base_raan_deg=0.0, base_ta_deg=0.0
-):
+    planes: int, sats_per_plane: int, phasing_parameter_f: int, inc_deg: float, base_raan_deg: float = 0.0, base_ta_deg: float = 0.0
+) -> list[dict[str, Any]]:
     """
     Computes target RAAN and True Anomaly for each satellite in a Walker-Delta Constellation (T/P/F).
 

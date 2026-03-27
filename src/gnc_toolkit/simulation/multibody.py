@@ -1,11 +1,11 @@
-from collections.abc import Callable
-from typing import Any, Optional
+from typing import Any
+
 from .simulator import (
+    ControllerFunc,
+    EstimatorFunc,
     MissionSimulator,
     PropagatorFunc,
     SensorFunc,
-    EstimatorFunc,
-    ControllerFunc,
     SimulationLogger,
 )
 
@@ -37,11 +37,11 @@ class ConstellationSimulator:
         self,
         num_satellites: int,
         propagator: PropagatorFunc,
-        sensor_model: Optional[SensorFunc] = None,
-        estimator: Optional[EstimatorFunc] = None,
-        controller: Optional[ControllerFunc] = None,
-        logger: Optional[SimulationLogger] = None,
-    ):
+        sensor_model: SensorFunc | None = None,
+        estimator: EstimatorFunc | None = None,
+        controller: ControllerFunc | None = None,
+        logger: SimulationLogger | None = None,
+    ) -> None:
         """Initialize simulation for spacecraft N members."""
         self.num_satellites = num_satellites
         self.simulator = MissionSimulator(
@@ -82,7 +82,7 @@ class ConstellationSimulator:
             Physics update rate (s).
 
         Returns
--------
+        -------
         Any
             Aggregate simulation results.
         """

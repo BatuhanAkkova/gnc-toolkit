@@ -33,7 +33,7 @@ class CoarseSunSensorArray(Sensor):
         i_max: float = 1.0,
         noise_std: float = 0.01,
         name: str = "CSSArray",
-    ):
+    ) -> None:
         super().__init__(name)
         if boresights is None:
             # Default to 6 faces of a cube

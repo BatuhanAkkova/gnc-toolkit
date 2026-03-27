@@ -28,7 +28,7 @@ class HorizonSensor(Sensor):
         noise_std: float = 0.01,
         bias: np.ndarray | None = None,
         name: str = "HorizonSensor",
-    ):
+    ) -> None:
         super().__init__(name)
         self.noise_std = noise_std
         self.bias = bias if bias is not None else np.zeros(2)  # [roll_error, pitch_error]

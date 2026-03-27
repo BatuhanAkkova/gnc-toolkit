@@ -106,7 +106,7 @@ def crp_addition(q1: np.ndarray, q2: np.ndarray) -> np.ndarray:
     """
     qv1 = np.asarray(q1)
     qv2 = np.asarray(q2)
-    
+
     dot = np.dot(qv1, qv2)
     if abs(1.0 - dot) < 1e-12:
         raise ValueError("CRP addition is singular (rotation equals 180 degrees).")

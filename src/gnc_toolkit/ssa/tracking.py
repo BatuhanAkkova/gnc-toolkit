@@ -3,7 +3,6 @@ Object Tracking and Orbit Correlation Utilities.
 """
 
 import numpy as np
-from scipy.linalg import inv
 
 
 def compute_mahalanobis_distance(

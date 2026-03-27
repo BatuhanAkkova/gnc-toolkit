@@ -34,7 +34,7 @@ class Magnetometer(Sensor):
         misalignment: np.ndarray | None = None,
         scale_factor: float | np.ndarray = 1.0,
         name: str = "Magnetometer",
-    ):
+    ) -> None:
         super().__init__(name)
         self.noise_std = noise_std
         self.bias = bias if bias is not None else np.zeros(3)

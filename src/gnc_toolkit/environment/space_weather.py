@@ -2,10 +2,10 @@
 Space weather index management (F10.7, Ap, Kp) for disturbance models.
 """
 
+from typing import Any
+
 import numpy as np
 
-
-from typing import Any, Optional, Dict
 
 class SpaceWeather:
     """
@@ -54,7 +54,7 @@ class SpaceWeather:
             return 0.0
         return float(3.0 * np.log2(ap / 2.0 + 1.0) / 2.0)
 
-    def get_indices(self, date: Optional[Any] = None) -> Dict[str, float]:
+    def get_indices(self, date: Any | None = None) -> dict[str, float]:
         """
         Retrieve indices for a given epoch.
 
@@ -75,7 +75,7 @@ class SpaceWeather:
             "kp": self.kp
         }
 
-    def set_solar_flux(self, f107: float, f107_avg: Optional[float] = None) -> None:
+    def set_solar_flux(self, f107: float, f107_avg: float | None = None) -> None:
         """
         Update local solar flux parameters.
 

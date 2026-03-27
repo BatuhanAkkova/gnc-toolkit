@@ -10,7 +10,7 @@ class RealTimeSimulator(MissionSimulator):
     Supports Hardware-In-the-Loop (HIL) or Software-In-the-Loop (SIL) testing.
     """
 
-    def __init__(self, *args, rtf: float = 1.0, **kwargs):
+    def __init__(self, *args, rtf: float = 1.0, **kwargs) -> None:
         """
         Initialize real-time simulator.
 
@@ -30,12 +30,12 @@ class RealTimeSimulator(MissionSimulator):
         self.wall_clock_start = 0.0
         self.sim_clock_start = 0.0
 
-    def initialize(self, t0: float, initial_state: Any):
+    def initialize(self, t0: float, initial_state: Any) -> None:
         super().initialize(t0, initial_state)
         self.sim_clock_start = t0
         self.wall_clock_start = time.time()
 
-    def run(self, t_end: float, dt: float):
+    def run(self, t_end: float, dt: float) -> None:
         """
         Runs the simulation loop until the end time, matching wall-clock pace.
 

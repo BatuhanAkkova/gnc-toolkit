@@ -2,10 +2,11 @@
 Atmospheric density models (Exponential, Harris-Priester, NRLMSISE-00, JB2008).
 """
 
+from datetime import datetime
+from typing import Any
+
 import numpy as np
 import pymsis
-from datetime import datetime
-from typing import Any, Optional
 
 from gnc_toolkit.environment.solar import Sun
 from gnc_toolkit.utils.frame_conversion import eci2geodetic, eci2llh
@@ -29,12 +30,11 @@ class Exponential:
         Scale height $H$ (km).
     """
 
-
     def __init__(
         self,
         rho0: float = 1.225,
         h0: float = 0.0,
-        h_scale: Optional[float] = None,
+        h_scale: float | None = None,
         **kwargs: Any
     ) -> None:
         """
@@ -53,7 +53,7 @@ class Exponential:
         """
         self.rho0 = rho0
         self.h0 = h0
-        
+
         # Handle backward compatibility for 'H'
         if h_scale is not None:
             self.h_scale = h_scale
@@ -102,7 +102,6 @@ class HarrisPriester:
         Solar lag angle (degrees). Default 30.0.
     """
 
-
     def __init__(self, lag_deg: float = 30.0) -> None:
         """
         Initialize HP model with solar lag and ephemeris.
@@ -134,7 +133,7 @@ class HarrisPriester:
         """
         rv = np.asarray(r_eci)
         r_sun = self.sun_model.calculate_sun_eci(jd)
-        
+
         sun_norm = np.linalg.norm(r_sun)
         sun_u = r_sun / sun_norm if sun_norm > 1e-12 else np.array([1.0, 0.0, 0.0])
 
@@ -150,7 +149,7 @@ class HarrisPriester:
         r_u = rv / r_mag if r_mag > 1e-12 else np.array([1.0, 0.0, 0.0])
         cos_psi = np.dot(r_u, apex)
 
-        n_pow = 2 
+        n_pow = 2
         cos_term = np.abs(np.cos(np.arccos(np.clip(cos_psi, -1.0, 1.0)) / 2.0)) ** n_pow
 
         # Profile Lookup
@@ -195,7 +194,7 @@ class HarrisPriester:
 
         h1, rho_min1, rho_max1 = rho_table[idx]
         h2, rho_min2, rho_max2 = rho_table[idx + 1]
-        
+
         frac = (h_m - h1) / (h2 - h1)
         rho_min = np.exp(np.log(rho_min1) + frac * (np.log(rho_min2) - np.log(rho_min1)))
         rho_max = np.exp(np.log(rho_max1) + frac * (np.log(rho_max2) - np.log(rho_max1)))
@@ -267,7 +266,7 @@ class JB2008:
         SpaceWeather model for fetching real-time indices.
     """
 
-    def __init__(self, space_weather: Optional[Any] = None) -> None:
+    def __init__(self, space_weather: Any | None = None) -> None:
         """Initialize JB2008 with space weather source."""
         from gnc_toolkit.environment.space_weather import SpaceWeather
 
@@ -291,7 +290,7 @@ class JB2008:
         """
         rv = np.asarray(r_eci)
         _, _, h_m = eci2geodetic(rv, jd)
-        
+
         indices = self.sw.get_indices(jd)
         f10 = indices.get("f107", 150.0)
         f10_avg = indices.get("f107_avg", 150.0)

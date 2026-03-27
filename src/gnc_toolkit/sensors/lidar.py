@@ -28,7 +28,7 @@ class Lidar(Sensor):
         range_noise_std: float = 0.01,
         los_noise_std: float = 0.001,
         name: str = "Lidar",
-    ):
+    ) -> None:
         super().__init__(name)
         self.range_noise_std = range_noise_std
         self.los_noise_std = los_noise_std

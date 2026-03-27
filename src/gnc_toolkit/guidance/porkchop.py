@@ -2,22 +2,22 @@
 Porkchop plot grid generation for interplanetary transfers.
 """
 
+from collections.abc import Callable
+
 import numpy as np
 
 from ..guidance.rendezvous import solve_lambert
 
 
-from typing import Callable, Any, Dict, List, Union
-
 def generate_porkchop_grid(
-    departure_dates: Union[np.ndarray, List[float]],
-    arrival_dates: Union[np.ndarray, List[float]],
+    departure_dates: np.ndarray | list[float],
+    arrival_dates: np.ndarray | list[float],
     r_dep_func: Callable[[float], np.ndarray],
     v_dep_func: Callable[[float], np.ndarray],
     r_arr_func: Callable[[float], np.ndarray],
     v_arr_func: Callable[[float], np.ndarray],
     mu: float = 398600.4418,
-) -> Dict[str, Union[np.ndarray, List[float]]]:
+) -> dict[str, np.ndarray | list[float]]:
     """
     Generate a grid of C3 and V-infinity values for interplanetary transfers.
 

@@ -2,8 +2,10 @@
 Ensemble Kalman Filter (EnKF) using Monte Carlo samples for covariance representation.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
-from typing import Callable, Any
 
 
 class EnKF:
@@ -24,7 +26,7 @@ class EnKF:
         Number of ensemble members (N). Default is 50.
     """
 
-    def __init__(self, dim_x: int, dim_z: int, ensemble_size: int = 50):
+    def __init__(self, dim_x: int, dim_z: int, ensemble_size: int = 50) -> None:
         self.dim_x = dim_x
         self.dim_z = dim_z
         self.num_ensemble = ensemble_size

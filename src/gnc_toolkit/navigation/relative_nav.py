@@ -2,8 +2,8 @@
 EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.
 """
 
+
 import numpy as np
-from typing import Optional, Any
 
 from gnc_toolkit.kalman_filters.ekf import EKF
 
@@ -36,7 +36,7 @@ class RelativeNavigationEKF:
         q_mat: np.ndarray,
         r_mat: np.ndarray,
         mean_motion: float
-    ):
+    ) -> None:
         """Initialize Relative EKF."""
         self.ekf = EKF(dim_x=6, dim_z=3)
         self.ekf.x = np.asarray(x0, dtype=float)
@@ -56,10 +56,10 @@ class RelativeNavigationEKF:
         """
         phi = self._get_cw_transition_matrix(self.n, dt)
 
-        def fx(x: np.ndarray, dt_step: float, u: Optional[np.ndarray]) -> np.ndarray:
+        def fx(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
             return phi @ x
 
-        def f_jac(x: np.ndarray, dt_step: float, u: Optional[np.ndarray]) -> np.ndarray:
+        def f_jac(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
             return phi
 
         self.ekf.predict(fx, f_jac, dt)

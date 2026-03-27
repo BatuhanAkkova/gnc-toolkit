@@ -2,6 +2,7 @@
 Continuous thrust guidance laws including Q-law and ZEM/ZEV feedback.
 """
 
+
 import numpy as np
 from scipy.integrate import solve_bvp
 from scipy.optimize import minimize
@@ -9,15 +10,13 @@ from scipy.optimize import minimize
 from gnc_toolkit.utils.state_to_elements import eci2kepler
 
 
-from typing import Optional, Tuple, List, Union
-
 def q_law_guidance(
     r_eci: np.ndarray,
     v_eci: np.ndarray,
     target_oe: np.ndarray,
     mu: float,
     accel_max: float,
-    weights: Optional[np.ndarray] = None,
+    weights: np.ndarray | None = None,
 ) -> np.ndarray:
     r"""
     Lyapunov-based Q-law guidance for low-thrust orbit transfers.
@@ -66,7 +65,7 @@ def q_law_guidance(
     b_a = (2 * a**2 / h_mag) * np.array([e * np.sin(nu), p / r_mag, 0.0])
     b_e = (1 / h_mag) * np.array([p * np.sin(nu), (p + r_mag) * np.cos(nu) + r_mag * e, 0.0])
     b_i = (r_mag * np.cos(theta) / h_mag) * np.array([0.0, 0.0, 1.0])
-    
+
     if np.sin(i) == 0:
         b_raan = np.zeros(3)
     else:
@@ -108,7 +107,7 @@ def zem_zev_guidance(
     pos_target: np.ndarray,
     vel_target: np.ndarray,
     t_go: float,
-    gravity: Optional[np.ndarray] = None,
+    gravity: np.ndarray | None = None,
 ) -> np.ndarray:
     """
     Zero-Effort Miss (ZEM) and Zero-Effort Velocity (ZEV) feedback guidance.
@@ -191,7 +190,7 @@ def apollo_dps_guidance(
     pos_t: np.ndarray,
     vel_t: np.ndarray,
     accel_t: np.ndarray,
-    gravity: Optional[np.ndarray] = None,
+    gravity: np.ndarray | None = None,
 ) -> np.ndarray:
     """
     E-guidance (Apollo Descent Propulsion System style).
@@ -234,7 +233,7 @@ def apollo_dps_guidance(
 
 def indirect_optimal_guidance(
     r0: np.ndarray, v0: np.ndarray, rf: np.ndarray, vf: np.ndarray, tf: float, mu: float
-) -> Tuple[Optional[np.ndarray], Optional[np.ndarray]]:
+) -> tuple[np.ndarray | None, np.ndarray | None]:
     """
     Solve minimum-energy transfer using Pontryagin's Minimum Principle (PMP).
 
@@ -285,7 +284,7 @@ def indirect_optimal_guidance(
         l_v = state[9:12]
 
         r_mag = np.linalg.norm(pos, axis=0)
-        
+
         # State dynamics
         dr = vel
         # Optimal control u = -lambda_v for minimizing integral(u^2)
@@ -357,7 +356,7 @@ def direct_collocation_guidance(
     tf: float,
     mu: float,
     n_nodes: int = 20,
-) -> Optional[np.ndarray]:
+) -> np.ndarray | None:
     """
     Solve optimal transfer using Trapezoidal Direct Collocation.
 

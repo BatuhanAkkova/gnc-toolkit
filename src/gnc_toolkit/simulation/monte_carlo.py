@@ -1,5 +1,6 @@
 import multiprocessing as mp
-from typing import Any, Optional, Callable
+from collections.abc import Callable
+from typing import Any
 
 
 class MonteCarloSim:
@@ -16,7 +17,7 @@ class MonteCarloSim:
         Signature: `(seed, **kwargs) -> MissionSimulator`.
     """
 
-    def __init__(self, simulator_factory: Callable[..., Any]):
+    def __init__(self, simulator_factory: Callable[..., Any]) -> None:
         """Initialize the harness with a simulator factory."""
         self.simulator_factory = simulator_factory
         self.results: list[Any] = []
@@ -53,7 +54,7 @@ class MonteCarloSim:
     def run_parallel(
         self,
         num_runs: int,
-        processes: Optional[int] = None,
+        processes: int | None = None,
         **kwargs
     ) -> list[Any]:
         """
@@ -82,5 +83,5 @@ class MonteCarloSim:
 
         with mp.Pool(processes) as pool:
             self.results = pool.map(self._run_single, pool_kwargs)
-        
+
         return self.results

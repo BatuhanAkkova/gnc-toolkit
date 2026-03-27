@@ -2,9 +2,10 @@
 Interacting Multiple Model (IMM) Filter for switching-mode systems.
 """
 
-import numpy as np
 import inspect
 from typing import Any
+
+import numpy as np
 
 
 class IMM:
@@ -23,7 +24,7 @@ class IMM:
         Model transition probability matrix (N x N), where $T_{ij} = P(M_j | M_i)$.
     """
 
-    def __init__(self, filters: list[Any], transition_matrix: np.ndarray):
+    def __init__(self, filters: list[Any], transition_matrix: np.ndarray) -> None:
         self.filters = filters
         self.num_models = len(filters)
         self.transition_matrix = transition_matrix
@@ -85,7 +86,7 @@ class IMM:
 
             # Support both 'fx' and 'fx_func' keywords
             fx_func = kwargs.get("fx_func", kwargs.get("fx"))
-            
+
             sig = inspect.signature(self.filters[i].predict)
             if "fx_func" in sig.parameters and fx_func is not None:
                 self.filters[i].predict(dt=dt, fx_func=fx_func, **{k: v for k, v in kwargs.items() if k not in ["fx", "fx_func"]})
@@ -107,7 +108,7 @@ class IMM:
         """
         # Support both 'hx' and 'hx_func' keywords
         hx_func = kwargs.get("hx_func", kwargs.get("hx"))
-        
+
         likelihoods = np.zeros(self.num_models)
         for i in range(self.num_models):
             if "hx_func" in inspect.signature(self.filters[i].update).parameters and hx_func is not None:

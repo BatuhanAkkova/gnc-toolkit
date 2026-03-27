@@ -2,17 +2,16 @@
 QUEST algorithm for optimal attitude determination (Wahba's problem).
 """
 
+
 import numpy as np
 
 from gnc_toolkit.utils.quat_utils import quat_normalize
 
 
-from typing import Optional, Union
-
 def quest(
     body_vectors: np.ndarray,
     ref_vectors: np.ndarray,
-    weights: Optional[np.ndarray] = None,
+    weights: np.ndarray | None = None,
     tol: float = 1e-12,
     max_iter: int = 20,
 ) -> np.ndarray:
@@ -95,7 +94,7 @@ def quest(
             b_matrix[0, 0]*b_matrix[1, 1] - b_matrix[0, 1]*b_matrix[1, 0]
         ]
     ]).T  # Adjugate is the transpose of the cofactor matrix
-    
+
     adj_b_frob_sq = float(np.trace(adj_b @ adj_b.T))
     det_b = float(np.linalg.det(b_matrix))
 
@@ -105,7 +104,7 @@ def quest(
         # f(lam) and f'(lam) from Davenport characteristic equation
         f_val = (lam**2 - b_frob_sq)**2 - 8*lam*det_b - 4*adj_b_frob_sq
         fp_val = 4*lam*(lam**2 - b_frob_sq) - 8*det_b
-        
+
         delta = f_val / fp_val
         lam -= delta
         if abs(delta) < tol:

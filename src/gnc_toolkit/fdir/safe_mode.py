@@ -5,7 +5,7 @@ Safe mode and fault detection logic for system mode transitions.
 import time
 from collections.abc import Callable
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 
 class SystemMode(Enum):
@@ -29,7 +29,7 @@ class SafeModeCondition:
         Confirmation threshold (s). Default is 0.0 (immediate).
     """
 
-    def __init__(self, check_fn: Callable[[], bool], trigger_time_sec: float = 0.0):
+    def __init__(self, check_fn: Callable[[], bool], trigger_time_sec: float = 0.0) -> None:
         """Initialize trigger condition."""
         self.check_fn = check_fn
         self.trigger_time_sec = trigger_time_sec
@@ -50,7 +50,7 @@ class SafeModeCondition:
 
             elapsed = time.time() - self.violated_start_time
             return elapsed >= self.trigger_time_sec
-        
+
         self.violated_start_time = None
         return False
 
@@ -65,7 +65,7 @@ class SafeModeLogic:
         Starting mode. Default is NOMINAL.
     """
 
-    def __init__(self, initial_mode: SystemMode = SystemMode.NOMINAL):
+    def __init__(self, initial_mode: SystemMode = SystemMode.NOMINAL) -> None:
         """Initialize mode logic."""
         self.mode = initial_mode
         self.conditions: dict[str, SafeModeCondition] = {}

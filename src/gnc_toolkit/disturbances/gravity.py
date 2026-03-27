@@ -11,16 +11,11 @@ import numpy as np
 Gravitational acceleration models (Two-Body, J2, Harmonics) and Gradient Torques.
 """
 
-import csv
-import os
 
-import numpy as np
 
 from gnc_toolkit.utils.frame_conversion import ecef2eci, eci2ecef
 from gnc_toolkit.utils.quat_utils import quat_conj, quat_rot
 
-
-from typing import Optional, Union, Tuple, Dict
 
 class TwoBodyGravity:
     r"""
@@ -143,8 +138,8 @@ class HarmonicsGravity:
         re: float = 6378137.0,
         n_max: int = 20,
         m_max: int = 20,
-        file_path: Optional[str] = None
-    ):
+        file_path: str | None = None
+    ) -> None:
         """Load potential coefficients and initialize recursion workspace."""
         self.mu = mu
         self.re = re
@@ -257,11 +252,11 @@ class HarmonicsGravity:
 
         cos_phi = np.sqrt(max(0, 1 - sin_phi**2))
         safe_cos = max(1e-15, cos_phi)
-        
+
         term_r = du_dr * cos_phi
         term_lat = (du_dlat / r_mag) * (-sin_phi)
         term_lon = (du_dlon / (r_mag * safe_cos))
-        
+
         ax_ecef = (term_r + term_lat) * clon + term_lon * (-slon)
         ay_ecef = (term_r + term_lat) * slon + term_lon * clon
         az_ecef = du_dr * sin_phi + (du_dlat / r_mag) * cos_phi
@@ -336,7 +331,7 @@ class ThirdBodyGravity:
         Lunar gravitational parameter.
     """
 
-    def __init__(self, mu_sun: float = 1.32712440018e20, mu_moon: float = 4902.800066e9):
+    def __init__(self, mu_sun: float = 1.32712440018e20, mu_moon: float = 4902.800066e9) -> None:
         """Initialize planetary ephemeris models."""
         self.mu_sun = mu_sun
         self.mu_moon = mu_moon
@@ -387,7 +382,7 @@ class RelativisticCorrection:
         Angular momentum vector of the planet.
     """
 
-    def __init__(self, mu: float = 398600.4418e9, J_earth: Optional[np.ndarray] = None):
+    def __init__(self, mu: float = 398600.4418e9, J_earth: np.ndarray | None = None) -> None:
         """Initialize with physical constants."""
         self.mu = mu
         self.c = 299792458.0
@@ -438,7 +433,7 @@ class OceanTidesGravity:
         Reference radius.
     """
 
-    def __init__(self, mu: float = 398600.4418e9, re: float = 6378137.0):
+    def __init__(self, mu: float = 398600.4418e9, re: float = 6378137.0) -> None:
         """Initialize with IERS constituent coefficients."""
         self.mu = mu
         self.re = re
@@ -449,7 +444,7 @@ class OceanTidesGravity:
             "O1": {"n": 2, "m": 1, "C+": -0.177e-11, "S+": 0.055e-11},
         }
 
-    def _get_doodson_arguments(self, jd: float) -> Dict[str, float]:
+    def _get_doodson_arguments(self, jd: float) -> dict[str, float]:
         """Compute Doodson harmonic arguments for the given epoch."""
         from gnc_toolkit.utils.time_utils import calc_gmst
         T = (jd - 2451545.0) / 36525.0

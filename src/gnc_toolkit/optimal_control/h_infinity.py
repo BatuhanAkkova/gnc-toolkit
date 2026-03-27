@@ -41,7 +41,7 @@ class HInfinityController:
         Q: np.ndarray,
         R: np.ndarray,
         gamma: float,
-    ):
+    ) -> None:
         """Initialize the H-infinity controller parameters."""
         self.A = np.asarray(A)
         self.B1 = np.asarray(B1)
@@ -110,7 +110,7 @@ class HInfinityController:
             Current state vector (nx,).
 
         Returns
--------
+        -------
         np.ndarray
             Control input vector $u = -Kx$ (nu,).
         """

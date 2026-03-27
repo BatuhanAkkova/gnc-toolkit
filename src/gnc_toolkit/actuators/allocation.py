@@ -5,7 +5,6 @@ Control allocation algorithms mapping generalized forces to actuator commands.
 from abc import ABC, abstractmethod
 
 import numpy as np
-from typing import Any
 
 
 class ControlAllocator(ABC):
@@ -22,7 +21,7 @@ class ControlAllocator(ABC):
         n = number of actuators.
     """
 
-    def __init__(self, actuator_matrix: np.ndarray):
+    def __init__(self, actuator_matrix: np.ndarray) -> None:
         self.A = np.array(actuator_matrix)
         self.m, self.n = self.A.shape
 
@@ -57,7 +56,7 @@ class PseudoInverseAllocator(ControlAllocator):
         The (m x n) matrix mapping actuator outputs to forces/torques.
     """
 
-    def __init__(self, effectiveness_matrix: np.ndarray):
+    def __init__(self, effectiveness_matrix: np.ndarray) -> None:
         self.A = effectiveness_matrix
         # Precompute pseudo-inverse
         self.A_pinv = np.linalg.pinv(self.A)
@@ -96,7 +95,7 @@ class SingularRobustAllocator(ControlAllocator):
         Maximum regularization weight. Default is 0.01.
     """
 
-    def __init__(self, actuator_matrix: np.ndarray, epsilon: float = 0.01, lambda0: float = 0.01):
+    def __init__(self, actuator_matrix: np.ndarray, epsilon: float = 0.01, lambda0: float = 0.01) -> None:
         super().__init__(actuator_matrix)
         self.epsilon = epsilon
         self.lambda0 = lambda0
@@ -148,7 +147,7 @@ class NullMotionManager:
         The control effectiveness matrix.
     """
 
-    def __init__(self, actuator_matrix: np.ndarray):
+    def __init__(self, actuator_matrix: np.ndarray) -> None:
         self.A = np.array(actuator_matrix)
         self.m, self.n = self.A.shape
         self.I = np.eye(self.n)

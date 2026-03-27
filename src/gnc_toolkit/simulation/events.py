@@ -1,5 +1,5 @@
 import heapq
-from typing import Callable
+from collections.abc import Callable
 
 
 class Event:
@@ -7,7 +7,7 @@ class Event:
     A single discrete event to be processed at a specific time.
     """
 
-    def __init__(self, t: float, callback: Callable, *args, **kwargs):
+    def __init__(self, t: float, callback: Callable, *args, **kwargs) -> None:
         """
         Initialize a discrete event.
 
@@ -26,7 +26,7 @@ class Event:
     def __lt__(self, other):
         return self.t < other.t
 
-    def execute(self):
+    def execute(self) -> Any:
         """Executes the event callback."""
         return self.callback(*self.args, **self.kwargs)
 
@@ -37,10 +37,10 @@ class EventQueue:
     Handles maneuver scheduling and mode transitions.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._events: list[Event] = []
 
-    def schedule(self, t: float, callback: Callable, *args, **kwargs):
+    def schedule(self, t: float, callback: Callable, *args, **kwargs) -> None:
         """
         Schedule a new event.
 
@@ -63,7 +63,7 @@ class EventQueue:
             return float("inf")
         return self._events[0].t
 
-    def process_until(self, current_time: float):
+    def process_until(self, current_time: float) -> None:
         """
         Process all events scheduled up to the provided current_time.
 

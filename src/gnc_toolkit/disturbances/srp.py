@@ -58,7 +58,7 @@ class Canonball:
             Radiation pressure coefficient $[1, 2]$.
 
         Returns
--------
+        -------
         np.ndarray
             Acceleration vector ($m/s^2$).
         """

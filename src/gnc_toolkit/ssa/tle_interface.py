@@ -2,7 +2,6 @@
 TLE Catalog Interface and Utilities.
 """
 
-from typing import List, Dict, Union, Optional
 from ..propagators.sgp4_propagator import Sgp4Propagator
 
 
@@ -20,7 +19,7 @@ class TLEEntity:
         Second line of the TLE.
     """
 
-    def __init__(self, name: str, line1: str, line2: str):
+    def __init__(self, name: str, line1: str, line2: str) -> None:
         """Initialize TLE entity and parse metadata."""
         self.name = name.strip()
         self.line1 = line1.rstrip()
@@ -50,7 +49,7 @@ class TLECatalog:
     Catalog for managing and searching a collection of satellite TLEs.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize empty catalog."""
         self.satellites: list[TLEEntity] = []
         self._by_id: dict[str, TLEEntity] = {}
@@ -100,11 +99,11 @@ class TLECatalog:
             else:
                 i += 1
 
-    def get_by_norad_id(self, norad_id: Union[str, int]) -> Optional[TLEEntity]:
+    def get_by_norad_id(self, norad_id: str | int) -> TLEEntity | None:
         """Lookup satellite by catalog ID."""
         return self._by_id.get(str(norad_id).strip())
 
-    def get_by_name(self, name: str) -> Optional[TLEEntity]:
+    def get_by_name(self, name: str) -> TLEEntity | None:
         """Lookup satellite by name (case-insensitive)."""
         return self._by_name.get(name.strip().upper())
 

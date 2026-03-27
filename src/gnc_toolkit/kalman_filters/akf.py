@@ -24,7 +24,7 @@ class AKF(KF):
         Moving window size (N) for covariance estimation. Default is 20.
     """
 
-    def __init__(self, dim_x: int, dim_z: int, window_size: int = 20):
+    def __init__(self, dim_x: int, dim_z: int, window_size: int = 20) -> None:
         super().__init__(dim_x, dim_z)
         self.window_size = window_size
         self.innovations: list[np.ndarray] = []

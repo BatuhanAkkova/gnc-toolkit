@@ -2,8 +2,8 @@
 Standard Linear Kalman Filter (KF) implementation.
 """
 
+
 import numpy as np
-from typing import Optional
 
 
 class KF:
@@ -21,7 +21,7 @@ class KF:
         Dimension of the measurement vector $z$.
     """
 
-    def __init__(self, dim_x: int, dim_z: int):
+    def __init__(self, dim_x: int, dim_z: int) -> None:
         """Initialize filter dimensions and default matrices."""
         self.dim_x = dim_x
         self.dim_z = dim_z
@@ -32,7 +32,7 @@ class KF:
         self.H = np.zeros((dim_z, dim_x))
         self.Q = np.eye(dim_x)
         self.R = np.eye(dim_z)
-        self.B: Optional[np.ndarray] = None
+        self.B: np.ndarray | None = None
 
     def predict(
         self,

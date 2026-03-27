@@ -4,6 +4,7 @@ Solar position models based on Julian Date.
 
 import numpy as np
 
+
 class Sun:
     r"""
     Solar Position Model (Astronomical Almanac).

@@ -2,8 +2,8 @@
 Lander/Rover surface navigation EKF using landmark tracking.
 """
 
+
 import numpy as np
-from typing import Optional
 
 from gnc_toolkit.kalman_filters.ekf import EKF
 
@@ -28,7 +28,7 @@ class SurfaceNavigationEKF:
         Measurement noise covariance for relative landmark tracking ($3\times 3$).
     """
 
-    def __init__(self, x0: np.ndarray, p0: np.ndarray, q_mat: np.ndarray, r_mat: np.ndarray):
+    def __init__(self, x0: np.ndarray, p0: np.ndarray, q_mat: np.ndarray, r_mat: np.ndarray) -> None:
         """Initialize Surface EKF."""
         self.ekf = EKF(dim_x=6, dim_z=3)
         self.ekf.x = np.asarray(x0, dtype=float)
@@ -36,7 +36,7 @@ class SurfaceNavigationEKF:
         self.ekf.Q = np.asarray(q_mat, dtype=float)
         self.ekf.R = np.asarray(r_mat, dtype=float)
 
-    def predict(self, dt: float, accel: Optional[np.ndarray] = None) -> None:
+    def predict(self, dt: float, accel: np.ndarray | None = None) -> None:
         """
         Perform kinematic state prediction.
 
@@ -47,12 +47,12 @@ class SurfaceNavigationEKF:
         accel : np.ndarray, optional
             IMU acceleration or commanded thrust (m/s^2).
         """
-        def fx(x: np.ndarray, dt_step: float, u: Optional[np.ndarray]) -> np.ndarray:
+        def fx(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
             r, v = x[:3], x[3:]
             a = np.asarray(u) if u is not None else np.zeros(3)
             return np.concatenate([r + v*dt_step + 0.5*a*dt_step**2, v + a*dt_step])
 
-        def f_jac(x: np.ndarray, dt_step: float, u: Optional[np.ndarray]) -> np.ndarray:
+        def f_jac(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
             phi = np.eye(6)
             phi[:3, 3:] = np.eye(3) * dt_step
             return phi

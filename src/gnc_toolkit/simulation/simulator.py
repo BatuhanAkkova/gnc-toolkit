@@ -1,4 +1,5 @@
-from typing import Any, Optional, Union, Dict, List, Callable
+from collections.abc import Callable
+from typing import Any
 
 from .events import EventQueue
 from .logging import SimulationLogger
@@ -37,11 +38,11 @@ class MissionSimulator:
     def __init__(
         self,
         propagator: PropagatorFunc,
-        sensor_model: Optional[SensorFunc] = None,
-        estimator: Optional[EstimatorFunc] = None,
-        controller: Optional[ControllerFunc] = None,
-        logger: Optional[SimulationLogger] = None,
-    ):
+        sensor_model: SensorFunc | None = None,
+        estimator: EstimatorFunc | None = None,
+        controller: ControllerFunc | None = None,
+        logger: SimulationLogger | None = None,
+    ) -> None:
         """Initialize simulator core and event management."""
         self.propagator = propagator
         self.sensor_model = sensor_model
@@ -119,7 +120,7 @@ class MissionSimulator:
         # 6. Propagate Truth
         if self.propagator:
             self.state = self.propagator(self.time, self.state, dt, u)
-        
+
         self.time += dt
 
     def run(self, t_end: float, dt: float) -> Any:
@@ -140,5 +141,5 @@ class MissionSimulator:
         """
         while self.time <= t_end:
             self.step(dt)
-        
+
         return self.logger.history if self.logger else self.state

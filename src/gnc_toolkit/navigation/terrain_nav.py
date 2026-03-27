@@ -2,10 +2,9 @@
 Terrain-Relative Navigation (TRN) feature matching and localization update.
 """
 
+
 import numpy as np
 
-
-from typing import List, Tuple
 
 class FeatureMatchingTRN:
     """
@@ -20,15 +19,15 @@ class FeatureMatchingTRN:
         List of absolute landmark coordinates (m).
     """
 
-    def __init__(self, map_database: List[np.ndarray]):
+    def __init__(self, map_database: list[np.ndarray]) -> None:
         """Initialize TRN map."""
         self.map = np.stack([np.asarray(m) for m in map_database])
 
     def match_features(
         self,
-        observed_features: List[np.ndarray],
+        observed_features: list[np.ndarray],
         dist_threshold: float = 10.0
-    ) -> List[Tuple[np.ndarray, np.ndarray]]:
+    ) -> list[tuple[np.ndarray, np.ndarray]]:
         """
         Match observed features to the global map.
 
@@ -40,7 +39,7 @@ class FeatureMatchingTRN:
             Max distance for correlation (m). Default is 10.0.
 
         Returns
--------
+        -------
         List[Tuple[np.ndarray, np.ndarray]]
             Pairs of (Map Position, Observed Position).
         """
@@ -50,7 +49,7 @@ class FeatureMatchingTRN:
             # Vectorized distance check
             dists = np.linalg.norm(self.map - obs_v, axis=1)
             idx = np.argmin(dists)
-            
+
             if dists[idx] < dist_threshold:
                 matches.append((self.map[idx], obs_v))
         return matches
@@ -59,9 +58,9 @@ class FeatureMatchingTRN:
 def map_relative_localization_update(
     x_state: np.ndarray,
     p_cov: np.ndarray,
-    matches: List[Tuple[np.ndarray, np.ndarray]],
+    matches: list[tuple[np.ndarray, np.ndarray]],
     r_noise: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     r"""
     EKF Measurement Update using TRN feature matches.
 
@@ -80,7 +79,7 @@ def map_relative_localization_update(
         Sensor noise covariance ($3\times 3$).
 
     Returns
--------
+    -------
     updated_x : np.ndarray
         Updated state estimate.
     updated_p : np.ndarray
@@ -98,7 +97,7 @@ def map_relative_localization_update(
         h_mat[:, :3] = np.eye(3)
 
         resid = np.asarray(obs_pos) - h_mat @ x
-        
+
         # Kalman Gain K = P H^T (H P H^T + R)^-1
         s_mat = h_mat @ p @ h_mat.T + rv
         k_gain = p @ h_mat.T @ np.linalg.inv(s_mat)

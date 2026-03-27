@@ -116,7 +116,7 @@ class ManeuverSequence:
     Tracks a sequence of maneuvers and accurately budgets propellant consumption over time.
     """
 
-    def __init__(self, initial_mass: float, isp: float):
+    def __init__(self, initial_mass: float, isp: float) -> None:
         """
         Initialize the ManeuverSequence.
 
@@ -129,7 +129,7 @@ class ManeuverSequence:
         self.isp = isp
         self.maneuvers = []  # List of tuples (name, dv, m_prop_consumed, m_final, description)
 
-    def add_maneuver(self, name: str, dv: float, description: str = ""):
+    def add_maneuver(self, name: str, dv: float, description: str = "") -> None:
         """
         Adds a maneuver to the sequence and updates the current mass.
 

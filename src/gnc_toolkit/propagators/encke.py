@@ -2,8 +2,9 @@
 Encke's Method Propagator.
 """
 
+from collections.abc import Callable
+
 import numpy as np
-from typing import Callable
 
 from ..integrators.integrator import Integrator
 from ..integrators.rk4 import RK4
@@ -33,7 +34,7 @@ class EnckePropagator(Propagator):
         integrator: Integrator | None = None,
         mu: float = 398600.4418e9,
         rect_tol: float = 1e-6,
-    ):
+    ) -> None:
         self.integrator = integrator if integrator else RK4()
         self.mu = mu
         self.rect_tol = rect_tol

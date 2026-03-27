@@ -2,8 +2,8 @@
 Simplified Lunar Ephemeris Model for position calculation.
 """
 
-from typing import Any
 import numpy as np
+
 
 class Moon:
     """
@@ -63,7 +63,7 @@ class Moon:
             + 0.277 * np.sin(m_m - u_rad)
             + 0.173 * np.sin(u_rad - 2 * d_rad)
         )
-        
+
         # 5. Parallax (determines distance)
         hp = (
             0.9508

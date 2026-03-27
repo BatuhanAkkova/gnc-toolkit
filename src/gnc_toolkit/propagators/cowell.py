@@ -2,8 +2,9 @@
 Numerical Cowell Propagator.
 """
 
+from collections.abc import Callable
+
 import numpy as np
-from typing import Callable
 
 from ..integrators.integrator import Integrator
 from ..integrators.rk4 import RK4
@@ -24,7 +25,7 @@ class CowellPropagator(Propagator):
         Gravitational parameter (m^3/s^2). Default is Earth's.
     """
 
-    def __init__(self, integrator: Integrator | None = None, mu: float = 398600.4418e9):
+    def __init__(self, integrator: Integrator | None = None, mu: float = 398600.4418e9) -> None:
         self.integrator = integrator if integrator else RK4()
         self.mu = mu
 

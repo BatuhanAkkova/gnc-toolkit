@@ -2,15 +2,14 @@
 Fast Optimal Attitude Matrix (FOAM) algorithm for attitude determination.
 """
 
+
 import numpy as np
 
-
-from typing import Optional, Union
 
 def foam(
     body_vectors: np.ndarray,
     ref_vectors: np.ndarray,
-    weights: Optional[np.ndarray] = None,
+    weights: np.ndarray | None = None,
     tol: float = 1e-12,
     max_iter: int = 20,
 ) -> np.ndarray:
@@ -78,7 +77,7 @@ def foam(
     for _ in range(max_iter):
         f_val = (lam**2 - b_frob_sq)**2 - 8*lam*det_b - 4*adj_b_frob_sq
         fp_val = 4*lam*(lam**2 - b_frob_sq) - 8*det_b
-        
+
         delta = f_val / fp_val
         lam -= delta
         if abs(delta) < tol:

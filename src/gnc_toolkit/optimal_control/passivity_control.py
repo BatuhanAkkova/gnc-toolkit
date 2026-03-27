@@ -2,10 +2,10 @@
 Passivity-Based Controller for Euler-Lagrange mechanical systems.
 """
 
+from collections.abc import Callable
+
 import numpy as np
 
-
-from typing import Callable, Optional, Union
 
 class PassivityBasedController:
     r"""
@@ -36,9 +36,9 @@ class PassivityBasedController:
         M_func: Callable[[np.ndarray], np.ndarray],
         C_func: Callable[[np.ndarray, np.ndarray], np.ndarray],
         G_func: Callable[[np.ndarray], np.ndarray],
-        K_d: Union[float, np.ndarray],
-        Lambda: Union[float, np.ndarray],
-    ):
+        K_d: float | np.ndarray,
+        Lambda: float | np.ndarray,
+    ) -> None:
         """Initialize controller gains and model functions."""
         self.M = M_func
         self.C = C_func
@@ -52,7 +52,7 @@ class PassivityBasedController:
         q_dot: np.ndarray,
         q_d: np.ndarray,
         q_dot_d: np.ndarray,
-        q_ddot_d: Optional[np.ndarray] = None,
+        q_ddot_d: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Compute the passivity-based control torque output.
@@ -67,7 +67,7 @@ class PassivityBasedController:
             Desired feedforward acceleration (n,). Defaults to zero.
 
         Returns
--------
+        -------
         np.ndarray
             Control input vector $u$ (n,).
         """

@@ -2,8 +2,8 @@
 Linear Quadratic Gaussian (LQG) Controller.
 """
 
+
 import numpy as np
-from typing import Optional
 
 from .lqe import LQE
 from .lqr import LQR
@@ -54,7 +54,7 @@ class LQG:
         Q_lqe: np.ndarray,
         R_lqe: np.ndarray,
         G_lqe: np.ndarray | None = None,
-    ):
+    ) -> None:
         """Initialize the LQG controller and compute LQR/LQE gains."""
         self.A = np.asarray(A)
         self.B = np.asarray(B)

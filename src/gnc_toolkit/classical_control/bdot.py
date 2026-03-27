@@ -2,8 +2,8 @@
 B-Dot controller for spacecraft magnetic detumbling.
 """
 
+
 import numpy as np
-from typing import Union, List
 
 
 class BDot:
@@ -23,7 +23,7 @@ class BDot:
         """Initialize the B-Dot controller."""
         self.gain = gain
 
-    def calculate_control(self, b_dot: Union[np.ndarray, List[float]]) -> np.ndarray:
+    def calculate_control(self, b_dot: np.ndarray | list[float]) -> np.ndarray:
         r"""
         Calculate the required magnetic dipole moment from the B-field rate.
 
@@ -44,8 +44,8 @@ class BDot:
 
     def calculate_control_discrete(
         self,
-        b_field_curr: Union[np.ndarray, List[float]],
-        b_field_prev: Union[np.ndarray, List[float]],
+        b_field_curr: np.ndarray | list[float],
+        b_field_prev: np.ndarray | list[float],
         dt: float,
     ) -> np.ndarray:
         r"""

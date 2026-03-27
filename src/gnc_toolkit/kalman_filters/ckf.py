@@ -2,11 +2,12 @@
 Cubature Kalman Filter (CKF) using spherical-radial rule for non-linear estimation.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 from scipy.linalg import cholesky
 
-
-from typing import Callable, Any, Optional
 
 class CKF:
     """
@@ -24,7 +25,7 @@ class CKF:
         Dimension of the measurement vector $z$.
     """
 
-    def __init__(self, dim_x: int, dim_z: int):
+    def __init__(self, dim_x: int, dim_z: int) -> None:
         """Initialize CKF weights and unit cubature points."""
         self.dim_x = dim_x
         self.dim_z = dim_z
@@ -49,7 +50,7 @@ class CKF:
         self,
         dt: float,
         fx_func: Callable,
-        q_mat: Optional[np.ndarray] = None,
+        q_mat: np.ndarray | None = None,
         **kwargs: Any,
     ) -> None:
         r"""
@@ -90,7 +91,7 @@ class CKF:
         self,
         z: np.ndarray,
         hx_func: Callable,
-        r_mat: Optional[np.ndarray] = None,
+        r_mat: np.ndarray | None = None,
         **kwargs: Any,
     ) -> None:
         r"""

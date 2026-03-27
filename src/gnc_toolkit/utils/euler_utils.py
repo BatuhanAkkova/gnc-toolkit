@@ -135,7 +135,7 @@ def dcm_to_euler(dcm: np.ndarray, sequence: str) -> np.ndarray:
         raise ValueError("Sequence must be a string of length 3.")
 
     mat = np.asarray(dcm)
-    
+
     # 1. Symmetric Sequences (e.g., 3-1-3, 1-2-1)
     if sequence[0] == sequence[2]:
         i = int(sequence[0]) - 1

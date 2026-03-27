@@ -10,7 +10,7 @@ class SimulationLogger:
     (HDF5 support optionally using h5py if installed).
     """
 
-    def __init__(self, filename: str):
+    def __init__(self, filename: str) -> None:
         self.filename = filename
         self.history: list[dict[str, Any]] = []
 
@@ -21,7 +21,7 @@ class SimulationLogger:
         measurements: Any = None,
         estimates: Any = None,
         commands: Any = None,
-    ):
+    ) -> None:
         """
         Record a simulation step.
 
@@ -51,12 +51,12 @@ class SimulationLogger:
 
         self.history.append(entry)
 
-    def save_json(self):
+    def save_json(self) -> None:
         """Saves the logged history to a JSON file."""
         with open(self.filename + ".json", "w", encoding="utf-8") as f:
             json.dump(self.history, f, indent=4)
 
-    def save_csv(self):
+    def save_csv(self) -> None:
         """Saves the log's top-level keys to a CSV file."""
         if not self.history:
             return
@@ -70,7 +70,7 @@ class SimulationLogger:
             for row in self.history:
                 writer.writerow(row)
 
-    def save_hdf5(self):
+    def save_hdf5(self) -> None:
         """Saves the logged history to an HDF5 file (requires h5py)."""
         try:
             import h5py

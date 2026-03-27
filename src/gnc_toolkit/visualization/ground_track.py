@@ -1,12 +1,12 @@
+
 import numpy as np
-from typing import Union, Optional, List
 import plotly.graph_objects as go
 
 
 def plot_ground_track(
-    latitudes: Union[np.ndarray, List[float]],
-    longitudes: Union[np.ndarray, List[float]],
-    times: Optional[Union[np.ndarray, List[float]]] = None,
+    latitudes: np.ndarray | list[float],
+    longitudes: np.ndarray | list[float],
+    times: np.ndarray | list[float] | None = None,
     title: str = "Satellite Ground Track"
 ) -> go.Figure:
     """

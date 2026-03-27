@@ -2,7 +2,12 @@ import numpy as np
 import plotly.graph_objects as go
 
 
-def plot_coverage_heatmap(latitudes, longitudes, values, title="Coverage Heat Map"):
+def plot_coverage_heatmap(
+    latitudes: np.ndarray | list[float],
+    longitudes: np.ndarray | list[float],
+    values: np.ndarray | list[float],
+    title: str = "Coverage Heat Map"
+) -> go.Figure:
     """
     Plots a density/heatmap on an Earth map to analyze access/coverage.
 

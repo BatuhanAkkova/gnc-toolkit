@@ -2,10 +2,10 @@
 Feedback Linearization Controller for nonlinear systems.
 """
 
+from collections.abc import Callable
+
 import numpy as np
 
-
-from typing import Callable
 
 class FeedbackLinearization:
     r"""
@@ -32,7 +32,7 @@ class FeedbackLinearization:
         self,
         f_func: Callable[[np.ndarray], np.ndarray],
         g_func: Callable[[np.ndarray], np.ndarray],
-    ):
+    ) -> None:
         """Initialize the feedback linearization controller."""
         self.f_func = f_func
         self.g_func = g_func
@@ -49,7 +49,7 @@ class FeedbackLinearization:
             Desired linear acceleration/pseudo-control vector (nx,).
 
         Returns
--------
+        -------
         np.ndarray
             The required control input $u$ (nu,).
         """
@@ -62,6 +62,6 @@ class FeedbackLinearization:
         if g_val.size == 1:
             # Scalar case
             return (v_vec - f_val) / g_val
-        
+
         # Matrix case: Solve g(x)u = v - f(x)
         return np.linalg.solve(g_val, v_vec - f_val)

@@ -4,7 +4,6 @@ Conjunction Analysis and Probability of Collision (Pc) computation.
 
 import numpy as np
 from scipy.integrate import dblquad
-from scipy.linalg import det, inv
 
 
 def compute_pc_foster(
@@ -55,7 +54,7 @@ def compute_pc_foster(
 
     # Define Encounter Frame (Equinoctial/Collision Plane)
     z_hat = v_rel / v_mag
-    
+
     # x-hat is along the projected relative position (impact parameter)
     if np.linalg.norm(r_rel) > 1e-4:
         x_hat = r_rel - np.dot(r_rel, z_hat) * z_hat
@@ -164,7 +163,7 @@ def compute_pc_chan(
     # Principal components
     r_p = vecs.T @ r_enc[:2]
     sig_x, sig_y = np.sqrt(vals[0]), np.sqrt(vals[1])
-    
+
     u = (r_p[0]**2 / vals[0]) + (r_p[1]**2 / vals[1])
     v = hbr**2 / (sig_x * sig_y)
 
@@ -173,7 +172,7 @@ def compute_pc_chan(
     term_u = np.exp(-u / 2.0)
     term_v = np.exp(-v / 2.0)
     sum_v = term_v
-    
+
     for n in range(50):
         inc = term_u * (1.0 - sum_v)
         pc += inc

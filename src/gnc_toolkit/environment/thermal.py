@@ -38,7 +38,7 @@ class ThermalEnvironment:
             Sun-spacecraft distance (AU). Default 1.0.
 
         Returns
--------
+        -------
         float
             Solar flux ($W/m^2$).
         """
@@ -64,7 +64,7 @@ class ThermalEnvironment:
         """
         rs = np.asarray(r_sat)
         rn = np.asarray(r_sun)
-        
+
         r_sat_u = rs / np.linalg.norm(rs)
         r_sun_u = rn / np.linalg.norm(rn)
 

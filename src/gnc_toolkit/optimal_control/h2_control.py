@@ -2,11 +2,11 @@
 H2 Optimal Controller (LQG equivalent).
 """
 
-from .lqg import LQG
-
 
 import numpy as np
-from typing import Tuple, Optional
+
+from .lqg import LQG
+
 
 class H2Controller(LQG):
     """
@@ -46,12 +46,12 @@ class H2Controller(LQG):
         R_lqr: np.ndarray,
         Q_lqe: np.ndarray,
         R_lqe: np.ndarray,
-        G_lqe: Optional[np.ndarray] = None,
-    ):
+        G_lqe: np.ndarray | None = None,
+    ) -> None:
         """Initialize H2 controller as an LQG instance."""
         super().__init__(A, B, C, Q_lqr, R_lqr, Q_lqe, R_lqe, G_lqe)
 
-    def solve(self) -> Tuple[np.ndarray, np.ndarray]:
+    def solve(self) -> tuple[np.ndarray, np.ndarray]:
         """
         Solve LQR and LQE optimal gain design problems.
 

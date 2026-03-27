@@ -2,8 +2,10 @@
 Particle Filter (Sequential Importance Resampling) for non-Gaussian/non-linear systems.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
-from typing import Callable, Any
 
 
 class ParticleFilter:
@@ -23,7 +25,7 @@ class ParticleFilter:
         Number of particles (N). Default is 1000.
     """
 
-    def __init__(self, dim_x: int, dim_z: int, num_particles: int = 1000):
+    def __init__(self, dim_x: int, dim_z: int, num_particles: int = 1000) -> None:
         self.dim_x = dim_x
         self.dim_z = dim_z
         self.num_particles = num_particles

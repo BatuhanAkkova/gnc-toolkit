@@ -20,7 +20,7 @@ class KeplerPropagator(Propagator):
         Gravitational parameter ($m^3/s^2$).
     """
 
-    def __init__(self, mu: float = 398600.4418e9):
+    def __init__(self, mu: float = 398600.4418e9) -> None:
         self.mu = mu
 
     def propagate(

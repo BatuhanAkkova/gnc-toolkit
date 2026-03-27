@@ -2,8 +2,8 @@
 Quaternion kinematics and math utilities.
 """
 
+
 import numpy as np
-from typing import Optional, Union, Tuple
 
 
 def quat_normalize(q: np.ndarray) -> np.ndarray:
@@ -84,7 +84,7 @@ def quat_mult(q_left: np.ndarray, q_right: np.ndarray) -> np.ndarray:
     """
     ql = np.asarray(q_left)
     qr = np.asarray(q_right)
-    
+
     x1, y1, z1, w1 = ql
     x2, y2, z2, w2 = qr
 
@@ -138,10 +138,10 @@ def quat_rot(q: np.ndarray, v: np.ndarray) -> np.ndarray:
     """
     qv = np.asarray(q)
     vv = np.asarray(v)
-    
+
     v_ext = np.array([vv[0], vv[1], vv[2], 0.0])
     q_inv = quat_conj(qv)
-    
+
     res = quat_mult(quat_mult(qv, v_ext), q_inv)
     return res[0:3]
 
@@ -162,7 +162,7 @@ def quat_to_rmat(q: np.ndarray) -> np.ndarray:
     """
     qv = np.asarray(q)
     x, y, z, w = qv
-    
+
     return np.array([
         [1 - 2*y**2 - 2*z**2, 2*x*y - 2*z*w,     2*x*z + 2*y*w],
         [2*x*y + 2*z*w,     1 - 2*x**2 - 2*z**2, 2*y*z - 2*x*w],
@@ -170,7 +170,7 @@ def quat_to_rmat(q: np.ndarray) -> np.ndarray:
     ])
 
 
-def axis_angle_to_quat(axis: np.ndarray, angle: Optional[float] = None) -> np.ndarray:
+def axis_angle_to_quat(axis: np.ndarray, angle: float | None = None) -> np.ndarray:
     r"""
     Convert axis and angle (or a rotation vector) to a rotation quaternion.
 
@@ -188,7 +188,7 @@ def axis_angle_to_quat(axis: np.ndarray, angle: Optional[float] = None) -> np.nd
         Unit quaternion [x, y, z, w].
     """
     av = np.asarray(axis)
-    
+
     if angle is None:
         norm = np.linalg.norm(av)
         if norm < 1e-15:
@@ -201,10 +201,10 @@ def axis_angle_to_quat(axis: np.ndarray, angle: Optional[float] = None) -> np.nd
             return np.array([0.0, 0.0, 0.0, 1.0])
         u = av / norm
         theta = angle
-    
+
     s = np.sin(theta / 2.0)
     c = np.cos(theta / 2.0)
-    
+
     return np.array([u[0] * s, u[1] * s, u[2] * s, c])
 
 

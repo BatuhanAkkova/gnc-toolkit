@@ -34,7 +34,7 @@ class Camera(Sensor):
         sensor_size: tuple[float, float] = (1.0, 1.0),
         noise_std: float = 0.0,
         name: str = "Camera",
-    ):
+    ) -> None:
         super().__init__(name)
         self.focal_length = focal_length
         self.resolution = resolution

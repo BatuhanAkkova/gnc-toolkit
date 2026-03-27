@@ -2,7 +2,10 @@ import dash
 from dash import dcc, html
 
 
-def create_dashboard_app(figures, title="GNC Toolkit Mission Dashboard"):
+def create_dashboard_app(
+    figures: dict[str, go.Figure],
+    title: str = "GNC Toolkit Mission Dashboard"
+) -> dash.Dash:
     """
     Creates a Dash application to display multiple figures together.
 

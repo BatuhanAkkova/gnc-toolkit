@@ -29,7 +29,7 @@ def quat_to_mrp(q: np.ndarray) -> np.ndarray:
     if abs(den) < 1e-12:
         # Fallback to a very large but finite MRP or notify
         # In practice, we use shadow sets before this happens.
-        return np.array([x, y, z]) * 1e12 
+        return np.array([x, y, z]) * 1e12
     return np.array([x, y, z]) / den
 
 

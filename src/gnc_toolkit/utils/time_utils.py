@@ -49,15 +49,15 @@ def calc_jd(
     a_val = int(y_adj / 100)
     b_val = 2 - a_val + int(a_val / 4)
     jd_int = int(365.25 * (y_adj + 4716)) + int(30.6001 * (m_adj + 1)) + day + b_val - 1524.5
-    
+
     # 2. Compute fractional day part
     jd_frac = (hour * 3600.0 + minute * 60.0 + sec) / 86400.0
-    
+
     # Normalize
     rollover = np.floor(jd_frac)
     jd_int += rollover
     jd_frac -= rollover
-    
+
     return float(jd_int), float(jd_frac)
 
 
@@ -80,7 +80,7 @@ def jd_to_datetime(jd: float, jd_frac: float) -> tuple[int, int, int, int, int, 
     jd_total = float(jd) + float(jd_frac)
     z_val = int(jd_total + 0.5)
     f_val = jd_total + 0.5 - z_val
-    
+
     if z_val < 2299161:
         a_val = z_val
     else:
@@ -99,7 +99,7 @@ def jd_to_datetime(jd: float, jd_frac: float) -> tuple[int, int, int, int, int, 
     # Extract time from fractional day
     day_int = int(day)
     time_frac = (day - day_int) * 86400.0
-    
+
     hour = int(time_frac / 3600.0)
     minute = int((time_frac - hour * 3600.0) / 60.0)
     second = time_frac - hour * 3600.0 - minute * 60.0
@@ -125,19 +125,19 @@ def day_to_mdtime(year: int, doy_frac: float) -> tuple[int, int, int, int, float
     """
     is_leap = (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0))
     mon_days = [31, 29 if is_leap else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    
+
     doy = int(doy_frac)
     time_frac = (float(doy_frac) - doy) * 24.0
-    
+
     month = 0
     while doy > mon_days[month] and month < 11:
         doy -= mon_days[month]
         month += 1
-    
+
     hour = int(time_frac)
     minute = int((time_frac - hour) * 60.0)
     second = ((time_frac - hour) * 60.0 - minute) * 60.0
-    
+
     return month + 1, doy, hour, minute, second
 
 

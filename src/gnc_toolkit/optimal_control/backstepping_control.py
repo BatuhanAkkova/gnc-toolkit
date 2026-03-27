@@ -2,8 +2,9 @@
 Backstepping Controller for generic 2nd order nonlinear systems.
 """
 
+from collections.abc import Callable
+
 import numpy as np
-from typing import Optional, Any, Callable, Union
 
 
 class BacksteppingController:
@@ -33,9 +34,9 @@ class BacksteppingController:
         self,
         f_func: Callable[[np.ndarray, np.ndarray], np.ndarray],
         g_func: Callable[[np.ndarray, np.ndarray], np.ndarray],
-        k1: Union[float, np.ndarray],
-        k2: Union[float, np.ndarray],
-    ):
+        k1: float | np.ndarray,
+        k2: float | np.ndarray,
+    ) -> None:
         """Initialize the backstepping controller parameters."""
         self.f = f_func
         self.g = g_func
@@ -48,7 +49,7 @@ class BacksteppingController:
         x2: np.ndarray,
         x1_d: np.ndarray,
         x1_dot_d: np.ndarray,
-        x1_ddot_d: Optional[np.ndarray] = None,
+        x1_ddot_d: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Compute the backstepping control input for the current state.
@@ -67,7 +68,7 @@ class BacksteppingController:
             Desired acceleration (n,). Defaults to zero.
 
         Returns
--------
+        -------
         np.ndarray
             Control input vector $u$ (m,).
         """
@@ -110,6 +111,6 @@ class BacksteppingController:
 
         if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1, 1):
             return inner_term / g_val
-        
+
         # Use pseudoinverse for robust inversion
         return np.linalg.pinv(g_val) @ inner_term

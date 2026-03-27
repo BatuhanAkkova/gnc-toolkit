@@ -130,7 +130,7 @@ def eci2mee(
         MEE elements (p, f, g, h, k, L).
     """
     from .state_to_elements import eci2kepler
-    
+
     rv = np.asarray(r_eci)
     vv = np.asarray(v_eci)
 

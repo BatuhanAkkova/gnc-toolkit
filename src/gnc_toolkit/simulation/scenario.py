@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Union, Dict
+from typing import Any
 
 
 class ScenarioConfig:
@@ -16,10 +16,10 @@ class ScenarioConfig:
         Path to the configuration file.
     """
 
-    def __init__(self, filename: Union[str, Path]):
+    def __init__(self, filename: str | Path) -> None:
         """Initialize and automatically load configuration."""
         self.filename = Path(filename)
-        self.config: Dict[str, Any] = {}
+        self.config: dict[str, Any] = {}
         self.load()
 
     def load(self) -> None:
@@ -69,7 +69,7 @@ class ScenarioConfig:
             Fallback value if key is missing.
 
         Returns
--------
+        -------
         Any
             The requested parameter value.
         """

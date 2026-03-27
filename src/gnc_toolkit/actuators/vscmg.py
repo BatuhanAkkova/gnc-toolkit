@@ -38,7 +38,7 @@ class VariableSpeedCMG(ControlMomentGyro):
         name: str = "VSCMG",
         max_gimbal_rate: float | None = None,
         max_wheel_torque: float | None = None,
-    ):
+    ) -> None:
         super().__init__(
             wheel_momentum=0.0,
             gimbal_axis=gimbal_axis,

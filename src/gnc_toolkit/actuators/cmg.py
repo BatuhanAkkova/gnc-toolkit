@@ -35,7 +35,7 @@ class ControlMomentGyro(Actuator):
         spin_axis_init: np.ndarray,
         name: str = "CMG",
         max_gimbal_rate: float | None = None,
-    ):
+    ) -> None:
         super().__init__(name=name, saturation=max_gimbal_rate)
         self.h_mag = wheel_momentum
         self.g_axis = np.array(gimbal_axis) / np.linalg.norm(gimbal_axis)

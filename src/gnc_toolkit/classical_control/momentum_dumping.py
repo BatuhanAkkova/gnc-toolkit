@@ -2,10 +2,9 @@
 Reaction wheel momentum desaturation using magnetic torque (Cross-Product Law).
 """
 
+
 import numpy as np
 
-
-from typing import Optional, Union, List
 
 class CrossProductLaw:
     r"""
@@ -25,13 +24,13 @@ class CrossProductLaw:
         Maximum magnetic dipole moment allowed (saturation) [Am^2].
     """
 
-    def __init__(self, gain: float, max_dipole: Optional[float] = None):
+    def __init__(self, gain: float, max_dipole: float | None = None) -> None:
         """Initialize the momentum dumping controller."""
         self.gain = gain
         self.max_dipole = max_dipole
 
     def calculate_control(
-        self, h_error: Union[np.ndarray, List[float]], b_field: Union[np.ndarray, List[float]]
+        self, h_error: np.ndarray | list[float], b_field: np.ndarray | list[float]
     ) -> np.ndarray:
         """
         Calculate the required magnetic dipole moment.

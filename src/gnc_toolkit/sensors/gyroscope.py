@@ -23,7 +23,7 @@ class Gyroscope(Sensor):
         misalignment=None,
         scale_factor=1.0,
         name="Gyroscope",
-    ):
+    ) -> None:
         """
         Args:
             noise_std (float): Angle Random Walk (ARW) coefficient or white noise std dev [rad/s].
@@ -41,7 +41,7 @@ class Gyroscope(Sensor):
         self.misalignment = misalignment
         self.scale_factor = scale_factor
 
-    def measure(self, true_omega, **kwargs):
+    def measure(self, true_omega: np.ndarray, **kwargs) -> np.ndarray:
         """
         Args:
             true_omega (np.ndarray): True angular velocity [rad/s].

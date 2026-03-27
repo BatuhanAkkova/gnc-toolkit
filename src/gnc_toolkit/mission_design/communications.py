@@ -9,8 +9,8 @@ C = 299792458.0
 
 
 def calculate_friis_link_budget(
-    p_tx_w, g_tx_db, g_rx_db, frequency_hz, distance_m, losses_misc_db=0.0, l_atm_db=0.0
-):
+    p_tx_w: float, g_tx_db: float, g_rx_db: float, frequency_hz: float, distance_m: float, losses_misc_db: float = 0.0, l_atm_db: float = 0.0
+) -> dict[str, float]:
     """
     Calculates the link budget using Friis transmission equation.
 
@@ -51,7 +51,7 @@ def calculate_friis_link_budget(
     return {"p_rx_dbw": p_rx_dbw, "p_rx_w": p_rx_w, "l_fs_db": l_fs_db}
 
 
-def calculate_doppler_shift(f_tx_hz, r_ecef_rx, v_ecef_rx, r_ecef_tx, v_ecef_tx):
+def calculate_doppler_shift(f_tx_hz: float, r_ecef_rx: np.ndarray, v_ecef_rx: np.ndarray, r_ecef_tx: np.ndarray, v_ecef_tx: np.ndarray) -> dict[str, float]:
     """
     Calculates the Doppler shift for a signal sent from TX to RX.
 
@@ -95,7 +95,7 @@ def calculate_doppler_shift(f_tx_hz, r_ecef_rx, v_ecef_rx, r_ecef_tx, v_ecef_tx)
     return {"f_rx_hz": f_rx_hz, "doppler_shift_hz": doppler_shift_hz}
 
 
-def calculate_atmospheric_attenuation(elevation_deg, frequency_hz):
+def calculate_atmospheric_attenuation(elevation_deg: float, frequency_hz: float) -> float:
     """
     Calculates atmospheric attenuation using a simplified cosecant model.
 

@@ -42,7 +42,7 @@ def flexible_body_dynamics(
     eta_val = np.asarray(eta)
     edot_val = np.asarray(eta_dot)
     odot_val = np.asarray(omega_dot)
-    
+
     # Force/Torque coupling term: F_modal = Phi * omega_dot
     coupling = modal_influence @ odot_val
 

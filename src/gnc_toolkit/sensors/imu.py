@@ -2,8 +2,9 @@
 Inertial Measurement Unit (IMU) with Accelerometer and Gyroscope.
 """
 
+from typing import Any
+
 import numpy as np
-from typing import Any, Optional
 
 from gnc_toolkit.sensors.gyroscope import Gyroscope
 from gnc_toolkit.sensors.sensor import Sensor
@@ -96,7 +97,7 @@ class IMU(Sensor):
         gyro_params: dict | None = None,
         accel_params: dict | None = None,
         name: str = "IMU",
-    ):
+    ) -> None:
         super().__init__(name)
         gyro_p = gyro_params if gyro_params is not None else {}
         accel_p = accel_params if accel_params is not None else {}

@@ -3,7 +3,7 @@ Generic PID controller implementation with anti-windup logic.
 """
 
 
-from typing import Optional, Tuple
+
 
 class PID:
     r"""
@@ -31,9 +31,9 @@ class PID:
         kp: float,
         ki: float,
         kd: float,
-        output_limits: Optional[Tuple[float, float]] = None,
+        output_limits: tuple[float, float] | None = None,
         anti_windup_method: str = "clamping",
-    ):
+    ) -> None:
         """Initialize the PID controller instance."""
         self.kp = kp
         self.ki = ki

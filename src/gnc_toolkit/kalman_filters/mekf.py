@@ -2,8 +2,8 @@
 Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
 """
 
+
 import numpy as np
-from typing import Optional
 
 from gnc_toolkit.utils.quat_utils import (
     quat_conj,
@@ -31,9 +31,9 @@ class MEKF:
 
     def __init__(
         self,
-        q_init: Optional[np.ndarray] = None,
-        beta_init: Optional[np.ndarray] = None
-    ):
+        q_init: np.ndarray | None = None,
+        beta_init: np.ndarray | None = None
+    ) -> None:
         """Initialize reference state, error covariance, and noise matrices."""
         if q_init is None:
             self.q = np.array([0.0, 0.0, 0.0, 1.0])
@@ -53,7 +53,7 @@ class MEKF:
         # Internal state vector (7x1) [quat, bias]
         self.x = np.concatenate([self.q, self.beta])
 
-    def predict(self, omega_meas: np.ndarray, dt: float, q_mat: Optional[np.ndarray] = None) -> None:
+    def predict(self, omega_meas: np.ndarray, dt: float, q_mat: np.ndarray | None = None) -> None:
         """
         Predict the reference state and propagate error covariance.
 
@@ -77,7 +77,7 @@ class MEKF:
             axis = omega / wm
             angle = wm * dt
             dq = np.concatenate([axis * np.sin(angle / 2), [np.cos(angle / 2)]])
-            self.q = quat_mult(self.q, dq) 
+            self.q = quat_mult(self.q, dq)
 
         self.q = quat_normalize(self.q)
 
@@ -96,7 +96,7 @@ class MEKF:
         self,
         z_body: np.ndarray,
         z_ref: np.ndarray,
-        r_mat: Optional[np.ndarray] = None
+        r_mat: np.ndarray | None = None
     ) -> None:
         """
         Perform a vector measurement update.

@@ -2,8 +2,9 @@
 Linear and Nonlinear Model Predictive Control (MPC) solvers.
 """
 
+from collections.abc import Callable
+
 import numpy as np
-from typing import Optional, Any, Callable, Tuple, Dict, Union, List
 from scipy.optimize import minimize
 
 
@@ -44,12 +45,12 @@ class LinearMPC:
         Q: np.ndarray,
         R: np.ndarray,
         horizon: int,
-        P: Optional[np.ndarray] = None,
-        u_min: Optional[Union[float, np.ndarray]] = None,
-        u_max: Optional[Union[float, np.ndarray]] = None,
-        x_min: Optional[Union[float, np.ndarray]] = None,
-        x_max: Optional[Union[float, np.ndarray]] = None,
-    ):
+        P: np.ndarray | None = None,
+        u_min: float | np.ndarray | None = None,
+        u_max: float | np.ndarray | None = None,
+        x_min: float | np.ndarray | None = None,
+        x_max: float | np.ndarray | None = None,
+    ) -> None:
         """Initialize the Linear MPC solver."""
         self.A = np.asarray(A)
         self.B = np.asarray(B)
@@ -187,11 +188,11 @@ class NonlinearMPC:
         horizon: int,
         nx: int,
         nu: int,
-        u_min: Optional[Union[float, np.ndarray]] = None,
-        u_max: Optional[Union[float, np.ndarray]] = None,
-        x_min: Optional[Union[float, np.ndarray]] = None,
-        x_max: Optional[Union[float, np.ndarray]] = None,
-    ):
+        u_min: float | np.ndarray | None = None,
+        u_max: float | np.ndarray | None = None,
+        x_min: float | np.ndarray | None = None,
+        x_max: float | np.ndarray | None = None,
+    ) -> None:
         """Initialize the Nonlinear MPC solver."""
         self.f = dynamics_func
         self.L = cost_func

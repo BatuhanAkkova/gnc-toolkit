@@ -2,11 +2,10 @@
 Sliding Mode Controller (SMC) implementation.
 """
 
+from collections.abc import Callable
+
 import numpy as np
-from typing import Callable, Any, Optional
 
-
-from typing import Callable, Union, Optional
 
 class SlidingModeController:
     r"""
@@ -33,10 +32,10 @@ class SlidingModeController:
         self,
         surface_func: Callable[[np.ndarray, float], float],
         k_gain: float,
-        equivalent_control_func: Optional[Callable[[np.ndarray, float], float]] = None,
+        equivalent_control_func: Callable[[np.ndarray, float], float] | None = None,
         chattering_reduction: bool = True,
         boundary_layer: float = 0.1,
-    ):
+    ) -> None:
         """Initialize the Sliding Mode Controller."""
         self.surface_func = surface_func
         self.k_gain = k_gain
@@ -44,7 +43,7 @@ class SlidingModeController:
         self.use_sat = chattering_reduction
         self.phi = boundary_layer
 
-    def compute_control(self, x: np.ndarray, t: float = 0.0) -> Union[float, np.ndarray]:
+    def compute_control(self, x: np.ndarray, t: float = 0.0) -> float | np.ndarray:
         """
         Compute the sliding mode control input.
 
@@ -56,7 +55,7 @@ class SlidingModeController:
             Current time (s). Default is 0.0.
 
         Returns
--------
+        -------
         float or np.ndarray
             The computed control input signal.
         """

@@ -23,7 +23,7 @@ class Altimeter(Sensor):
         Sensor name. Default is "Altimeter".
     """
 
-    def __init__(self, noise_std: float = 1.0, bias: float = 0.0, name: str = "Altimeter"):
+    def __init__(self, noise_std: float = 1.0, bias: float = 0.0, name: str = "Altimeter") -> None:
         super().__init__(name)
         self.noise_std = noise_std
         self.bias = bias

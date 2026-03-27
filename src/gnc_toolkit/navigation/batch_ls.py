@@ -2,12 +2,11 @@
 Differential Correction using Batch Least Squares for Orbit Determination.
 """
 
+
 import numpy as np
 
 from gnc_toolkit.disturbances.gravity import TwoBodyGravity
 
-
-from typing import Optional, Union
 
 class BatchLeastSquaresOD:
     r"""
@@ -25,7 +24,7 @@ class BatchLeastSquaresOD:
         Gravitational parameter ($m^3/s^2$). Default is Earth.
     """
 
-    def __init__(self, x_guess: np.ndarray, mu: float = 398600.4415e9):
+    def __init__(self, x_guess: np.ndarray, mu: float = 398600.4415e9) -> None:
         """Initialize Batch LS solver."""
         self.x = np.asarray(x_guess, dtype=float)
         self.mu = mu

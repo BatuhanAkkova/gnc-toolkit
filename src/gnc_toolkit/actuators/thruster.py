@@ -129,7 +129,7 @@ class ChemicalThruster(Thruster):
         isp: float = 300.0,
         min_on_time: float = 0.010,
         name: str = "ChemThruster",
-    ):
+    ) -> None:
         """
         Initialize chemical thruster.
 
@@ -203,7 +203,7 @@ class ElectricThruster(Thruster):
         isp: float = 1500.0,
         power_efficiency: float = 0.6,
         name: str = "ElecThruster",
-    ):
+    ) -> None:
         """
         Initialize electric thruster.
 
@@ -262,7 +262,7 @@ class ThrusterCluster:
         (N, 3) thrust unit vectors in body frame.
     """
 
-    def __init__(self, thrusters: list[Thruster], positions: np.ndarray, directions: np.ndarray):
+    def __init__(self, thrusters: list[Thruster], positions: np.ndarray, directions: np.ndarray) -> None:
         self.thrusters = thrusters
         self.N = len(thrusters)
         self.pos = np.array(positions)

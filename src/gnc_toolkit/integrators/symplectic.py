@@ -15,7 +15,7 @@ class SymplecticIntegrator(Integrator):
     Specifically for systems where a depends only on r (a = f(r)).
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Yoshida 4th Order Coefficients
         two_to_third = 2 ** (1 / 3)
         denom = 2 - two_to_third
@@ -32,7 +32,7 @@ class SymplecticIntegrator(Integrator):
         self.d2 = self.w0
         self.d4 = 0.0
 
-    def integrate(self, f, t_span, y0, dt=10.0, **kwargs):
+    def integrate(self, f: Callable, t_span: tuple[float, float], y0: np.ndarray, dt: float = 10.0, **kwargs: Any) -> tuple[np.ndarray, np.ndarray]:
         """
         Integrate over time span.
         Note: Symplectic methods work BEST for TIME-INVARIANT potentials (a = f(r)).
@@ -84,7 +84,7 @@ class SymplecticIntegrator(Integrator):
 
         return np.array(t_values), np.array(y_values)
 
-    def step(self, f, t, y, dt, **kwargs):
+    def step(self, f: Callable, t: float, y: np.ndarray, dt: float, **kwargs: Any) -> tuple[np.ndarray, float, float]:
         """
         Single step wrapper.
         """

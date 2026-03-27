@@ -2,10 +2,10 @@
 Lumped atmospheric drag model for spacecraft acceleration.
 """
 
+from typing import Any
+
 import numpy as np
 
-
-from typing import Any
 
 class LumpedDrag:
     r"""
@@ -22,7 +22,7 @@ class LumpedDrag:
         Atmospheric co-rotation with planet. Default True.
     """
 
-    def __init__(self, density_model: Any, co_rotate: bool = True):
+    def __init__(self, density_model: Any, co_rotate: bool = True) -> None:
         """Initialize drag model with density source."""
         self.density_model = density_model
         self.co_rotate = co_rotate
@@ -64,7 +64,7 @@ class LumpedDrag:
         """
         r_val = np.asarray(r_eci)
         v_val = np.asarray(v_eci)
-        
+
         rho = self.density_model.get_density(r_val, jd)
 
         if self.co_rotate:

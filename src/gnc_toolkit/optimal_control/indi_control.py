@@ -1,7 +1,7 @@
+from collections.abc import Callable
+
 import numpy as np
 
-
-from typing import Callable, Optional, Union
 
 class INDIController:
     r"""
@@ -22,7 +22,7 @@ class INDIController:
         Nonlinear input matrix function $g(x, \dot{x})$.
     """
 
-    def __init__(self, g_func: Callable[[np.ndarray, np.ndarray], np.ndarray]):
+    def __init__(self, g_func: Callable[[np.ndarray, np.ndarray], np.ndarray]) -> None:
         """Initialize INDI controller with input matrix function."""
         self.g = g_func
 
@@ -51,7 +51,7 @@ class INDIController:
             Current velocity vector (nx,).
 
         Returns
--------
+        -------
         np.ndarray
             Optimal control input $u$ (nu,).
         """
@@ -87,7 +87,7 @@ class INDIOuterLoopPD:
         Derivative gain matrix or scalar.
     """
 
-    def __init__(self, Kp: Union[float, np.ndarray], Kd: Union[float, np.ndarray]):
+    def __init__(self, Kp: float | np.ndarray, Kd: float | np.ndarray) -> None:
         """Initialize outer-loop tracking gains."""
         self.Kp = Kp
         self.Kd = Kd
@@ -98,7 +98,7 @@ class INDIOuterLoopPD:
         x_dot: np.ndarray,
         x_d: np.ndarray,
         x_dot_d: np.ndarray,
-        x_ddot_d: Optional[np.ndarray] = None,
+        x_ddot_d: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Compute desired acceleration pseudo-control $v$.
@@ -113,7 +113,7 @@ class INDIOuterLoopPD:
             Desired feedforward acceleration. Defaults to zero.
 
         Returns
--------
+        -------
         np.ndarray
             Acceleration command $v$.
         """

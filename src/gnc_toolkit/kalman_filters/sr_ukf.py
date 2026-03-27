@@ -2,8 +2,10 @@
 Square-Root Unscented Kalman Filter (SR-UKF) algorithm.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
-from typing import Callable, Any, Optional
 from scipy.linalg import cholesky, qr, solve_triangular
 
 
@@ -35,7 +37,7 @@ class SRUKF:
         alpha: float = 1e-3,
         beta: float = 2.0,
         kappa: float = 0.0,
-    ):
+    ) -> None:
         self.dim_x = dim_x
         self.dim_z = dim_z
 

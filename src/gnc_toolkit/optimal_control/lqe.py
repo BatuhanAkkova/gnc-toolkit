@@ -49,7 +49,7 @@ class LQE:
         C: np.ndarray,
         Q: np.ndarray,
         R: np.ndarray,
-    ):
+    ) -> None:
         """Initialize the LQE parameters."""
         self.A = np.asarray(A)
         self.G = np.asarray(G)
@@ -87,7 +87,7 @@ class LQE:
         $L = P C^T R^{-1}$
 
         Returns
--------
+        -------
         np.ndarray
             Observer gain matrix L (nx x ny).
         """

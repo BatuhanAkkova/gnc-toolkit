@@ -2,8 +2,8 @@
 GNSS Receiver sensor model.
 """
 
+
 import numpy as np
-from typing import Optional, Tuple
 
 from gnc_toolkit.sensors.sensor import Sensor
 
@@ -29,14 +29,14 @@ class GNSSReceiver(Sensor):
     """
 
     def __init__(
-        self, 
-        pos_noise_std: float = 10.0, 
-        vel_noise_std: float = 0.1, 
+        self,
+        pos_noise_std: float = 10.0,
+        vel_noise_std: float = 0.1,
         name: str = "GNSS",
-        pos_bias: Optional[np.ndarray] = None,
-        vel_bias: Optional[np.ndarray] = None,
+        pos_bias: np.ndarray | None = None,
+        vel_bias: np.ndarray | None = None,
         **kwargs
-    ):
+    ) -> None:
         super().__init__(name)
         self.pos_noise_std = pos_noise_std
         self.vel_noise_std = vel_noise_std
@@ -45,7 +45,7 @@ class GNSSReceiver(Sensor):
 
     def measure(
         self, true_pos: np.ndarray, true_vel: np.ndarray, **kwargs
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Generate GNSS position and velocity measurements.
 

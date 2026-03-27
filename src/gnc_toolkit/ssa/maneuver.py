@@ -2,7 +2,7 @@
 Debris Avoidance Maneuver Planning.
 """
 
-from typing import Tuple
+
 import numpy as np
 
 
@@ -13,7 +13,7 @@ def plan_avoidance_maneuver(
     v_debris: np.ndarray,
     safety_radius: float,
     t_encounter: float,
-) -> Tuple[np.ndarray, float]:
+) -> tuple[np.ndarray, float]:
     """
     Plan an impulsive Debris Avoidance Maneuver (DAM).
 
@@ -39,7 +39,7 @@ def plan_avoidance_maneuver(
     """
     rs, vs = np.asarray(r_sat), np.asarray(v_sat)
     rd, vd = np.asarray(r_debris), np.asarray(v_debris)
-    
+
     v_mag = np.linalg.norm(vs)
     if v_mag < 1e-6:
         raise ValueError("Velocity is too small.")
@@ -56,7 +56,7 @@ def plan_avoidance_maneuver(
 
     # Phasing approximation: d_r_track ~ 3 * dt * dv_t
     d_req = safety_radius - d_curr
-    
+
     if t_encounter < 10.0:
         # Radial/Direct avoidance (Heuristic)
         dv_mag = d_req / t_encounter

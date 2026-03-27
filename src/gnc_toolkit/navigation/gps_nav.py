@@ -2,8 +2,8 @@
 Navigation using GNSS (GPS) position and velocity measurements.
 """
 
+
 import numpy as np
-from typing import Optional
 
 from .orbit_determination import OrbitDeterminationEKF
 
@@ -20,8 +20,8 @@ class GPSNavigation(OrbitDeterminationEKF):
     def update_gps(
         self,
         r_meas: np.ndarray,
-        v_meas: Optional[np.ndarray] = None,
-        gps_cov: Optional[np.ndarray] = None,
+        v_meas: np.ndarray | None = None,
+        gps_cov: np.ndarray | None = None,
         **kwargs
     ) -> None:
         r"""
@@ -39,7 +39,7 @@ class GPSNavigation(OrbitDeterminationEKF):
             Additional parameters (e.g., R_gps).
         """
         rv = np.asarray(r_meas)
-        
+
         # Handle custom R passed via kwargs or gps_cov
         r_custom = gps_cov if gps_cov is not None else kwargs.get("R_gps")
 

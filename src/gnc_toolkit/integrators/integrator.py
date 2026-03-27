@@ -3,11 +3,11 @@ Abstract base class for numerical integrators.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 
-
-from typing import Callable, Any, Optional
 
 class Integrator(ABC):
     r"""

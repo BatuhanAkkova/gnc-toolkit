@@ -2,8 +2,11 @@
 Fixed-step Runge-Kutta 4th order integrator.
 """
 
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
-from typing import Callable, Any
+
 from .integrator import Integrator
 
 
@@ -51,7 +54,7 @@ class RK4(Integrator):
             (y_next, t_next, dt).
         """
         y_val = np.asarray(y)
-        
+
         k1 = np.asarray(f(t, y_val, **kwargs))
         k2 = np.asarray(f(t + 0.5 * dt, y_val + 0.5 * dt * k1, **kwargs))
         k3 = np.asarray(f(t + 0.5 * dt, y_val + 0.5 * dt * k2, **kwargs))

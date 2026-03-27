@@ -94,7 +94,7 @@ def fuel_slosh_torque(
     # Relative unit vectors for pendulum bob
     e_r = np.array([np.sin(theta), 0, -np.cos(theta)])
     e_theta = np.array([np.cos(theta), 0, np.sin(theta)])
-    
+
     # Bob relative acceleration: a_rel = L*theta_ddot*e_theta - L*theta_dot^2*e_r
     a_rel = L * theta_ddot * e_theta - L * (theta_dot**2) * e_r
 

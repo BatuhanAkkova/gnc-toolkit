@@ -2,8 +2,9 @@
 Extended Kalman Filter for Orbit Determination (OD-EKF).
 """
 
+from typing import Any
+
 import numpy as np
-from typing import Optional, Union, Any, Callable
 
 from gnc_toolkit.disturbances.gravity import J2Gravity, TwoBodyGravity
 from gnc_toolkit.kalman_filters.ekf import EKF
@@ -84,7 +85,7 @@ class OrbitDeterminationEKF:
         self,
         x: np.ndarray,
         dt: float,
-        u: Optional[np.ndarray] = None,
+        u: np.ndarray | None = None,
         **kwargs
     ) -> np.ndarray:
         r"""
@@ -121,7 +122,7 @@ class OrbitDeterminationEKF:
         self,
         x: np.ndarray,
         dt: float,
-        u: Optional[np.ndarray] = None,
+        u: np.ndarray | None = None,
         **kwargs: Any
     ) -> np.ndarray:
         r"""

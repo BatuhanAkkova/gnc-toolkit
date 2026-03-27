@@ -23,7 +23,7 @@ class Sgp4Propagator(Propagator):
         Second line of the TLE.
     """
 
-    def __init__(self, line1: str, line2: str):
+    def __init__(self, line1: str, line2: str) -> None:
         self.sat = Satrec.twoline2rv(line1, line2)
         # TLE Epoch Julian Date
         self.jdsatepoch = self.sat.jdsatepoch

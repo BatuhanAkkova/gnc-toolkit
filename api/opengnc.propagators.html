@@ -244,6 +244,67 @@ v_f : Final velocity vector (m/s).</p>
 </dd></dl>
 
 </section>
+<section id="module-opengnc.propagators.gve">
+<span id="opengnc-propagators-gve-module"></span><h2>opengnc.propagators.gve module<a class="headerlink" href="#module-opengnc.propagators.gve" title="Link to this heading"></a></h2>
+<p>Gauss-Variational Equations (GVE) Propagator.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.propagators.gve.GVEPropagator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.propagators.gve.</span></span><span class="sig-name descname"><span class="pre">GVEPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/propagators/gve.html#GVEPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.propagators.gve.GVEPropagator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#opengnc.propagators.base.Propagator" title="opengnc.propagators.base.Propagator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Propagator</span></code></a></p>
+<p>Propagator based on Gauss-Variational Equations.</p>
+<p>Suitable for analyzing the effects of small perturbations on
+Keplerian elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter (m^3/s^2).</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.propagators.gve.GVEPropagator.gve_derivatives">
+<span class="sig-name descname"><span class="pre">gve_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/propagators/gve.html#GVEPropagator.gve_derivatives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.propagators.gve.GVEPropagator.gve_derivatives" title="Link to this definition"></a></dt>
+<dd><p>Calculate GVE state derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
+<li><p><strong>state</strong> (<em>np.ndarray</em>) – $[a, e, i, Omega, omega,  heta]$.</p></li>
+<li><p><strong>perturbation_func</strong> (<em>Callable</em>) – RIC acceleration function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>$[da, de, di, dOmega, domega, d   heta]$.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.propagators.gve.GVEPropagator.propagate">
+<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/propagators/gve.html#GVEPropagator.propagate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.propagators.gve.GVEPropagator.propagate" title="Link to this definition"></a></dt>
+<dd><p>Propagate orbital elements one step using RK4 on GVE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Initial time (s).</p></li>
+<li><p><strong>state0</strong> (<em>np.ndarray</em>) – Initial Keplerian elements $[a, e, i, Omega, omega,       heta]$.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Time step (s).</p></li>
+<li><p><strong>perturbation_func</strong> (<em>Callable</em>) – Function returning acceleration vector $[a_r, a_s, a_w]$ in RIC frame.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New orbital elements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-opengnc.propagators.kepler">
 <span id="opengnc-propagators-kepler-module"></span><h2>opengnc.propagators.kepler module<a class="headerlink" href="#module-opengnc.propagators.kepler" title="Link to this heading"></a></h2>
 <p>Analytical Two-Body Propagator using Kepler’s Equation.</p>

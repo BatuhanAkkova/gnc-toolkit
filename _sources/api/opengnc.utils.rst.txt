@@ -12,10 +12,26 @@ opengnc.utils.cayley\_klein\_utils module
    :show-inheritance:
    :undoc-members:
 
+opengnc.utils.covariance module
+-------------------------------
+
+.. automodule:: opengnc.utils.covariance
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 opengnc.utils.crp\_utils module
 -------------------------------
 
 .. automodule:: opengnc.utils.crp_utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+opengnc.utils.ephemeris module
+------------------------------
+
+.. automodule:: opengnc.utils.ephemeris
    :members:
    :show-inheritance:
    :undoc-members:

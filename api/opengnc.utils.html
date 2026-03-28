@@ -182,6 +182,74 @@ $beta = y + i x$</p>
 </dd></dl>
 
 </section>
+<section id="module-opengnc.utils.covariance">
+<span id="opengnc-utils-covariance-module"></span><h2>opengnc.utils.covariance module<a class="headerlink" href="#module-opengnc.utils.covariance" title="Link to this heading"></a></h2>
+<p>Covariance transformation and reachability analysis tools.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.utils.covariance.CovarianceTransform">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.utils.covariance.</span></span><span class="sig-name descname"><span class="pre">CovarianceTransform</span></span><a class="reference internal" href="../_modules/opengnc/utils/covariance.html#CovarianceTransform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.covariance.CovarianceTransform" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tools for transforming state covariances between various frames.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.utils.covariance.CovarianceTransform.eci_to_ric">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">eci_to_ric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/utils/covariance.html#CovarianceTransform.eci_to_ric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.covariance.CovarianceTransform.eci_to_ric" title="Link to this definition"></a></dt>
+<dd><p>Transform covariance from ECI to RIC (Radial, In-Track, Cross-Track).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position (m).</p></li>
+<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – Velocity (m/s).</p></li>
+<li><p><strong>P_eci</strong> (<em>np.ndarray</em>) – $6  imes 6$ Covariance matrix in ECI.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>$6  imes 6$ Covariance matrix in RIC.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.utils.covariance.CovarianceTransform.ric_to_eci">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ric_to_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P_ric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/utils/covariance.html#CovarianceTransform.ric_to_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.covariance.CovarianceTransform.ric_to_eci" title="Link to this definition"></a></dt>
+<dd><p>Transform covariance from RIC back to ECI.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.utils.covariance.ReachabilityAnalysis">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.utils.covariance.</span></span><span class="sig-name descname"><span class="pre">ReachabilityAnalysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">398600441800000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/utils/covariance.html#ReachabilityAnalysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.covariance.ReachabilityAnalysis" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Orbital maneuver reachability analysis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.utils.covariance.ReachabilityAnalysis.get_reachable_delta_elements">
+<span class="sig-name descname"><span class="pre">get_reachable_delta_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dv_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/utils/covariance.html#ReachabilityAnalysis.get_reachable_delta_elements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.covariance.ReachabilityAnalysis.get_reachable_delta_elements" title="Link to this definition"></a></dt>
+<dd><p>Calculate maximum possible changes in orbital elements for a total delta-V.</p>
+<p>Based on impulsive GVE approximations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – Current semi-major axis, eccentricity, inclination.</p></li>
+<li><p><strong>e</strong> (<em>float</em>) – Current semi-major axis, eccentricity, inclination.</p></li>
+<li><p><strong>i</strong> (<em>float</em>) – Current semi-major axis, eccentricity, inclination.</p></li>
+<li><p><strong>dv_total</strong> (<em>float</em>) – Total $Delta V$ budget (m/s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Max theoretical $Delta a, Delta e, Delta i$.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-opengnc.utils.crp_utils">
 <span id="opengnc-utils-crp-utils-module"></span><h2>opengnc.utils.crp_utils module<a class="headerlink" href="#module-opengnc.utils.crp_utils" title="Link to this heading"></a></h2>
 <p>Classical Rodrigues Parameters (CRP) kinematics and composition.</p>
@@ -263,6 +331,63 @@ Singular for 180-degree rotations ($q_w = 0$).</p>
 <dd class="field-even"><p><strong>ValueError</strong> – If the rotation is 180 degrees.</p>
 </dd>
 </dl>
+</dd></dl>
+
+</section>
+<section id="module-opengnc.utils.ephemeris">
+<span id="opengnc-utils-ephemeris-module"></span><h2>opengnc.utils.ephemeris module<a class="headerlink" href="#module-opengnc.utils.ephemeris" title="Link to this heading"></a></h2>
+<p>JPL Ephemeris integration using jplephem.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.utils.ephemeris.JPLEphemeris">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.utils.ephemeris.</span></span><span class="sig-name descname"><span class="pre">JPLEphemeris</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spk_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/utils/ephemeris.html#JPLEphemeris"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.ephemeris.JPLEphemeris" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Handler for JPL SPK (Space Property Kernel) files.</p>
+<p>Provides high-precision position and velocity for planets, Sun, and Moon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spk_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the .bsp SPK file (e.g., de421.bsp).</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.utils.ephemeris.JPLEphemeris.get_position">
+<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/utils/ephemeris.html#JPLEphemeris.get_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.ephemeris.JPLEphemeris.get_position" title="Link to this definition"></a></dt>
+<dd><p>Get body position in km (usually relative to solar system barycenter).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body_id</strong> (<em>int</em>) – JPL Body ID (e.g., 399 for Earth, 301 for Moon, 10 for Sun).</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Position vector [x, y, z] in meters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.utils.ephemeris.JPLEphemeris.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/utils/ephemeris.html#JPLEphemeris.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.ephemeris.JPLEphemeris.get_state" title="Link to this definition"></a></dt>
+<dd><p>Get body position and velocity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body_id</strong> (<em>int</em>) – JPL Body ID.</p></li>
+<li><p><strong>jd</strong> (<em>float</em>) – Julian Date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State vector [x, y, z, vx, vy, vz] in m, m/s.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

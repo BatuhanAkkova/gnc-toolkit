@@ -28,6 +28,14 @@ opengnc.propagators.encke module
    :show-inheritance:
    :undoc-members:
 
+opengnc.propagators.gve module
+------------------------------
+
+.. automodule:: opengnc.propagators.gve
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 opengnc.propagators.kepler module
 ---------------------------------
 

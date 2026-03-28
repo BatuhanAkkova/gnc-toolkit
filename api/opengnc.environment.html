@@ -395,6 +395,62 @@ $D$ = Mean elongation, $u$ = Mean latitude.</p>
 </dd></dl>
 
 </section>
+<section id="module-opengnc.environment.multibody_dynamics">
+<span id="opengnc-environment-multibody-dynamics-module"></span><h2>opengnc.environment.multibody_dynamics module<a class="headerlink" href="#module-opengnc.environment.multibody_dynamics" title="Link to this heading"></a></h2>
+<p>Circular Restricted Three-Body Problem (CR3BP) dynamics.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.environment.multibody_dynamics.CR3BP">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.environment.multibody_dynamics.</span></span><span class="sig-name descname"><span class="pre">CR3BP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/environment/multibody_dynamics.html#CR3BP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.environment.multibody_dynamics.CR3BP" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Circular Restricted Three-Body Problem Dynamics.</p>
+<p>Models the motion of a negligible mass under the influence of two
+massive bodies (primaries) in a circular orbit about their barycenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mu</strong> (<em>float</em>) – Mass parameter $mu = m_2 / (m_1 + m_2)$.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.environment.multibody_dynamics.CR3BP.calculate_jacobi_constant">
+<span class="sig-name descname"><span class="pre">calculate_jacobi_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/opengnc/environment/multibody_dynamics.html#CR3BP.calculate_jacobi_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.environment.multibody_dynamics.CR3BP.calculate_jacobi_constant" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Jacobi constant (Integral of motion).</p>
+<p>$C = (x^2 + y^2) + 2frac{1-mu}{r_1} + 2frac{mu}{r_2} - (vx^2 + vy^2 + vz^2)$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>np.ndarray</em>) – Current state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Jacobi constant value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.environment.multibody_dynamics.CR3BP.get_dynamics">
+<span class="sig-name descname"><span class="pre">get_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/environment/multibody_dynamics.html#CR3BP.get_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.environment.multibody_dynamics.CR3BP.get_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Calculate state derivatives in the rotating frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time (normalized).</p></li>
+<li><p><strong>state</strong> (<em>np.ndarray</em>) – Current state $[x, y, z, vx, vy, vz]$.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivative vector $[dot{x}, dot{y}, dot{z}, dot{vx}, dot{vy}, dot{vz}]$.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-opengnc.environment.radiation">
 <span id="opengnc-environment-radiation-module"></span><h2>opengnc.environment.radiation module<a class="headerlink" href="#module-opengnc.environment.radiation" title="Link to this heading"></a></h2>
 <p>Radiation environment models for TID and SEU rates estimation.</p>

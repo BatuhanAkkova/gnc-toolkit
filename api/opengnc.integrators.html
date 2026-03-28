@@ -415,6 +415,46 @@ f: function that returns [v, a].</p>
 </dd></dl>
 
 </section>
+<section id="module-opengnc.integrators.taylor">
+<span id="opengnc-integrators-taylor-module"></span><h2>opengnc.integrators.taylor module<a class="headerlink" href="#module-opengnc.integrators.taylor" title="Link to this heading"></a></h2>
+<p>Taylor Series Numerical Integrator.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.integrators.taylor.TaylorIntegrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.integrators.taylor.</span></span><span class="sig-name descname"><span class="pre">TaylorIntegrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/integrators/taylor.html#TaylorIntegrator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.integrators.taylor.TaylorIntegrator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#opengnc.integrators.integrator.Integrator" title="opengnc.integrators.integrator.Integrator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integrator</span></code></a></p>
+<p>Taylor Series expansion-based numerical integrator.</p>
+<p>Solves $dot{y} = f(t, y)$ by expanding $y$ as a Taylor series
+up to a specified order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>order</strong> (<em>int</em><em>, </em><em>optional</em>) – Taylor expansion order (1-4). Default 2.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.integrators.taylor.TaylorIntegrator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/integrators/taylor.html#TaylorIntegrator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.integrators.taylor.TaylorIntegrator.step" title="Link to this definition"></a></dt>
+<dd><p>Perform a single Taylor series step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>Callable</em>) – Derivative function.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Current time.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Current state.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Time step.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(y_next, t_next, dt_suggested).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-opengnc.integrators">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-opengnc.integrators" title="Link to this heading"></a></h2>
 </section>

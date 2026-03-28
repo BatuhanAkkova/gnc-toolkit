@@ -68,6 +68,14 @@ opengnc.integrators.symplectic module
    :show-inheritance:
    :undoc-members:
 
+opengnc.integrators.taylor module
+---------------------------------
+
+.. automodule:: opengnc.integrators.taylor
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Module contents
 ---------------
 

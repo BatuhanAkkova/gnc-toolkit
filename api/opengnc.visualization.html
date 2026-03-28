@@ -163,29 +163,6 @@
 </dd></dl>
 
 </section>
-<section id="module-opengnc.visualization.dashboard">
-<span id="opengnc-visualization-dashboard-module"></span><h2>opengnc.visualization.dashboard module<a class="headerlink" href="#module-opengnc.visualization.dashboard" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="opengnc.visualization.dashboard.create_dashboard_app">
-<span class="sig-prename descclassname"><span class="pre">opengnc.visualization.dashboard.</span></span><span class="sig-name descname"><span class="pre">create_dashboard_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Figure</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'OpenGNC</span> <span class="pre">Mission</span> <span class="pre">Dashboard'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dash</span></span></span><a class="reference internal" href="../_modules/opengnc/visualization/dashboard.html#create_dashboard_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.visualization.dashboard.create_dashboard_app" title="Link to this definition"></a></dt>
-<dd><p>Creates a Dash application to display multiple figures together.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>figures</em>)</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>title</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>dash.Dash</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Dash application object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 <section id="module-opengnc.visualization.ground_track">
 <span id="opengnc-visualization-ground-track-module"></span><h2>opengnc.visualization.ground_track module<a class="headerlink" href="#module-opengnc.visualization.ground_track" title="Link to this heading"></a></h2>
 <dl class="py function">
@@ -245,26 +222,6 @@ latitude and longitude evolution over time.</p>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-opengnc.visualization" title="Link to this heading"></a></h2>
 <p>Visualization module for OpenGNC.
 Provides interactive 3D and 2D plotting capabilities for orbits, attitude, mapped data, and dashboards.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="opengnc.visualization.create_dashboard_app">
-<span class="sig-prename descclassname"><span class="pre">opengnc.visualization.</span></span><span class="sig-name descname"><span class="pre">create_dashboard_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Figure</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'OpenGNC</span> <span class="pre">Mission</span> <span class="pre">Dashboard'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dash</span></span></span><a class="reference internal" href="../_modules/opengnc/visualization/dashboard.html#create_dashboard_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.visualization.create_dashboard_app" title="Link to this definition"></a></dt>
-<dd><p>Creates a Dash application to display multiple figures together.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>figures</em>)</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>title</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>dash.Dash</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Dash application object.</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="opengnc.visualization.plot_attitude_sphere">
 <span class="sig-prename descclassname"><span class="pre">opengnc.visualization.</span></span><span class="sig-name descname"><span class="pre">plot_attitude_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Attitude</span> <span class="pre">Sphere</span> <span class="pre">Visualization'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/opengnc/visualization/attitude.html#plot_attitude_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.visualization.plot_attitude_sphere" title="Link to this definition"></a></dt>

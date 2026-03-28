@@ -1,14 +1,12 @@
 import pytest
 import numpy as np
 import plotly.graph_objects as go
-import dash
 
 from opengnc.visualization import (
     plot_orbit_3d, 
     plot_attitude_sphere, 
     plot_ground_track, 
-    plot_coverage_heatmap,
-    create_dashboard_app
+    plot_coverage_heatmap
 )
 
 def test_plot_orbit_3d():
@@ -44,13 +42,6 @@ def test_plot_coverage_heatmap():
     values = [1.0, 2.0, 3.0]
     fig = plot_coverage_heatmap(lats, lons, values)
     assert isinstance(fig, go.Figure)
-
-def test_create_dashboard_app():
-    r_eci = np.array([[7000000, 0, 0], [0, 7000000, 0]])
-    fig = plot_orbit_3d(r_eci)
-    fig_dict = {"Orbit": fig}
-    app = create_dashboard_app(fig_dict)
-    assert isinstance(app, dash.Dash)
 
 def test_plot_attitude_sphere_invalid():
     with pytest.raises(ValueError):

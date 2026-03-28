@@ -9,8 +9,7 @@ from opengnc.visualization import (
     plot_orbit_3d, 
     plot_attitude_sphere, 
     plot_ground_track, 
-    plot_coverage_heatmap,
-    create_dashboard_app
+    plot_coverage_heatmap
 )
 
 def main():
@@ -67,30 +66,18 @@ def main():
     
     fig_cov = plot_coverage_heatmap(LA.flatten(), LO.flatten(), val.flatten(), title="Global Coverage Grid")
 
-    # -------------------------------------------------------------------------
-    # 5. Dashboard creation demo
-    # -------------------------------------------------------------------------
-    figs_dict = {
-        "3D Orbit": fig_orbit,
-        "Attitude Sphere": fig_attitude,
-        "Ground Track": fig_gt,
-        "Coverage Heatmap": fig_cov
-    }
-
-    # Save standalone HTML files for manual verification or static review
+    # Save PNG files for results
     assets_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'assets'))
     if not os.path.exists(assets_dir):
         os.makedirs(assets_dir)
         
     print(f"Saving plots to {assets_dir}...")
-    fig_orbit.write_html(os.path.join(assets_dir, "orbit_viz.html"))
-    fig_attitude.write_html(os.path.join(assets_dir, "attitude_viz.html"))
-    fig_gt.write_html(os.path.join(assets_dir, "ground_track_viz.html"))
-    fig_cov.write_html(os.path.join(assets_dir, "coverage_viz.html"))
+    fig_orbit.write_image(os.path.join(assets_dir, "orbit_viz.png"))
+    fig_attitude.write_image(os.path.join(assets_dir, "attitude_viz.png"))
+    fig_gt.write_image(os.path.join(assets_dir, "ground_track_viz.png"))
+    fig_cov.write_image(os.path.join(assets_dir, "coverage_viz.png"))
 
-    print("To launch the Dashboard Server, you can create a small runner containing:")
-    print("    app = create_dashboard_app(figs_dict)")
-    print("    app.run_server(debug=True)")
+    print("Generation complete.")
 
 if __name__ == "__main__":
     main()

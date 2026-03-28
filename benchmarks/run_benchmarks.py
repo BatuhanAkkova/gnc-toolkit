@@ -48,6 +48,34 @@ def main():
     )
     run_benchmark("euler_to_dcm (123)", setup_euler, "euler_to_dcm(angle, seq)")
 
+    print("\n## Integrators\n")
+    print("| Operation                 | Iterations | Total Time (s) | Avg Time (µs) |")
+    print("|---------------------------|------------|----------------|---------------|")
+
+    # Benchmark RK4
+    setup_rk4 = (
+        "import numpy as np; "
+        "from opengnc.integrators.rk4 import RK4; "
+        "f = lambda t, y, **kwargs: -0.1 * y; "
+        "rk = RK4(); "
+        "y = np.array([1.0, 2.0, 3.0]); "
+        "dt = 0.1; t = 0.0"
+    )
+    run_benchmark("RK4 Step (3D Linear)", setup_rk4, "rk.step(f, t, y, dt)", number=50000)
+
+    print("\n## Attitude Determination & Filters\n")
+    print("| Operation                 | Iterations | Total Time (s) | Avg Time (µs) |")
+    print("|---------------------------|------------|----------------|---------------|")
+
+    # Benchmark TRIAD
+    setup_triad = (
+        "import numpy as np; "
+        "from opengnc.attitude_determination.triad import triad; "
+        "b1 = np.array([1.0, 0.0, 0.0]); b2 = np.array([0.0, 1.0, 0.0]); "
+        "r1 = np.array([1.0, 0.0, 0.0]); r2 = np.array([0.0, 1.0, 0.0])"
+    )
+    run_benchmark("TRIAD Determination", setup_triad, "triad(b1, b2, r1, r2)", number=20000)
+
 if __name__ == "__main__":
     main()
 

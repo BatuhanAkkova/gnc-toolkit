@@ -1,68 +1,50 @@
 # OpenGNC — Open-Source Roadmap
 
-> **Mission**: Become the definitive open-source Guidance, Navigation & Control toolkit for spacecraft engineers, scientists, and researchers — covering the full mission lifecycle from concept to operations.
+> **Mission**: Become the definitive open-source Guidance, Navigation & Control toolkit for spacecraft engineers, scientists, and researchers — bridging the gap between academic simulation and flight-ready software across the full mission lifecycle.
 
-This roadmap outlines the strategic development of **OpenGNC** to bridge the gap between academic simulation and flight-ready software.
+This roadmap outlines the strategic development of **OpenGNC** to provide a high-fidelity, validated, and performance-optimized platform for modern aerospace missions.
 
 ---
 
 ## Strategic Objectives
 
-1. **High-Fidelity Transparency**: Every algorithm and environment model must be fully documented and traceable to published aerospace standards.
-2. **Interoperability**: Seamless integration with tools like GMAT, Orekit, and STK.
-3. **Flight-Readiness**: Focus on C/C++ acceleration and deterministic performance for embedded targets.
-4. **Autonomous Ops**: Implement modern AI/ML methods for onboard decision-making and fault isolation.
+1.  **High-Fidelity Transparency**: Every algorithm and environment model must be fully documented and traceable to published aerospace standards.
+2.  **Mission Lifecycle Coverage**: Support a seamless path from fundamental research and conceptual design to embedded flight code and mission operations.
+3.  **Performance & Portability**: Prioritize C++ acceleration, SIMD-optimized state management, and thread-safe, lock-free communication for high-performance computing.
+4.  **Autonomous Intelligence**: Integrate modern AI/ML methods for automated state estimation, decision-making, and fault isolation.
 
 ---
 
 ## Development Phases
 
-### Phase 1: High-Fidelity Foundation & Orbit Mastery
-*Solidify the core orbital mechanics and environment tools.*
-- [x] **Recursive Gravity Models**: Optimize EGM2008 up to degree/order 360+ via Cython/Numba.
-- [x] **Multi-Body Dynamics**: Implement Circular Restricted Three-Body Problem (CR3BP) and Solar System JPL Ephemeris integration.
-- [x] **Advanced Propagators**: Add Gauss-Variational Equations (GVE) and Taylor Series integrators.
-- [x] **Covariance Analysis**: Formalize Covariance Transform Tool (ECI/RIC/TLE) and reach-ability analysis.
+### Phase 1: High-Fidelity Foundation & Design (In Progress)
+*Establishing the core orbital mechanics and environmental simulation environment.*
+- [x] **Recursive Gravity Models**: Optimized EGM2008 up to degree/order 360+ via Cython/Numba.
+- [x] **High-Fidelity Environment**: Integrated IGRF-13 magnetic fields and NRLMSISE-00 atmospheric density models.
+- [x] **Advanced Propagators**: Cowell’s Method, Keplerian elements, and Gauss-Variational Equations (GVE).
+- [x] **Professionality**: Established CI/CD pipeline, automated formatting, and performance benchmarking suite.
+- [ ] **Interoperability**: Standardized interfaces for external tools like GMAT, Orekit, and STK (SPICE kernels).
 
-### Phase 2: Autonomy, AI & Next-Gen GNC
-*Integrate modern control and estimation techniques.*
-- [ ] **Relative Navigation**: Implement Filter-based relative state estimation for swarming and docking.
-- [ ] **AI/ML Integration**: Reinforcement Learning (RL) hooks for autonomous rendezvous and optimal control tuning.
-- [ ] **FDIR v2**: Implement PCA and LSTM-based anomaly detection for sensor/actuator failures.
-- [ ] **MPC Optimization**: Leverage CasADi for highly constrained multi-burn optimization (Debris removal, refueling).
+### Phase 2: Autonomy, AI & Advanced Research (Next)
+*Integrating modern control and state estimation techniques for autonomous missions.*
+- [ ] **Relative Navigation**: Filter-based relative state estimation for swarming, docking, and proximity operations.
+- [ ] **Optimal Control**: Expanded MPC optimization using CasADi for highly constrained multi-burn maneuvers.
+- [ ] **AI/ML Hooks**: Reinforcement Learning (RL) wrappers for autonomous rendezvous and docking (GNC Gymnasium).
+- [ ] **FDIR v2**: Implementation of PCA and LSTM-based anomaly detection for sensor/actuator protection.
 
-### Phase 3: Flight Integration & HIL Framework
-*Bridging simulation to real hardware.*
-- [ ] **Embedded Target Support**: Move core Kalman Filters and Control Laws to optimized C99-compatible code.
-- [ ] **HIL/PIL Framework**: Generic interface for simulated sensors to talk to hardware over Serial/UDP/ROS2.
-- [ ] **Telemetry Ops**: Real-time CCSDS packet parsing and de-commutation framework for flight operations.
-- [ ] **Verification**: Automated Monte Carlo analysis suite for robust stability and performance margins.
+### Phase 3: Flight Implementation & Embedded Software
+*Converting high-fidelity simulations into deterministic, flight-ready artifacts.*
+- [ ] **C++ Acceleration**: Porting core filters (MEKF, UKF) and control laws to header-only, C++17/20 templates.
+- [ ] **Hardware-in-the-Loop (HIL)**: Generic SIM-to-Hardware bridge supporting Serial, UDP, and ROS2 protocols.
+- [ ] **Real-Time Performance**: Enforce static memory allocation and lock-free message passing for mission-critical paths.
+- [ ] **Verification**: Automated Monte Carlo analysis suite for robust stability and performance margin proofs.
 
----
-
-## Infrastructure & Maintenance
-
-### Packaging & Distribution
-| Feature | Status | Notes |
-|---|---|---|
-| pip installable (`pyproject.toml`) | ✅ | `pyproject.toml` |
-| PyPI / Conda-forge Release | ✅ | Automate via GitHub Actions |
-| Docker image for reproducibility | ✅ | For HPC and CI environments |
-| C extension / Cython acceleration | 🔄 | Currently in progress for propagators |
-
-### Code Quality & Validation
-| Feature | Status | Notes |
-|---|---|---|
-| Type hints (Complete Coverage) | ✅ | Expand to all public APIs |
-| Docstrings (NumPy style) | ✅ | Enforced via Ruff |
-| Linting / Pre-commit | ✅ | |
-| Benchmarks / Profiling | 🔄 | Expand `timeit` suite to core integrators |
-| Benchmarking vs Industry Tools | 🔄 | (GMAT, Orekit, SPICE) |
+### Phase 4: Mission Operations & Space Situational Awareness
+*Supporting the platform in active operations and orbital safety.*
+- [ ] **Ground Station Ops**: CSSDS packet parsing, de-commutation toolkits, and Real-time Plotting Dashboards.
+- [ ] **SSA/SDA**: Conjunction Assessment (CAT), TLE maintenance, and automated collision avoidance planning.
+- [ ] **Mission Control API**: Specialized Python/Web interface for live telemetry monitoring and commanding.
 
 ---
 
 *Last updated: March 2026 | Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)*
-
-
-
-

@@ -80,6 +80,10 @@
 <span class="sd">Variable Speed Control Moment Gyro (VSCMG) actuator model.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.actuators.cmg</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlMomentGyro</span>
@@ -133,7 +137,13 @@
 
 <div class="viewcode-block" id="VariableSpeedCMG.command">
 <a class="viewcode-back" href="../../../api/opengnc.actuators.html#opengnc.actuators.vscmg.VariableSpeedCMG.command">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd_vec</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">gimbal_rate_cmd</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate combined torque from gimbaling and wheel acceleration.</span>
 
@@ -151,7 +161,16 @@
 <span class="sd">        np.ndarray</span>
 <span class="sd">            Net torque vector (Nm) (3,).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">g_rate_cmd</span><span class="p">,</span> <span class="n">w_torque_cmd</span> <span class="o">=</span> <span class="n">cmd_vec</span>
+        <span class="n">cmd_vec</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cmd_vec&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cmd_vec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">gimbal_rate_cmd</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cmd_vec or gimbal_rate_cmd is required.&quot;</span><span class="p">)</span>
+            <span class="n">cmd_vec</span> <span class="o">=</span> <span class="n">gimbal_rate_cmd</span> <span class="k">if</span> <span class="n">gimbal_rate_cmd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmd_vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">)):</span>
+            <span class="n">g_rate_cmd</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cmd_vec</span><span class="p">)</span>
+            <span class="n">w_torque_cmd</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">g_rate_cmd</span><span class="p">,</span> <span class="n">w_torque_cmd</span> <span class="o">=</span> <span class="n">cmd_vec</span>
 
         <span class="c1"># Apply saturation</span>
         <span class="n">g_rate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_saturation</span><span class="p">(</span><span class="n">g_rate_cmd</span><span class="p">))</span>

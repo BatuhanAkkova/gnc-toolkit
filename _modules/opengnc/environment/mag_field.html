@@ -126,7 +126,7 @@
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;ppigrf not installed&quot;</span><span class="p">)</span>
 
     <span class="c1"># ppigrf expects (lon, lat, alt, time)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ppigrf</span><span class="o">.</span><span class="n">igrf</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">alt</span><span class="p">,</span> <span class="n">time</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ppigrf</span><span class="o">.</span><span class="n">igrf</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">alt</span><span class="p">,</span> <span class="n">time</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span></div>
 
 
 
@@ -210,14 +210,14 @@
     <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">r_mag</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="n">r_unit</span> <span class="o">=</span> <span class="n">rv</span> <span class="o">/</span> <span class="n">r_mag</span>
 
     <span class="c1"># 5. Dipole Field Equation</span>
     <span class="n">b_ecef</span> <span class="o">=</span> <span class="p">(</span><span class="n">k_mag</span> <span class="o">/</span> <span class="p">(</span><span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">moment_u</span><span class="p">,</span> <span class="n">r_unit</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_unit</span> <span class="o">-</span> <span class="n">moment_u</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="o">-</span><span class="n">b_ecef</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="o">-</span><span class="n">b_ecef</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span></div>
 
 
 

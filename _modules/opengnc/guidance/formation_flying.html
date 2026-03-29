@@ -107,7 +107,7 @@
 <span class="sd">        Computed control actions for each spacecraft (N x control_dim).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Simple proportional feedback to desired formation state</span>
-    <span class="k">return</span> <span class="o">-</span><span class="n">gains</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">state_actual</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">state_desired</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="o">-</span><span class="n">gains</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">state_actual</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">state_desired</span><span class="p">)))</span></div>
 
 
 
@@ -139,7 +139,7 @@
 <span class="sd">        Control command for the follower.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">target_state</span> <span class="o">=</span> <span class="n">leader_state</span> <span class="o">+</span> <span class="n">desired_relative_state</span>
-    <span class="k">return</span> <span class="o">-</span><span class="n">gains</span> <span class="o">*</span> <span class="p">(</span><span class="n">follower_state</span> <span class="o">-</span> <span class="n">target_state</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="o">-</span><span class="n">gains</span> <span class="o">*</span> <span class="p">(</span><span class="n">follower_state</span> <span class="o">-</span> <span class="n">target_state</span><span class="p">))</span></div>
 
 
 
@@ -171,11 +171,11 @@
     <span class="n">fuel_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fuel_levels</span><span class="p">)</span>
     <span class="n">total_fuel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fuel_norm</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">total_fuel</span> <span class="o">&lt;</span> <span class="mf">1e-9</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">base_weights</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">base_weights</span><span class="p">))</span>
 
     <span class="n">fuel_ratios</span> <span class="o">=</span> <span class="n">fuel_norm</span> <span class="o">/</span> <span class="n">total_fuel</span>
     <span class="c1"># Scale control weights by available fuel fraction</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">base_weights</span><span class="p">)</span> <span class="o">*</span> <span class="n">fuel_ratios</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">base_weights</span><span class="p">)</span> <span class="o">*</span> <span class="n">fuel_ratios</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span></div>
 
 
 
@@ -207,7 +207,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># The term (L @ X) computes the sum of relative state errors in the network</span>
     <span class="n">consensus_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">laplacian_matrix</span><span class="p">)</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
-    <span class="k">return</span> <span class="o">-</span><span class="n">gains</span> <span class="o">*</span> <span class="n">consensus_error</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="o">-</span><span class="n">gains</span> <span class="o">*</span> <span class="n">consensus_error</span><span class="p">)</span></div>
 
 
 

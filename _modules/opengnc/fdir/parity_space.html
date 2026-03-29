@@ -80,6 +80,8 @@
 <span class="sd">Parity Space methods for Fault Detection and Isolation (FDI).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
@@ -130,7 +132,7 @@
 <span class="sd">            Parity vector of shape $(p-n,)$.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">y_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="n">y_vec</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="n">y_vec</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ParitySpaceDetector.detect_fault">
@@ -152,7 +154,7 @@
 <span class="sd">            True if a fault is detected.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parity_vector</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p_vec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span></div>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p_vec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ParitySpaceDetector.isolate_fault">

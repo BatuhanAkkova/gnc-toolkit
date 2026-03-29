@@ -80,6 +80,8 @@
 <span class="sd">TRIAD algorithm for attitude determination from two vectors.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
@@ -155,7 +157,7 @@
     <span class="n">m_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">t1b</span><span class="p">,</span> <span class="n">t2b</span><span class="p">,</span> <span class="n">t3b</span><span class="p">))</span>
     <span class="n">m_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">t1r</span><span class="p">,</span> <span class="n">t2r</span><span class="p">,</span> <span class="n">t3r</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">m_b</span> <span class="o">@</span> <span class="n">m_r</span><span class="o">.</span><span class="n">T</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">m_b</span> <span class="o">@</span> <span class="n">m_r</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
 
 
 

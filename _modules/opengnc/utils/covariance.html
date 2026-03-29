@@ -80,7 +80,10 @@
 <span class="sd">Covariance transformation and reachability analysis tools.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 
 
 <div class="viewcode-block" id="CovarianceTransform">
@@ -119,14 +122,14 @@
 
         <span class="c1"># 2. Rotation Matrix R (ECI to RIC)</span>
         <span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">u_r</span><span class="p">,</span> <span class="n">u_i</span><span class="p">,</span> <span class="n">u_c</span><span class="p">])</span>
-        
+
         <span class="c1"># 3. Full 6x6 Transformation Matrix T</span>
         <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
         <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">rot</span>
         <span class="n">T</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">rot</span>
 
         <span class="c1"># 4. Transform: P_ric = T P_eci T.T</span>
-        <span class="k">return</span> <span class="n">T</span> <span class="o">@</span> <span class="n">P_eci</span> <span class="o">@</span> <span class="n">T</span><span class="o">.</span><span class="n">T</span></div>
+        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span> <span class="o">@</span> <span class="n">P_eci</span> <span class="o">@</span> <span class="n">T</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CovarianceTransform.ric_to_eci">
@@ -135,19 +138,33 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">ric_to_eci</span><span class="p">(</span><span class="n">r_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v_eci</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">P_ric</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transform covariance from RIC back to ECI.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r_eci : np.ndarray</span>
+<span class="sd">            Position (m).</span>
+<span class="sd">        v_eci : np.ndarray</span>
+<span class="sd">            Velocity (m/s).</span>
+<span class="sd">        P_ric : np.ndarray</span>
+<span class="sd">            $6 \times 6$ Covariance matrix in RIC.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            $6 \times 6$ Covariance matrix in ECI.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">u_r</span> <span class="o">=</span> <span class="n">r_eci</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_eci</span><span class="p">)</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">r_eci</span><span class="p">,</span> <span class="n">v_eci</span><span class="p">)</span>
         <span class="n">u_c</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
         <span class="n">u_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">u_c</span><span class="p">,</span> <span class="n">u_r</span><span class="p">)</span>
 
-        <span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">u_r</span><span class="p">,</span> <span class="n">u_i</span><span class="p">,</span> <span class="n">u_c</span><span class="p">])</span><span class="o">.</span><span class="n">T</span> <span class="c1"># Inverse is Transpose</span>
-        
+        <span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">u_r</span><span class="p">,</span> <span class="n">u_i</span><span class="p">,</span> <span class="n">u_c</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># Inverse is Transpose</span>
+
         <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
         <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">rot</span>
         <span class="n">T</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">rot</span>
 
-        <span class="k">return</span> <span class="n">T</span> <span class="o">@</span> <span class="n">P_ric</span> <span class="o">@</span> <span class="n">T</span><span class="o">.</span><span class="n">T</span></div>
+        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span> <span class="o">@</span> <span class="n">P_ric</span> <span class="o">@</span> <span class="n">T</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
 </div>
 
 
@@ -165,7 +182,9 @@
 
 <div class="viewcode-block" id="ReachabilityAnalysis.get_reachable_delta_elements">
 <a class="viewcode-back" href="../../../api/opengnc.utils.html#opengnc.utils.covariance.ReachabilityAnalysis.get_reachable_delta_elements">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_reachable_delta_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dv_total</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_reachable_delta_elements</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dv_total</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate maximum possible changes in orbital elements for a total delta-V.</span>
 
@@ -184,15 +203,15 @@
 <span class="sd">            Max theoretical $\Delta a, \Delta e, \Delta i$.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">v_circ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
-        
+
         <span class="c1"># Max delta-a: Apply all delta-V along the velocity vector (Hohmann-like)</span>
         <span class="c1"># dv = sqrt(mu/a) * (sqrt(2*r_next / (a+r_next)) - 1)</span>
         <span class="c1"># Simplified: da = 2 * a * dv / v_orbit</span>
         <span class="n">max_da</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">dv_total</span> <span class="o">/</span> <span class="n">v_circ</span>
-        
+
         <span class="c1"># Max delta-e: Apply at perigee/apogee</span>
         <span class="n">max_de</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dv_total</span> <span class="o">/</span> <span class="n">v_circ</span>
-        
+
         <span class="c1"># Max delta-i: Apply at nodes</span>
         <span class="c1"># dv = 2 * v * sin(di/2)</span>
         <span class="n">max_di</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">dv_total</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">v_circ</span><span class="p">))</span>
@@ -200,7 +219,7 @@
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;max_delta_a&quot;</span><span class="p">:</span> <span class="n">max_da</span><span class="p">,</span>
             <span class="s2">&quot;max_delta_e&quot;</span><span class="p">:</span> <span class="n">max_de</span><span class="p">,</span>
-            <span class="s2">&quot;max_delta_i&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">max_di</span><span class="p">)</span>
+            <span class="s2">&quot;max_delta_i&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">max_di</span><span class="p">),</span>
         <span class="p">}</span></div>
 </div>
 

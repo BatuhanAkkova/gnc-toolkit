@@ -87,6 +87,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">cholesky</span>
 
 
@@ -248,12 +249,12 @@
         <span class="n">p_sym</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_cov</span> <span class="o">+</span> <span class="n">p_cov</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_x</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-12</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">chol_l</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">p_sym</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">chol_l</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">xi</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">chol_l</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">xi</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
             <span class="c1"># Fallback to sqrtm if Cholesky fails due to semi-definiteness</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrtm</span>
             <span class="n">sqrt_p</span> <span class="o">=</span> <span class="n">sqrtm</span><span class="p">(</span><span class="n">p_sym</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
-            <span class="k">return</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">sqrt_p</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">xi</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">sqrt_p</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">xi</span><span class="p">))</span></div>
 
 
 

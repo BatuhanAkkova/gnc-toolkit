@@ -80,6 +80,8 @@
 <span class="sd">Magnetorquer actuator model.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.actuators.actuator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Actuator</span>
@@ -105,7 +107,7 @@
 
 <div class="viewcode-block" id="Magnetorquer.command">
 <a class="viewcode-back" href="../../../api/opengnc.actuators.html#opengnc.actuators.magnetorquer.Magnetorquer.command">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dipole_cmd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dipole_cmd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate delivered dipole moment.</span>
 
@@ -122,6 +124,10 @@
 <span class="sd">            Delivered dipole moment (Am^2).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Apply saturation</span>
+        <span class="k">if</span> <span class="n">dipole_cmd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dipole_cmd is required.&quot;</span><span class="p">)</span>
+            <span class="n">dipole_cmd</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_saturation</span><span class="p">(</span><span class="n">dipole_cmd</span><span class="p">))</span></div>
 </div>
 

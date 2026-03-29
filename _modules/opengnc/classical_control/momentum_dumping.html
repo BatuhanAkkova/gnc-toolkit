@@ -136,7 +136,7 @@
 
         <span class="c1"># Singular handling for weak/zero magnetic fields</span>
         <span class="k">if</span> <span class="n">b_sq</span> <span class="o">&lt;</span> <span class="mf">1e-18</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="n">dipole_moment</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="o">/</span> <span class="n">b_sq</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">h_vec</span><span class="p">,</span> <span class="n">b_vec</span><span class="p">)</span>
 
@@ -146,7 +146,7 @@
             <span class="k">if</span> <span class="n">norm_m</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_dipole</span><span class="p">:</span>
                 <span class="n">dipole_moment</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_dipole</span> <span class="o">/</span> <span class="n">norm_m</span>
 
-        <span class="k">return</span> <span class="n">dipole_moment</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dipole_moment</span><span class="p">)</span></div>
 </div>
 
 

@@ -210,7 +210,7 @@
     <span class="c1"># Cosecant model valid for elevation &gt; 5 deg; clamp to avoid division singularity</span>
     <span class="n">elevation_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">elevation_deg</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span>
     <span class="n">l_atm_db</span> <span class="o">=</span> <span class="n">a_zenith</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">elevation_rad</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">l_atm_db</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">l_atm_db</span><span class="p">)</span></div>
 
 
 

@@ -80,8 +80,10 @@
 <span class="sd">Quaternion kinematics and math utilities.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 
 
 <div class="viewcode-block" id="quat_normalize">
@@ -104,7 +106,7 @@
     <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">qv</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot normalize a zero-length quaternion.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">qv</span> <span class="o">/</span> <span class="n">norm</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">qv</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span></div>
 
 
 
@@ -125,7 +127,7 @@
 <span class="sd">        Conjugate quaternion [-x, -y, -z, w].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">qv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">qv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">qv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">qv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">qv</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">qv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">qv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">qv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">qv</span><span class="p">[</span><span class="mi">3</span><span class="p">]]))</span></div>
 
 
 
@@ -146,7 +148,7 @@
 <span class="sd">        Norm of the quaternion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">qv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">qv</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">qv</span><span class="p">))</span></div>
 
 
 
@@ -177,12 +179,12 @@
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">w1</span> <span class="o">=</span> <span class="n">ql</span>
     <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="n">w2</span> <span class="o">=</span> <span class="n">qr</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
         <span class="n">w1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">,</span>
         <span class="n">w1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">,</span>
         <span class="n">w1</span> <span class="o">*</span> <span class="n">z2</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">x2</span><span class="p">,</span>
         <span class="n">w1</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">,</span>
-    <span class="p">])</span></div>
+    <span class="p">]))</span></div>
 
 
 
@@ -206,7 +208,7 @@
     <span class="n">norm</span> <span class="o">=</span> <span class="n">quat_norm</span><span class="p">(</span><span class="n">qv</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot invert a zero-length quaternion.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">quat_conj</span><span class="p">(</span><span class="n">qv</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span><span class="o">**</span><span class="mi">2</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">quat_conj</span><span class="p">(</span><span class="n">qv</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
 
 
@@ -238,7 +240,7 @@
     <span class="n">q_inv</span> <span class="o">=</span> <span class="n">quat_conj</span><span class="p">(</span><span class="n">qv</span><span class="p">)</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="n">quat_mult</span><span class="p">(</span><span class="n">quat_mult</span><span class="p">(</span><span class="n">qv</span><span class="p">,</span> <span class="n">v_ext</span><span class="p">),</span> <span class="n">q_inv</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span></div>
 
 
 
@@ -261,11 +263,11 @@
     <span class="n">qv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">qv</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
         <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">z</span><span class="o">*</span><span class="n">w</span><span class="p">,</span>     <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">w</span><span class="p">],</span>
         <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">z</span><span class="o">*</span><span class="n">w</span><span class="p">,</span>     <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">w</span><span class="p">],</span>
         <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">z</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">w</span><span class="p">,</span>     <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">w</span><span class="p">,</span>     <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">]</span>
-    <span class="p">])</span></div>
+    <span class="p">]))</span></div>
 
 
 
@@ -291,22 +293,22 @@
     <span class="n">av</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">av</span><span class="p">)</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">av</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">av</span> <span class="o">/</span> <span class="n">norm</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">norm</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">norm</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">av</span><span class="p">)</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">av</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">av</span> <span class="o">/</span> <span class="n">norm</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">angle</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
 
     <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">]))</span></div>
 
 
 
@@ -329,11 +331,11 @@
 <span class="sd">        3x3 skew-symmetric matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span>   <span class="o">-</span><span class="n">vv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="n">vv</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
         <span class="p">[</span><span class="n">vv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="mf">0.0</span><span class="p">,</span>   <span class="o">-</span><span class="n">vv</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
         <span class="p">[</span><span class="o">-</span><span class="n">vv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="mf">0.0</span><span class="p">]</span>
-    <span class="p">])</span></div>
+    <span class="p">]))</span></div>
 
 
 

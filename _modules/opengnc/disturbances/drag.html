@@ -158,11 +158,11 @@
 
         <span class="n">v_rel_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_rel</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">v_rel_norm</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="c1"># Acceleration calculation</span>
         <span class="n">acc_mag</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">v_rel_norm</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">*</span> <span class="p">(</span><span class="n">area</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span>
-        <span class="k">return</span> <span class="o">-</span><span class="n">acc_mag</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_rel</span> <span class="o">/</span> <span class="n">v_rel_norm</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="o">-</span><span class="n">acc_mag</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_rel</span> <span class="o">/</span> <span class="n">v_rel_norm</span><span class="p">))</span></div>
 </div>
 
 

@@ -215,6 +215,21 @@ $beta = y + i x$</p>
 <dt class="sig sig-object py" id="opengnc.utils.covariance.CovarianceTransform.ric_to_eci">
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ric_to_eci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_eci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P_ric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/opengnc/utils/covariance.html#CovarianceTransform.ric_to_eci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.utils.covariance.CovarianceTransform.ric_to_eci" title="Link to this definition"></a></dt>
 <dd><p>Transform covariance from RIC back to ECI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r_eci</strong> (<em>np.ndarray</em>) – Position (m).</p></li>
+<li><p><strong>v_eci</strong> (<em>np.ndarray</em>) – Velocity (m/s).</p></li>
+<li><p><strong>P_ric</strong> (<em>np.ndarray</em>) – $6  imes 6$ Covariance matrix in RIC.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>$6  imes 6$ Covariance matrix in ECI.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

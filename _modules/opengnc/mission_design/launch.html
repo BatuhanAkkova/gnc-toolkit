@@ -123,15 +123,15 @@
     <span class="n">t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_sec</span><span class="p">,</span> <span class="n">step_sec</span><span class="p">)</span>
     <span class="n">jd_array</span> <span class="o">=</span> <span class="n">jd_start</span> <span class="o">+</span> <span class="n">t_array</span> <span class="o">/</span> <span class="mf">86400.0</span>
 
-    <span class="n">dot_products</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dot_products_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">jd</span> <span class="ow">in</span> <span class="n">jd_array</span><span class="p">:</span>
         <span class="c1"># Convert to ECI</span>
         <span class="n">r_site_eci</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">eci2_ecef_or_inverse_wrapper</span><span class="p">(</span><span class="n">r_site_ecef</span><span class="p">,</span> <span class="n">jd</span><span class="p">)</span>
         <span class="n">dot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_site_eci</span><span class="p">,</span> <span class="n">N_orbit</span><span class="p">)</span>
-        <span class="n">dot_products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+        <span class="n">dot_products_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">dot</span><span class="p">))</span>
 
-    <span class="n">dot_products</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dot_products</span><span class="p">)</span>
+    <span class="n">dot_products</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dot_products_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="c1"># Find sign changes</span>
     <span class="n">windows</span> <span class="o">=</span> <span class="p">[]</span>

@@ -80,7 +80,9 @@
 <span class="sd">Entry, Descent, and Landing (EDL) dynamics and utilities.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -147,7 +149,7 @@
     <span class="c1"># Gravity</span>
     <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_vec</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span><span class="p">]))</span></div>
 
 
 
@@ -223,7 +225,7 @@
     <span class="c1"># Gravity</span>
     <span class="n">a_grav</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_vec</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span> <span class="o">+</span> <span class="n">a_lift</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v_vec</span><span class="p">,</span> <span class="n">a_grav</span> <span class="o">+</span> <span class="n">a_drag</span> <span class="o">+</span> <span class="n">a_lift</span><span class="p">]))</span></div>
 
 
 
@@ -252,7 +254,7 @@
 <span class="sd">        Stagnation heat flux ($W/m^2$).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">k</span> <span class="o">=</span> <span class="mf">1.74153e-4</span>  <span class="c1"># Constant for Earth atmospheric species</span>
-    <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">/</span> <span class="n">rn</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="o">**</span><span class="mi">3</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">/</span> <span class="n">rn</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span></div>
 
 
 
@@ -325,10 +327,12 @@
         <span class="n">rv</span><span class="p">,</span> <span class="n">vv</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
         <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rv</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vv</span><span class="p">)</span>
         <span class="n">energy</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">v</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mu</span> <span class="o">/</span> <span class="n">r</span>
-        <span class="k">if</span> <span class="n">energy</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">if</span> <span class="n">energy</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
         <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">energy</span><span class="p">)</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">vv</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">mu</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span> <span class="o">-</span> <span class="n">r_planet</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">vv</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">))))</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span> <span class="o">-</span> <span class="n">r_planet</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">cl</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
         <span class="k">return</span> <span class="mf">0.0</span>
@@ -338,12 +342,12 @@
             <span class="k">return</span> <span class="n">lifting_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">bank</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">r_planet</span><span class="p">,</span> <span class="n">rho_model</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">exit_check</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="n">atm_int</span>
-        <span class="n">exit_check</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">exit_check</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="n">atm_int</span><span class="p">)</span>
+        <span class="n">exit_check</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># type: ignore[attr-defined]</span>
+        <span class="n">exit_check</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># type: ignore[attr-defined]</span>
 
         <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">dydt</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">3600.0</span><span class="p">),</span> <span class="n">state</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">exit_check</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">get_exit_apoapsis</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">get_exit_apoapsis</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 
     <span class="c1"># Simple Bisection</span>
     <span class="n">b_min</span><span class="p">,</span> <span class="n">b_max</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
@@ -355,7 +359,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">b_max</span> <span class="o">=</span> <span class="n">b_mid</span>
 
-    <span class="k">return</span> <span class="p">(</span><span class="n">b_min</span> <span class="o">+</span> <span class="n">b_max</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">b_min</span> <span class="o">+</span> <span class="n">b_max</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span></div>
 
 
 
@@ -390,8 +394,8 @@
         <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos</span> <span class="o">-</span> <span class="n">h_pos</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">safety_margin</span><span class="p">:</span>
             <span class="n">u_div</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos</span> <span class="o">-</span> <span class="n">h_pos</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">u_div</span> <span class="o">*</span> <span class="mf">5.0</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">u_div</span> <span class="o">*</span> <span class="mf">5.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span></div>
 
 
 

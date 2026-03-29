@@ -80,6 +80,10 @@
 <span class="sd">Control Moment Gyro (CMG) actuator model.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.actuators.actuator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Actuator</span>
@@ -155,7 +159,13 @@
 
 <div class="viewcode-block" id="ControlMomentGyro.command">
 <a class="viewcode-back" href="../../../api/opengnc.actuators.html#opengnc.actuators.cmg.ControlMomentGyro.command">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gimbal_rate_cmd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">gimbal_rate_cmd</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate torque produced by gimbal rate.</span>
 
@@ -165,6 +175,8 @@
 <span class="sd">            Commanded gimbal rate (rad/s).</span>
 <span class="sd">        dt : float, optional</span>
 <span class="sd">            Time step (s) to update gimbal angle.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional parameters (unused).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -172,7 +184,11 @@
 <span class="sd">            Torque vector (Nm) (3,).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Apply rate limits</span>
-        <span class="n">g_rate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_saturation</span><span class="p">(</span><span class="n">gimbal_rate_cmd</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">gimbal_rate_cmd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;gimbal_rate_cmd is required.&quot;</span><span class="p">)</span>
+            <span class="n">gimbal_rate_cmd</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">g_rate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_saturation</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">gimbal_rate_cmd</span><span class="p">)))</span>
 
         <span class="c1"># Current axes</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_axes</span><span class="p">()</span>

@@ -132,7 +132,7 @@
     <span class="c1"># Stiffness: omega_n^2 * eta</span>
     <span class="n">stiffness</span> <span class="o">=</span> <span class="p">(</span><span class="n">natural_freqs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">eta_val</span>
 
-    <span class="k">return</span> <span class="n">coupling</span> <span class="o">-</span> <span class="n">damping</span> <span class="o">-</span> <span class="n">stiffness</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">coupling</span> <span class="o">-</span> <span class="n">damping</span> <span class="o">-</span> <span class="n">stiffness</span><span class="p">)</span></div>
 
 
 
@@ -198,7 +198,7 @@
     <span class="c1"># 3. Solve system</span>
     <span class="n">sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">m_aug</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">sol</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">sol</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sol</span><span class="p">[:</span><span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span></div>
 
 
 

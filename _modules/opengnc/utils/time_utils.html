@@ -80,6 +80,8 @@
 <span class="sd">Time system conversions (UTC, TAI, GPS, TT, TDB) and Julian date utilities.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
@@ -252,7 +254,7 @@
         <span class="mf">67310.54841</span> <span class="o">+</span> <span class="p">(</span><span class="mi">876600</span> <span class="o">*</span> <span class="mf">3600.0</span> <span class="o">+</span> <span class="mf">8640184.812866</span><span class="p">)</span> <span class="o">*</span> <span class="n">ut1</span> <span class="o">+</span> <span class="mf">0.093104</span> <span class="o">*</span> <span class="n">ut1</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">6.2e-6</span> <span class="o">*</span> <span class="n">ut1</span><span class="o">**</span><span class="mi">3</span>
     <span class="p">)</span> <span class="o">%</span> <span class="mf">86400.0</span>
     <span class="n">gmst</span> <span class="o">/=</span> <span class="mf">240.0</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">gmst</span> <span class="o">%</span> <span class="mf">360.0</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">gmst</span> <span class="o">%</span> <span class="mf">360.0</span><span class="p">))</span></div>
 
 
 
@@ -295,7 +297,7 @@
     <span class="c1"># GAST = GMST + equinox</span>
     <span class="n">last</span> <span class="o">=</span> <span class="n">gmst</span> <span class="o">+</span> <span class="n">equinox</span> <span class="o">+</span> <span class="n">lon</span>
     <span class="n">last</span> <span class="o">=</span> <span class="n">last</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">last</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">last</span><span class="p">)</span></div>
 
 
 

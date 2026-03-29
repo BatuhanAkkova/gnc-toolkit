@@ -80,8 +80,10 @@
 <span class="sd">Initial Orbit Determination (IOD) methods (Gibbs, Gauss, Laplace).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 
 
 <div class="viewcode-block" id="gibbs_iod">
@@ -119,12 +121,12 @@
     <span class="n">l_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">d_vec</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">l_mag</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
 
     <span class="n">s_vec</span> <span class="o">=</span> <span class="n">rv1</span> <span class="o">*</span> <span class="p">(</span><span class="n">r2m</span> <span class="o">-</span> <span class="n">r3m</span><span class="p">)</span> <span class="o">+</span> <span class="n">rv2</span> <span class="o">*</span> <span class="p">(</span><span class="n">r3m</span> <span class="o">-</span> <span class="n">r1m</span><span class="p">)</span> <span class="o">+</span> <span class="n">rv3</span> <span class="o">*</span> <span class="p">(</span><span class="n">r1m</span> <span class="o">-</span> <span class="n">r2m</span><span class="p">)</span>
 
     <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">n_vec</span><span class="p">)</span> <span class="o">*</span> <span class="n">l_mag</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">d_vec</span><span class="p">,</span> <span class="n">rv2</span><span class="p">)</span> <span class="o">/</span> <span class="n">r2m</span> <span class="o">+</span> <span class="n">s_vec</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">v2</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span></div>
 
 
 
@@ -170,7 +172,7 @@
     <span class="n">term2</span> <span class="o">=</span> <span class="p">(</span><span class="n">dt32</span> <span class="o">-</span> <span class="n">dt21</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">dt21</span> <span class="o">*</span> <span class="n">dt32</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="mf">12.0</span> <span class="o">*</span> <span class="n">n2</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="n">p2</span>
     <span class="n">term3</span> <span class="o">=</span> <span class="n">dt21</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">dt32</span> <span class="o">*</span> <span class="n">dt31</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu</span> <span class="o">/</span> <span class="p">(</span><span class="mf">12.0</span> <span class="o">*</span> <span class="n">n3</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="n">p3</span>
 
-    <span class="k">return</span> <span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span> <span class="o">+</span> <span class="n">term3</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span> <span class="o">+</span> <span class="n">term3</span><span class="p">)</span></div>
 
 
 
@@ -285,7 +287,7 @@
         <span class="n">r2_final</span> <span class="o">=</span> <span class="n">R2</span> <span class="o">+</span> <span class="n">rho2</span> <span class="o">*</span> <span class="n">l2</span>
         <span class="n">v2_final</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r2_final</span><span class="p">,</span> <span class="n">v2_final</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r2_final</span><span class="p">,</span> <span class="n">v2_final</span><span class="p">]))</span></div>
 
 
 
@@ -351,7 +353,7 @@
 
     <span class="n">vv</span> <span class="o">=</span> <span class="n">rho_mag_dot</span> <span class="o">*</span> <span class="n">l</span> <span class="o">+</span> <span class="n">rho_mag</span> <span class="o">*</span> <span class="n">ld</span> <span class="o">+</span> <span class="n">v_o</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">rv</span><span class="p">,</span> <span class="n">vv</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">rv</span><span class="p">,</span> <span class="n">vv</span><span class="p">]))</span></div>
 
 
 
@@ -405,7 +407,7 @@
     <span class="n">l_ddot</span> <span class="o">=</span> <span class="n">cl1dd</span> <span class="o">*</span> <span class="n">l1</span> <span class="o">+</span> <span class="n">cl2dd</span> <span class="o">*</span> <span class="n">l2</span> <span class="o">+</span> <span class="n">cl3dd</span> <span class="o">*</span> <span class="n">l3</span>
     <span class="n">R_ddot</span> <span class="o">=</span> <span class="n">cl1dd</span> <span class="o">*</span> <span class="n">R1</span> <span class="o">+</span> <span class="n">cl2dd</span> <span class="o">*</span> <span class="n">R2</span> <span class="o">+</span> <span class="n">cl3dd</span> <span class="o">*</span> <span class="n">R3</span>
 
-    <span class="k">return</span> <span class="n">laplace_iod</span><span class="p">(</span><span class="n">l2</span><span class="p">,</span> <span class="n">l_dot</span><span class="p">,</span> <span class="n">l_ddot</span><span class="p">,</span> <span class="n">R2</span><span class="p">,</span> <span class="n">R_dot</span><span class="p">,</span> <span class="n">R_ddot</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">laplace_iod</span><span class="p">(</span><span class="n">l2</span><span class="p">,</span> <span class="n">l_dot</span><span class="p">,</span> <span class="n">l_ddot</span><span class="p">,</span> <span class="n">R2</span><span class="p">,</span> <span class="n">R_dot</span><span class="p">,</span> <span class="n">R_ddot</span><span class="p">,</span> <span class="n">mu</span><span class="p">))</span></div>
 
 
 
@@ -424,7 +426,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">c2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="n">c3</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">6.0</span>
-    <span class="k">return</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">c2</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">c3</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_kepler_U</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">r0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">v0_mag</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -439,9 +441,9 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">r0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z</span> <span class="o">*</span> <span class="n">c2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">v0_mag</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span> <span class="o">*</span> <span class="n">chi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z</span> <span class="o">*</span> <span class="n">c3</span><span class="p">)</span> <span class="o">+</span> <span class="n">chi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">c2</span>
         <span class="n">chi_new</span> <span class="o">=</span> <span class="n">chi</span> <span class="o">-</span> <span class="n">f</span> <span class="o">/</span> <span class="n">df</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">chi_new</span> <span class="o">-</span> <span class="n">chi</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">chi_new</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">chi_new</span><span class="p">)</span>
         <span class="n">chi</span> <span class="o">=</span> <span class="n">chi_new</span>
-    <span class="k">return</span> <span class="n">chi</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">chi</span><span class="p">)</span>
 
 
 

@@ -2,6 +2,10 @@
 Reaction Wheel (RW) actuator model with friction and momentum limits.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 
 from opengnc.actuators.actuator import Actuator
@@ -68,7 +72,13 @@ class ReactionWheel(Actuator):
         self.viscous_friction = viscous_friction
         self.coulomb_friction = coulomb_friction
 
-    def command(self, torque_cmd: float, current_speed: float = 0.0) -> float:
+    def command(
+        self,
+        torque_cmd: float | None = None,
+        current_speed: float = 0.0,
+        *args: Any,
+        **kwargs: Any
+    ) -> float:
         r"""
         Calculate delivered motor torque.
 
@@ -87,8 +97,12 @@ class ReactionWheel(Actuator):
         float
             Actual torque delivered to the spacecraft (Nm).
         """
+        if torque_cmd is None:
+            if not args:
+                raise ValueError("torque_cmd is required.")
+            torque_cmd = float(args[0])
         torque = self.apply_deadband(torque_cmd)
-        torque = self.apply_saturation(torque)
+        torque = float(self.apply_saturation(torque))
 
         if abs(current_speed) < 1e-4:
             if abs(torque) < self.static_friction:
@@ -103,7 +117,7 @@ class ReactionWheel(Actuator):
             torque -= float(friction_torque)
 
         if self.inertia is not None and self.max_momentum is not None:
-            current_momentum = self.inertia * current_speed
+            current_momentum = float(self.inertia * current_speed)
 
             if (current_momentum >= self.max_momentum and torque > 0) or (
                 current_momentum <= -self.max_momentum and torque < 0

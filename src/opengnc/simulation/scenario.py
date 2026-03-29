@@ -1,6 +1,12 @@
+"""
+Scenario Configuration Manager.
+"""
+
+from __future__ import annotations
+
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 
 class ScenarioConfig:
@@ -44,9 +50,10 @@ class ScenarioConfig:
                 self.config = json.load(f)
         elif ext in [".yaml", ".yml"]:
             try:
-                import yaml
+                import yaml  # type: ignore[import-untyped]
                 with open(self.filename, encoding="utf-8") as f:
-                    self.config = yaml.safe_load(f)
+                    data = yaml.safe_load(f)
+                    self.config = cast(dict[str, Any], data) if data is not None else {}
             except ImportError:
                 raise ImportError(
                     "PyYAML is required to parse YAML scenarios. Install it with `pip install pyyaml`."

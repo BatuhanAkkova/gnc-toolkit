@@ -31,13 +31,7 @@ This roadmap outlines the strategic development of **OpenGNC** to bridge the gap
 - [ ] **FDIR v2**: Implement PCA and LSTM-based anomaly detection for sensor/actuator failures.
 - [ ] **MPC Optimization**: Leverage CasADi for highly constrained multi-burn optimization (Debris removal, refueling).
 
-### Phase 3: Deep Space & Lunar Exploration
-*Expand capabilities beyond Earth orbit.*
-- [ ] **Lunar Environment**: High-fidelity Mascons, Moon-centered frames, and Lunar albedo models.
-- [ ] **Deep Space Navigation**: DSN (Deep Space Network) scheduling helpers and Optical Navigation (OpNav) from limb/crater detection.
-- [ ] **Radiation Shielding Analysis**: Integration of radiation environment models (AP8/AE8) for mission design.
-
-### Phase 4: Flight Integration & HIL Framework
+### Phase 3: Flight Integration & HIL Framework
 *Bridging simulation to real hardware.*
 - [ ] **Embedded Target Support**: Move core Kalman Filters and Control Laws to optimized C99-compatible code.
 - [ ] **HIL/PIL Framework**: Generic interface for simulated sensors to talk to hardware over Serial/UDP/ROS2.
@@ -59,7 +53,7 @@ This roadmap outlines the strategic development of **OpenGNC** to bridge the gap
 ### Code Quality & Validation
 | Feature | Status | Notes |
 |---|---|---|
-| Type hints (Complete Coverage) | 🔄 | Expand to all public APIs |
+| Type hints (Complete Coverage) | ✅ | Expand to all public APIs |
 | Docstrings (NumPy style) | ✅ | Enforced via Ruff |
 | Linting / Pre-commit | ✅ | |
 | Benchmarks / Profiling | 🔄 | Expand `timeit` suite to core integrators |

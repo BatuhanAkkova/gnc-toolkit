@@ -2,7 +2,10 @@
 Numerical Cowell Propagator.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
+from typing import Any, cast
 
 import numpy as np
 
@@ -34,8 +37,8 @@ class CowellPropagator(Propagator):
         r_i: np.ndarray,
         v_i: np.ndarray,
         dt: float,
-        perturbation_acc_fn: Callable | None = None,
-        **kwargs,
+        perturbation_acc_fn: Callable[[float, np.ndarray, np.ndarray], np.ndarray] | None = None,
+        **kwargs: Any,
     ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagates the state using numerical integration.
@@ -65,7 +68,7 @@ class CowellPropagator(Propagator):
         y0 = np.concatenate([r_i, v_i])
 
         # Define the equations of motion: dy/dt = f(t, y)
-        def equations_of_motion(t, y):
+        def equations_of_motion(t: float, y: np.ndarray) -> np.ndarray:
             r = y[:3]
             v = y[3:]
             r_mag = np.linalg.norm(r)
@@ -80,7 +83,7 @@ class CowellPropagator(Propagator):
 
             a_total = a_two_body + a_pert
 
-            return np.concatenate([v, a_total])
+            return cast(np.ndarray, np.concatenate([v, a_total]))
 
         # Determine integration step size
         # If the user provides 'dt_step' in kwargs, use it.
@@ -101,7 +104,7 @@ class CowellPropagator(Propagator):
         r_f = y_final[:3]
         v_f = y_final[3:]
 
-        return r_f, v_f
+        return cast(np.ndarray, r_f), cast(np.ndarray, v_f)
 
 
 

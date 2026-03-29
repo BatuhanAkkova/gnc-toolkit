@@ -43,15 +43,15 @@ def calculate_launch_windows(jd_start: float, jd_end: float, inc_deg: float, raa
     t_array = np.arange(0, total_sec, step_sec)
     jd_array = jd_start + t_array / 86400.0
 
-    dot_products = []
+    dot_products_list: list[float] = []
 
     for jd in jd_array:
         # Convert to ECI
         r_site_eci, _ = eci2_ecef_or_inverse_wrapper(r_site_ecef, jd)
         dot = np.dot(r_site_eci, N_orbit)
-        dot_products.append(dot)
+        dot_products_list.append(float(dot))
 
-    dot_products = np.array(dot_products)
+    dot_products = np.array(dot_products_list, dtype=float)
 
     # Find sign changes
     windows = []

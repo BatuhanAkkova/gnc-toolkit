@@ -28,7 +28,7 @@ class MonteCarloSim:
         sim = self.simulator_factory(seed, **kwargs)
         return sim.run()
 
-    def run_sequential(self, num_runs: int, **kwargs) -> list[Any]:
+    def run_sequential(self, num_runs: int, **kwargs: Any) -> list[Any]:
         """
         Execute Monte Carlo iterations in a single thread.
 
@@ -55,7 +55,7 @@ class MonteCarloSim:
         self,
         num_runs: int,
         processes: int | None = None,
-        **kwargs
+        **kwargs: Any
     ) -> list[Any]:
         """
         Execute Monte Carlo iterations across multiple processor cores.

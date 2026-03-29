@@ -2,7 +2,10 @@
 Abstract base class for actuator models.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import Any
 
 import numpy as np
 
@@ -45,20 +48,20 @@ class Actuator(ABC):
         self.deadband = deadband
 
     @abstractmethod
-    def command(self, signal: np.ndarray | float, **kwargs) -> np.ndarray | float:
+    def command(self, *args: Any, **kwargs: Any) -> Any:
         """
         Calculate the actuator output based on the command signal.
 
         Parameters
         ----------
-        signal : np.ndarray | float
-            The commanded input (e.g., torque, dipole, voltage).
+        *args : Any
+            Commanded input(s) (e.g., torque, dipole, voltage).
         **kwargs : dict
             Additional state info (e.g., current speed, environment).
 
         Returns
         -------
-        np.ndarray | float
+        Any
             The actual output applied to the system.
         """
         pass

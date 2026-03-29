@@ -3,6 +3,13 @@ Utility for managing and searching star catalogs.
 """
 
 import numpy as np
+from typing import TypedDict
+
+
+class _StarEntry(TypedDict):
+    id: int
+    mag: float
+    vec: np.ndarray
 
 
 class StarCatalog:
@@ -15,7 +22,7 @@ class StarCatalog:
         Args:
             catalog_path (str): Path to the catalog file (CSV/DAT).
         """
-        self.stars = []  # List of dicts or array: {id, magnitude, vector_j2000}
+        self.stars: list[_StarEntry] = []
         if catalog_path:
             self.load_catalog(catalog_path)
 
@@ -26,13 +33,15 @@ class StarCatalog:
         """
         # Create a few synthetic stars for testing
         self.stars = [
-            {"id": 1, "mag": 0.0, "vec": np.array([1, 0, 0])},  # Vega-ish
-            {"id": 2, "mag": 0.5, "vec": np.array([0, 1, 0])},
-            {"id": 3, "mag": 1.0, "vec": np.array([0, 0, 1])},
-            {"id": 4, "mag": 0.1, "vec": np.array([-1, 0, 0])},
+            {"id": 1, "mag": 0.0, "vec": np.array([1.0, 0.0, 0.0])},  # Vega-ish
+            {"id": 2, "mag": 0.5, "vec": np.array([0.0, 1.0, 0.0])},
+            {"id": 3, "mag": 1.0, "vec": np.array([0.0, 0.0, 1.0])},
+            {"id": 4, "mag": 0.1, "vec": np.array([-1.0, 0.0, 0.0])},
         ]
 
-    def get_stars_in_fov(self, boresight: np.ndarray, fov_deg: float, min_mag: float | None = None) -> list:
+    def get_stars_in_fov(
+        self, boresight: np.ndarray, fov_deg: float, min_mag: float | None = None
+    ) -> list[_StarEntry]:
         """
         Filters stars within a given Field of View (FOV).
 
@@ -46,7 +55,7 @@ class StarCatalog:
             list: Stars within the FOV.
         """
         cos_limit = np.cos(np.radians(fov_deg / 2))
-        visible_stars = []
+        visible_stars: list[_StarEntry] = []
 
         for star in self.stars:
             if min_mag is not None and star["mag"] > min_mag:

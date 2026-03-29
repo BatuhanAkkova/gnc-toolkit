@@ -2,7 +2,10 @@
 Abstract base class for orbit propagators.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import Any
 
 import numpy as np
 
@@ -14,7 +17,7 @@ class Propagator(ABC):
 
     @abstractmethod
     def propagate(
-        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs
+        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs: Any
     ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagates the state vector (position and velocity) forward in time.

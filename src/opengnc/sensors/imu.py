@@ -2,6 +2,8 @@
 Inertial Measurement Unit (IMU) with Accelerometer and Gyroscope.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 import numpy as np
@@ -54,7 +56,9 @@ class Accelerometer(Sensor):
         self.bias = np.asarray(bias) if bias is not None else np.zeros(3)
         self.scale_factor = scale_factor
 
-    def measure(self, true_accel: np.ndarray, **kwargs: Any) -> np.ndarray:
+    def measure(
+        self, true_accel: np.ndarray | None = None, *args: Any, **kwargs: Any
+    ) -> np.ndarray:
         r"""
         Generate acceleration measurement.
 
@@ -73,6 +77,10 @@ class Accelerometer(Sensor):
         np.ndarray
             Measured acceleration vector ($m/s^2$).
         """
+        if true_accel is None:
+            if not args:
+                raise ValueError("true_accel is required.")
+            true_accel = np.asarray(args[0])
         noise = np.random.normal(0, self.noise_std, 3)
         measured_accel = self.scale_factor * np.asarray(true_accel) + self.bias + noise
         return measured_accel
@@ -106,7 +114,11 @@ class IMU(Sensor):
         self.accel = Accelerometer(**accel_p)
 
     def measure(
-        self, true_omega: np.ndarray, true_accel: np.ndarray, **kwargs: Any
+        self,
+        true_omega: np.ndarray | None = None,
+        true_accel: np.ndarray | None = None,
+        *args: Any,
+        **kwargs: Any
     ) -> tuple[np.ndarray, np.ndarray]:
         """
         Generate dual IMU measurements.
@@ -125,6 +137,14 @@ class IMU(Sensor):
         tuple[np.ndarray, np.ndarray]
             (measured_omega, measured_accel).
         """
+        if true_omega is None:
+            if not args:
+                raise ValueError("true_omega is required.")
+            true_omega = np.asarray(args[0])
+        if true_accel is None:
+            if len(args) < 2:
+                raise ValueError("true_accel is required.")
+            true_accel = np.asarray(args[1])
         meas_omega = self.gyro.measure(true_omega, **kwargs)
         meas_accel = self.accel.measure(true_accel, **kwargs)
         return meas_omega, meas_accel

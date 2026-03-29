@@ -79,4 +79,4 @@ class CR3BP:
         v_sq = vx**2 + vy**2 + vz**2
         potential = (x**2 + y**2) + 2 * (1 - self.mu) / r1 + 2 * self.mu / r2
 
-        return potential - v_sq
+        return float(potential - v_sq)

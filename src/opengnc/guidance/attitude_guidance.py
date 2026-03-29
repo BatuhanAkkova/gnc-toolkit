@@ -181,7 +181,7 @@ def attitude_blending(q1: np.ndarray, q2: np.ndarray, alpha: float) -> np.ndarra
     s0 = np.cos(theta) - dot_prod * sin_theta / sin_theta_0
     s1 = sin_theta / sin_theta_0
 
-    return (s0 * quat1) + (s1 * quat2)
+    return np.asarray((s0 * quat1) + (s1 * quat2))
 
 
 def _rmat_to_quat(r_mat: np.ndarray) -> np.ndarray:

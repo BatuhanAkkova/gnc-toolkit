@@ -2,7 +2,9 @@
 Entry, Descent, and Landing (EDL) dynamics and utilities.
 """
 
-from typing import Any
+from __future__ import annotations
+
+from typing import Any, cast
 
 import numpy as np
 
@@ -67,7 +69,7 @@ def ballistic_entry_dynamics(
     # Gravity
     a_grav = -(mu / r_mag**3) * r_vec
 
-    return np.concatenate([v_vec, a_grav + a_drag])
+    return cast(np.ndarray, np.concatenate([v_vec, a_grav + a_drag]))
 
 
 def lifting_entry_dynamics(
@@ -140,7 +142,7 @@ def lifting_entry_dynamics(
     # Gravity
     a_grav = -(mu / r_mag**3) * r_vec
 
-    return np.concatenate([v_vec, a_grav + a_drag + a_lift])
+    return cast(np.ndarray, np.concatenate([v_vec, a_grav + a_drag + a_lift]))
 
 
 def sutton_grave_heating(rho: float, v: float, rn: float) -> float:
@@ -166,7 +168,7 @@ def sutton_grave_heating(rho: float, v: float, rn: float) -> float:
         Stagnation heat flux ($W/m^2$).
     """
     k = 1.74153e-4  # Constant for Earth atmospheric species
-    return k * np.sqrt(rho / rn) * v**3
+    return float(k * np.sqrt(rho / rn) * v**3)
 
 
 def calculate_g_load(acc_vec: np.ndarray) -> float:
@@ -233,10 +235,12 @@ def aerocapture_guidance(
         rv, vv = s[:3], s[3:]
         r, v = np.linalg.norm(rv), np.linalg.norm(vv)
         energy = 0.5 * v**2 - mu / r
-        if energy >= 0: return np.inf
+        if energy >= 0:
+            return float(np.inf)
         a = -mu / (2 * energy)
-        e = np.sqrt(max(0, 1 - np.linalg.norm(np.cross(rv, vv))**2 / (a * mu)))
-        return a * (1 + e) - r_planet
+        val = 1.0 - (np.linalg.norm(np.cross(rv, vv)) ** 2) / (a * mu)
+        e = float(np.sqrt(max(0.0, float(val))))
+        return float(a * (1 + e) - r_planet)
 
     if cl <= 0.0:
         return 0.0
@@ -246,12 +250,12 @@ def aerocapture_guidance(
             return lifting_entry_dynamics(t, y, cl, cd, bank, area, mass, mu, r_planet, rho_model)
 
         def exit_check(t: float, y: np.ndarray) -> float:
-            return np.linalg.norm(y[:3]) - atm_int
-        exit_check.terminal = True
-        exit_check.direction = 1
+            return float(np.linalg.norm(y[:3]) - atm_int)
+        exit_check.terminal = True  # type: ignore[attr-defined]
+        exit_check.direction = 1  # type: ignore[attr-defined]
 
         sol = solve_ivp(dydt, (0, 3600.0), state, events=exit_check, rtol=1e-4)
-        return get_exit_apoapsis(sol.y[:, -1])
+        return float(get_exit_apoapsis(sol.y[:, -1]))
 
     # Simple Bisection
     b_min, b_max = 0.0, np.pi
@@ -263,7 +267,7 @@ def aerocapture_guidance(
         else:
             b_max = b_mid
 
-    return (b_min + b_max) / 2
+    return float((b_min + b_max) / 2)
 
 
 def hazard_avoidance(
@@ -295,8 +299,8 @@ def hazard_avoidance(
         dist = np.linalg.norm(pos - h_pos)
         if dist < safety_margin:
             u_div = (pos - h_pos) / max(1e-3, dist)
-            return u_div * 5.0
-    return np.zeros(3)
+            return cast(np.ndarray, u_div * 5.0)
+    return cast(np.ndarray, np.zeros(3))
 
 
 

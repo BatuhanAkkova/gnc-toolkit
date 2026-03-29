@@ -2,6 +2,10 @@
 SGP4/SDP4 Analytical Propagator.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 from sgp4.api import Satrec
 
@@ -30,7 +34,7 @@ class Sgp4Propagator(Propagator):
         self.jdsatepochF = self.sat.jdsatepochF
 
     def propagate(
-        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs
+        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, **kwargs: Any
     ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagates the satellite state from TLE epoch forward by dt.

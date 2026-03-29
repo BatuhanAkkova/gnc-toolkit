@@ -2,6 +2,8 @@
 Linear Quadratic Regulator (LQR) Controller.
 """
 
+from __future__ import annotations
+
 import numpy as np
 from scipy.linalg import solve_continuous_are
 
@@ -33,8 +35,8 @@ class LQR:
         self.B = np.asarray(B)
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
-        self.P = None
-        self.K = None
+        self.P: np.ndarray | None = None
+        self.K: np.ndarray | None = None
 
     def solve(self) -> np.ndarray:
         """
@@ -63,6 +65,8 @@ class LQR:
         """
         if self.P is None:
             self.solve()
+        if self.P is None:
+            raise RuntimeError("Riccati solution not available.")
 
         # Numerically stable solve for R*K = B^T*P
         self.K = np.linalg.solve(self.R, self.B.T @ self.P)

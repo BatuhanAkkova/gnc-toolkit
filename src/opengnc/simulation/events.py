@@ -8,7 +8,7 @@ class Event:
     A single discrete event to be processed at a specific time.
     """
 
-    def __init__(self, t: float, callback: Callable, *args, **kwargs) -> None:
+    def __init__(self, t: float, callback: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
         """
         Initialize a discrete event.
 
@@ -24,7 +24,7 @@ class Event:
         self.args = args
         self.kwargs = kwargs
 
-    def __lt__(self, other):
+    def __lt__(self, other: Event) -> bool:
         return self.t < other.t
 
     def execute(self) -> Any:
@@ -41,7 +41,7 @@ class EventQueue:
     def __init__(self) -> None:
         self._events: list[Event] = []
 
-    def schedule(self, t: float, callback: Callable, *args, **kwargs) -> None:
+    def schedule(self, t: float, callback: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
         """
         Schedule a new event.
 

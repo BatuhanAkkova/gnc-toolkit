@@ -4,6 +4,7 @@ Lander/Rover surface navigation EKF using landmark tracking.
 
 
 import numpy as np
+from typing import cast
 
 from opengnc.kalman_filters.ekf import EKF
 
@@ -31,10 +32,10 @@ class SurfaceNavigationEKF:
     def __init__(self, x0: np.ndarray, p0: np.ndarray, q_mat: np.ndarray, r_mat: np.ndarray) -> None:
         """Initialize Surface EKF."""
         self.ekf = EKF(dim_x=6, dim_z=3)
-        self.ekf.x = np.asarray(x0, dtype=float)
-        self.ekf.P = np.asarray(p0, dtype=float)
-        self.ekf.Q = np.asarray(q_mat, dtype=float)
-        self.ekf.R = np.asarray(r_mat, dtype=float)
+        self.ekf.x = cast(np.ndarray, np.asarray(x0, dtype=float))
+        self.ekf.P = cast(np.ndarray, np.asarray(p0, dtype=float))
+        self.ekf.Q = cast(np.ndarray, np.asarray(q_mat, dtype=float))
+        self.ekf.R = cast(np.ndarray, np.asarray(r_mat, dtype=float))
 
     def predict(self, dt: float, accel: np.ndarray | None = None) -> None:
         """
@@ -50,7 +51,7 @@ class SurfaceNavigationEKF:
         def fx(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
             r, v = x[:3], x[3:]
             a = np.asarray(u) if u is not None else np.zeros(3)
-            return np.concatenate([r + v*dt_step + 0.5*a*dt_step**2, v + a*dt_step])
+            return cast(np.ndarray, np.concatenate([r + v*dt_step + 0.5*a*dt_step**2, v + a*dt_step]))
 
         def f_jac(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
             phi = np.eye(6)
@@ -75,19 +76,19 @@ class SurfaceNavigationEKF:
         r_land = np.asarray(landmark_pos)
 
         def hx(x: np.ndarray) -> np.ndarray:
-            return r_land - x[:3]
+            return np.asarray(r_land - x[:3])
 
         def h_jac(x_state_unused: np.ndarray) -> np.ndarray:
             h = np.zeros((3, 6))
             h[:, :3] = -np.eye(3)
-            return h
+            return cast(np.ndarray, h)
 
         self.ekf.update(np.asarray(z_obs), hx, h_jac)
 
     @property
     def state(self) -> np.ndarray:
         """Estimated 6D rover state vector."""
-        return self.ekf.x
+        return cast(np.ndarray, np.asarray(self.ekf.x, dtype=float))
 
 
 

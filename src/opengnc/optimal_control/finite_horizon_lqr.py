@@ -3,6 +3,7 @@ Finite-Horizon Linear Quadratic Regulator (LQR).
 """
 
 from collections.abc import Callable
+from typing import cast
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -49,8 +50,8 @@ class FiniteHorizonLQR:
         self.R_fn = R_fn
         self.Pf = np.asarray(Pf)
         self.T = float(T)
-        self.P_trajectory = None
-        self.t_span = None
+        self.P_trajectory: np.ndarray | None = None
+        self.t_span: np.ndarray | None = None
 
     def solve(self, num_points: int = 100) -> tuple[np.ndarray, np.ndarray]:
         r"""
@@ -80,15 +81,15 @@ class FiniteHorizonLQR:
             # Solve for R^-1 * B.T @ P numerically
             k_term = np.linalg.solve(r_cur, b_cur.T @ p_mat)
             p_dot = -(p_mat @ a_cur + a_cur.T @ p_mat - p_mat @ b_cur @ k_term + q_cur)
-            return p_dot.flatten()
+            return cast(np.ndarray, p_dot.flatten())
 
         # Backward integration from T to 0
         t_eval = np.linspace(self.T, 0, num_points)
         sol = solve_ivp(dre, [self.T, 0], self.Pf.flatten(), t_eval=t_eval, method="RK45")
 
         # Reverse results to be monotonic from 0 to T
-        self.t_span = sol.t[::-1]
-        self.P_trajectory = sol.y.T[::-1].reshape((-1, nx, nx))
+        self.t_span = cast(np.ndarray, sol.t[::-1])
+        self.P_trajectory = cast(np.ndarray, sol.y.T[::-1].reshape((-1, nx, nx)))
 
         return self.t_span, self.P_trajectory
 
@@ -106,8 +107,10 @@ class FiniteHorizonLQR:
         np.ndarray
             Feedback gain matrix K (nu x nx).
         """
-        if self.P_trajectory is None:
+        if self.P_trajectory is None or self.t_span is None:
             self.solve()
+        if self.P_trajectory is None or self.t_span is None:
+            raise RuntimeError("Riccati trajectory not available.")
 
         # Linearly interpolate each element of the P matrix
         nx = self.Pf.shape[0]
@@ -118,7 +121,7 @@ class FiniteHorizonLQR:
 
         b_cur = self.B_fn(t)
         r_cur = self.R_fn(t)
-        return np.linalg.solve(r_cur, b_cur.T @ p_t)
+        return cast(np.ndarray, np.linalg.solve(r_cur, b_cur.T @ p_t))
 
     def compute_control(self, x: np.ndarray, t: float) -> np.ndarray:
         """
@@ -137,7 +140,7 @@ class FiniteHorizonLQR:
             Optimal control input u (nu,).
         """
         k_t = self.get_gain(t)
-        return -k_t @ np.asarray(x)
+        return cast(np.ndarray, -k_t @ np.asarray(x))
 
 
 

@@ -2,6 +2,8 @@
 Star Tracker sensor model.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 import numpy as np
@@ -32,7 +34,7 @@ class StarTracker(Sensor):
         self.noise_std = noise_std
         self.bias = np.asarray(bias) if bias is not None else np.zeros(3)
 
-    def measure(self, true_quat: np.ndarray, **kwargs: Any) -> np.ndarray:
+    def measure(self, true_quat: np.ndarray | None = None, *args: Any, **kwargs: Any) -> np.ndarray:
         """
         Simulate attitude measurement with error quaternion.
 
@@ -48,6 +50,10 @@ class StarTracker(Sensor):
         np.ndarray
             Measured quaternion [x, y, z, w].
         """
+        if true_quat is None:
+            if not args:
+                raise ValueError("true_quat is required.")
+            true_quat = np.asarray(args[0])
         tq = np.asarray(true_quat)
         noise = np.random.normal(0, self.noise_std, 3)
         error_vec = self.bias + noise
@@ -68,8 +74,8 @@ class StarTracker(Sensor):
         q_meas = q_meas / np.linalg.norm(q_meas)
 
         # Apply faults from base class
-        q_meas = self.apply_faults(q_meas)
-        return q_meas / np.linalg.norm(q_meas)
+        q_meas = np.asarray(self.apply_faults(q_meas), dtype=float)
+        return np.asarray(q_meas / np.linalg.norm(q_meas), dtype=float)
 
 
 

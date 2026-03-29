@@ -2,6 +2,7 @@
 Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
 """
 
+from __future__ import annotations
 
 import numpy as np
 

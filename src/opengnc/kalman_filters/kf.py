@@ -4,6 +4,7 @@ Standard Linear Kalman Filter (KF) implementation.
 
 
 import numpy as np
+from typing import cast
 
 
 class KF:
@@ -65,9 +66,9 @@ class KF:
 
         # 1. State Prediction
         if b is not None and u is not None:
-            self.x = (f @ self.x) + (b @ np.asarray(u))
+            self.x = cast(np.ndarray, (f @ self.x) + (b @ np.asarray(u)))
         else:
-            self.x = f @ self.x
+            self.x = cast(np.ndarray, f @ self.x)
 
         # 2. Covariance Prediction
         self.P = (f @ self.P @ f.T) + q
@@ -107,7 +108,7 @@ class KF:
         k_gain = self.P @ h.T @ np.linalg.inv(s_mat)
 
         # 4. State Correction
-        self.x = self.x + (k_gain @ innov)
+        self.x = cast(np.ndarray, self.x + (k_gain @ innov))
 
         # 5. Covariance Correction (Joseph Form): P = (I-KH)P(I-KH)' + KRK'
         i_mat = np.eye(self.dim_x)

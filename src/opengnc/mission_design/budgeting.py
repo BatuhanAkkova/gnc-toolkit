@@ -3,6 +3,7 @@ Propellant budgeting and orbital lifetime prediction tools.
 """
 
 import numpy as np
+from typing import Any
 from scipy.integrate import solve_ivp
 
 from opengnc.disturbances.drag import LumpedDrag
@@ -35,7 +36,7 @@ def calculate_propellant_mass(initial_mass: float, dv: float, isp: float) -> flo
         raise ValueError("Isp must be positive.")
     mass_ratio = np.exp(dv / (isp * g0))
     final_mass = initial_mass / mass_ratio
-    return initial_mass - final_mass
+    return float(initial_mass - final_mass)
 
 
 def calculate_delta_v(initial_mass: float, propellant_mass: float, isp: float) -> float:
@@ -65,7 +66,7 @@ def calculate_delta_v(initial_mass: float, propellant_mass: float, isp: float) -
     if isp <= 0:
         raise ValueError("Isp must be positive.")
     final_mass = initial_mass - propellant_mass
-    return isp * g0 * np.log(initial_mass / final_mass)
+    return float(isp * g0 * np.log(initial_mass / final_mass))
 
 
 def calculate_staged_delta_v(stages: list[dict]) -> float:
@@ -108,7 +109,7 @@ def calculate_staged_delta_v(stages: list[dict]) -> float:
         # update current payload for the next stage down
         current_payload = m0_stage  # The entire current stage is the payload for the stage below it
 
-    return total_dv
+    return float(total_dv)
 
 
 class ManeuverSequence:
@@ -127,7 +128,7 @@ class ManeuverSequence:
         self.initial_mass = initial_mass
         self.current_mass = initial_mass
         self.isp = isp
-        self.maneuvers = []  # List of tuples (name, dv, m_prop_consumed, m_final, description)
+        self.maneuvers: list[dict[str, Any]] = []
 
     def add_maneuver(self, name: str, dv: float, description: str = "") -> None:
         """
@@ -166,7 +167,7 @@ class ManeuverSequence:
 
     def get_total_dv(self) -> float:
         """Total Delta-V applied."""
-        return sum(m["dv"] for m in self.maneuvers)
+        return float(sum(m["dv"] for m in self.maneuvers))
 
     def get_total_propellant(self) -> float:
         """Total propellant consumed."""
@@ -179,7 +180,7 @@ def predict_lifetime(
     mass: float,
     area: float,
     cd: float,
-    density_model,
+    density_model: Any,
     jd_epoch: float,
     max_days: float = 30,
     dt: float = 100.0,
@@ -215,7 +216,7 @@ def predict_lifetime(
     # State: [r_km, v_km_s]
     y0 = np.concatenate([r_eci, v_eci])
 
-    def equations_of_motion(t, y):
+    def equations_of_motion(t: float, y: np.ndarray) -> np.ndarray:
         r = y[:3]  # km
         v = y[3:]  # km/s
         r_mag = np.linalg.norm(r)
@@ -229,14 +230,14 @@ def predict_lifetime(
         a_total = a_grav + a_drag_km_s2
         return np.concatenate([v, a_total])
 
-    def reentry_event(t, y):
+    def reentry_event(t: float, y: np.ndarray) -> float:
         r = y[:3]
         _, _, h = eci2geodetic(r * 1000.0, jd_epoch + t / 86400.0)
         # h is in meters
         return h - 100000.0  # Event at 100 km altitude
 
-    reentry_event.terminal = True
-    reentry_event.direction = -1  # altitude decreasing
+    reentry_event.terminal = True  # type: ignore[attr-defined]
+    reentry_event.direction = -1  # type: ignore[attr-defined]  # altitude decreasing
 
     # Max simulation time in seconds
     t_max = max_days * 86400.0

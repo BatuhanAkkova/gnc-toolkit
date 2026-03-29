@@ -46,7 +46,7 @@ def igrf_field(
         raise ImportError("ppigrf not installed")
 
     # ppigrf expects (lon, lat, alt, time)
-    return np.array(ppigrf.igrf(lon, lat, alt, time))
+    return np.asarray(ppigrf.igrf(lon, lat, alt, time), dtype=float)
 
 
 def wmm_field(
@@ -124,14 +124,14 @@ def tilted_dipole_field(r_ecef: np.ndarray) -> np.ndarray:
     r_mag = np.linalg.norm(rv)
 
     if r_mag < 1.0:
-        return np.zeros(3)
+        return np.zeros(3, dtype=float)
 
     r_unit = rv / r_mag
 
     # 5. Dipole Field Equation
     b_ecef = (k_mag / (r_mag**3)) * (3.0 * np.dot(moment_u, r_unit) * r_unit - moment_u)
 
-    return -b_ecef
+    return np.asarray(-b_ecef, dtype=float)
 
 
 

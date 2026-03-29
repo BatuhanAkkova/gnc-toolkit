@@ -2,7 +2,10 @@
 Classical Rodrigues Parameters (CRP) kinematics and composition.
 """
 
+from __future__ import annotations
+
 import numpy as np
+from typing import cast
 
 
 def quat_to_crp(q: np.ndarray) -> np.ndarray:
@@ -31,7 +34,7 @@ def quat_to_crp(q: np.ndarray) -> np.ndarray:
     x, y, z, w = qv
     if abs(w) < 1e-12:
         raise ValueError("CRP is singular for 180-degree rotations.")
-    return np.array([x, y, z]) / w
+    return cast(np.ndarray, np.array([x, y, z]) / w)
 
 
 def crp_to_quat(q_crp: np.ndarray) -> np.ndarray:
@@ -51,7 +54,7 @@ def crp_to_quat(q_crp: np.ndarray) -> np.ndarray:
     cv = np.asarray(q_crp)
     norm_sq = np.sum(cv**2)
     den = np.sqrt(1.0 + norm_sq)
-    return np.array([cv[0] / den, cv[1] / den, cv[2] / den, 1.0 / den])
+    return cast(np.ndarray, np.array([cv[0] / den, cv[1] / den, cv[2] / den, 1.0 / den]))
 
 
 def crp_to_dcm(q_crp: np.ndarray) -> np.ndarray:
@@ -78,7 +81,7 @@ def crp_to_dcm(q_crp: np.ndarray) -> np.ndarray:
         [-q2, q1,  0.0]
     ])
 
-    return np.eye(3) + (2.0 * s_mat @ s_mat + 2.0 * s_mat) / (1.0 + norm_sq)
+    return cast(np.ndarray, np.eye(3) + (2.0 * s_mat @ s_mat + 2.0 * s_mat) / (1.0 + norm_sq))
 
 
 def crp_addition(q1: np.ndarray, q2: np.ndarray) -> np.ndarray:
@@ -111,7 +114,7 @@ def crp_addition(q1: np.ndarray, q2: np.ndarray) -> np.ndarray:
     if abs(1.0 - dot) < 1e-12:
         raise ValueError("CRP addition is singular (rotation equals 180 degrees).")
 
-    return (qv1 + qv2 + np.cross(qv2, qv1)) / (1.0 - dot)
+    return cast(np.ndarray, (qv1 + qv2 + np.cross(qv2, qv1)) / (1.0 - dot))
 
 
 

@@ -2,6 +2,10 @@
 Solar Sail force model based on Solar Radiation Pressure (SRP).
 """
 
+from __future__ import annotations
+
+from typing import Any, cast
+
 import numpy as np
 
 from opengnc.actuators.actuator import Actuator
@@ -31,7 +35,7 @@ class SolarSail(Actuator):
         reflectivity: float = 0.9,
         specular_reflect_coeff: float = 0.9,
         name: str = "SolarSail",
-    ):
+    ) -> None:
         super().__init__(name=name)
         self.area = area
         self.rho = reflectivity
@@ -80,9 +84,9 @@ class SolarSail(Actuator):
             * ((1 - rho_s) * u_sun + (2 * rho_s * cos_theta + (2 / 3) * rho_d) * n)
         )
 
-        return force
+        return cast(np.ndarray, force)
 
-    def command(self, normal_cmd: np.ndarray, **kwargs) -> np.ndarray:
+    def command(self, normal_cmd: np.ndarray | None = None, *args: Any, **kwargs: Any) -> np.ndarray:
         """
         Calculate force based on commanded normal vector and current environment.
 
@@ -101,9 +105,13 @@ class SolarSail(Actuator):
         np.ndarray
             Force vector (N).
         """
+        if normal_cmd is None:
+            if not args:
+                raise ValueError("normal_cmd is required.")
+            normal_cmd = np.asarray(args[0])
         sun_vec = kwargs.get("sun_vec", np.array([1.0, 0.0, 0.0]))
         dist = float(kwargs.get("distance_au", 1.0))
-        return self.calculate_force(sun_vec, normal_cmd, distance_au=dist)
+        return cast(np.ndarray, self.calculate_force(sun_vec, normal_cmd, distance_au=dist))
 
 
 

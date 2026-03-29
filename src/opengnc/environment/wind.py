@@ -42,7 +42,7 @@ class AtmosphereCoRotation:
             Wind velocity vector (m/s).
         """
         rv = np.asarray(r_eci)
-        return np.cross(self.omega_earth, rv)
+        return np.asarray(np.cross(self.omega_earth, rv))
 
     def get_relative_velocity(
         self,
@@ -73,7 +73,7 @@ class AtmosphereCoRotation:
         rv = np.asarray(r_eci)
         vv = np.asarray(v_eci)
         v_wind = self.get_wind_velocity(rv, jd)
-        return vv - v_wind
+        return np.asarray(vv - v_wind)
 
 
 

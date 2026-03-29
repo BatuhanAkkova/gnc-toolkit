@@ -4,6 +4,7 @@ Navigation using GNSS (GPS) position and velocity measurements.
 
 
 import numpy as np
+from typing import Any
 
 from .orbit_determination import OrbitDeterminationEKF
 
@@ -22,7 +23,7 @@ class GPSNavigation(OrbitDeterminationEKF):
         r_meas: np.ndarray,
         v_meas: np.ndarray | None = None,
         gps_cov: np.ndarray | None = None,
-        **kwargs
+        **kwargs: Any
     ) -> None:
         r"""
         Update state estimate using GNSS Cartesian measurements.

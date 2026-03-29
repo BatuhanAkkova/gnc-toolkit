@@ -2,6 +2,8 @@
 Gauss-Variational Equations (GVE) Propagator.
 """
 
+from __future__ import annotations
+
 from typing import Callable
 
 import numpy as np
@@ -26,7 +28,7 @@ class GVEPropagator(Propagator):
         """Initialize with gravity constant."""
         self.mu = mu
 
-    def propagate(
+    def propagate(  # type: ignore[override]
         self,
         t0: float,
         state0: np.ndarray,
@@ -58,7 +60,7 @@ class GVEPropagator(Propagator):
         k3 = self.gve_derivatives(t0 + 0.5 * dt, state0 + 0.5 * dt * k2, perturbation_func)
         k4 = self.gve_derivatives(t0 + dt, state0 + dt * k3, perturbation_func)
 
-        return state0 + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
+        return np.asarray(state0 + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
 
     def gve_derivatives(
         self,

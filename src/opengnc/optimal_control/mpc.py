@@ -3,6 +3,7 @@ Linear and Nonlinear Model Predictive Control (MPC) solvers.
 """
 
 from collections.abc import Callable
+from typing import Any, cast
 
 import numpy as np
 from scipy.optimize import minimize
@@ -110,7 +111,7 @@ class LinearMPC:
             return float(cost + x.T @ self.P @ x)
 
         # Build Input Bounds
-        bounds = []
+        bounds: list[tuple[float, float]] = []
         if self.u_min is not None or self.u_max is not None:
             umin = np.full(self.nu, self.u_min) if np.isscalar(self.u_min) else np.asarray(self.u_min).flatten()
             umax = np.full(self.nu, self.u_max) if np.isscalar(self.u_max) else np.asarray(self.u_max).flatten()
@@ -118,10 +119,10 @@ class LinearMPC:
                 for i in range(self.nu):
                     bounds.append((umin[i], umax[i]))
         else:
-            bounds = None
+            bounds = []
 
         # State constraints
-        constraints = []
+        constraints: list[dict[str, Any]] = []
         if self.x_min is not None or self.x_max is not None:
             xmin = np.full(self.nx, self.x_min) if np.isscalar(self.x_min) else np.asarray(self.x_min).flatten()
             xmax = np.full(self.nx, self.x_max) if np.isscalar(self.x_max) else np.asarray(self.x_max).flatten()
@@ -141,13 +142,13 @@ class LinearMPC:
             constraints.append({"type": "ineq", "fun": state_constraint_fun})
 
         u_guess = np.zeros(self.N * self.nu)
-        res = minimize(objective, u_guess, method="SLSQP", bounds=bounds, constraints=constraints)
+        res = minimize(objective, u_guess, method="SLSQP", bounds=bounds or None, constraints=constraints)
 
         if not res.success:
             # Note: In production GNC, fallback controllers are usually triggered here
             pass
 
-        return res.x.reshape((self.N, self.nu))
+        return cast(np.ndarray, res.x.reshape((self.N, self.nu)))
 
 
 class NonlinearMPC:
@@ -248,7 +249,7 @@ class NonlinearMPC:
 
             return float(total_cost + self.V(x))
 
-        bounds = []
+        bounds: list[tuple[float, float]] = []
         if self.u_min is not None or self.u_max is not None:
             umin = np.full(self.nu, self.u_min) if np.isscalar(self.u_min) else np.asarray(self.u_min).flatten()
             umax = np.full(self.nu, self.u_max) if np.isscalar(self.u_max) else np.asarray(self.u_max).flatten()
@@ -256,10 +257,10 @@ class NonlinearMPC:
                 for i in range(self.nu):
                     bounds.append((umin[i], umax[i]))
         else:
-            bounds = None
+            bounds = []
 
         # State constraints
-        constraints = []
+        constraints: list[dict[str, Any]] = []
         if self.x_min is not None or self.x_max is not None:
             xmin = np.full(self.nx, self.x_min) if np.isscalar(self.x_min) else np.asarray(self.x_min).flatten()
             xmax = np.full(self.nx, self.x_max) if np.isscalar(self.x_max) else np.asarray(self.x_max).flatten()
@@ -279,9 +280,9 @@ class NonlinearMPC:
             constraints.append({"type": "ineq", "fun": state_constraint_fun})
 
         u0 = np.zeros(self.N * self.nu)
-        res = minimize(objective, u0, method="SLSQP", bounds=bounds, constraints=constraints)
+        res = minimize(objective, u0, method="SLSQP", bounds=bounds or None, constraints=constraints)
 
-        return res.x.reshape((self.N, self.nu))
+        return cast(np.ndarray, res.x.reshape((self.N, self.nu)))
 
 
 

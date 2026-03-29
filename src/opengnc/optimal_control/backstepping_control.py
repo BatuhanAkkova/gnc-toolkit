@@ -3,7 +3,7 @@ Backstepping Controller for generic 2nd order nonlinear systems.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import cast
 
 import numpy as np
 
@@ -111,10 +111,10 @@ class BacksteppingController:
         )
 
         if np.isscalar(g_val) or g_val.shape == () or g_val.shape == (1, 1):
-            return inner_term / g_val
+            return cast(np.ndarray, inner_term / g_val)
 
         # Use pseudoinverse for robust inversion
-        return np.linalg.pinv(g_val) @ inner_term
+        return cast(np.ndarray, np.linalg.pinv(g_val) @ inner_term)
 
 
 

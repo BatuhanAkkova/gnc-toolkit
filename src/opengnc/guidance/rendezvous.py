@@ -2,6 +2,8 @@
 Rendezvous and Proximity Operations (RPO) guidance (Lambert, Clohessy-Wiltshire).
 """
 
+from __future__ import annotations
+
 import numpy as np
 from scipy.optimize import newton
 
@@ -172,7 +174,9 @@ def solve_lambert_multi_rev(
         if x_val < 1:  # elliptic
             alpha = 2 * np.arccos(x_val)
             beta = 2 * np.arcsin(np.sqrt((semi_p - chord) / semi_p))
-            return (alpha - np.sin(alpha) - (beta - np.sin(beta)) + 2 * np.pi * n_rev) - tau
+            return float(
+                (alpha - np.sin(alpha) - (beta - np.sin(beta)) + 2 * np.pi * n_rev) - tau
+            )
         return 1e10
 
     x0 = 0.5 if branch == "left" else -0.5
@@ -329,10 +333,10 @@ def tschauner_hempel_propagation(
     param_p = semi_a * (1 - ecc**2)
 
     def true_to_eccentric(nu: float, e_val: float) -> float:
-        return 2 * np.arctan(np.sqrt((1 - e_val) / (1 + e_val)) * np.tan(nu / 2))
+        return float(2 * np.arctan(np.sqrt((1 - e_val) / (1 + e_val)) * np.tan(nu / 2)))
 
     def eccentric_to_true(e_trans: float, e_val: float) -> float:
-        return 2 * np.arctan(np.sqrt((1 + e_val) / (1 - e_val)) * np.tan(e_trans / 2))
+        return float(2 * np.arctan(np.sqrt((1 + e_val) / (1 - e_val)) * np.tan(e_trans / 2)))
 
     e_init = true_to_eccentric(nu0, ecc)
     m_init = e_init - ecc * np.sin(e_init)
@@ -360,13 +364,13 @@ def tschauner_hempel_propagation(
 
         stm_mat = stm_flat.reshape((6, 6))
         dstm = a_mat @ stm_mat
-        return dstm.flatten()
+        return np.asarray(dstm.flatten())
 
     stm0_flat = np.eye(6).flatten()
     sol = solve_ivp(th_ode, [0, dt], stm0_flat, method="RK45", atol=1e-8, rtol=1e-8)
     phi_ya = sol.y[:, -1].reshape((6, 6))
 
-    return phi_ya @ x0
+    return np.asarray(phi_ya @ x0)
 
 
 def primer_vector_analysis(

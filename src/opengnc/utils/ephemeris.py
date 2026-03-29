@@ -3,7 +3,7 @@ JPL Ephemeris integration using jplephem.
 """
 
 import os
-from typing import Optional
+from typing import Optional, cast
 
 import numpy as np
 from jplephem.spk import SPK
@@ -54,7 +54,7 @@ class JPLEphemeris:
 
         # jplephem returns km
         pos_km = self.kernel[0, body_id].compute(jd)
-        return pos_km * 1000.0
+        return cast(np.ndarray, pos_km * 1000.0)
 
     def get_state(self, body_id: int, jd: float) -> np.ndarray:
         """
@@ -79,4 +79,4 @@ class JPLEphemeris:
         state_km = self.kernel[0, body_id].compute_and_differentiate(jd)
         pos = state_km[:3] * 1000.0
         vel = state_km[3:] * 1000.0 / 86400.0
-        return np.concatenate([pos, vel])
+        return cast(np.ndarray, np.concatenate([pos, vel]))

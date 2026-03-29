@@ -76,11 +76,11 @@ class LumpedDrag:
 
         v_rel_norm = np.linalg.norm(v_rel)
         if v_rel_norm < 1e-6:
-            return np.zeros(3)
+            return np.zeros(3, dtype=float)
 
         # Acceleration calculation
         acc_mag = 0.5 * rho * v_rel_norm**2 * cd * (area / mass)
-        return -acc_mag * (v_rel / v_rel_norm)
+        return np.asarray(-acc_mag * (v_rel / v_rel_norm))
 
 
 

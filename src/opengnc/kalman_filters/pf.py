@@ -3,7 +3,7 @@ Particle Filter (Sequential Importance Resampling) for non-Gaussian/non-linear s
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 from collections.abc import Callable
 from typing import Any
@@ -52,7 +52,9 @@ class ParticleFilter:
         p_cov : np.ndarray
             Initial covariance (dim_x, dim_x).
         """
-        self.particles = np.random.multivariate_normal(x_mean, p_cov, self.num_particles)
+        self.particles = cast(
+            np.ndarray, np.random.multivariate_normal(x_mean, p_cov, self.num_particles)
+        )
         self.weights = np.ones(self.num_particles) / self.num_particles
 
     def predict(
@@ -76,7 +78,7 @@ class ParticleFilter:
 
         # Propagate each particle through the model and add noise
         for i in range(self.num_particles):
-            self.particles[i] = fx_func(self.particles[i], dt, **kwargs)
+            self.particles[i] = cast(np.ndarray, fx_func(self.particles[i], dt, **kwargs))
             noise = np.random.multivariate_normal(np.zeros(self.dim_x), q_curr)
             self.particles[i] += noise
 
@@ -148,19 +150,19 @@ class ParticleFilter:
         float
             Effective sample size.
         """
-        return 1.0 / np.sum(np.square(self.weights))
+        return float(1.0 / np.sum(np.square(self.weights)))
 
     @property
     def x(self) -> np.ndarray:
         """Weighted mean state vector."""
-        return np.average(self.particles, weights=self.weights, axis=0)
+        return cast(np.ndarray, np.average(self.particles, weights=self.weights, axis=0))
 
     @property
     def P(self) -> np.ndarray:
         """Weighted error covariance matrix."""
         x_mean = self.x
         diff = self.particles - x_mean
-        return (self.weights * diff.T) @ diff
+        return cast(np.ndarray, (self.weights * diff.T) @ diff)
 
 
 

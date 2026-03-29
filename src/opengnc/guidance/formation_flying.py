@@ -27,7 +27,7 @@ def virtual_structure_control(
         Computed control actions for each spacecraft (N x control_dim).
     """
     # Simple proportional feedback to desired formation state
-    return -gains * (np.asarray(state_actual) - np.asarray(state_desired))
+    return np.asarray(-gains * (np.asarray(state_actual) - np.asarray(state_desired)))
 
 
 def leader_follower_control(
@@ -56,7 +56,7 @@ def leader_follower_control(
         Control command for the follower.
     """
     target_state = leader_state + desired_relative_state
-    return -gains * (follower_state - target_state)
+    return np.asarray(-gains * (follower_state - target_state))
 
 
 def fuel_balanced_formation_keeping(
@@ -85,11 +85,11 @@ def fuel_balanced_formation_keeping(
     fuel_norm = np.asarray(fuel_levels)
     total_fuel = np.sum(fuel_norm)
     if total_fuel < 1e-9:
-        return np.zeros_like(base_weights)
+        return np.asarray(np.zeros_like(base_weights))
 
     fuel_ratios = fuel_norm / total_fuel
     # Scale control weights by available fuel fraction
-    return np.asarray(base_weights) * fuel_ratios[:, np.newaxis]
+    return np.asarray(np.asarray(base_weights) * fuel_ratios[:, np.newaxis])
 
 
 def distributed_consensus_control(
@@ -118,7 +118,7 @@ def distributed_consensus_control(
     """
     # The term (L @ X) computes the sum of relative state errors in the network
     consensus_error = np.asarray(laplacian_matrix) @ np.asarray(states)
-    return -gains * consensus_error
+    return np.asarray(-gains * consensus_error)
 
 
 

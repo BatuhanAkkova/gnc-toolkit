@@ -3,6 +3,7 @@ Simple pinhole camera model.
 """
 
 import numpy as np
+from typing import Any
 
 from opengnc.sensors.sensor import Sensor
 
@@ -49,7 +50,9 @@ class Camera(Sensor):
         self.cx = resolution[0] / 2
         self.cy = resolution[1] / 2
 
-    def measure(self, true_point_body: np.ndarray, **kwargs) -> np.ndarray | None:
+    def measure(
+        self, true_point_body: np.ndarray | None = None, *args: Any, **kwargs: Any
+    ) -> np.ndarray | None:
         """
         Project 3D point onto image plane.
 
@@ -66,6 +69,10 @@ class Camera(Sensor):
         np.ndarray | None
             (u, v) pixel coordinates, or None if outside FOV or behind camera.
         """
+        if true_point_body is None:
+            if not args:
+                raise ValueError("true_point_body is required.")
+            true_point_body = np.asarray(args[0])
         x, y, z = true_point_body
 
         if z <= 0:

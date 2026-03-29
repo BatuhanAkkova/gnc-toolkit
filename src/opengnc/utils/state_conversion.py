@@ -2,6 +2,8 @@
 State and attitude representation conversion utilities.
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 from opengnc.utils import euler_utils as eu

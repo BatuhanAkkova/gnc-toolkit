@@ -3,7 +3,7 @@ Square-Root Unscented Kalman Filter (SR-UKF) algorithm.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from scipy.linalg import cholesky, qr, solve_triangular
@@ -95,7 +95,7 @@ class SRUKF:
             sigmas_f[i] = fx_func(sigmas[i], dt, **kwargs)
 
         # Predicted mean
-        self.x = self.Wm @ sigmas_f
+        self.x = cast(np.ndarray, np.asarray(self.Wm @ sigmas_f, dtype=float))
 
         # Update square-root covariance S
         # Compute S- using QR decomposition
@@ -197,18 +197,20 @@ class SRUKF:
         if weight > 0:
             v_scaled = np.sqrt(weight) * vec
             _, s_transpose = qr(np.vstack((s_mat.T, v_scaled)), mode="economic")
-            return s_transpose[: s_mat.shape[0], : s_mat.shape[1]].T
+            return np.asarray(s_transpose[: s_mat.shape[0], : s_mat.shape[1]].T, dtype=float)
         else:
             p_cov = s_mat @ s_mat.T + weight * np.outer(vec, vec)
             try:
-                return cholesky(p_cov, lower=True)
+                return np.asarray(cholesky(p_cov, lower=True), dtype=float)
             except np.linalg.LinAlgError:
-                return cholesky(p_cov + np.eye(s_mat.shape[0]) * 1e-12, lower=True)
+                return np.asarray(
+                    cholesky(p_cov + np.eye(s_mat.shape[0]) * 1e-12, lower=True), dtype=float
+                )
 
     @property
     def P(self) -> np.ndarray:
         """Full error covariance matrix P = S S^T."""
-        return self.S @ self.S.T
+        return np.asarray(self.S @ self.S.T, dtype=float)
 
 
 

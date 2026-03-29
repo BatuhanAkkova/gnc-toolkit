@@ -10,7 +10,7 @@ class RealTimeSimulator(MissionSimulator):
     Supports Hardware-In-the-Loop (HIL) or Software-In-the-Loop (SIL) testing.
     """
 
-    def __init__(self, *args, rtf: float = 1.0, **kwargs) -> None:
+    def __init__(self, *args: Any, rtf: float = 1.0, **kwargs: Any) -> None:
         """
         Initialize real-time simulator.
 

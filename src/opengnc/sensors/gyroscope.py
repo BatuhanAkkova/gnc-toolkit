@@ -2,6 +2,10 @@
 Gyroscope sensor model.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 
 from opengnc.sensors.sensor import Sensor
@@ -16,13 +20,13 @@ class Gyroscope(Sensor):
 
     def __init__(
         self,
-        noise_std=0.0,
-        bias_stability=0.0,
-        initial_bias=None,
-        dt=0.1,
-        misalignment=None,
-        scale_factor=1.0,
-        name="Gyroscope",
+        noise_std: float = 0.0,
+        bias_stability: float = 0.0,
+        initial_bias: np.ndarray | None = None,
+        dt: float = 0.1,
+        misalignment: np.ndarray | None = None,
+        scale_factor: float | np.ndarray = 1.0,
+        name: str = "Gyroscope",
     ) -> None:
         """
         Args:
@@ -41,12 +45,16 @@ class Gyroscope(Sensor):
         self.misalignment = misalignment
         self.scale_factor = scale_factor
 
-    def measure(self, true_omega: np.ndarray, **kwargs) -> np.ndarray:
+    def measure(self, true_omega: np.ndarray | None = None, *args: Any, **kwargs: Any) -> np.ndarray:
         """
         Args:
             true_omega (np.ndarray): True angular velocity [rad/s].
             kwargs: Can contain 'dt' to update time step if variable.
         """
+        if true_omega is None:
+            if not args:
+                raise ValueError("true_omega is required.")
+            true_omega = np.asarray(args[0])
         dt = kwargs.get("dt", self.dt)
 
         # Propagate bias (Random Walk)
@@ -63,7 +71,7 @@ class Gyroscope(Sensor):
         measured_omega = omega_cal + self.current_bias + measurement_noise
 
         # Apply any faults
-        measured_omega = self.apply_faults(measured_omega)
+        measured_omega = np.asarray(self.apply_faults(measured_omega), dtype=float)
 
         return measured_omega
 

@@ -3,6 +3,7 @@ Cayley-Klein parameters for attitude representation and composition.
 """
 
 import numpy as np
+from typing import cast
 
 
 def quat_to_cayley_klein(q: np.ndarray) -> np.ndarray:
@@ -31,10 +32,10 @@ def quat_to_cayley_klein(q: np.ndarray) -> np.ndarray:
     alpha = complex(w, z)
     beta = complex(y, x)
 
-    return np.array([
+    return cast(np.ndarray, np.array([
         [alpha, beta],
         [-np.conj(beta), np.conj(alpha)]
-    ])
+    ]))
 
 
 def cayley_klein_to_quat(u_mat: np.ndarray) -> np.ndarray:
@@ -60,7 +61,7 @@ def cayley_klein_to_quat(u_mat: np.ndarray) -> np.ndarray:
     y = beta.real
     x = beta.imag
 
-    return np.array([x, y, z, w])
+    return cast(np.ndarray, np.array([x, y, z, w]))
 
 
 def cayley_klein_mult(u1: np.ndarray, u2: np.ndarray) -> np.ndarray:
@@ -79,7 +80,7 @@ def cayley_klein_mult(u1: np.ndarray, u2: np.ndarray) -> np.ndarray:
     np.ndarray
         Product 2x2 complex matrix.
     """
-    return np.asarray(u1) @ np.asarray(u2)
+    return cast(np.ndarray, np.asarray(u1) @ np.asarray(u2))
 
 
 

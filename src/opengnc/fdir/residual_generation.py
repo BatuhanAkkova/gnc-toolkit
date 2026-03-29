@@ -2,6 +2,7 @@
 Residual generation for fault detection using observers.
 """
 
+from __future__ import annotations
 
 import numpy as np
 
@@ -37,7 +38,7 @@ class ObserverResidualGenerator:
         B: np.ndarray,
         C: np.ndarray,
         D: np.ndarray | None = None,
-        L: np.ndarray = None,
+        L: np.ndarray | None = None,
         x0: np.ndarray | None = None,
     ) -> None:
         """Initialize observer state and matrices."""
@@ -73,7 +74,7 @@ class ObserverResidualGenerator:
         # Update estimate
         self.x_hat = self.A @ self.x_hat + self.B @ uv + self.L @ resid
 
-        return resid
+        return np.asarray(resid)
 
 
 class AnalyticalRedundancy:
@@ -96,7 +97,7 @@ class AnalyticalRedundancy:
         bool
             True if $\|\mathbf{r}\| > \text{threshold}$.
         """
-        return np.linalg.norm(r) > threshold
+        return bool(np.linalg.norm(r) > threshold)
 
     @staticmethod
     def gyro_vs_quaternion_residual(
@@ -121,7 +122,7 @@ class AnalyticalRedundancy:
         np.ndarray
             Attitude residual vector.
         """
-        return np.asarray(q_dot_measured) - np.asarray(q_dot_calculated)
+        return np.asarray(np.asarray(q_dot_measured) - np.asarray(q_dot_calculated))
 
 
 

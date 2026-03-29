@@ -92,8 +92,8 @@ class SymplecticIntegrator(Integrator):
         Single step wrapper.
         """
         # Compose a single step
-        res_t, res_y = self.integrate(f, [t, t + dt], y, dt=dt)
-        return res_y[-1], res_t[-1], None
+        res_t, res_y = self.integrate(f, (t, t + dt), y, dt=dt)
+        return res_y[-1], res_t[-1], float(dt)
 
 
 

@@ -2,8 +2,10 @@
 Abstract base class for all sensors.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Any  # Added for **kwargs: Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -25,20 +27,20 @@ class Sensor(ABC):
         self.stuck_value: np.ndarray | float | None = None
 
     @abstractmethod
-    def measure(self, true_state: np.ndarray | float, **kwargs: Any) -> np.ndarray | float:
+    def measure(self, *args: Any, **kwargs: Any) -> Any:
         """
         Generate a measurement.
 
         Parameters
         ----------
-        true_state : np.ndarray | float
-            Actual physical state.
+        *args : Any
+            Input state(s) or signals required by the sensor.
         **kwargs : Any
             Additional parameters.
 
         Returns
         -------
-        np.ndarray | float
+        Any
             Measured value.
         """
         pass
@@ -87,7 +89,7 @@ class Sensor(ABC):
             if bias is not None:
                 value += bias
 
-        return value
+        return cast(np.ndarray | float, value)
 
     def apply_fogm_noise(
         self, current_val: np.ndarray | float, sigma: float, tau: float, dt: float
@@ -114,13 +116,13 @@ class Sensor(ABC):
             Updated noise state.
         """
         if sigma == 0 or tau <= 0:
-            return current_val
+            return cast(np.ndarray | float, current_val)
 
         phi = np.exp(-dt / tau)
         q = sigma * np.sqrt(1 - np.exp(-2 * dt / tau))
 
         noise = np.random.normal(0, q, size=np.shape(current_val))
-        return phi * current_val + noise
+        return cast(np.ndarray | float, phi * current_val + noise)
 
     def apply_faults(self, value: np.ndarray | float) -> np.ndarray | float:
         """
@@ -137,21 +139,24 @@ class Sensor(ABC):
             Faulted measurement value.
         """
         if self.fault_state == "stuck":
-            return self.stuck_value if self.stuck_value is not None else value
+            return cast(np.ndarray | float, self.stuck_value if self.stuck_value is not None else value)
 
         if self.fault_state == "spike":
             spike = np.random.normal(
                 0, 100 * np.std(value) if np.std(value) > 0 else 10.0, size=np.shape(value)
             )
-            return value + spike
+            return cast(np.ndarray | float, value + spike)
 
         if self.fault_state == "noise_increase":
             # Add extra noise
-            return value + np.random.normal(
+            return cast(
+                np.ndarray | float,
+                value + np.random.normal(
                 0, 10.0 * np.std(value) if np.std(value) > 0 else 1.0, size=np.shape(value)
+                ),
             )
 
-        return value
+        return cast(np.ndarray | float, value)
 
     def add_gaussian_noise(self, value: np.ndarray | float, std_dev: float) -> np.ndarray | float:
         """
@@ -170,10 +175,10 @@ class Sensor(ABC):
             Noisy value.
         """
         if std_dev is None or std_dev == 0:
-            return value
+            return cast(np.ndarray | float, value)
 
         noise = np.random.normal(0, std_dev, size=np.shape(value))
-        return value + noise
+        return cast(np.ndarray | float, value + noise)
 
 
 

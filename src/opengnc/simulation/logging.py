@@ -60,7 +60,7 @@ class SimulationLogger:
         """Saves the log's top-level keys to a CSV file."""
         if not self.history:
             return
-        keys = set()
+        keys: set[str] = set()
         for h in self.history:
             keys.update(h.keys())
 

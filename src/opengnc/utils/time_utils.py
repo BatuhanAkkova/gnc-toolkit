@@ -2,6 +2,8 @@
 Time system conversions (UTC, TAI, GPS, TT, TDB) and Julian date utilities.
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 
@@ -163,7 +165,7 @@ def calc_gmst(jd: float, dut1: float = 0.0) -> float:
         67310.54841 + (876600 * 3600.0 + 8640184.812866) * ut1 + 0.093104 * ut1**2 - 6.2e-6 * ut1**3
     ) % 86400.0
     gmst /= 240.0
-    return np.radians(gmst % 360.0)
+    return float(np.radians(gmst % 360.0))
 
 
 def calc_last(jd: float, lon: float, dut1: float = 0.0) -> float:
@@ -203,7 +205,7 @@ def calc_last(jd: float, lon: float, dut1: float = 0.0) -> float:
     # GAST = GMST + equinox
     last = gmst + equinox + lon
     last = last % (2 * np.pi)
-    return last
+    return float(last)
 
 
 def calc_lst(gmst: float, lon: float, dut1: float = 0.0) -> float:

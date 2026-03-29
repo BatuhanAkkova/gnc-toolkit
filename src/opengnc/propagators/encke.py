@@ -2,7 +2,10 @@
 Encke's Method Propagator.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
+from typing import Any, cast
 
 import numpy as np
 
@@ -45,8 +48,8 @@ class EnckePropagator(Propagator):
         r_i: np.ndarray,
         v_i: np.ndarray,
         dt: float,
-        perturbation_acc_fn: Callable | None = None,
-        **kwargs,
+        perturbation_acc_fn: Callable[[float, np.ndarray, np.ndarray], np.ndarray] | None = None,
+        **kwargs: Any,
     ) -> tuple[np.ndarray, np.ndarray]:
         """
         Propagate state using Encke's method.
@@ -87,7 +90,7 @@ class EnckePropagator(Propagator):
                 h = dt - curr_t
 
             # Define local EOM relative to current reference state
-            def local_eom(t_local, y):
+            def local_eom(t_local: float, y: np.ndarray) -> np.ndarray:
                 d_r = y[:3]
                 d_v = y[3:]
 
@@ -113,7 +116,7 @@ class EnckePropagator(Propagator):
                     a_pt = perturbation_acc_fn(curr_t + t_local, r_tot, v_tot)
 
                 a_en = a_pt + (self.mu / (r_r_mag**3)) * (f_q_val * r_r - d_r)
-                return np.concatenate([d_v, a_en])
+                return cast(np.ndarray, np.concatenate([d_v, a_en]))
 
             # Advance deviation step
             next_y_dev, _, _ = self.integrator.step(local_eom, 0, curr_y_dev, h)
@@ -142,7 +145,7 @@ class EnckePropagator(Propagator):
         r_f = curr_r_ref + curr_y_dev[:3]
         v_f = curr_v_ref + curr_y_dev[3:]
 
-        return r_f, v_f
+        return cast(np.ndarray, r_f), cast(np.ndarray, v_f)
 
 
 

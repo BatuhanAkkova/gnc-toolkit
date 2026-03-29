@@ -2,7 +2,10 @@
 Navigation using Line-of-Sight (LOS) measurements (unit vectors).
 """
 
+from __future__ import annotations
+
 import numpy as np
+from typing import cast
 
 from .orbit_determination import OrbitDeterminationEKF
 
@@ -52,7 +55,7 @@ class AngleOnlyNavigation(OrbitDeterminationEKF):
             rho = np.linalg.norm(rel_r)
             if rho < 1.0:
                 return np.zeros(3)
-            return rel_r / rho
+            return cast(np.ndarray, rel_r / rho)
 
         def h_jac(x: np.ndarray) -> np.ndarray:
             r = x[:3]
@@ -64,7 +67,7 @@ class AngleOnlyNavigation(OrbitDeterminationEKF):
 
             u = rel_r / rho
             # Projection matrix (I - uu^T)
-            h_rel = -(np.eye(3) - np.outer(u, u)) / rho
+            h_rel = cast(np.ndarray, -(np.eye(3) - np.outer(u, u)) / rho)
 
             h_mat = np.zeros((3, 6))
             h_mat[:, :3] = h_rel

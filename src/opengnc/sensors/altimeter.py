@@ -3,6 +3,7 @@ Radar / Altimeter sensor model.
 """
 
 import numpy as np
+from typing import Any
 
 from opengnc.sensors.sensor import Sensor
 
@@ -28,7 +29,7 @@ class Altimeter(Sensor):
         self.noise_std = noise_std
         self.bias = bias
 
-    def measure(self, true_altitude: float, **kwargs) -> float:
+    def measure(self, true_altitude: float | None = None, *args: Any, **kwargs: Any) -> float:
         """
         Generate altitude measurement.
 
@@ -44,6 +45,10 @@ class Altimeter(Sensor):
         float
             Measured altitude (m). Guaranteed to be non-negative.
         """
+        if true_altitude is None:
+            if not args:
+                raise ValueError("true_altitude is required.")
+            true_altitude = float(args[0])
         measured_alt = true_altitude + self.bias + np.random.normal(0, self.noise_std)
         return float(max(0.0, measured_alt))
 

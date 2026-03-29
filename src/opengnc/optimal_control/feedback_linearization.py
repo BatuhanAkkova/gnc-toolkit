@@ -3,7 +3,7 @@ Feedback Linearization Controller for nonlinear systems.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import cast
 
 import numpy as np
 
@@ -62,10 +62,10 @@ class FeedbackLinearization:
 
         if g_val.size == 1:
             # Scalar case
-            return (v_vec - f_val) / g_val
+            return cast(np.ndarray, (v_vec - f_val) / g_val)
 
         # Matrix case: Solve g(x)u = v - f(x)
-        return np.linalg.solve(g_val, v_vec - f_val)
+        return cast(np.ndarray, np.linalg.solve(g_val, v_vec - f_val))
 
 
 

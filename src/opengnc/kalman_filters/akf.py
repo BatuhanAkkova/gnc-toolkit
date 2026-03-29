@@ -3,6 +3,7 @@ Adaptive Kalman Filter (AKF) with online covariance estimation (Myers-Tapley).
 """
 
 import numpy as np
+from typing import cast
 
 from opengnc.kalman_filters.kf import KF
 
@@ -151,7 +152,7 @@ class AKF(KF):
         """
         eigenvalues, eigenvectors = np.linalg.eigh(matrix)
         eigenvalues = np.maximum(eigenvalues, 1e-6)
-        return eigenvectors @ np.diag(eigenvalues) @ eigenvectors.T
+        return cast(np.ndarray, eigenvectors @ np.diag(eigenvalues) @ eigenvectors.T)
 
 
 

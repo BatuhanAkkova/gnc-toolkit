@@ -2,8 +2,10 @@
 Initial Orbit Determination (IOD) methods (Gibbs, Gauss, Laplace).
 """
 
+from __future__ import annotations
 
 import numpy as np
+from typing import cast
 
 
 def gibbs_iod(
@@ -39,12 +41,12 @@ def gibbs_iod(
     l_mag = np.linalg.norm(d_vec)
 
     if l_mag < 1e-12:
-        return np.zeros(3)
+        return cast(np.ndarray, np.zeros(3))
 
     s_vec = rv1 * (r2m - r3m) + rv2 * (r3m - r1m) + rv3 * (r1m - r2m)
 
     v2 = np.sqrt(mu / (np.linalg.norm(n_vec) * l_mag)) * (np.cross(d_vec, rv2) / r2m + s_vec)
-    return v2
+    return cast(np.ndarray, v2)
 
 
 def herrick_gibbs_iod(
@@ -87,7 +89,7 @@ def herrick_gibbs_iod(
     term2 = (dt32 - dt21) * (1.0 / (dt21 * dt32) + mu / (12.0 * n2**3)) * p2
     term3 = dt21 * (1.0 / (dt32 * dt31) + mu / (12.0 * n3**3)) * p3
 
-    return term1 + term2 + term3
+    return cast(np.ndarray, term1 + term2 + term3)
 
 
 def gauss_iod(
@@ -199,7 +201,7 @@ def gauss_iod(
         r2_final = R2 + rho2 * l2
         v2_final = np.zeros(3)
 
-    return np.concatenate([r2_final, v2_final])
+    return cast(np.ndarray, np.concatenate([r2_final, v2_final]))
 
 
 def laplace_iod(
@@ -262,7 +264,7 @@ def laplace_iod(
 
     vv = rho_mag_dot * l + rho_mag * ld + v_o
 
-    return np.concatenate([rv, vv])
+    return cast(np.ndarray, np.concatenate([rv, vv]))
 
 
 def laplace_iod_from_observations(
@@ -313,7 +315,7 @@ def laplace_iod_from_observations(
     l_ddot = cl1dd * l1 + cl2dd * l2 + cl3dd * l3
     R_ddot = cl1dd * R1 + cl2dd * R2 + cl3dd * R3
 
-    return laplace_iod(l2, l_dot, l_ddot, R2, R_dot, R_ddot, mu)
+    return cast(np.ndarray, laplace_iod(l2, l_dot, l_ddot, R2, R_dot, R_ddot, mu))
 
 
 def _stumpff(z: float) -> tuple[float, float]:
@@ -331,7 +333,7 @@ def _stumpff(z: float) -> tuple[float, float]:
     else:
         c2 = 1.0 / 2.0
         c3 = 1.0 / 6.0
-    return c2, c3
+    return float(c2), float(c3)
 
 
 def _kepler_U(dt: float, r0: float, v0_mag: float, alpha: float, mu: float) -> float:
@@ -346,9 +348,9 @@ def _kepler_U(dt: float, r0: float, v0_mag: float, alpha: float, mu: float) -> f
         df = r0 * (1 - z * c2) + (np.dot(r0, v0_mag) / np.sqrt(mu)) * chi * (1 - z * c3) + chi**2 * c2
         chi_new = chi - f / df
         if np.abs(chi_new - chi) < 1e-10:
-            return chi_new
+            return float(chi_new)
         chi = chi_new
-    return chi
+    return float(chi)
 
 
 

@@ -2,6 +2,10 @@
 Analytical Two-Body Propagator using Kepler's Equation.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 
 from .base import Propagator
@@ -24,7 +28,7 @@ class KeplerPropagator(Propagator):
         self.mu = mu
 
     def propagate(
-        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, n_iter: int = 100, **kwargs
+        self, r_i: np.ndarray, v_i: np.ndarray, dt: float, n_iter: int = 100, **kwargs: Any
     ) -> tuple[np.ndarray, np.ndarray]:
         """
         Solves the two-body problem using the Kepler equation (Vallado implementation).
@@ -54,7 +58,7 @@ class KeplerPropagator(Propagator):
         v_i_mag = np.linalg.norm(v_i)
         energy = 0.5 * v_i_mag**2 - mu / r_i_mag  # Specific orbital energy
 
-        alpha = -2 * energy / mu  # Reciprocal of semi-major axis
+        alpha: float = float(-2 * energy / mu)  # Reciprocal of semi-major axis
 
         # Check for near-parabolic or undefined orbits
         if np.abs(energy) < 1e-9:
@@ -69,7 +73,7 @@ class KeplerPropagator(Propagator):
             except:  # pragma: no cover
                 pass  # Fallback if calculation fails
 
-            x_i = np.sqrt(mu) * dt * alpha
+            x_i = float(np.sqrt(mu) * dt * alpha)
 
         elif np.abs(alpha) < 1e-9:  # Parabolic
             h = np.cross(r_i, v_i)
@@ -79,7 +83,7 @@ class KeplerPropagator(Propagator):
             s = 0.5 * (np.pi / 2 - np.arctan(3 * np.sqrt(mu / (p**3)) * dt))
             w = np.arctan(np.power(np.tan(s), 1 / 3))
 
-            x_i = np.sqrt(p) * (2 / np.tan(2 * w))
+            x_i = float(np.sqrt(p) * (2 / np.tan(2 * w)))
             alpha = 0.0
 
         else:  # Hyperbolic
@@ -92,16 +96,16 @@ class KeplerPropagator(Propagator):
                     * dt
                     / (np.dot(r_i, v_i) + np.sign(dt) * np.sqrt(-mu / alpha) * (1 - r_i_mag * alpha))
                 )
-                x_i = np.sign(dt) * np.sqrt(-1 / alpha) * np.log(temp)
+                x_i = float(np.sign(dt) * np.sqrt(-1 / alpha) * np.log(temp))
             except:
                 # Fallback for very specific hyperbolic cases or numerical issues
-                x_i = np.sqrt(mu) * dt * alpha  # Rough guess
+                x_i = float(np.sqrt(mu) * dt * alpha)  # Rough guess
 
         # Newton-Raphson iteration
         i = 0
-        x_new = x_i
+        x_new = float(x_i)
         while i < n_iter:
-            yaw = (x_i**2) * alpha
+            yaw = float((x_i**2) * alpha)
             c2, c3 = self._c23_eq(yaw)
 
             r_dot_v = np.dot(r_i, v_i)
@@ -128,7 +132,7 @@ class KeplerPropagator(Propagator):
             x_i = x_new
             i += 1
 
-        c2, c3 = self._c23_eq((x_new**2) * alpha)
+        c2, c3 = self._c23_eq(float((x_new**2) * alpha))
         f = 1 - x_new**2 / r_i_mag * c2
         g = dt - x_new**3 / np.sqrt(mu) * c3
         r_new = f * r_i + g * v_i

@@ -2,6 +2,8 @@
 Rigid body Attitude dynamics based on Euler's equations of motion.
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 

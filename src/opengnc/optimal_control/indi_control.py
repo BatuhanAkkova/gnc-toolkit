@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import cast
 
 import numpy as np
 
@@ -72,7 +73,7 @@ class INDIController:
             # Use pseudo-inverse for robust increments
             delta_u = np.linalg.pinv(g_val) @ acc_err
 
-        return u_prev + delta_u
+        return cast(np.ndarray, u_prev + delta_u)
 
 
 class INDIOuterLoopPD:
@@ -129,7 +130,7 @@ class INDIOuterLoopPD:
         p_term = self.Kp @ err_p if isinstance(self.Kp, np.ndarray) else self.Kp * err_p
         d_term = self.Kd @ err_d if isinstance(self.Kd, np.ndarray) else self.Kd * err_d
 
-        return ad_val - p_term - d_term
+        return cast(np.ndarray, ad_val - p_term - d_term)
 
 
 

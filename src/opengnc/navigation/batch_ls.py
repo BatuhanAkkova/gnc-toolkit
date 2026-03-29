@@ -4,6 +4,7 @@ Differential Correction using Batch Least Squares for Orbit Determination.
 
 
 import numpy as np
+from typing import cast
 
 from opengnc.disturbances.gravity import TwoBodyGravity
 
@@ -54,13 +55,13 @@ class BatchLeastSquaresOD:
 
         dt = t_end - t_start
         if abs(dt) < 1e-8:
-            return x0
+            return cast(np.ndarray, x0)
 
         k1 = f(x0)
         k2 = f(x0 + 0.5 * dt * k1)
         k3 = f(x0 + 0.5 * dt * k2)
         k4 = f(x0 + dt * k3)
-        return x0 + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
+        return cast(np.ndarray, x0 + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
 
     def solve(
         self,
@@ -92,7 +93,8 @@ class BatchLeastSquaresOD:
         t_vecs = np.asarray(times)
 
         for _ in range(max_iter):
-            a_list, b_list = [], []
+            a_list: list[np.ndarray] = []
+            b_list: list[np.ndarray] = []
 
             for z, t in zip(obs_vecs, t_vecs):
                 # 1. Prediction and Residual
@@ -127,7 +129,7 @@ class BatchLeastSquaresOD:
             if np.linalg.norm(dx) < tol:
                 break
 
-        return self.x
+        return cast(np.ndarray, self.x)
 
 
 

@@ -124,7 +124,7 @@ def calculate_atmospheric_attenuation(elevation_deg: float, frequency_hz: float)
     # Cosecant model valid for elevation > 5 deg; clamp to avoid division singularity
     elevation_rad = np.radians(max(elevation_deg, 5.0))
     l_atm_db = a_zenith / np.sin(elevation_rad)
-    return l_atm_db
+    return float(l_atm_db)
 
 
 

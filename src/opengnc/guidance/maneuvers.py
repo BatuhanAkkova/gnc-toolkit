@@ -2,6 +2,8 @@
 Orbital maneuver calculations (Hohmann, Bi-elliptic, Phasing, Plane Change).
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 
@@ -157,7 +159,7 @@ def plane_change(v_mag: float, delta_i: float) -> float:
     float
         Delta-V required (km/s).
     """
-    return 2 * v_mag * np.sin(delta_i / 2.0)
+    return float(2 * v_mag * np.sin(delta_i / 2.0))
 
 
 def combined_plane_change(v1: float, v2: float, delta_i: float) -> float:
@@ -178,7 +180,7 @@ def combined_plane_change(v1: float, v2: float, delta_i: float) -> float:
     float
         Delta-V required (km/s).
     """
-    return np.sqrt(v1**2 + v2**2 - 2 * v1 * v2 * np.cos(delta_i))
+    return float(np.sqrt(v1**2 + v2**2 - 2 * v1 * v2 * np.cos(delta_i)))
 
 
 def delta_v_budget(initial_mass: float, dv_total: float, isp: float) -> float:
@@ -202,7 +204,7 @@ def delta_v_budget(initial_mass: float, dv_total: float, isp: float) -> float:
     g0 = 0.00980665  # standard gravity in km/s^2
     mass_ratio = np.exp(dv_total / (isp * g0))
     final_mass = initial_mass / mass_ratio
-    return initial_mass - final_mass
+    return float(initial_mass - final_mass)
 
 
 def raan_change(v_mag: float, inc: float, delta_raan: float) -> float:
@@ -228,7 +230,7 @@ def raan_change(v_mag: float, inc: float, delta_raan: float) -> float:
     # cos(alpha) = cos^2(i) + sin^2(i) * cos(delta_raan)
     cos_alpha = np.cos(inc) ** 2 + np.sin(inc) ** 2 * np.cos(delta_raan)
     alpha = np.arccos(np.clip(cos_alpha, -1.0, 1.0))
-    return 2 * v_mag * np.sin(alpha / 2.0)
+    return float(2 * v_mag * np.sin(alpha / 2.0))
 
 
 def optimal_combined_maneuver(

@@ -9,6 +9,7 @@ from collections.abc import Callable
 from typing import Any
 
 import numpy as np
+from typing import cast
 from scipy.linalg import cholesky
 
 
@@ -162,12 +163,12 @@ class CKF:
         p_sym = (p_cov + p_cov.T) / 2 + np.eye(self.dim_x) * 1e-12
         try:
             chol_l = cholesky(p_sym, lower=True)
-            return x[:, np.newaxis] + (chol_l @ self.xi)
+            return cast(np.ndarray, x[:, np.newaxis] + (chol_l @ self.xi))
         except np.linalg.LinAlgError:
             # Fallback to sqrtm if Cholesky fails due to semi-definiteness
             from scipy.linalg import sqrtm
             sqrt_p = sqrtm(p_sym).real
-            return x[:, np.newaxis] + (sqrt_p @ self.xi)
+            return cast(np.ndarray, x[:, np.newaxis] + (sqrt_p @ self.xi))
 
 
 

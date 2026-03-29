@@ -2,6 +2,10 @@
 Variable Speed Control Moment Gyro (VSCMG) actuator model.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 
 from opengnc.actuators.cmg import ControlMomentGyro
@@ -51,7 +55,13 @@ class VariableSpeedCMG(ControlMomentGyro):
         self.wheel_speed = 0.0
         self.max_wheel_torque = max_wheel_torque
 
-    def command(self, cmd_vec: tuple[float, float] | list[float], dt: float | None = None) -> np.ndarray:
+    def command(
+        self,
+        gimbal_rate_cmd: Any = None,
+        dt: float | None = None,
+        *args: Any,
+        **kwargs: Any,
+    ) -> np.ndarray:
         """
         Calculate combined torque from gimbaling and wheel acceleration.
 
@@ -69,7 +79,16 @@ class VariableSpeedCMG(ControlMomentGyro):
         np.ndarray
             Net torque vector (Nm) (3,).
         """
-        g_rate_cmd, w_torque_cmd = cmd_vec
+        cmd_vec = kwargs.get("cmd_vec", None)
+        if cmd_vec is None:
+            if gimbal_rate_cmd is None and not args:
+                raise ValueError("cmd_vec or gimbal_rate_cmd is required.")
+            cmd_vec = gimbal_rate_cmd if gimbal_rate_cmd is not None else args[0]
+        if isinstance(cmd_vec, (int, float, np.floating)):
+            g_rate_cmd = float(cmd_vec)
+            w_torque_cmd = 0.0
+        else:
+            g_rate_cmd, w_torque_cmd = cmd_vec
 
         # Apply saturation
         g_rate = float(self.apply_saturation(g_rate_cmd))

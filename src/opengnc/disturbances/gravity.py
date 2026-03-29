@@ -6,6 +6,7 @@ import csv
 import os
 
 import numpy as np
+from typing import cast
 from numba import njit
 
 """
@@ -53,7 +54,7 @@ class TwoBodyGravity:
         """
         r_vec = np.asarray(r_eci, dtype=float)
         r_mag = np.linalg.norm(r_vec)
-        return -self.mu / r_mag**3 * r_vec
+        return cast(np.ndarray, -self.mu / r_mag**3 * r_vec)
 
 
 class J2Gravity:
@@ -108,7 +109,7 @@ class J2Gravity:
         ay = factor * y * (5 * (z / r_mag)**2 - 1)
         az = factor * z * (5 * (z / r_mag)**2 - 3)
 
-        return np.array([ax, ay, az]) + TwoBodyGravity(self.mu).get_acceleration(r_vec)
+        return cast(np.ndarray, np.array([ax, ay, az]) + TwoBodyGravity(self.mu).get_acceleration(r_vec))
 
 
 class HarmonicsGravity:
@@ -200,11 +201,21 @@ class HarmonicsGravity:
         )
 
         aeci, _ = ecef2eci(acc_ecef, np.zeros(3), jd)
-        return aeci
+        return cast(np.ndarray, aeci)
 
 
 @njit
-def _compute_gravity_njit(x, y, z, re, mu, n_max, m_max, C, S):
+def _compute_gravity_njit(
+    x: float,
+    y: float,
+    z: float,
+    re: float,
+    mu: float,
+    n_max: int,
+    m_max: int,
+    C: np.ndarray,
+    S: np.ndarray,
+) -> np.ndarray:
     """
     Numba-accelerated spherical harmonics recursion.
     """
@@ -327,13 +338,13 @@ class GradientTorque:
         r_val = np.asarray(r_eci)
         rm = np.linalg.norm(r_val)
         if rm < 1e-3:
-            return np.zeros(3)
+            return cast(np.ndarray, np.zeros(3))
 
         u_nadir = -r_val / rm
         q_e2b = quat_conj(np.asarray(q_body2eci))
         u_body = quat_rot(q_e2b, u_nadir)
 
-        return (3 * self.mu / rm**3) * np.cross(u_body, J @ u_body)
+        return cast(np.ndarray, (3 * self.mu / rm**3) * np.cross(u_body, J @ u_body))
 
 
 class ThirdBodyGravity:
@@ -380,11 +391,11 @@ class ThirdBodyGravity:
         rss = self.sun_model.calculate_sun_eci(jd)
         rms = self.moon_model.calculate_moon_eci(jd)
 
-        def body_acc(s_vec, mu):
+        def body_acc(s_vec: np.ndarray, mu: float) -> np.ndarray:
             d = s_vec - rv
-            return mu * (d / np.linalg.norm(d)**3 - s_vec / np.linalg.norm(s_vec)**3)
+            return np.asarray(mu * (d / np.linalg.norm(d) ** 3 - s_vec / np.linalg.norm(s_vec) ** 3))
 
-        return body_acc(rss, self.mu_sun) + body_acc(rms, self.mu_moon)
+        return cast(np.ndarray, body_acc(rss, self.mu_sun) + body_acc(rms, self.mu_moon))
 
 
 class RelativisticCorrection:
@@ -435,7 +446,7 @@ class RelativisticCorrection:
         # Lense-Thirring dynamic correction
         lt_term = (2 * self.mu / (self.c**2 * rm**3)) * ( (3.0/rm**2) * np.dot(r, self.S_vec) * r - self.S_vec )
 
-        return sch + np.cross(lt_term, v)
+        return cast(np.ndarray, sch + np.cross(lt_term, v))
 
 
 class OceanTidesGravity:
@@ -501,7 +512,7 @@ class OceanTidesGravity:
 
         dc, ds = np.zeros((3, 3)), np.zeros((3, 3))
         for c, v in self.coefs.items():
-            n, m = v["n"], v["m"]
+            n, m = int(v["n"]), int(v["m"])
             a = args[c]
             dc[n, m] += v["C+"] * np.cos(a) + v["S+"] * np.sin(a)
             ds[n, m] += v["S+"] * np.cos(a) - v["C+"] * np.sin(a)
@@ -521,7 +532,7 @@ class OceanTidesGravity:
 
         acc_ecef = - (self.mu / rm**2) * (u_21 + u_22) * (r_ecef / rm)
         aeci, _ = ecef2eci(acc_ecef, np.zeros(3), jd)
-        return aeci
+        return cast(np.ndarray, aeci)
 
 
 

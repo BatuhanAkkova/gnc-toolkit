@@ -2,6 +2,8 @@
 TRIAD algorithm for attitude determination from two vectors.
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 
@@ -75,7 +77,7 @@ def triad(
     m_b = np.column_stack((t1b, t2b, t3b))
     m_r = np.column_stack((t1r, t2r, t3r))
 
-    return m_b @ m_r.T
+    return np.asarray(m_b @ m_r.T)
 
 
 

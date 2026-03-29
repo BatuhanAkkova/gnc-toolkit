@@ -267,7 +267,7 @@ def calculate_constellation_coverage(
 
         # Now compute statistics: coverage gaps and revisit times
         # find contiguous False regions (gaps)
-        gaps = []
+        gaps_list: list[float] = []
         covered_time = 0.0
 
         in_gap = not point_visibility[0]
@@ -283,7 +283,7 @@ def calculate_constellation_coverage(
             if not was_visible and is_visible:
                 # End of a gap
                 gap_duration = t_array[i] - gap_start_t
-                gaps.append(gap_duration)
+                gaps_list.append(float(gap_duration))
                 in_gap = False
             elif was_visible and not is_visible:
                 # Start of a gap
@@ -292,9 +292,9 @@ def calculate_constellation_coverage(
 
         if in_gap:
             # gap persists to the end of the simulation
-            gaps.append(t_array[-1] - gap_start_t)
+            gaps_list.append(float(t_array[-1] - gap_start_t))
 
-        gaps = np.array(gaps)
+        gaps = np.array(gaps_list, dtype=float)
         max_gap = np.max(gaps) if len(gaps) > 0 else 0.0
         mean_gap = np.mean(gaps) if len(gaps) > 0 else 0.0
 

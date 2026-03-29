@@ -3,6 +3,8 @@ Recursive QUEST (REQUEST) algorithm for recursive attitude estimation.
 """
 
 
+from typing import Any
+
 import numpy as np
 
 from opengnc.utils.quat_utils import quat_normalize
@@ -22,7 +24,7 @@ class RequestFilter:
         Initial $4 \times 4$ K-matrix. Default zero.
     """
 
-    def __init__(self, initial_k: np.ndarray | None = None, **kwargs) -> None:
+    def __init__(self, initial_k: np.ndarray | None = None, **kwargs: Any) -> None:
         """Initialize filter state."""
         # Support both 'initial_k' and 'initial_K'
         k_val = initial_k if initial_k is not None else kwargs.get("initial_K")

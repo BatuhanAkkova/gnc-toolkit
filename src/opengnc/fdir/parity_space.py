@@ -2,6 +2,8 @@
 Parity Space methods for Fault Detection and Isolation (FDI).
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 
@@ -48,7 +50,7 @@ class ParitySpaceDetector:
             Parity vector of shape $(p-n,)$.
         """
         y_vec = np.asarray(y).flatten()
-        return self.P @ y_vec
+        return np.asarray(self.P @ y_vec)
 
     def detect_fault(self, y: np.ndarray, threshold: float) -> bool:
         r"""
@@ -67,7 +69,7 @@ class ParitySpaceDetector:
             True if a fault is detected.
         """
         p_vec = self.get_parity_vector(y)
-        return np.linalg.norm(p_vec) > threshold
+        return bool(np.linalg.norm(p_vec) > threshold)
 
     def isolate_fault(self, y: np.ndarray) -> int:
         r"""

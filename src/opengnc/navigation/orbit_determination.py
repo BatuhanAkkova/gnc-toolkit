@@ -2,7 +2,7 @@
 Extended Kalman Filter for Orbit Determination (OD-EKF).
 """
 
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -67,15 +67,16 @@ class OrbitDeterminationEKF:
             Planet radius (m).
         """
         self.ekf = EKF(dim_x=6, dim_z=3)
-        self.ekf.x = np.asarray(x0, dtype=float)
-        self.ekf.P = np.asarray(p0, dtype=float)
-        self.ekf.Q = np.asarray(q_mat, dtype=float)
-        self.ekf.R = np.asarray(r_mat, dtype=float)
+        self.ekf.x = cast(np.ndarray, np.asarray(x0, dtype=float))
+        self.ekf.P = cast(np.ndarray, np.asarray(p0, dtype=float))
+        self.ekf.Q = cast(np.ndarray, np.asarray(q_mat, dtype=float))
+        self.ekf.R = cast(np.ndarray, np.asarray(r_mat, dtype=float))
 
         self.mu = mu
         self.re = re
         self.use_j2 = use_j2
 
+        self.gravity: TwoBodyGravity | J2Gravity
         if use_j2:
             self.gravity = J2Gravity(mu=mu, re=re)
         else:
@@ -86,7 +87,7 @@ class OrbitDeterminationEKF:
         x: np.ndarray,
         dt: float,
         u: np.ndarray | None = None,
-        **kwargs
+        **kwargs: Any
     ) -> np.ndarray:
         r"""
         Integrate orbital dynamics using the RK4 method.
@@ -116,7 +117,7 @@ class OrbitDeterminationEKF:
         k3 = f_dynamics(x + 0.5 * dt * k2)
         k4 = f_dynamics(x + dt * k3)
 
-        return x + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
+        return cast(np.ndarray, x + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
 
     def _jacobian_f(
         self,
@@ -157,7 +158,7 @@ class OrbitDeterminationEKF:
         a_mat[:3, 3:] = np.eye(3)
         a_mat[3:, :3] = g_mat
 
-        return np.eye(6) + a_mat * dt
+        return cast(np.ndarray, np.eye(6) + a_mat * dt)
 
     def predict(self, dt: float) -> None:
         """

@@ -2,6 +2,10 @@
 Magnetometer sensor model.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 
 from opengnc.sensors.sensor import Sensor
@@ -41,7 +45,9 @@ class Magnetometer(Sensor):
         self.misalignment = misalignment
         self.scale_factor = scale_factor
 
-    def measure(self, true_mag_vec_body: np.ndarray, **kwargs) -> np.ndarray:
+    def measure(
+        self, true_mag_vec_body: np.ndarray | None = None, *args: Any, **kwargs: Any
+    ) -> np.ndarray:
         """
         Generate magnetic field measurement.
 
@@ -58,6 +64,10 @@ class Magnetometer(Sensor):
             Measured magnetic field vector (Tesla).
         """
         # Apply calibration (soft iron, misalignment, hard iron bias)
+        if true_mag_vec_body is None:
+            if not args:
+                raise ValueError("true_mag_vec_body is required.")
+            true_mag_vec_body = np.asarray(args[0])
         calibrated = self.apply_calibration(
             true_mag_vec_body, self.misalignment, self.scale_factor, self.bias
         )
@@ -66,7 +76,7 @@ class Magnetometer(Sensor):
         measured = self.add_gaussian_noise(calibrated, self.noise_std)
 
         # Apply faults
-        measured = self.apply_faults(measured)
+        measured = np.asarray(self.apply_faults(measured), dtype=float)
 
         return measured
 

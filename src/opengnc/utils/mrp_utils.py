@@ -3,6 +3,7 @@ Modified Rodrigues Parameters (MRP) kinematics and math utilities.
 """
 
 import numpy as np
+from typing import cast
 
 
 def quat_to_mrp(q: np.ndarray) -> np.ndarray:
@@ -29,8 +30,8 @@ def quat_to_mrp(q: np.ndarray) -> np.ndarray:
     if abs(den) < 1e-12:
         # Fallback to a very large but finite MRP or notify
         # In practice, we use shadow sets before this happens.
-        return np.array([x, y, z]) * 1e12
-    return np.array([x, y, z]) / den
+        return cast(np.ndarray, np.array([x, y, z]) * 1e12)
+    return cast(np.ndarray, np.array([x, y, z]) / den)
 
 
 def mrp_to_quat(sigma: np.ndarray) -> np.ndarray:
@@ -51,7 +52,7 @@ def mrp_to_quat(sigma: np.ndarray) -> np.ndarray:
     sigma_sq = np.sum(sv**2)
     w = (1.0 - sigma_sq) / (1.0 + sigma_sq)
     xyz = 2.0 * sv / (1.0 + sigma_sq)
-    return np.array([xyz[0], xyz[1], xyz[2], w])
+    return cast(np.ndarray, np.array([xyz[0], xyz[1], xyz[2], w]))
 
 
 def mrp_to_dcm(sigma: np.ndarray) -> np.ndarray:
@@ -79,7 +80,7 @@ def mrp_to_dcm(sigma: np.ndarray) -> np.ndarray:
     ])
 
     den = (1.0 + sigma_sq)**2
-    return np.eye(3) + (8.0 * s_mat @ s_mat + 4.0 * (1.0 - sigma_sq) * s_mat) / den
+    return cast(np.ndarray, np.eye(3) + (8.0 * s_mat @ s_mat + 4.0 * (1.0 - sigma_sq) * s_mat) / den)
 
 
 def get_shadow_mrp(sigma: np.ndarray) -> np.ndarray:
@@ -103,8 +104,8 @@ def get_shadow_mrp(sigma: np.ndarray) -> np.ndarray:
     sv = np.asarray(sigma)
     sigma_sq = np.sum(sv**2)
     if sigma_sq < 1e-15:
-        return np.zeros(3)
-    return -sv / sigma_sq
+        return cast(np.ndarray, np.zeros(3))
+    return cast(np.ndarray, -sv / sigma_sq)
 
 
 def check_mrp_switching(sigma: np.ndarray, threshold: float = 1.0) -> np.ndarray:
@@ -128,7 +129,7 @@ def check_mrp_switching(sigma: np.ndarray, threshold: float = 1.0) -> np.ndarray
     sv = np.asarray(sigma)
     if np.linalg.norm(sv) > threshold:
         return get_shadow_mrp(sv)
-    return sv
+    return cast(np.ndarray, sv)
 
 
 

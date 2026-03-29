@@ -56,8 +56,8 @@ class LQE:
         self.C = np.asarray(C)
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
-        self.P = None
-        self.L = None
+        self.P: np.ndarray | None = None
+        self.L: np.ndarray | None = None
 
     def solve(self) -> np.ndarray:
         """
@@ -93,6 +93,8 @@ class LQE:
         """
         if self.P is None:
             self.solve()
+        if self.P is None:
+            raise RuntimeError("Riccati solution not available.")
 
         # Numerically stable solve for R*L.T = C*P
         term = np.linalg.solve(self.R, self.C @ self.P)

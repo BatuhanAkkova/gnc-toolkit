@@ -4,6 +4,7 @@ Geometric Controller on SO(3) for attitude tracking.
 
 
 import numpy as np
+from typing import cast
 
 
 def vee_map(R: np.ndarray) -> np.ndarray:
@@ -20,7 +21,7 @@ def vee_map(R: np.ndarray) -> np.ndarray:
     np.ndarray
         $3\times 1$ vector.
     """
-    return np.array([R[2, 1], R[0, 2], R[1, 0]])
+    return cast(np.ndarray, np.array([R[2, 1], R[0, 2], R[1, 0]]))
 
 
 def hat_map(v: np.ndarray) -> np.ndarray:
@@ -38,11 +39,11 @@ def hat_map(v: np.ndarray) -> np.ndarray:
         $3\times 3$ skew-symmetric matrix.
     """
     v_vec = np.asarray(v).flatten()
-    return np.array([
+    return cast(np.ndarray, np.array([
         [0.0, -v_vec[2], v_vec[1]],
         [v_vec[2], 0.0, -v_vec[0]],
         [-v_vec[1], v_vec[0], 0.0]
-    ])
+    ]))
 
 
 class GeometricController:
@@ -124,7 +125,7 @@ class GeometricController:
         M_gyro = np.cross(omega_vec, self.J @ omega_vec)
 
         # Control Law: M = -kR*eR - kW*eW + gyro - ff
-        return -self.kR * eR - self.kW * eW + M_gyro - M_ff
+        return cast(np.ndarray, -self.kR * eR - self.kW * eW + M_gyro - M_ff)
 
 
 

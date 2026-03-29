@@ -3,7 +3,7 @@ Ensemble Kalman Filter (EnKF) using Monte Carlo samples for covariance represent
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 from collections.abc import Callable
 from typing import Any
@@ -50,7 +50,9 @@ class EnKF:
         p_cov : np.ndarray
             Initial state error covariance (dim_x, dim_x).
         """
-        self.X = np.random.multivariate_normal(x_mean, p_cov, self.num_ensemble).T
+        self.X = cast(
+            np.ndarray, np.random.multivariate_normal(x_mean, p_cov, self.num_ensemble).T
+        )
 
     def predict(
         self,
@@ -78,7 +80,7 @@ class EnKF:
         # Propagate each ensemble member
         for i in range(self.num_ensemble):
             # Propagate through nonlinear model
-            self.X[:, i] = fx_func(self.X[:, i], dt, **kwargs)
+            self.X[:, i] = cast(np.ndarray, fx_func(self.X[:, i], dt, **kwargs))
 
             # Add process noise to each member
             noise = np.random.multivariate_normal(np.zeros(self.dim_x), q_curr)
@@ -110,7 +112,7 @@ class EnKF:
         # Transform ensemble to measurement space
         z_ensemble = np.zeros((self.dim_z, self.num_ensemble))
         for i in range(self.num_ensemble):
-            z_ensemble[:, i] = hx_func(self.X[:, i], **kwargs)
+            z_ensemble[:, i] = cast(np.ndarray, hx_func(self.X[:, i], **kwargs))
 
         # Sample mean of measurement ensemble
         z_mean = np.mean(z_ensemble, axis=1, keepdims=True)
@@ -144,13 +146,13 @@ class EnKF:
     @property
     def x(self) -> np.ndarray:
         """Ensemble mean state vector."""
-        return np.mean(self.X, axis=1)
+        return cast(np.ndarray, np.mean(self.X, axis=1))
 
     @property
     def P(self) -> np.ndarray:
         """Ensemble covariance matrix."""
         anomalies_x = self.X - np.mean(self.X, axis=1, keepdims=True)
-        return (1.0 / (self.num_ensemble - 1)) * (anomalies_x @ anomalies_x.T)
+        return cast(np.ndarray, (1.0 / (self.num_ensemble - 1)) * (anomalies_x @ anomalies_x.T))
 
 
 

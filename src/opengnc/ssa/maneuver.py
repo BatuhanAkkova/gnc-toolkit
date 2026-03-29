@@ -4,6 +4,7 @@ Debris Avoidance Maneuver Planning.
 
 
 import numpy as np
+from typing import cast
 
 
 def plan_avoidance_maneuver(
@@ -40,7 +41,7 @@ def plan_avoidance_maneuver(
     rs, vs = np.asarray(r_sat), np.asarray(v_sat)
     rd, vd = np.asarray(r_debris), np.asarray(v_debris)
 
-    v_mag = np.linalg.norm(vs)
+    v_mag = float(np.linalg.norm(vs))
     if v_mag < 1e-6:
         raise ValueError("Velocity is too small.")
 
@@ -49,10 +50,10 @@ def plan_avoidance_maneuver(
 
     # Current predicted miss (Euclidean distance at encounter/epoch)
     r_rel = rs - rd
-    d_curr = np.linalg.norm(r_rel)
+    d_curr = float(np.linalg.norm(r_rel))
 
     if d_curr >= safety_radius:
-        return np.zeros(3), d_curr
+        return np.zeros(3), float(d_curr)
 
     # Phasing approximation: d_r_track ~ 3 * dt * dv_t
     d_req = safety_radius - d_curr
@@ -64,10 +65,10 @@ def plan_avoidance_maneuver(
         # Efficient along-track phasing
         dv_mag = d_req / (3.0 * t_encounter)
 
-    dv_vec = t_hat * dv_mag
+    dv_vec = cast(np.ndarray, t_hat * dv_mag)
     d_est = d_curr + np.abs(dv_mag) * (3.0 * t_encounter if t_encounter > 10.0 else t_encounter)
 
-    return dv_vec, d_est
+    return dv_vec, float(d_est)
 
 
 

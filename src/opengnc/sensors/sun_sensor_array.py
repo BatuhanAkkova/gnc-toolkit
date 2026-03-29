@@ -3,6 +3,7 @@ Coarse Sun Sensor Array model.
 """
 
 import numpy as np
+from typing import Any
 
 from opengnc.sensors.sensor import Sensor
 
@@ -52,7 +53,9 @@ class CoarseSunSensorArray(Sensor):
         self.i_max = i_max
         self.noise_std = noise_std
 
-    def measure(self, true_sun_vec: np.ndarray, **kwargs) -> np.ndarray:
+    def measure(
+        self, true_sun_vec: np.ndarray | None = None, *args: Any, **kwargs: Any
+    ) -> np.ndarray:
         """
         Generate measurements from each CSS in the array.
 
@@ -68,6 +71,10 @@ class CoarseSunSensorArray(Sensor):
         np.ndarray
             Array of measurements (typically current or voltage) from each CSS.
         """
+        if true_sun_vec is None:
+            if not args:
+                raise ValueError("true_sun_vec is required.")
+            true_sun_vec = np.asarray(args[0])
         s = true_sun_vec / np.linalg.norm(true_sun_vec)
         measurements = []
         for n in self.boresights:

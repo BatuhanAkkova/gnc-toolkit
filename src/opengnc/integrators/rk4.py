@@ -2,6 +2,8 @@
 Fixed-step Runge-Kutta 4th order integrator.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import Any
 

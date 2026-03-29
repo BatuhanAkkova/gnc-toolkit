@@ -3,6 +3,7 @@ Solar Radiation Pressure (SRP) acceleration models.
 """
 
 import numpy as np
+from typing import cast
 
 from opengnc.environment.solar import Sun
 
@@ -72,14 +73,14 @@ class Canonball:
         # Shadow factor (nu)
         nu = self.check_eclipse(r_val, r_sun)
         if nu < 1e-6:
-            return np.zeros(3)
+            return cast(np.ndarray, np.zeros(3))
 
         # Pressure scaling (Inverse Square Law)
         au = 149597870700.0
         p_dist = self.P_sun * (au / dist_sun) ** 2
 
         acc_mag = nu * p_dist * cr * (area / mass)
-        return -acc_mag * u_sun
+        return cast(np.ndarray, -acc_mag * u_sun)
 
     def check_eclipse(self, r_sat: np.ndarray, r_sun: np.ndarray) -> float:
         """

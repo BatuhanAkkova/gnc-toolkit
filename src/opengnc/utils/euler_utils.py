@@ -2,7 +2,10 @@
 Euler angle kinematics and Direction Cosine Matrix (DCM) utilities.
 """
 
+from __future__ import annotations
+
 import numpy as np
+from typing import cast
 
 
 def rot_x(angle: float) -> np.ndarray:
@@ -20,11 +23,11 @@ def rot_x(angle: float) -> np.ndarray:
         3x3 rotation matrix.
     """
     c, s = np.cos(angle), np.sin(angle)
-    return np.array([
+    return cast(np.ndarray, np.array([
         [1.0, 0.0, 0.0],
         [0.0,   c,  -s],
         [0.0,   s,   c]
-    ])
+    ]))
 
 
 def rot_y(angle: float) -> np.ndarray:
@@ -42,11 +45,11 @@ def rot_y(angle: float) -> np.ndarray:
         3x3 rotation matrix.
     """
     c, s = np.cos(angle), np.sin(angle)
-    return np.array([
+    return cast(np.ndarray, np.array([
         [  c, 0.0,  s],
         [0.0, 1.0, 0.0],
         [ -s, 0.0,  c]
-    ])
+    ]))
 
 
 def rot_z(angle: float) -> np.ndarray:
@@ -64,11 +67,11 @@ def rot_z(angle: float) -> np.ndarray:
         3x3 rotation matrix.
     """
     c, s = np.cos(angle), np.sin(angle)
-    return np.array([
+    return cast(np.ndarray, np.array([
         [  c,  -s, 0.0],
         [  s,   c, 0.0],
         [0.0, 0.0, 1.0]
-    ])
+    ]))
 
 
 def euler_to_dcm(angles: np.ndarray, sequence: str) -> np.ndarray:
@@ -109,7 +112,7 @@ def euler_to_dcm(angles: np.ndarray, sequence: str) -> np.ndarray:
         raise ValueError(f"Invalid axis '{e.args[0]}' in sequence '{sequence}'.") from e
 
     # Composite rotation: last rotation applied first in matrix product
-    return r3 @ r2 @ r1
+    return cast(np.ndarray, r3 @ r2 @ r1)
 
 
 def dcm_to_euler(dcm: np.ndarray, sequence: str) -> np.ndarray:
@@ -155,7 +158,7 @@ def dcm_to_euler(dcm: np.ndarray, sequence: str) -> np.ndarray:
             theta1 = np.arctan2(mat[i, j], parity * mat[i, k])
             theta3 = np.arctan2(mat[j, i], -parity * mat[k, i])
 
-        return np.array([theta1, theta2, theta3])
+        return cast(np.ndarray, np.array([theta1, theta2, theta3]))
 
     # 2. Asymmetric Sequences (e.g., 3-2-1, 1-2-3)
     else:
@@ -176,7 +179,7 @@ def dcm_to_euler(dcm: np.ndarray, sequence: str) -> np.ndarray:
             theta1 = np.arctan2(parity * mat[k, j], mat[k, k])
             theta3 = np.arctan2(parity * mat[j, i], mat[i, i])
 
-        return np.array([theta1, theta2, theta3])
+        return cast(np.ndarray, np.array([theta1, theta2, theta3]))
 
 
 

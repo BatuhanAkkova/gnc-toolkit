@@ -3,6 +3,7 @@ H-Infinity Robust Controller state-feedback design.
 """
 
 import numpy as np
+from typing import cast
 from scipy.linalg import solve_continuous_are
 
 
@@ -49,8 +50,8 @@ class HInfinityController:
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
         self.gamma = float(gamma)
-        self.P = None
-        self.K = None
+        self.P: np.ndarray | None = None
+        self.K: np.ndarray | None = None
 
     def solve(self) -> np.ndarray:
         r"""
@@ -96,6 +97,8 @@ class HInfinityController:
         """
         if self.P is None:
             self.solve()
+        if self.P is None:
+            raise RuntimeError("Riccati solution not available.")
 
         self.K = np.linalg.solve(self.R, self.B2.T @ self.P)
         return self.K
@@ -116,7 +119,9 @@ class HInfinityController:
         """
         if self.K is None:
             self.compute_gain()
-        return -self.K @ x
+        if self.K is None:
+            raise RuntimeError("Feedback gain not available.")
+        return cast(np.ndarray, -self.K @ x)
 
 
 

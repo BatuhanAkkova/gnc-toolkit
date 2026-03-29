@@ -3,6 +3,7 @@ Sliding Mode Controller (SMC) implementation.
 """
 
 from collections.abc import Callable
+from typing import cast
 
 import numpy as np
 
@@ -67,7 +68,7 @@ class SlidingModeController:
         else:
             switching_term = np.sign(s_val)
 
-        return self.eq_func(x, t) - self.k_gain * switching_term
+        return cast(float | np.ndarray, self.eq_func(x, t) - self.k_gain * switching_term)
 
 
 

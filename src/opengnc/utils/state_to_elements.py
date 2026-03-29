@@ -5,8 +5,6 @@ Conversions between ECI position/velocity and Keplerian orbital elements.
 
 import numpy as np
 
-from opengnc.utils.euler_utils import rot_x, rot_z
-
 
 def eci2kepler(
     r_eci: np.ndarray,
@@ -45,37 +43,37 @@ def eci2kepler(
     rv = np.asarray(r_eci)
     vv = np.asarray(v_eci)
 
-    r_mag = np.linalg.norm(rv)
-    v_mag = np.linalg.norm(vv)
+    r_mag = float(np.linalg.norm(rv))
+    v_mag = float(np.linalg.norm(vv))
 
     # 2. Angular momentum
     h_vec = np.cross(rv, vv)
-    h_mag = np.linalg.norm(h_vec)
+    h_mag = float(np.linalg.norm(h_vec))
 
     # 3. Node vector
     n_vec = np.array([-h_vec[1], h_vec[0], 0.0])
-    n_mag = np.linalg.norm(n_vec)
+    n_mag = float(np.linalg.norm(n_vec))
 
     # 4. Eccentricity vector
     e_vec = ((v_mag**2 - mu / r_mag) * rv - np.dot(rv, vv) * vv) / mu
-    ecc = np.linalg.norm(e_vec)
+    ecc = float(np.linalg.norm(e_vec))
 
     # 5. Semi-major axis and Semi-latus rectum
-    energy = (v_mag**2 / 2.0) - (mu / r_mag)
+    energy = float((v_mag**2 / 2.0) - (mu / r_mag))
     if abs(energy) < 1e-12: # Parabolic
         a = np.inf
     else:
-        a = -mu / (2.0 * energy)
-    p = h_mag**2 / mu
+        a = float(-mu / (2.0 * energy))
+    p = float(h_mag**2 / mu)
 
     # 6. Inclination
-    incl = np.arccos(np.clip(h_vec[2] / h_mag, -1.0, 1.0))
+    incl = float(np.arccos(np.clip(h_vec[2] / h_mag, -1.0, 1.0)))
 
     # 7. RAAN (Node)
     if n_mag < 1e-12:
         raan = 0.0
     else:
-        raan = np.arccos(np.clip(n_vec[0] / n_mag, -1.0, 1.0))
+        raan = float(np.arccos(np.clip(n_vec[0] / n_mag, -1.0, 1.0)))
         if n_vec[1] < 0:
             raan = 2.0 * np.pi - raan
 
@@ -86,7 +84,7 @@ def eci2kepler(
         if ecc < 1e-12:
             argp = 0.0
         else:
-            argp = np.arccos(np.clip(np.dot(n_vec, e_vec) / (n_mag * ecc), -1.0, 1.0))
+            argp = float(np.arccos(np.clip(np.dot(n_vec, e_vec) / (n_mag * ecc), -1.0, 1.0)))
             if e_vec[2] < 0:
                 argp = 2.0 * np.pi - argp
 
@@ -94,7 +92,7 @@ def eci2kepler(
     if ecc < 1e-12:
         nu = 0.0 # Circular orbit placeholder
     else:
-        nu = np.arccos(np.clip(np.dot(e_vec, rv) / (ecc * r_mag), -1.0, 1.0))
+        nu = float(np.arccos(np.clip(np.dot(e_vec, rv) / (ecc * r_mag), -1.0, 1.0)))
         if np.dot(rv, vv) < 0:
             nu = 2.0 * np.pi - nu
 
@@ -103,7 +101,7 @@ def eci2kepler(
     if n_mag < 1e-12:
         arglat = 0.0
     else:
-        arglat = np.arccos(np.clip(np.dot(n_vec, rv) / (n_mag * r_mag), -1.0, 1.0))
+        arglat = float(np.arccos(np.clip(np.dot(n_vec, rv) / (n_mag * r_mag), -1.0, 1.0)))
         if rv[2] < 0:
             arglat = 2.0 * np.pi - arglat
 
@@ -111,12 +109,12 @@ def eci2kepler(
     if ecc < 1e-12:
         lonper = 0.0
     else:
-        lonper = np.arccos(np.clip(e_vec[0] / ecc, -1.0, 1.0))
+        lonper = float(np.arccos(np.clip(e_vec[0] / ecc, -1.0, 1.0)))
         if e_vec[1] < 0:
             lonper = 2.0 * np.pi - lonper
 
     # True Longitude (Equatorial Circular)
-    truelon = np.arccos(np.clip(rv[0] / r_mag, -1.0, 1.0))
+    truelon = float(np.arccos(np.clip(rv[0] / r_mag, -1.0, 1.0)))
     if rv[1] < 0:
         truelon = 2.0 * np.pi - truelon
 

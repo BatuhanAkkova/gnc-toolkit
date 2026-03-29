@@ -69,7 +69,7 @@ class MissionSimulator:
         self.time = t0
         self.state = initial_state
 
-    def schedule_event(self, t: float, callback: Callable, *args, **kwargs) -> None:
+    def schedule_event(self, t: float, callback: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
         """
         Register a discrete event for future execution.
 
@@ -118,8 +118,7 @@ class MissionSimulator:
             self.logger.log(self.time, self.state, meas, est, u)
 
         # 6. Propagate Truth
-        if self.propagator:
-            self.state = self.propagator(self.time, self.state, dt, u)
+        self.state = self.propagator(self.time, self.state, dt, u)
 
         self.time += dt
 

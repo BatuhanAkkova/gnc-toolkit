@@ -3,6 +3,7 @@ Lidar sensor model.
 """
 
 import numpy as np
+from typing import Any
 
 from opengnc.sensors.sensor import Sensor
 
@@ -33,7 +34,9 @@ class Lidar(Sensor):
         self.range_noise_std = range_noise_std
         self.los_noise_std = los_noise_std
 
-    def measure(self, true_relative_pos: np.ndarray, **kwargs) -> tuple[float, np.ndarray]:
+    def measure(
+        self, true_relative_pos: np.ndarray | None = None, *args: Any, **kwargs: Any
+    ) -> tuple[float, np.ndarray]:
         """
         Generate Lidar range and LOS measurement.
 
@@ -51,6 +54,10 @@ class Lidar(Sensor):
             measured_range : Range to target (m).
             measured_los_vec : Unit LOS vector in body frame.
         """
+        if true_relative_pos is None:
+            if not args:
+                raise ValueError("true_relative_pos is required.")
+            true_relative_pos = np.asarray(args[0])
         true_range = float(np.linalg.norm(true_relative_pos))
         true_los = true_relative_pos / true_range if true_range > 0 else np.zeros(3)
 

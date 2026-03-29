@@ -2,6 +2,10 @@
 Thruster models including Chemical, Electric, and Multi-thruster clusters.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 
 from opengnc.actuators.actuator import Actuator
@@ -51,7 +55,13 @@ class Thruster(Actuator):
         self.min_impulse_bit: float = min_impulse_bit
         self.isp: float | None = isp
 
-    def command(self, thrust_cmd: float, dt: float | None = None, **kwargs) -> float:
+    def command(
+        self,
+        thrust_cmd: float | None = None,
+        dt: float | None = None,
+        *args: Any,
+        **kwargs: Any
+    ) -> float:
         """
         Calculate delivered thrust.
 
@@ -70,7 +80,11 @@ class Thruster(Actuator):
             Delivered thrust (N).
         """
         # Saturation (clip to max thrust)
-        thrust: float = self.apply_saturation(thrust_cmd)
+        if thrust_cmd is None:
+            if not args:
+                raise ValueError("thrust_cmd is required.")
+            thrust_cmd = float(args[0])
+        thrust = float(self.apply_saturation(thrust_cmd))
 
         # Minimum Impulse Bit Logic
         # If dt is provided, check if the requested impulse is possible.
@@ -148,7 +162,13 @@ class ChemicalThruster(Thruster):
         mib: float = max_thrust * min_on_time
         super().__init__(max_thrust=max_thrust, isp=isp, min_impulse_bit=mib, name=name)
 
-    def command(self, thrust_cmd: float, dt: float | None = None, **kwargs) -> float:
+    def command(
+        self,
+        thrust_cmd: float | None = None,
+        dt: float | None = None,
+        *args: Any,
+        **kwargs: Any
+    ) -> float:
         """
         Considers PWM constraints for chemical valve.
 
@@ -168,6 +188,8 @@ class ChemicalThruster(Thruster):
         float
             Delivered thrust (N).
         """
+        if thrust_cmd is None and args:
+            thrust_cmd = float(args[0])
         thrust: float = super().command(thrust_cmd, dt=dt, **kwargs)
 
         if dt is not None and self.min_on_time > 0 and abs(thrust) > 1e-9:
@@ -242,6 +264,8 @@ class ElectricThruster(Thruster):
         if self.power_efficiency <= 0:
             return float("inf")
 
+        if self.isp is None:
+            return 0.0
         ve = self.isp * self.g0
         return float(thrust * ve / (2 * self.power_efficiency))
 
@@ -280,7 +304,12 @@ class ThrusterCluster:
 
         self.allocator = PseudoInverseAllocator(self.A)
 
-    def command(self, force_torque_cmd: np.ndarray, dt: float | None = None) -> np.ndarray:
+    def command(
+        self,
+        force_torque_cmd: np.ndarray | None = None,
+        dt: float | None = None,
+        *args: Any
+    ) -> np.ndarray:
         """
         Distribute 6-DOF force/torque command to individual thrusters.
 
@@ -296,6 +325,10 @@ class ThrusterCluster:
         np.ndarray
             Delivered thrusts for each thruster in the cluster (N).
         """
+        if force_torque_cmd is None:
+            if not args:
+                raise ValueError("force_torque_cmd is required.")
+            force_torque_cmd = np.asarray(args[0])
         thrust_cmds = self.allocator.allocate(force_torque_cmd)
 
         # Apply individual thruster constraints

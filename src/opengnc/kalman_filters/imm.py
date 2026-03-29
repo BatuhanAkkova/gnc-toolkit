@@ -163,7 +163,7 @@ class IMM:
         det_s = np.linalg.det(s_mat)
         dim = len(z)
         exponent = -0.5 * (resid.T @ inv_s @ resid)
-        return (1.0 / np.sqrt((2 * np.pi) ** dim * det_s)) * np.exp(exponent)
+        return float((1.0 / np.sqrt((2 * np.pi) ** dim * det_s)) * np.exp(exponent))
 
 
 

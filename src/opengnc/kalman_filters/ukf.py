@@ -263,7 +263,7 @@ class UKF_Attitude(UKF):
         self._axis_angle_to_quat = axis_angle_to_quat
         self._quat_normalize = quat_normalize
 
-        def subtract_x(x1, x2):
+        def subtract_x(x1: np.ndarray, x2: np.ndarray) -> np.ndarray:
             # q1 = q2 * dq => dq = q2_conj * q1
             dq = self._quat_mult(self._quat_conj(x2[:4]), x1[:4])
             if dq[3] < 0:
@@ -272,14 +272,14 @@ class UKF_Attitude(UKF):
             dbias = x1[4:] - x2[4:]
             return np.concatenate([dtheta, dbias])
 
-        def add_x(x, dx):
+        def add_x(x: np.ndarray, dx: np.ndarray) -> np.ndarray:
             dq = self._axis_angle_to_quat(dx[:3])
             # q_new = q_old * dq
             q_new = self._quat_normalize(self._quat_mult(x[:4], dq))
             bias_new = x[4:] + dx[3:]
             return np.concatenate([q_new, bias_new])
 
-        def mean_x(sigmas, weights):
+        def mean_x(sigmas: np.ndarray, weights: np.ndarray) -> np.ndarray:
             # Simple renormalized weighted mean for quaternions
             q_ref = sigmas[0, :4]
             q_avg = np.zeros(4)

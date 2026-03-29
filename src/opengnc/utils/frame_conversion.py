@@ -2,6 +2,8 @@
 Frame conversion utilities (ECI, ECEF, LVLH, LLH).
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 from opengnc.utils.euler_utils import rot_z

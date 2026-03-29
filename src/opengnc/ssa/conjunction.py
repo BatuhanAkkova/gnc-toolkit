@@ -2,6 +2,8 @@
 Conjunction Analysis and Probability of Collision (Pc) computation.
 """
 
+from __future__ import annotations
+
 import numpy as np
 from scipy.integrate import dblquad
 
@@ -89,7 +91,7 @@ def compute_pc_foster(
     def pdf_2d(x: float, y: float) -> float:
         d = np.array([x - x_c, y - y_c])
         arg = -0.5 * d.T @ inv_c @ d
-        return (1.0 / (2.0 * np.pi * np.sqrt(det_c))) * np.exp(arg)
+        return float((1.0 / (2.0 * np.pi * np.sqrt(det_c))) * np.exp(arg))
 
     pc, _ = dblquad(
         pdf_2d,
@@ -98,7 +100,7 @@ def compute_pc_foster(
         lambda y: np.sqrt(max(0, hbr**2 - y**2))
     )
 
-    return pc
+    return float(pc)
 
 
 def compute_pc_chan(
@@ -182,7 +184,7 @@ def compute_pc_chan(
         term_v *= (v / 2.0) / (n + 1)
         sum_v += term_v
 
-    return pc
+    return float(pc)
 
 
 

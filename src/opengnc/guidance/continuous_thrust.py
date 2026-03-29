@@ -87,7 +87,7 @@ def q_law_guidance(
     direction = -(grad_q_oe @ b_mat)
 
     if np.linalg.norm(direction) < 1e-12:
-        return np.zeros(3)
+        return np.zeros(3, dtype=float)
 
     u_rtn = direction / np.linalg.norm(direction)
     f_rtn = accel_max * u_rtn
@@ -98,7 +98,7 @@ def q_law_guidance(
     u_t = np.cross(u_n, u_r)
 
     r_rtn_to_eci = np.column_stack([u_r, u_t, u_n])
-    return r_rtn_to_eci @ f_rtn
+    return np.asarray(r_rtn_to_eci @ f_rtn)
 
 
 def zem_zev_guidance(
@@ -135,7 +135,7 @@ def zem_zev_guidance(
         Commanded acceleration vector (m/s^2).
     """
     if t_go <= 1e-6:
-        return np.zeros(3)
+        return np.zeros(3, dtype=float)
 
     if gravity is None:
         gravity = np.zeros(3)
@@ -146,7 +146,7 @@ def zem_zev_guidance(
     zev = vel_target - (vel + gravity * t_go)
 
     # Optimal acceleration for minimum effort (integral of a^2)
-    return (6.0 / t_go**2) * zem - (2.0 / t_go) * zev
+    return np.asarray((6.0 / t_go**2) * zem - (2.0 / t_go) * zev)
 
 
 def gravity_turn_guidance(
@@ -174,13 +174,13 @@ def gravity_turn_guidance(
     """
     v_mag = np.linalg.norm(vel)
     if v_mag < 1e-6:
-        return np.zeros(3)
+        return np.zeros(3, dtype=float)
 
     u_v = vel / v_mag
 
     if mode == "descent":
-        return -accel_mag * u_v
-    return accel_mag * u_v
+        return np.asarray(-accel_mag * u_v)
+    return np.asarray(accel_mag * u_v)
 
 
 def apollo_dps_guidance(
@@ -220,7 +220,7 @@ def apollo_dps_guidance(
         Commanded acceleration vector (m/s^2).
     """
     if t_go <= 1e-6:
-        return accel_t
+        return np.asarray(accel_t)
 
     if gravity is None:
         gravity = np.zeros(3)
@@ -228,7 +228,7 @@ def apollo_dps_guidance(
     delta_r = pos_t - (pos + vel * t_go + 0.5 * gravity * t_go**2)
     delta_v = vel_t - (vel + gravity * t_go)
 
-    return accel_t + (12.0 / t_go**2) * delta_r + (6.0 / t_go) * delta_v
+    return np.asarray(accel_t + (12.0 / t_go**2) * delta_r + (6.0 / t_go) * delta_v)
 
 
 def indirect_optimal_guidance(
@@ -310,7 +310,7 @@ def indirect_optimal_guidance(
         # d(lambda_v)/dt = -dH/dv = -lambda_r
         dl_v = -l_r
 
-        return np.vstack([dr, dv, dl_r, dl_v])
+        return np.asarray(np.vstack([dr, dv, dl_r, dl_v]))
 
     def boundary_conditions(ya: np.ndarray, yb: np.ndarray) -> np.ndarray:
         """
@@ -330,7 +330,9 @@ def indirect_optimal_guidance(
         """
         # Initial position and velocity
         # Final position and velocity
-        return np.concatenate([ya[:3] - r0, ya[3:6] - v0, yb[:3] - rf, yb[3:6] - vf])
+        return np.asarray(
+            np.concatenate([ya[:3] - r0, ya[3:6] - v0, yb[:3] - rf, yb[3:6] - vf])
+        )
 
     t_init = np.linspace(0, tf, 5)
     y_init = np.zeros((12, t_init.size))
@@ -344,7 +346,7 @@ def indirect_optimal_guidance(
     if res.success:
         l_v_sol = res.y[9:12]
         # Optimal acceleration is u = -lambda_v
-        return res.x, -l_v_sol
+        return np.asarray(res.x), np.asarray(-l_v_sol)
     return None, None
 
 
@@ -445,7 +447,7 @@ def direct_collocation_guidance(
         cons.append(nodes[-1, :3] - rf)
         cons.append(nodes[-1, 3:6] - vf)
 
-        return np.concatenate([c.flatten() for c in cons])
+        return np.asarray(np.concatenate([c.flatten() for c in cons]))
 
     # Initial guess: linear interpolation for position and velocity, zero acceleration
     x_guess = np.zeros(n_nodes * 9)
@@ -458,7 +460,7 @@ def direct_collocation_guidance(
     res = minimize(objective, x_guess, constraints={"type": "eq", "fun": dynamic_constraints}, method="SLSQP")
 
     if res.success:
-        return res.x.reshape((n_nodes, 9))
+        return np.asarray(res.x.reshape((n_nodes, 9)))
     return None
 
 

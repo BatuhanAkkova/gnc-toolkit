@@ -2,6 +2,9 @@
 GNSS Receiver sensor model.
 """
 
+from __future__ import annotations
+
+from typing import Any
 
 import numpy as np
 
@@ -35,7 +38,7 @@ class GNSSReceiver(Sensor):
         name: str = "GNSS",
         pos_bias: np.ndarray | None = None,
         vel_bias: np.ndarray | None = None,
-        **kwargs
+        **kwargs: Any
     ) -> None:
         super().__init__(name)
         self.pos_noise_std = pos_noise_std
@@ -44,7 +47,11 @@ class GNSSReceiver(Sensor):
         self.vel_bias = np.asarray(vel_bias) if vel_bias is not None else np.zeros(3)
 
     def measure(
-        self, true_pos: np.ndarray, true_vel: np.ndarray, **kwargs
+        self,
+        true_pos: np.ndarray | None = None,
+        true_vel: np.ndarray | None = None,
+        *args: Any,
+        **kwargs: Any
     ) -> tuple[np.ndarray, np.ndarray]:
         """
         Generate GNSS position and velocity measurements.
@@ -66,12 +73,20 @@ class GNSSReceiver(Sensor):
         tuple[np.ndarray, np.ndarray]
             (meas_pos, meas_vel).
         """
+        if true_pos is None:
+            if not args:
+                raise ValueError("true_pos is required.")
+            true_pos = np.asarray(args[0])
+        if true_vel is None:
+            if len(args) < 2:
+                raise ValueError("true_vel is required.")
+            true_vel = np.asarray(args[1])
         meas_pos = self.add_gaussian_noise(true_pos, self.pos_noise_std) + self.pos_bias
         meas_vel = self.add_gaussian_noise(true_vel, self.vel_noise_std) + self.vel_bias
 
         # Apply faults if any
-        meas_pos = self.apply_faults(meas_pos)
-        meas_vel = self.apply_faults(meas_vel)
+        meas_pos = np.asarray(self.apply_faults(meas_pos), dtype=float)
+        meas_vel = np.asarray(self.apply_faults(meas_vel), dtype=float)
 
         return meas_pos, meas_vel
 

@@ -29,10 +29,10 @@ class ActuatorAccommodation:
         self.k, self.m = self.B.shape
 
         if initial_weights is None:
-            self.W_diag = np.ones(self.m)
+            self.W_diag: np.ndarray = np.ones(self.m)
         else:
-            w_arr = np.asarray(initial_weights)
-            self.W_diag = np.diag(w_arr) if w_arr.ndim == 2 else w_arr
+            w_arr = np.asarray(initial_weights, dtype=float)
+            self.W_diag = np.asarray(np.diag(w_arr) if w_arr.ndim == 2 else w_arr, dtype=float)
 
         self.health = np.ones(self.m)  # 1.0 = Healthy, 0.0 = Dead
 
@@ -74,9 +74,9 @@ class ActuatorAccommodation:
         # B_pinv = W_inv * B^T * (B * W_inv * B^T)^-1
         try:
             gram_mat = self.B @ w_inv @ self.B.T
-            return w_inv @ self.B.T @ np.linalg.inv(gram_mat)
+            return np.asarray(w_inv @ self.B.T @ np.linalg.inv(gram_mat))
         except np.linalg.LinAlgError:
-            return np.linalg.pinv(self.B)
+            return np.asarray(np.linalg.pinv(self.B))
 
     def allocate(self, tau: np.ndarray) -> np.ndarray:
         """
@@ -94,7 +94,7 @@ class ActuatorAccommodation:
         """
         tau_vec = np.asarray(tau).flatten()
         b_pinv = self.update_allocation_matrix()
-        return b_pinv @ tau_vec
+        return np.asarray(b_pinv @ tau_vec)
 
 
 

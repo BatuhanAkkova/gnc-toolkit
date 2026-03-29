@@ -3,7 +3,7 @@ Model Reference Adaptive Control (MRAC) for state-space systems.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import cast
 
 import numpy as np
 from scipy.linalg import solve_continuous_lyapunov
@@ -119,7 +119,7 @@ class ModelReferenceAdaptiveControl:
         e = (x_vec - xm_vec).reshape(1, -1)
         self.d_theta_hat = self.Gamma @ phi_x @ (e @ self.P @ self.B)
 
-        return u
+        return cast(np.ndarray, u)
 
     def update_theta(self, dt: float) -> None:
         """

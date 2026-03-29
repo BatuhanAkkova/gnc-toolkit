@@ -4,6 +4,7 @@ EKF for relative navigation using Clohessy-Wiltshire (Hill) dynamics.
 
 
 import numpy as np
+from typing import cast
 
 from opengnc.kalman_filters.ekf import EKF
 
@@ -39,10 +40,10 @@ class RelativeNavigationEKF:
     ) -> None:
         """Initialize Relative EKF."""
         self.ekf = EKF(dim_x=6, dim_z=3)
-        self.ekf.x = np.asarray(x0, dtype=float)
-        self.ekf.P = np.asarray(p0, dtype=float)
-        self.ekf.Q = np.asarray(q_mat, dtype=float)
-        self.ekf.R = np.asarray(r_mat, dtype=float)
+        self.ekf.x = cast(np.ndarray, np.asarray(x0, dtype=float))
+        self.ekf.P = cast(np.ndarray, np.asarray(p0, dtype=float))
+        self.ekf.Q = cast(np.ndarray, np.asarray(q_mat, dtype=float))
+        self.ekf.R = cast(np.ndarray, np.asarray(r_mat, dtype=float))
         self.n = mean_motion
 
     def predict(self, dt: float) -> None:
@@ -57,10 +58,10 @@ class RelativeNavigationEKF:
         phi = self._get_cw_transition_matrix(self.n, dt)
 
         def fx(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
-            return phi @ x
+            return cast(np.ndarray, phi @ x)
 
         def f_jac(x: np.ndarray, dt_step: float, u: np.ndarray | None) -> np.ndarray:
-            return phi
+            return cast(np.ndarray, phi)
 
         self.ekf.predict(fx, f_jac, dt)
 
@@ -74,12 +75,12 @@ class RelativeNavigationEKF:
             Relative position vector in Hill frame (m).
         """
         def hx(x: np.ndarray) -> np.ndarray:
-            return x[:3]
+            return cast(np.ndarray, x[:3])
 
         def h_jac(x: np.ndarray) -> np.ndarray:
             h_mat = np.zeros((3, 6))
             h_mat[:, :3] = np.eye(3)
-            return h_mat
+            return cast(np.ndarray, h_mat)
 
         self.ekf.update(np.asarray(z_rel_pos), hx, h_jac)
 
@@ -120,7 +121,7 @@ class RelativeNavigationEKF:
         phi[4, 0], phi[4, 3], phi[4, 4] = 6*n*(c - 1), -2*s, 4*c - 3
         phi[5, 2], phi[5, 5] = -n*s, c
 
-        return phi
+        return cast(np.ndarray, phi)
 
     @property
     def state(self) -> np.ndarray:

@@ -2,6 +2,10 @@
 Control Moment Gyro (CMG) actuator model.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
 
 from opengnc.actuators.actuator import Actuator
@@ -70,7 +74,13 @@ class ControlMomentGyro(Actuator):
         t = np.cross(self.g_axis, s)
         return s, t
 
-    def command(self, gimbal_rate_cmd: float, dt: float | None = None) -> np.ndarray:
+    def command(
+        self,
+        gimbal_rate_cmd: Any = None,
+        dt: float | None = None,
+        *args: Any,
+        **kwargs: Any
+    ) -> np.ndarray:
         """
         Calculate torque produced by gimbal rate.
 
@@ -80,6 +90,8 @@ class ControlMomentGyro(Actuator):
             Commanded gimbal rate (rad/s).
         dt : float, optional
             Time step (s) to update gimbal angle.
+        **kwargs : dict
+            Additional parameters (unused).
 
         Returns
         -------
@@ -87,7 +99,11 @@ class ControlMomentGyro(Actuator):
             Torque vector (Nm) (3,).
         """
         # Apply rate limits
-        g_rate = float(self.apply_saturation(gimbal_rate_cmd))
+        if gimbal_rate_cmd is None:
+            if not args:
+                raise ValueError("gimbal_rate_cmd is required.")
+            gimbal_rate_cmd = args[0]
+        g_rate = float(self.apply_saturation(float(gimbal_rate_cmd)))
 
         # Current axes
         _, t = self.get_axes()

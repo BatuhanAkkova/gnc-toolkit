@@ -3,6 +3,7 @@ Passivity-Based Controller for Euler-Lagrange mechanical systems.
 """
 
 from collections.abc import Callable
+from typing import cast
 
 import numpy as np
 
@@ -103,7 +104,7 @@ class PassivityBasedController:
         ff_term = M_mat @ v_r_dot + C_mat @ v_r + G_vec
         damp_term = self.K_d @ s if isinstance(self.K_d, np.ndarray) else self.K_d * s
 
-        return ff_term - damp_term
+        return cast(np.ndarray, ff_term - damp_term)
 
 
 

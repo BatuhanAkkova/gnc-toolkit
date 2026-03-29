@@ -52,7 +52,7 @@ def flexible_body_dynamics(
     # Stiffness: omega_n^2 * eta
     stiffness = (natural_freqs**2) * eta_val
 
-    return coupling - damping - stiffness
+    return np.asarray(coupling - damping - stiffness)
 
 
 def coupled_flexible_rigid_dynamics(
@@ -115,7 +115,7 @@ def coupled_flexible_rigid_dynamics(
     # 3. Solve system
     sol = np.linalg.solve(m_aug, rhs)
 
-    return sol[:3], sol[3:]
+    return np.asarray(sol[:3]), np.asarray(sol[3:])
 
 
 

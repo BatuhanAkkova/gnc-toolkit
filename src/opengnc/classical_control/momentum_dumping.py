@@ -54,7 +54,7 @@ class CrossProductLaw:
 
         # Singular handling for weak/zero magnetic fields
         if b_sq < 1e-18:
-            return np.zeros(3)
+            return np.zeros(3, dtype=float)
 
         dipole_moment = (self.gain / b_sq) * np.cross(h_vec, b_vec)
 
@@ -64,7 +64,7 @@ class CrossProductLaw:
             if norm_m > self.max_dipole:
                 dipole_moment *= self.max_dipole / norm_m
 
-        return dipole_moment
+        return np.asarray(dipole_moment)
 
 
 

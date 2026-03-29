@@ -2,9 +2,12 @@
 Control allocation algorithms mapping generalized forces to actuator commands.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 import numpy as np
+from typing import cast
 
 
 class ControlAllocator(ABC):
@@ -75,7 +78,7 @@ class PseudoInverseAllocator(ControlAllocator):
         np.ndarray
             Actuator commands vector.
         """
-        return self.A_pinv @ force_torque_cmd
+        return cast(np.ndarray, self.A_pinv @ force_torque_cmd)
 
 
 class SingularRobustAllocator(ControlAllocator):
@@ -131,7 +134,7 @@ class SingularRobustAllocator(ControlAllocator):
         m = A.shape[0]
         inv_term = np.linalg.inv(A @ A.T + lam * np.eye(m))
         u = A.T @ inv_term @ desired_output
-        return u
+        return cast(np.ndarray, u)
 
 
 class NullMotionManager:
@@ -168,7 +171,7 @@ class NullMotionManager:
         """
         A = A_current if A_current is not None else self.A
         A_pinv = np.linalg.pinv(A)
-        return self.I - A_pinv @ A
+        return cast(np.ndarray, self.I - A_pinv @ A)
 
     def apply_null_command(self, u_base: np.ndarray, z: np.ndarray, A_current: np.ndarray | None = None) -> np.ndarray:
         """
@@ -189,7 +192,7 @@ class NullMotionManager:
             Combined actuator command.
         """
         P = self.get_null_projection(A_current)
-        return u_base + P @ z
+        return cast(np.ndarray, u_base + P @ z)
 
 
 

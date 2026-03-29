@@ -3,7 +3,7 @@ Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 import casadi as ca
 import numpy as np
@@ -71,6 +71,10 @@ class CasadiNMPC:
         self.u_max = self._setup_bounds(u_max, self.nu, np.inf)
         self.x_min = self._setup_bounds(x_min, self.nx, -np.inf)
         self.x_max = self._setup_bounds(x_max, self.nx, np.inf)
+        self.lbx: np.ndarray
+        self.ubx: np.ndarray
+        self.lbg: np.ndarray
+        self.ubg: np.ndarray
 
         self._setup_solver()
 
@@ -127,17 +131,17 @@ class CasadiNMPC:
         self.solver = ca.nlpsol("solver", "ipopt", nlp, opts)
 
         # Build concatenated bound vectors for X and U
-        self.lbx = []
-        self.ubx = []
+        lbx_list: list[float] = []
+        ubx_list: list[float] = []
         for _ in range(self.N + 1):
-            self.lbx.extend(self.x_min)
-            self.ubx.extend(self.x_max)
+            lbx_list.extend(self.x_min)
+            ubx_list.extend(self.x_max)
         for _ in range(self.N):
-            self.lbx.extend(self.u_min)
-            self.ubx.extend(self.u_max)
+            lbx_list.extend(self.u_min)
+            ubx_list.extend(self.u_max)
 
-        self.lbx = np.array(self.lbx)
-        self.ubx = np.array(self.ubx)
+        self.lbx = np.array(lbx_list, dtype=float)
+        self.ubx = np.array(ubx_list, dtype=float)
         self.lbg = np.zeros(self.nx * (self.N + 1))
         self.ubg = np.zeros(self.nx * (self.N + 1))
 
@@ -177,7 +181,7 @@ class CasadiNMPC:
         v_opt = sol["x"].full().flatten()
         # Extract controls (located after all state variables in decision vector)
         u_opt_flat = v_opt[self.nx * (self.N + 1):]
-        return u_opt_flat.reshape((self.N, self.nu))
+        return cast(np.ndarray, u_opt_flat.reshape((self.N, self.nu)))
 
 
 

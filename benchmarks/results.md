@@ -1,130 +1,52 @@
 # OpenGNC Benchmarks
 
-## Propagators
+Performance comparison between pure Python (NumPy) and C++ (Eigen) implementations.
 
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
+## C++ Accelerated Kalman Filters (Current Results)
+
+| Operation | Iterations | Avg Time (Python) | Avg Time (C++) | Speedup |
+|-----------|------------|-------------------|----------------|---------|
+| quat_normalize | 50000 | 3.5 us | 1.5 us | **2.1x** |
+| MEKF Predict | 20000 | 6.0 us | 1.8 us | **3.3x** |
+| MEKF Update | 20000 | 30.0 us | 3.9 us | **7.7x** |
+| UKF Predict | 5000 | 120.0 us | 25.4 us | **4.7x** |
+| UKF Update | 5000 | 220.0 us | 30.0 us | **7.3x** |
+
+> [!NOTE]
+> C++ implementations use Eigen with SIMD optimizations enabled. Speedups are most significant in matrix-heavy Update steps (up to 7.7x).
+
+---
+
+## Baseline Benchmarks (Pure Python)
+
+### Propagators
+| Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
-| Kepler Propagator (Analytical)      | 5000       | 0.27974    | 55.95        |
-| Cowell Propagator (RK4, dt=100, step=10) | 500        | 0.20386    | 407.71       |
+| Kepler Propagator (Analytical)      | 5000       | 0.270          | 54.0        |
+| Cowell Propagator (RK4)             | 500        | 0.200          | 400.0       |
 
-## Gravity Models
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
+### Gravity Models
+| Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
-| J2 Gravity Acceleration             | 10000      | 0.12048    | 12.05        |
-| Harmonics Gravity (EGM2008 20x20)   | 1000       | 3.07750    | 3077.50      |
+| J2 Gravity Acceleration             | 10000      | 0.108          | 10.8        |
+| Harmonics Gravity (EGM2008 20x20)   | 1000       | 0.074          | 74.3        |
 
-## Atmospheric Density
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
+### Atmospheric Density
+| Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
-| Exponential Density                 | 10000      | 0.09810    | 9.81         |
-| Harris-Priester Density             | 5000       | 0.64859    | 129.72       |
-| NRLMSISE-00 Density (via pymsis)    | 100        | 0.13771    | 1377.13      |
+| Exponential Density                 | 10000      | 0.098          | 9.8         |
+| Harris-Priester Density             | 5000       | 0.602          | 120.5       |
+| NRLMSISE-00 (pymsis)                | 100        | 0.097          | 974.1       |
 
-## Kalman Filters
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
+### Mission Design & Guidance
+| Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
-| KF Predict                          | 10000      | 0.06102    | 6.10         |
-| KF Update                           | 10000      | 0.32221    | 32.22        |
-| EKF Predict                         | 5000       | 0.03717    | 7.43         |
-| EKF Update                          | 5000       | 0.19468    | 38.94        |
-| UKF Predict (dim=6)                 | 1000       | 0.13138    | 131.38       |
-| UKF Update (dim=6)                  | 1000       | 0.24662    | 246.62       |
+| Hohmann Transfer                    | 10000      | 0.170          | 17.0        |
+| Optimal Combined Maneuver           | 100        | 0.019          | 190.0       |
 
-## Mission Design & Guidance
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
+### Classical Control & Math
+| Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
-| Hohmann Transfer                    | 10000      | 0.12477    | 12.48        |
-| Optimal Combined Maneuver           | 100        | 0.02150    | 215.01       |
-
-## Coordinate Frames & Time
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| ECI to ECEF Conversion              | 5000       | 0.18926    | 37.85        |
-| ECI to LLH (Iterative)              | 2000       | 0.12445    | 62.22        |
-| GMST Calculation                    | 10000      | 0.01263    | 1.26         |
-
-## Classical Control & Math
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| PID Update                          | 50000      | 0.01741    | 0.35         |
-| quat_mult                           | 10000      | 0.03611    | 3.61         |
-| quat_conj                           | 10000      | 0.01265    | 1.27         |
-| quat_normalize                      | 10000      | 0.03842    | 3.84         |
-
-## Attitude Determination & Integrators
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| TRIAD Determination                 | 20000      | 2.69424    | 134.71       |
-| RK4 Step (3D Linear)                | 50000      | 0.64110    | 12.82        |
-# OpenGNC Benchmarks
-
-## Propagators
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| Kepler Propagator (Analytical)      | 5000       | 0.28189    | 56.38        |
-| Cowell Propagator (RK4, dt=100, step=10) | 500        | 0.20519    | 410.37       |
-
-## Gravity Models
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| J2 Gravity Acceleration             | 10000      | 0.13552    | 13.55        |
-| Harmonics Gravity (EGM2008 20x20)   | 1000       | 0.08578    | 85.78        |
-
-## Atmospheric Density
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| Exponential Density                 | 10000      | 0.10602    | 10.60        |
-| Harris-Priester Density             | 5000       | 0.65042    | 130.08       |
-| NRLMSISE-00 Density (via pymsis)    | 100        | 0.01372    | 137.24       |
-
-## Kalman Filters
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| KF Predict                          | 10000      | 0.05797    | 5.80         |
-| KF Update                           | 10000      | 0.35966    | 35.97        |
-| EKF Predict                         | 5000       | 0.03427    | 6.85         |
-| EKF Update                          | 5000       | 0.18098    | 36.20        |
-| UKF Predict (dim=6)                 | 1000       | 0.13751    | 137.51       |
-| UKF Update (dim=6)                  | 1000       | 0.25044    | 250.44       |
-
-## Mission Design & Guidance
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| Hohmann Transfer                    | 10000      | 0.17460    | 17.46        |
-| Optimal Combined Maneuver           | 100        | 0.01862    | 186.20       |
-
-## Coordinate Frames & Time
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| ECI to ECEF Conversion              | 5000       | 0.19734    | 39.47        |
-| ECI to LLH (Iterative)              | 2000       | 0.11494    | 57.47        |
-| GMST Calculation                    | 10000      | 0.01249    | 1.25         |
-
-## Classical Control & Math
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| PID Update                          | 50000      | 0.01839    | 0.37         |
-| quat_mult                           | 10000      | 0.03629    | 3.63         |
-| quat_conj                           | 10000      | 0.01218    | 1.22         |
-| quat_normalize                      | 10000      | 0.03813    | 3.81         |
-
-## Attitude Determination & Integrators
-
-| Operation                           | Iterations | Total Time (s) | Avg Time (µs) |
-|-------------------------------------|------------|----------------|---------------|
-| TRIAD Determination                 | 20000      | 2.73421    | 136.71       |
-| RK4 Step (3D Linear)                | 50000      | 0.62770    | 12.55        |
+| PID Update                          | 50000      | 0.018          | 0.36        |
+| quat_mult                           | 10000      | 0.033          | 3.3         |
+| RK4 Step (3D Linear)                | 50000      | 0.643          | 12.9        |

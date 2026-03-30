@@ -29,10 +29,12 @@ PYBIND11_MODULE(opengnc_py, m) {
         .def(py::init<const Eigen::Vector4d&, const Eigen::Vector3d&>(),
              py::arg("q_init") = Eigen::Vector4d(0, 0, 0, 1),
              py::arg("beta_init") = Eigen::Vector3d::Zero())
-        .def("predict", &MEKF::predict, 
-             py::arg("omega"), py::arg("dt"), py::arg("Q_custom") = nullptr)
-        .def("update", &MEKF::update, 
-             py::arg("z_body"), py::arg("z_ref"), py::arg("R_custom") = nullptr)
+        .def("predict", [](MEKF& self, const Eigen::Vector3d& omega, double dt) {
+            self.predict(omega, dt);
+        }, py::arg("omega"), py::arg("dt"))
+        .def("update", [](MEKF& self, const Eigen::Vector3d& z_body, const Eigen::Vector3d& z_ref) {
+            self.update(z_body, z_ref);
+        }, py::arg("z_body"), py::arg("z_ref"))
         .def_property_readonly("q", &MEKF::getQuaternion)
         .def_property_readonly("bias", &MEKF::getBias)
         .def_readwrite("P", &MEKF::P)
@@ -40,21 +42,24 @@ PYBIND11_MODULE(opengnc_py, m) {
         .def_readwrite("R", &MEKF::R);
 
     // --- UKF Attitude ---
-    py::class_<UKF_Attitude<3>>(m, "UKF_Attitude")
+    using UKFAtt = UKF_Attitude<3>;
+    py::class_<UKFAtt>(m, "UKF_Attitude")
         .def(py::init<const Eigen::Vector4d&, const Eigen::Vector3d&, double, double, double>(),
              py::arg("q_init") = Eigen::Vector4d(0, 0, 0, 1),
              py::arg("bias_init") = Eigen::Vector3d::Zero(),
              py::arg("alpha") = 1e-2,
              py::arg("beta") = 2.0,
              py::arg("kappa") = 0.0)
-        .def("predict", &UKF_Attitude<3>::predict, 
-             py::arg("dt"), py::arg("fx"), py::arg("Q_custom") = nullptr)
-        .def("update", &UKF_Attitude<3>::update, 
-             py::arg("z"), py::arg("hx"), py::arg("R_custom") = nullptr)
-        .def_readwrite("x", &UKF_Attitude<3>::x)
-        .def_readwrite("P", &UKF_Attitude<3>::P)
-        .def_readwrite("Q", &UKF_Attitude<3>::Q)
-        .def_readwrite("R", &UKF_Attitude<3>::R);
+        .def("predict", [](UKFAtt& self, double dt, std::function<Eigen::VectorXd(const Eigen::VectorXd&, double)> fx) {
+            self.predict(dt, fx);
+        }, py::arg("dt"), py::arg("fx"))
+        .def("update", [](UKFAtt& self, const Eigen::VectorXd& z, std::function<Eigen::VectorXd(const Eigen::VectorXd&)> hx) {
+            self.update(z, hx);
+        }, py::arg("z"), py::arg("hx"))
+        .def_readwrite("x", &UKFAtt::x)
+        .def_readwrite("P", &UKFAtt::P)
+        .def_readwrite("Q", &UKFAtt::Q)
+        .def_readwrite("R", &UKFAtt::R);
 
     // --- UDP Communication ---
     py::class_<UDPInterface>(m, "UDPInterface")

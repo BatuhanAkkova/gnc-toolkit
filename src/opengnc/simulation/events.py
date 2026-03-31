@@ -1,3 +1,4 @@
+from __future__ import annotations
 import heapq
 from collections.abc import Callable
 from typing import Any
@@ -76,7 +77,3 @@ class EventQueue:
         while self._events and self._events[0].t <= current_time:
             event = heapq.heappop(self._events)
             event.execute()
-
-
-
-

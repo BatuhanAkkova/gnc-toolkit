@@ -25,7 +25,7 @@ This roadmap outlines the strategic development of **OpenGNC** to provide a high
 - [x] **Professionality**: Established CI/CD pipeline, automated formatting, and performance benchmarking suite.
 - [ ] **Interoperability**: Standardized interfaces for external tools like GMAT, Orekit, and STK (SPICE kernels).
 
-### Phase 2: Autonomy, AI & Advanced Research (Next)
+### Phase 2: Autonomy, AI & Advanced Research (Later)
 *Integrating modern control and state estimation techniques for autonomous missions.*
 - [ ] **Relative Navigation**: Filter-based relative state estimation for swarming, docking, and proximity operations.
 - [ ] **Optimal Control**: Expanded MPC optimization using CasADi for highly constrained multi-burn maneuvers.
@@ -36,8 +36,8 @@ This roadmap outlines the strategic development of **OpenGNC** to provide a high
 *Converting high-fidelity simulations into deterministic, flight-ready artifacts.*
 - [x] **C++ Acceleration**: Porting core filters (MEKF, UKF) and control laws to header-only, C++17/20 templates.
 - [x] **Hardware-in-the-Loop (HIL)**: Generic SIM-to-Hardware bridge with Serial and UDP (Packet Framing & CRC).
-- [ ] **Real-Time Performance**: Enforce static memory allocation and lock-free message passing for mission-critical paths.
-- [ ] **Verification**: Automated Monte Carlo analysis suite for robust stability and performance margin proofs.
+- [x] **Real-Time Performance**: Enforce static memory allocation and lock-free message passing for mission-critical paths.
+- [x] **Verification**: Automated Monte Carlo analysis suite for robust stability and performance margin proofs.
 
 ### Phase 4: Mission Operations & Space Situational Awareness
 *Supporting the platform in active operations and orbital safety.*

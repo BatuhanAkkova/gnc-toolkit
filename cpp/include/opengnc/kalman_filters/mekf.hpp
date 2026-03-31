@@ -8,6 +8,11 @@ namespace kalman_filters {
 
 /**
  * Multiplicative Extended Kalman Filter (MEKF) for Attitude Estimation.
+ * 
+ * DESIGN FOR REAL-TIME:
+ * - Uses fixed-size Eigen matrices to prevent dynamic memory allocation.
+ * - All temporary matrices are stack-allocated.
+ * - No standard library containers (std::vector, etc.) used in hot paths.
  */
 class MEKF {
 public:

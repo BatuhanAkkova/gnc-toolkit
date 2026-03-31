@@ -1,6 +1,7 @@
 import multiprocessing as mp
 from collections.abc import Callable
 from typing import Any
+from .monte_carlo_analyzer import MonteCarloAnalyzer
 
 
 class MonteCarloSim:
@@ -86,6 +87,13 @@ class MonteCarloSim:
 
         return self.results
 
-
-
-
+    def get_analyzer(self) -> MonteCarloAnalyzer:
+        """
+        Produce a statistical analyzer for the current simulation results.
+        
+        Returns
+        -------
+        MonteCarloAnalyzer
+            Instance of the analyzer initialized with current trial data.
+        """
+        return MonteCarloAnalyzer(self.results)

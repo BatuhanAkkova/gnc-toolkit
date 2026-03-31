@@ -62,6 +62,16 @@
 - **Telemetry Dashboards**: Web-based GNC dashboards using Dash for real-time like simulation monitoring.
 - **Coordinate Frames**: Visualizers for ECI, ECEF, Hill (RSW), and Body frame transformations.
 
+### Real-Time Performance & Determinism
+- **Static Allocation**: Core Kalman Filters (MEKF, UKF) are implemented in header-only C++17/20 with strict static memory allocation (no `malloc`/`new` in hot paths).
+- **SIMD Acceleration**: Full Eigen integration for vectorized matrix operations on ARM and x86 architectures.
+- **Lock-Free Communication**: High-speed, wait-free **SPSC (Single-Producer Single-Consumer) Queue** for telemetry and command dispatching.
+
+### Mission Verification Suite
+- **Monte Carlo Harness**: Scale simulations to 10,000+ runs with parallel processor execution.
+- **Statistical Analyzer**: Built-in tools for **3-Sigma margin proofs**, convergence rates, and stability limits.
+- **Consistency Verification**: Automated **NIS (Normalized Innovation Squared)** and **NEES** tests to validate filter optimality against stochastic truth.
+
 ---
 
 ## Installation

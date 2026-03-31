@@ -3,13 +3,8 @@ import shutil
 import subprocess
 
 def build():
-    # 1. Copy tutorials into docs directory
-    src_tutorials = os.path.abspath("../tutorials")
-    dest_tutorials = os.path.abspath("tutorials")
-    print(f"Copying {src_tutorials} to {dest_tutorials}...")
-    if os.path.exists(dest_tutorials):
-        shutil.rmtree(dest_tutorials)
-    shutil.copytree(src_tutorials, dest_tutorials)
+    # 1. Skip tutorial copying as they are already in docs/tutorials/
+    print("Detected tutorials directory in docs, skipping copy step...")
     
     # 2. Run sphinx-apidoc to generate API structure
     print("Running sphinx-apidoc...")

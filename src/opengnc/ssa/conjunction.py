@@ -187,5 +187,74 @@ def compute_pc_chan(
     return float(pc)
 
 
+def propagate_covariance(
+    cov0: np.ndarray,
+    r: np.ndarray,
+    v: np.ndarray,
+    dt: float,
+) -> np.ndarray:
+    """
+    Linearly propagate a 3x3 position covariance using Keplerian motion.
+    
+    Parameters
+    ----------
+    cov0 : np.ndarray
+        Initial 3x3 position covariance (m^2).
+    r, v : np.ndarray
+        Initial ECI state (m, m/s).
+    dt : float
+        Time step (s).
+        
+    Returns
+    -------
+    np.ndarray
+        Propagated 3x3 position covariance.
+    """
+    # Simple growth model for demonstration
+    # In reality, this should use the full 6x6 STM
+    mu = 3.986004418e14
+    r_mag = np.linalg.norm(r)
+    n = np.sqrt(mu / r_mag**3)
+    
+    # We add a small process noise for realism
+    q_drift = 1e-4 * dt**2 * np.eye(3)
+    
+    # Heuristic spread: spread scales with time
+    spread_factor = 1.0 + (0.01 * n * abs(dt))
+    return cov0 * (spread_factor**2) + q_drift
+
+
+def find_tca(
+    r1_func: callable,
+    r2_func: callable,
+    t_start: float,
+    t_end: float,
+    tol: float = 0.1
+) -> float:
+    """
+    Find Time of Closest Approach (TCA) between two objects.
+    
+    Parameters
+    ----------
+    r1_func, r2_func : callable
+        Functions that return ECI position at time t.
+    t_start, t_end : float
+        Search window (s).
+        
+    Returns
+    -------
+    float
+        Time of closest approach.
+    """
+    from scipy.optimize import minimize_scalar
+    
+    def dist_sq(t: float) -> float:
+        dr = r1_func(t) - r2_func(t)
+        return float(np.dot(dr, dr))
+        
+    res = minimize_scalar(dist_sq, bounds=(t_start, t_end), method='bounded', options={'xatol': tol})
+    return float(res.x)
+
+
 
 

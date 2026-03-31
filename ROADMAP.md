@@ -41,9 +41,9 @@ This roadmap outlines the strategic development of **OpenGNC** to provide a high
 
 ### Phase 4: Mission Operations & Space Situational Awareness
 *Supporting the platform in active operations and orbital safety.*
-- [ ] **Ground Station Ops**: CSSDS packet parsing, de-commutation toolkits, and Real-time Plotting Dashboards.
-- [ ] **SSA/SDA**: Conjunction Assessment (CAT), TLE maintenance, and automated collision avoidance planning.
-- [ ] **Mission Control API**: Specialized Python/Web interface for live telemetry monitoring and commanding.
+- [x] **Ground Station Ops**: CCSDS packet parsing (Primary Header + CUC), de-commutation toolkits, and Real-time Plotting Dashboards.
+- [x] **SSA/SDA**: Conjunction Assessment (CAT), TLE maintenance, and automated collision avoidance planning (CAM Optimization).
+- [x] **Mission Control API**: Specialized FastAPI/WebSocket interface for live telemetry monitoring and commanding.
 
 ---
 

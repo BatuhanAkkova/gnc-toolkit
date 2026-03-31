@@ -388,6 +388,7 @@ class TestHInfinity(unittest.TestCase):
          self.assertEqual(len(u), 1)
 
 class TestNewControllers(unittest.TestCase):
+    @unittest.skipIf(ca is None, "CasADi not installed")
     def test_casadi_nmpc(self):
         nx = 2
         nu = 1
@@ -413,6 +414,7 @@ class TestNewControllers(unittest.TestCase):
         self.assertEqual(U.shape, (horizon, nu))
         self.assertLess(U[0,0], 0)
 
+    @unittest.skipIf(ca is None, "CasADi not installed")
     def test_casadi_nmpc_1d(self):
         nx = 1
         nu = 1
@@ -528,6 +530,7 @@ class TestNewControllers(unittest.TestCase):
         v_mat = pd_mat.compute_v([1, 0], [0, 0], [0, 0], [0, 0], x_ddot_d=[0, 0])
         self.assertEqual(v_mat[0], -1.0)
 
+    @unittest.skipIf(ca is None, "CasADi not installed")
     def test_casadi_nmpc_discrete(self):
          def f(x, u): return ca.vertcat(x[1], u[0])
          def L(x, u): return x[0]**2
@@ -536,6 +539,7 @@ class TestNewControllers(unittest.TestCase):
          u = nmpc_disc.solve([1,0])
          self.assertEqual(u.shape, (5, 1))
 
+    @unittest.skipIf(ca is None, "CasADi not installed")
     def test_casadi_nmpc_bounds_scalar(self):
          def f(x, u): return ca.vertcat(x[1], u[0])
          def L(x, u): return x[0]**2
@@ -544,6 +548,7 @@ class TestNewControllers(unittest.TestCase):
          u = nmpc.solve([1,0], u_guess=[1,1,1,1,1])
          self.assertEqual(u.shape, (5, 1))
 
+    @unittest.skipIf(ca is None, "CasADi not installed")
     def test_casadi_nmpc_bounds_mismatch(self):
          def f(x, u): return ca.vertcat(x[1], u[0])
          def L(x, u): return x[0]**2
@@ -551,6 +556,7 @@ class TestNewControllers(unittest.TestCase):
          with self.assertRaises(ValueError):
               nmpc = CasadiNMPC(2, 1, 5, 0.1, f, L, V, u_min=[1,2,3])
 
+    @unittest.skipIf(ca is None, "CasADi not installed")
     def test_casadi_nmpc_guess_mismatch(self):
          def f(x, u): return ca.vertcat(x[1], u[0])
          def L(x, u): return x[0]**2
@@ -559,6 +565,7 @@ class TestNewControllers(unittest.TestCase):
          u = nmpc.solve([1,0], u_guess=[1,1])
          self.assertEqual(u.shape, (5, 1))
 
+    @unittest.skipIf(ca is None, "CasADi not installed")
     def test_casadi_nmpc_bounds_array(self):
          def f(x, u): return ca.vertcat(x[1], u[0] + u[1])
          def L(x, u): return x[0]**2

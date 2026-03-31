@@ -2,17 +2,23 @@
 Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.
 """
 
+from __future__ import annotations
 from collections.abc import Callable
-from typing import cast
+from typing import cast, Any
 import numpy as np
 
 try:
     import casadi as ca
     CASADI_AVAILABLE = True
 except ImportError:
-    import typing
-    ca = typing.Any  # type: ignore
     CASADI_AVAILABLE = False
+    
+    class ca:  # type: ignore
+        """Placeholder for CasADi types when not installed."""
+        MX = Any
+        SX = Any
+        def __getattr__(self, name: str) -> Any:
+            return Any
 
 
 class CasadiNMPC:

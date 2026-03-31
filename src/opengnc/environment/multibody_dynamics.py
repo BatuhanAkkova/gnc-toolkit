@@ -23,7 +23,7 @@ class CR3BP:
         self.mu = mu
 
     def get_dynamics(self, t: float, state: np.ndarray) -> np.ndarray:
-        """
+        r"""
         Calculate state derivatives in the rotating frame.
 
         Parameters

@@ -10,7 +10,7 @@ from opengnc.integrators.integrator import Integrator
 
 
 class TaylorIntegrator(Integrator):
-    """
+    r"""
     Taylor Series expansion-based numerical integrator.
 
     Solves $\dot{y} = f(t, y)$ by expanding $y$ as a Taylor series 

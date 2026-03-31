@@ -94,7 +94,7 @@ class ReachabilityAnalysis:
     def get_reachable_delta_elements(
         self, a: float, e: float, i: float, dv_total: float
     ) -> dict[str, float]:
-        """
+        r"""
         Calculate maximum possible changes in orbital elements for a total delta-V.
 
         Based on impulsive GVE approximations.

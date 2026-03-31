@@ -35,7 +35,7 @@ class GVEPropagator(Propagator):
         dt: float,
         perturbation_func: Callable[[float, np.ndarray], np.ndarray]
     ) -> np.ndarray:
-        """
+        r"""
         Propagate orbital elements one step using RK4 on GVE.
 
         Parameters
@@ -68,7 +68,7 @@ class GVEPropagator(Propagator):
         state: np.ndarray,
         perturbation_func: Callable[[float, np.ndarray], np.ndarray]
     ) -> np.ndarray:
-        """
+        r"""
         Calculate GVE state derivatives.
 
         Parameters

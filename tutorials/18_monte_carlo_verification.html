@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monte Carlo Verification &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="opengnc" href="../api/modules.html" />
+    <link rel="prev" title="Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator" href="17_e2e_sim.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_introduction.html">Tutorial 01: Introduction to OpenGNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_frames.html">Tutorial 02: Coordinate Systems &amp; Frame Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_state_conversions.html">Tutorial 03: State Vectors &amp; Orbital Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_spherical_harmonics.html">Tutorial 04: EGM2008 &amp; Mass Gravity Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_orbital_propagators.html">Tutorial 05: Comparison: Cowell vs Encke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06_environment.html">Tutorial 06: Environmental Perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_iod_determination.html">Tutorial 07: Initial Orbit Determination and Lambert’s Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08_sensors.html">Tutorial 08: Sensor Artifacts &amp; Biases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09_linear_kf.html">Tutorial 09: Linear Kalman Filter and EKF Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_mekf.html">Tutorial 10: Multiplicative Extended Kalman Filter (MEKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_ukf.html">Tutorial 11: Unscented Kalman Filter (UKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_orbital_maneuvers.html">Tutorial 12: Analytical Orbital Maneuvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_rendezvous.html">Tutorial 13: Rendezvous &amp; CW Equation Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="14_optimal_control.html">Tutorial 14: Indirect &amp; Direct Collocation Optimal Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="15_attitude_control.html">Tutorial 15: Reaction Wheel &amp; Magnetorquer Slew Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="16_fdir.html">Tutorial 16: Fault Detection, Isolation, and Recovery (FDIR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="17_e2e_sim.html">Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Monte Carlo Verification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-a-monte-carlo-simulation">Running a Monte Carlo Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#statistical-analysis-verification">Statistical Analysis &amp; Verification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verification-suite-tool">Verification Suite Tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Monte Carlo Verification</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/18_monte_carlo_verification.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="monte-carlo-verification">
+<h1>Monte Carlo Verification<a class="headerlink" href="#monte-carlo-verification" title="Link to this heading"></a></h1>
+<p>This tutorial demonstrates how to use the Monte Carlo Simulation harness and the statistical analyzer for GNC system verification.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>For mission-critical spacecraft software, a single simulation run is insufficient to prove robustness.
+<strong>OpenGNC</strong> provides a high-performance Monte Carlo suite to analyze performance under stochastic variations in environment, sensor noise, and process disturbances.</p>
+</section>
+<section id="running-a-monte-carlo-simulation">
+<h2>Running a Monte Carlo Simulation<a class="headerlink" href="#running-a-monte-carlo-simulation" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">MonteCarloSim</span></code> class facilitates parallel execution of multiple trials.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.simulation.monte_carlo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonteCarloSim</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_simulator</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Initialize your MissionSimulator with the given seed</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">MySimulator</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="n">mc</span> <span class="o">=</span> <span class="n">MonteCarloSim</span><span class="p">(</span><span class="n">my_simulator</span><span class="p">)</span>
+<span class="c1"># Run 100 trials in parallel</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">run_parallel</span><span class="p">(</span><span class="n">num_runs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="statistical-analysis-verification">
+<h2>Statistical Analysis &amp; Verification<a class="headerlink" href="#statistical-analysis-verification" title="Link to this heading"></a></h2>
+<p>Once the trials are complete, you can use the <code class="docutils literal notranslate"><span class="pre">MonteCarloAnalyzer</span></code> to calculate performance margins.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">analyzer</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">get_analyzer</span><span class="p">()</span>
+
+<span class="c1"># 1. Calculate 3-Sigma Bounds</span>
+<span class="n">pos_stats</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">get_aggregate_stats</span><span class="p">(</span><span class="s2">&quot;pos_error&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Mean Error: </span><span class="si">{</span><span class="n">pos_stats</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;3-Sigma Bound: </span><span class="si">{</span><span class="n">pos_stats</span><span class="p">[</span><span class="s1">&#39;sigma_3_upper&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Covariance Consistency Check (NIS)</span>
+<span class="n">consistency</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">check_covariance_consistency</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;cov&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Consistency Ratio: </span><span class="si">{</span><span class="n">consistency</span><span class="p">[</span><span class="s1">&#39;consistency_ratio&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Reliability Analysis</span>
+<span class="c1"># Define a failure criteria (e.g. error &gt; 1 meter)</span>
+<span class="n">failure_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;pos_error&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">1.0</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">summarize_failures</span><span class="p">(</span><span class="n">failure_func</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reliability Score: </span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;reliability&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="verification-suite-tool">
+<h2>Verification Suite Tool<a class="headerlink" href="#verification-suite-tool" title="Link to this heading"></a></h2>
+<p>A pre-configured verification suite is available at <code class="docutils literal notranslate"><span class="pre">benchmarks/run_verification.py</span></code> for standard proof-of-mission analysis.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$env</span>:PYTHONPATH<span class="o">=</span><span class="s2">&quot;src&quot;</span><span class="p">;</span><span class="w"> </span>python<span class="w"> </span>benchmarks/run_verification.py
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="17_e2e_sim.html" class="btn btn-neutral float-left" title="Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/modules.html" class="btn btn-neutral float-right" title="opengnc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

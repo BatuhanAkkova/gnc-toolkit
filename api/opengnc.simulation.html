@@ -115,29 +115,873 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="opengnc-simulation-events-module">
-<h2>opengnc.simulation.events module<a class="headerlink" href="#opengnc-simulation-events-module" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.events">
+<span id="opengnc-simulation-events-module"></span><h2>opengnc.simulation.events module<a class="headerlink" href="#module-opengnc.simulation.events" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.events.Event">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.events.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#Event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.events.Event" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A single discrete event to be processed at a specific time.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.events.Event.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#Event.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.events.Event.execute" title="Link to this definition"></a></dt>
+<dd><p>Executes the event callback.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.events.EventQueue">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.events.</span></span><span class="sig-name descname"><span class="pre">EventQueue</span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.events.EventQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Priority queue managing discrete events in the simulation.
+Handles maneuver scheduling and mode transitions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.events.EventQueue.has_events">
+<span class="sig-name descname"><span class="pre">has_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.has_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.events.EventQueue.has_events" title="Link to this definition"></a></dt>
+<dd><p>Returns True if there are pending events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.events.EventQueue.next_event_time">
+<span class="sig-name descname"><span class="pre">next_event_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.next_event_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.events.EventQueue.next_event_time" title="Link to this definition"></a></dt>
+<dd><p>Returns the time of the next pending event, or infinity if empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.events.EventQueue.process_until">
+<span class="sig-name descname"><span class="pre">process_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.process_until"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.events.EventQueue.process_until" title="Link to this definition"></a></dt>
+<dd><p>Process all events scheduled up to the provided current_time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_time</strong> (<em>float</em>) – The current simulation time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.events.EventQueue.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.events.EventQueue.schedule" title="Link to this definition"></a></dt>
+<dd><p>Schedule a new event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time at which to run the callback.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – The function to execute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="opengnc-simulation-logging-module">
-<h2>opengnc.simulation.logging module<a class="headerlink" href="#opengnc-simulation-logging-module" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.logging">
+<span id="opengnc-simulation-logging-module"></span><h2>opengnc.simulation.logging module<a class="headerlink" href="#module-opengnc.simulation.logging" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.logging.SimulationLogger">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.logging.</span></span><span class="sig-name descname"><span class="pre">SimulationLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.logging.SimulationLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulation replay and logging interface.
+Records state history and outputs to common formats like JSON, CSV.
+(HDF5 support optionally using h5py if installed).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.logging.SimulationLogger.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.logging.SimulationLogger.log" title="Link to this definition"></a></dt>
+<dd><p>Record a simulation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Simulation time.</p></li>
+<li><p><strong>state</strong> (<em>Any</em>) – True state of the system (e.g. state vector).</p></li>
+<li><p><strong>measurements</strong> (<em>Any</em><em>, </em><em>optional</em>) – Sensor measurements at this time step.</p></li>
+<li><p><strong>estimates</strong> (<em>Any</em><em>, </em><em>optional</em>) – Filter estimates at this time step.</p></li>
+<li><p><strong>commands</strong> (<em>Any</em><em>, </em><em>optional</em>) – Control commands sent to actuators.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.logging.SimulationLogger.save_csv">
+<span class="sig-name descname"><span class="pre">save_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.logging.SimulationLogger.save_csv" title="Link to this definition"></a></dt>
+<dd><p>Saves the log’s top-level keys to a CSV file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.logging.SimulationLogger.save_hdf5">
+<span class="sig-name descname"><span class="pre">save_hdf5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.save_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.logging.SimulationLogger.save_hdf5" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to an HDF5 file (requires h5py).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.logging.SimulationLogger.save_json">
+<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.logging.SimulationLogger.save_json" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to a JSON file.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="opengnc-simulation-monte-carlo-module">
-<h2>opengnc.simulation.monte_carlo module<a class="headerlink" href="#opengnc-simulation-monte-carlo-module" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.monte_carlo">
+<span id="opengnc-simulation-monte-carlo-module"></span><h2>opengnc.simulation.monte_carlo module<a class="headerlink" href="#module-opengnc.simulation.monte_carlo" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo.MonteCarloSim">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.monte_carlo.</span></span><span class="sig-name descname"><span class="pre">MonteCarloSim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo.MonteCarloSim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Monte Carlo Simulation Harness.</p>
+<p>Facilitates large-scale robustness analysis by executing multiple
+simulation runs with stochastic variations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>simulator_factory</strong> (<em>Callable</em><em>[</em><em>...</em><em>, </em><a class="reference internal" href="#opengnc.simulation.simulator.MissionSimulator" title="opengnc.simulation.simulator.MissionSimulator"><em>MissionSimulator</em></a><em>]</em>) – Generator function to produce specialized simulator instances.
+Signature: <cite>(seed, **kwargs) -&gt; MissionSimulator</cite>.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo.MonteCarloSim.get_analyzer">
+<span class="sig-name descname"><span class="pre">get_analyzer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer" title="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer"><span class="pre">MonteCarloAnalyzer</span></a></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim.get_analyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo.MonteCarloSim.get_analyzer" title="Link to this definition"></a></dt>
+<dd><p>Produce a statistical analyzer for the current simulation results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Instance of the analyzer initialized with current trial data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer" title="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer">MonteCarloAnalyzer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo.MonteCarloSim.run_parallel">
+<span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim.run_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo.MonteCarloSim.run_parallel" title="Link to this definition"></a></dt>
+<dd><p>Execute Monte Carlo iterations across multiple processor cores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_runs</strong> (<em>int</em>) – Number of trials to execute.</p></li>
+<li><p><strong>processes</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of parallel workers. Defaults to machine CPU count.</p></li>
+<li><p><strong>**kwargs</strong> – Parameters for simulation configuration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aggregated results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo.MonteCarloSim.run_sequential">
+<span class="sig-name descname"><span class="pre">run_sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim.run_sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo.MonteCarloSim.run_sequential" title="Link to this definition"></a></dt>
+<dd><p>Execute Monte Carlo iterations in a single thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_runs</strong> (<em>int</em>) – Number of trials to execute.</p></li>
+<li><p><strong>**kwargs</strong> – Variable parameters passed to the simulator factory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aggregated results from all trials.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="opengnc-simulation-multibody-module">
-<h2>opengnc.simulation.multibody module<a class="headerlink" href="#opengnc-simulation-multibody-module" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.monte_carlo_analyzer">
+<span id="opengnc-simulation-monte-carlo-analyzer-module"></span><h2>opengnc.simulation.monte_carlo_analyzer module<a class="headerlink" href="#module-opengnc.simulation.monte_carlo_analyzer" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.monte_carlo_analyzer.</span></span><span class="sig-name descname"><span class="pre">MonteCarloAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo_analyzer.html#MonteCarloAnalyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Statistical analysis suite for Monte Carlo simulations.</p>
+<p>Provides specialized tools for calculating performance margins,
+stability metrics, and covariance consistency proofs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer.check_covariance_consistency">
+<span class="sig-name descname"><span class="pre">check_covariance_consistency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo_analyzer.html#MonteCarloAnalyzer.check_covariance_consistency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer.check_covariance_consistency" title="Link to this definition"></a></dt>
+<dd><p>Perform a consistency test (e.g., NIS or NEES).</p>
+<p>Calculates the average quadratic form: e^T * P^-1 * e
+Should be close to the dimension of the state if P is consistent.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer.get_aggregate_stats">
+<span class="sig-name descname"><span class="pre">get_aggregate_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo_analyzer.html#MonteCarloAnalyzer.get_aggregate_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer.get_aggregate_stats" title="Link to this definition"></a></dt>
+<dd><p>Extract mean, std dev, and 3-sigma bounds for a specific telemetry key.</p>
+<p>Assumes the key points to a 1D or 2D numpy array in each result.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer.summarize_failures">
+<span class="sig-name descname"><span class="pre">summarize_failures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">criteria_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo_analyzer.html#MonteCarloAnalyzer.summarize_failures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer.summarize_failures" title="Link to this definition"></a></dt>
+<dd><p>Calculate failure rates based on a user-defined criteria function.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="opengnc-simulation-realtime-module">
-<h2>opengnc.simulation.realtime module<a class="headerlink" href="#opengnc-simulation-realtime-module" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.multibody">
+<span id="opengnc-simulation-multibody-module"></span><h2>opengnc.simulation.multibody module<a class="headerlink" href="#module-opengnc.simulation.multibody" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.multibody.ConstellationSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.multibody.</span></span><span class="sig-name descname"><span class="pre">ConstellationSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_satellites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#opengnc.simulation.logging.SimulationLogger" title="opengnc.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/multibody.html#ConstellationSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.multibody.ConstellationSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Multi-Agent / Constellation Simulator.</p>
+<p>Manages simultaneous simulation of multiple spacecraft, enabling
+coordinated formation flying or large network analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_satellites</strong> (<em>int</em>) – Total spacecraft count.</p></li>
+<li><p><strong>propagator</strong> (<em>PropagatorFunc</em>) – Joint or vectorized propagator function.</p></li>
+<li><p><strong>sensor_model</strong> (<em>Optional</em><em>[</em><em>SensorFunc</em><em>]</em>) – Measurement model.</p></li>
+<li><p><strong>estimator</strong> (<em>Optional</em><em>[</em><em>EstimatorFunc</em><em>]</em>) – Centralized or multi-state estimator.</p></li>
+<li><p><strong>controller</strong> (<em>Optional</em><em>[</em><em>ControllerFunc</em><em>]</em>) – Coordinating control logic.</p></li>
+<li><p><strong>logger</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#opengnc.simulation.logging.SimulationLogger" title="opengnc.simulation.logging.SimulationLogger"><em>SimulationLogger</em></a><em>]</em>) – Data recording utility.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.multibody.ConstellationSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/multibody.html#ConstellationSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.multibody.ConstellationSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize starting conditions for all members.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start simulation time (s).</p></li>
+<li><p><strong>initial_states</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – Container of starting states for each spacecraft.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.multibody.ConstellationSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/multibody.html#ConstellationSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.multibody.ConstellationSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Execute the constrained multi-body simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Termination time (s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Physics update rate (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aggregate simulation results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="opengnc-simulation-scenario-module">
-<h2>opengnc.simulation.scenario module<a class="headerlink" href="#opengnc-simulation-scenario-module" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.realtime">
+<span id="opengnc-simulation-realtime-module"></span><h2>opengnc.simulation.realtime module<a class="headerlink" href="#module-opengnc.simulation.realtime" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.realtime.RealTimeSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.realtime.</span></span><span class="sig-name descname"><span class="pre">RealTimeSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/realtime.html#RealTimeSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.realtime.RealTimeSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#opengnc.simulation.simulator.MissionSimulator" title="opengnc.simulation.simulator.MissionSimulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">MissionSimulator</span></code></a></p>
+<p>Real-time simulation synchronizing simulation time to wall-clock time.
+Supports Hardware-In-the-Loop (HIL) or Software-In-the-Loop (SIL) testing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.realtime.RealTimeSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/realtime.html#RealTimeSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.realtime.RealTimeSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Set the simulation starting epoch and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start time (s).</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth state vector or object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.realtime.RealTimeSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/realtime.html#RealTimeSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.realtime.RealTimeSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the simulation loop until the end time, matching wall-clock pace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation end time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Simulation time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="opengnc-simulation-simulator-module">
-<h2>opengnc.simulation.simulator module<a class="headerlink" href="#opengnc-simulation-simulator-module" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.scenario">
+<span id="opengnc-simulation-scenario-module"></span><h2>opengnc.simulation.scenario module<a class="headerlink" href="#module-opengnc.simulation.scenario" title="Link to this heading"></a></h2>
+<p>Scenario Configuration Manager.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.scenario.ScenarioConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.scenario.</span></span><span class="sig-name descname"><span class="pre">ScenarioConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/scenario.html#ScenarioConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.scenario.ScenarioConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Scenario Configuration Manager.</p>
+<p>Handles loading and parsing of reproducible mission configurations from
+external formatted files (JSON, YAML).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Path to the configuration file.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.scenario.ScenarioConfig.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/scenario.html#ScenarioConfig.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.scenario.ScenarioConfig.get" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a configuration value using dot-notation.</p>
+<p>Example: <cite>config.get(‘spacecraft.mass’, 500.0)</cite> retrieves the ‘mass’
+property from the ‘spacecraft’ object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Dot-separated access path (e.g., ‘propulsion.tank_vol’).</p></li>
+<li><p><strong>default</strong> (<em>Any</em><em>, </em><em>optional</em>) – Fallback value if key is missing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The requested parameter value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.scenario.ScenarioConfig.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/scenario.html#ScenarioConfig.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.scenario.ScenarioConfig.load" title="Link to this definition"></a></dt>
+<dd><p>Load data from the filesystem into the internal configuration dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If path does not exist.</p></li>
+<li><p><strong>ImportError</strong> – If YAML is requested but PyYAML is missing.</p></li>
+<li><p><strong>ValueError</strong> – If file extension is unsupported.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-opengnc.simulation.simulator">
+<span id="opengnc-simulation-simulator-module"></span><h2>opengnc.simulation.simulator module<a class="headerlink" href="#module-opengnc.simulation.simulator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.simulator.MissionSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.simulator.</span></span><span class="sig-name descname"><span class="pre">MissionSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#opengnc.simulation.logging.SimulationLogger" title="opengnc.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.simulator.MissionSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>High-Fidelity Mission Simulator.</p>
+<p>Loop Sequence:
+1. Update Sense: $mathbf{y} = h(t, mathbf{x}) + mathbf{v}$
+2. Estimate: $hat{mathbf{x}} = f(t, mathbf{y})$
+3. Control: $mathbf{u} = g(t, hat{mathbf{x}})$
+4. Propagate: $dot{mathbf{x}} = f(t, mathbf{x}, mathbf{u})$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>propagator</strong> (<em>PropagatorFunc</em>) – Truth propagation: $(t, x, dt, u) to x_{new}$</p></li>
+<li><p><strong>sensor_model</strong> (<em>Optional</em><em>[</em><em>SensorFunc</em><em>]</em>) – Measurement model: $(t, x) to y$</p></li>
+<li><p><strong>estimator</strong> (<em>Optional</em><em>[</em><em>EstimatorFunc</em><em>]</em>) – State estimation: $(t, y) to hat{x}$</p></li>
+<li><p><strong>controller</strong> (<em>Optional</em><em>[</em><em>ControllerFunc</em><em>]</em>) – Control law: $(t, hat{x}) to u$</p></li>
+<li><p><strong>logger</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#opengnc.simulation.logging.SimulationLogger" title="opengnc.simulation.logging.SimulationLogger"><em>SimulationLogger</em></a><em>]</em>) – Telemetry recording.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.simulator.MissionSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.simulator.MissionSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Set the simulation starting epoch and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start time (s).</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth state vector or object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.simulator.MissionSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.simulator.MissionSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Execute the simulation loop until the termination time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation stop time (s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Fixed integration step (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns logger history if available, otherwise simulation end state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.simulator.MissionSimulator.schedule_event">
+<span class="sig-name descname"><span class="pre">schedule_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.schedule_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.simulator.MissionSimulator.schedule_event" title="Link to this definition"></a></dt>
+<dd><p>Register a discrete event for future execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Target execution time (s).</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – Function to execute at time $t$.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.simulator.MissionSimulator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.simulator.MissionSimulator.step" title="Link to this definition"></a></dt>
+<dd><p>Execute a single fixed-step simulation frame.</p>
+<p>Sequence:
+1. Process pending discrete events.
+2. Generate synthetic measurements (Sense).
+3. Solve for state estimate (Estimate).
+4. Compute control effort (Control).
+5. Log data series.
+6. Advance physics (Propagate).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Simulation time step (s).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-opengnc.simulation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-opengnc.simulation" title="Link to this heading"></a></h2>
+<p>Simulation module for the opengnc.</p>
+<p>This module provides the architecture for end-to-end mission simulation,
+including scenario configuration, discrete-event scheduling, simulation
+logging, Monte Carlo harness, and real-time/multi-body support.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.ConstellationSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">ConstellationSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_satellites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#opengnc.simulation.logging.SimulationLogger" title="opengnc.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/multibody.html#ConstellationSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.ConstellationSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Multi-Agent / Constellation Simulator.</p>
+<p>Manages simultaneous simulation of multiple spacecraft, enabling
+coordinated formation flying or large network analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_satellites</strong> (<em>int</em>) – Total spacecraft count.</p></li>
+<li><p><strong>propagator</strong> (<em>PropagatorFunc</em>) – Joint or vectorized propagator function.</p></li>
+<li><p><strong>sensor_model</strong> (<em>Optional</em><em>[</em><em>SensorFunc</em><em>]</em>) – Measurement model.</p></li>
+<li><p><strong>estimator</strong> (<em>Optional</em><em>[</em><em>EstimatorFunc</em><em>]</em>) – Centralized or multi-state estimator.</p></li>
+<li><p><strong>controller</strong> (<em>Optional</em><em>[</em><em>ControllerFunc</em><em>]</em>) – Coordinating control logic.</p></li>
+<li><p><strong>logger</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#opengnc.simulation.SimulationLogger" title="opengnc.simulation.SimulationLogger"><em>SimulationLogger</em></a><em>]</em>) – Data recording utility.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.ConstellationSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/multibody.html#ConstellationSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.ConstellationSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize starting conditions for all members.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start simulation time (s).</p></li>
+<li><p><strong>initial_states</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – Container of starting states for each spacecraft.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.ConstellationSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/multibody.html#ConstellationSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.ConstellationSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Execute the constrained multi-body simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Termination time (s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Physics update rate (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aggregate simulation results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.Event">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#Event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.Event" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A single discrete event to be processed at a specific time.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.Event.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#Event.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.Event.execute" title="Link to this definition"></a></dt>
+<dd><p>Executes the event callback.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.EventQueue">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">EventQueue</span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.EventQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Priority queue managing discrete events in the simulation.
+Handles maneuver scheduling and mode transitions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.EventQueue.has_events">
+<span class="sig-name descname"><span class="pre">has_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.has_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.EventQueue.has_events" title="Link to this definition"></a></dt>
+<dd><p>Returns True if there are pending events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.EventQueue.next_event_time">
+<span class="sig-name descname"><span class="pre">next_event_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.next_event_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.EventQueue.next_event_time" title="Link to this definition"></a></dt>
+<dd><p>Returns the time of the next pending event, or infinity if empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.EventQueue.process_until">
+<span class="sig-name descname"><span class="pre">process_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.process_until"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.EventQueue.process_until" title="Link to this definition"></a></dt>
+<dd><p>Process all events scheduled up to the provided current_time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_time</strong> (<em>float</em>) – The current simulation time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.EventQueue.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/events.html#EventQueue.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.EventQueue.schedule" title="Link to this definition"></a></dt>
+<dd><p>Schedule a new event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time at which to run the callback.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – The function to execute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.MissionSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">MissionSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propagator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#opengnc.simulation.logging.SimulationLogger" title="opengnc.simulation.logging.SimulationLogger"><span class="pre">SimulationLogger</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MissionSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>High-Fidelity Mission Simulator.</p>
+<p>Loop Sequence:
+1. Update Sense: $mathbf{y} = h(t, mathbf{x}) + mathbf{v}$
+2. Estimate: $hat{mathbf{x}} = f(t, mathbf{y})$
+3. Control: $mathbf{u} = g(t, hat{mathbf{x}})$
+4. Propagate: $dot{mathbf{x}} = f(t, mathbf{x}, mathbf{u})$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>propagator</strong> (<em>PropagatorFunc</em>) – Truth propagation: $(t, x, dt, u) to x_{new}$</p></li>
+<li><p><strong>sensor_model</strong> (<em>Optional</em><em>[</em><em>SensorFunc</em><em>]</em>) – Measurement model: $(t, x) to y$</p></li>
+<li><p><strong>estimator</strong> (<em>Optional</em><em>[</em><em>EstimatorFunc</em><em>]</em>) – State estimation: $(t, y) to hat{x}$</p></li>
+<li><p><strong>controller</strong> (<em>Optional</em><em>[</em><em>ControllerFunc</em><em>]</em>) – Control law: $(t, hat{x}) to u$</p></li>
+<li><p><strong>logger</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#opengnc.simulation.SimulationLogger" title="opengnc.simulation.SimulationLogger"><em>SimulationLogger</em></a><em>]</em>) – Telemetry recording.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.MissionSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MissionSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Set the simulation starting epoch and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start time (s).</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth state vector or object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.MissionSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MissionSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Execute the simulation loop until the termination time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation stop time (s).</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Fixed integration step (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns logger history if available, otherwise simulation end state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.MissionSimulator.schedule_event">
+<span class="sig-name descname"><span class="pre">schedule_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.schedule_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MissionSimulator.schedule_event" title="Link to this definition"></a></dt>
+<dd><p>Register a discrete event for future execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Target execution time (s).</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – Function to execute at time $t$.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.MissionSimulator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/simulator.html#MissionSimulator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MissionSimulator.step" title="Link to this definition"></a></dt>
+<dd><p>Execute a single fixed-step simulation frame.</p>
+<p>Sequence:
+1. Process pending discrete events.
+2. Generate synthetic measurements (Sense).
+3. Solve for state estimate (Estimate).
+4. Compute control effort (Control).
+5. Log data series.
+6. Advance physics (Propagate).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Simulation time step (s).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.MonteCarloSim">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">MonteCarloSim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MonteCarloSim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Monte Carlo Simulation Harness.</p>
+<p>Facilitates large-scale robustness analysis by executing multiple
+simulation runs with stochastic variations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>simulator_factory</strong> (<em>Callable</em><em>[</em><em>...</em><em>, </em><a class="reference internal" href="#opengnc.simulation.MissionSimulator" title="opengnc.simulation.MissionSimulator"><em>MissionSimulator</em></a><em>]</em>) – Generator function to produce specialized simulator instances.
+Signature: <cite>(seed, **kwargs) -&gt; MissionSimulator</cite>.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.MonteCarloSim.get_analyzer">
+<span class="sig-name descname"><span class="pre">get_analyzer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer" title="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer"><span class="pre">MonteCarloAnalyzer</span></a></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim.get_analyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MonteCarloSim.get_analyzer" title="Link to this definition"></a></dt>
+<dd><p>Produce a statistical analyzer for the current simulation results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Instance of the analyzer initialized with current trial data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer" title="opengnc.simulation.monte_carlo_analyzer.MonteCarloAnalyzer">MonteCarloAnalyzer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.MonteCarloSim.run_parallel">
+<span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim.run_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MonteCarloSim.run_parallel" title="Link to this definition"></a></dt>
+<dd><p>Execute Monte Carlo iterations across multiple processor cores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_runs</strong> (<em>int</em>) – Number of trials to execute.</p></li>
+<li><p><strong>processes</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of parallel workers. Defaults to machine CPU count.</p></li>
+<li><p><strong>**kwargs</strong> – Parameters for simulation configuration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aggregated results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.MonteCarloSim.run_sequential">
+<span class="sig-name descname"><span class="pre">run_sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/monte_carlo.html#MonteCarloSim.run_sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.MonteCarloSim.run_sequential" title="Link to this definition"></a></dt>
+<dd><p>Execute Monte Carlo iterations in a single thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_runs</strong> (<em>int</em>) – Number of trials to execute.</p></li>
+<li><p><strong>**kwargs</strong> – Variable parameters passed to the simulator factory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aggregated results from all trials.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.RealTimeSimulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">RealTimeSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/realtime.html#RealTimeSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.RealTimeSimulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#opengnc.simulation.simulator.MissionSimulator" title="opengnc.simulation.simulator.MissionSimulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">MissionSimulator</span></code></a></p>
+<p>Real-time simulation synchronizing simulation time to wall-clock time.
+Supports Hardware-In-the-Loop (HIL) or Software-In-the-Loop (SIL) testing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.RealTimeSimulator.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/realtime.html#RealTimeSimulator.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.RealTimeSimulator.initialize" title="Link to this definition"></a></dt>
+<dd><p>Set the simulation starting epoch and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Start time (s).</p></li>
+<li><p><strong>initial_state</strong> (<em>Any</em>) – Initial truth state vector or object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.RealTimeSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/realtime.html#RealTimeSimulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.RealTimeSimulator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the simulation loop until the end time, matching wall-clock pace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_end</strong> (<em>float</em>) – Simulation end time.</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Simulation time step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.ScenarioConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">ScenarioConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/scenario.html#ScenarioConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.ScenarioConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Scenario Configuration Manager.</p>
+<p>Handles loading and parsing of reproducible mission configurations from
+external formatted files (JSON, YAML).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Path to the configuration file.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.ScenarioConfig.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/scenario.html#ScenarioConfig.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.ScenarioConfig.get" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a configuration value using dot-notation.</p>
+<p>Example: <cite>config.get(‘spacecraft.mass’, 500.0)</cite> retrieves the ‘mass’
+property from the ‘spacecraft’ object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Dot-separated access path (e.g., ‘propulsion.tank_vol’).</p></li>
+<li><p><strong>default</strong> (<em>Any</em><em>, </em><em>optional</em>) – Fallback value if key is missing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The requested parameter value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.ScenarioConfig.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/scenario.html#ScenarioConfig.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.ScenarioConfig.load" title="Link to this definition"></a></dt>
+<dd><p>Load data from the filesystem into the internal configuration dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If path does not exist.</p></li>
+<li><p><strong>ImportError</strong> – If YAML is requested but PyYAML is missing.</p></li>
+<li><p><strong>ValueError</strong> – If file extension is unsupported.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="opengnc.simulation.SimulationLogger">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">opengnc.simulation.</span></span><span class="sig-name descname"><span class="pre">SimulationLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.SimulationLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulation replay and logging interface.
+Records state history and outputs to common formats like JSON, CSV.
+(HDF5 support optionally using h5py if installed).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.SimulationLogger.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.SimulationLogger.log" title="Link to this definition"></a></dt>
+<dd><p>Record a simulation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Simulation time.</p></li>
+<li><p><strong>state</strong> (<em>Any</em>) – True state of the system (e.g. state vector).</p></li>
+<li><p><strong>measurements</strong> (<em>Any</em><em>, </em><em>optional</em>) – Sensor measurements at this time step.</p></li>
+<li><p><strong>estimates</strong> (<em>Any</em><em>, </em><em>optional</em>) – Filter estimates at this time step.</p></li>
+<li><p><strong>commands</strong> (<em>Any</em><em>, </em><em>optional</em>) – Control commands sent to actuators.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.SimulationLogger.save_csv">
+<span class="sig-name descname"><span class="pre">save_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.SimulationLogger.save_csv" title="Link to this definition"></a></dt>
+<dd><p>Saves the log’s top-level keys to a CSV file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.SimulationLogger.save_hdf5">
+<span class="sig-name descname"><span class="pre">save_hdf5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.save_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.SimulationLogger.save_hdf5" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to an HDF5 file (requires h5py).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="opengnc.simulation.SimulationLogger.save_json">
+<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/opengnc/simulation/logging.html#SimulationLogger.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opengnc.simulation.SimulationLogger.save_json" title="Link to this definition"></a></dt>
+<dd><p>Saves the logged history to a JSON file.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

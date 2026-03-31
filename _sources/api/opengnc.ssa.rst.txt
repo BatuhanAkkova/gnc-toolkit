@@ -4,6 +4,14 @@ opengnc.ssa package
 Submodules
 ----------
 
+opengnc.ssa.collision\_avoidance module
+---------------------------------------
+
+.. automodule:: opengnc.ssa.collision_avoidance
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 opengnc.ssa.conjunction module
 ------------------------------
 

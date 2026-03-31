@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>opengnc.simulation.simulator &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">opengnc.simulation.simulator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for opengnc.simulation.simulator</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventQueue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationLogger</span>
+
+<span class="c1"># Type aliases for simulation callbacks</span>
+<span class="n">PropagatorFunc</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+<span class="n">SensorFunc</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+<span class="n">EstimatorFunc</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+<span class="n">ControllerFunc</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="MissionSimulator">
+<a class="viewcode-back" href="../../../api/opengnc.simulation.html#opengnc.simulation.simulator.MissionSimulator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MissionSimulator</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    High-Fidelity Mission Simulator.</span>
+
+<span class="sd">    Loop Sequence:</span>
+<span class="sd">    1. Update Sense: $\mathbf{y} = h(t, \mathbf{x}) + \mathbf{v}$</span>
+<span class="sd">    2. Estimate: $\hat{\mathbf{x}} = f(t, \mathbf{y})$</span>
+<span class="sd">    3. Control: $\mathbf{u} = g(t, \hat{\mathbf{x}})$</span>
+<span class="sd">    4. Propagate: $\dot{\mathbf{x}} = f(t, \mathbf{x}, \mathbf{u})$</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    propagator : PropagatorFunc</span>
+<span class="sd">        Truth propagation: $(t, x, dt, u) \to x_{new}$</span>
+<span class="sd">    sensor_model : Optional[SensorFunc]</span>
+<span class="sd">        Measurement model: $(t, x) \to y$</span>
+<span class="sd">    estimator : Optional[EstimatorFunc]</span>
+<span class="sd">        State estimation: $(t, y) \to \hat{x}$</span>
+<span class="sd">    controller : Optional[ControllerFunc]</span>
+<span class="sd">        Control law: $(t, \hat{x}) \to u$</span>
+<span class="sd">    logger : Optional[SimulationLogger]</span>
+<span class="sd">        Telemetry recording.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">propagator</span><span class="p">:</span> <span class="n">PropagatorFunc</span><span class="p">,</span>
+        <span class="n">sensor_model</span><span class="p">:</span> <span class="n">SensorFunc</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">estimator</span><span class="p">:</span> <span class="n">EstimatorFunc</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">:</span> <span class="n">ControllerFunc</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">logger</span><span class="p">:</span> <span class="n">SimulationLogger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize simulator core and event management.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagator</span> <span class="o">=</span> <span class="n">propagator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor_model</span> <span class="o">=</span> <span class="n">sensor_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_queue</span> <span class="o">=</span> <span class="n">EventQueue</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="MissionSimulator.initialize">
+<a class="viewcode-back" href="../../../api/opengnc.simulation.html#opengnc.simulation.simulator.MissionSimulator.initialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the simulation starting epoch and state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t0 : float</span>
+<span class="sd">            Start time (s).</span>
+<span class="sd">        initial_state : Any</span>
+<span class="sd">            Initial truth state vector or object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">t0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">initial_state</span></div>
+
+
+<div class="viewcode-block" id="MissionSimulator.schedule_event">
+<a class="viewcode-back" href="../../../api/opengnc.simulation.html#opengnc.simulation.simulator.MissionSimulator.schedule_event">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">schedule_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register a discrete event for future execution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Target execution time (s).</span>
+<span class="sd">        callback : Callable</span>
+<span class="sd">            Function to execute at time $t$.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_queue</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MissionSimulator.step">
+<a class="viewcode-back" href="../../../api/opengnc.simulation.html#opengnc.simulation.simulator.MissionSimulator.step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute a single fixed-step simulation frame.</span>
+
+<span class="sd">        Sequence:</span>
+<span class="sd">        1. Process pending discrete events.</span>
+<span class="sd">        2. Generate synthetic measurements (Sense).</span>
+<span class="sd">        3. Solve for state estimate (Estimate).</span>
+<span class="sd">        4. Compute control effort (Control).</span>
+<span class="sd">        5. Log data series.</span>
+<span class="sd">        6. Advance physics (Propagate).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Simulation time step (s).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 1. Process discrete events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_queue</span><span class="o">.</span><span class="n">process_until</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+
+        <span class="c1"># 2. Sense</span>
+        <span class="n">meas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_model</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="c1"># 3. Estimate</span>
+        <span class="n">est</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="c1"># 4. Control</span>
+        <span class="c1"># Fallback to perfect knowledge if no estimator</span>
+        <span class="n">ctrl_ctx</span> <span class="o">=</span> <span class="n">est</span> <span class="k">if</span> <span class="n">est</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">ctrl_ctx</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="c1"># 5. Record</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">meas</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+        <span class="c1"># 6. Propagate Truth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="n">dt</span></div>
+
+
+<div class="viewcode-block" id="MissionSimulator.run">
+<a class="viewcode-back" href="../../../api/opengnc.simulation.html#opengnc.simulation.simulator.MissionSimulator.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_end</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute the simulation loop until the termination time.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t_end : float</span>
+<span class="sd">            Simulation stop time (s).</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Fixed integration step (s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Returns logger history if available, otherwise simulation end state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">t_end</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">history</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span></div>
+</div>
+
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

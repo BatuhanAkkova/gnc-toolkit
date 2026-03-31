@@ -3,10 +3,16 @@ Nonlinear Model Predictive Control (NMPC) using CasADi with Multiple Shooting.
 """
 
 from collections.abc import Callable
-from typing import Any, cast
-
-import casadi as ca
+from typing import cast
 import numpy as np
+
+try:
+    import casadi as ca
+    CASADI_AVAILABLE = True
+except ImportError:
+    import typing
+    ca = typing.Any  # type: ignore
+    CASADI_AVAILABLE = False
 
 
 class CasadiNMPC:
@@ -16,6 +22,8 @@ class CasadiNMPC:
     Optimizes a finite-horizon cost function subject to nonlinear dynamics and
     algebraic constraints using a Multiple Shooting formulation for numerical
     stability and parallelism.
+
+    NOTE: Requires the 'casadi' package (`pip install opengnc[mpc]`).
 
     Parameters
     ----------
@@ -27,12 +35,12 @@ class CasadiNMPC:
         Prediction horizon N.
     dt : float
         Time step (s).
-    dynamics_func : Callable[[ca.MX, ca.MX], ca.MX]
-        System dynamics $f(x, u)$. Returns $x_{next}$ if discrete, else $dx/dt$.
-    cost_func : Callable[[ca.MX, ca.MX], ca.MX]
-        Stage cost function $L(x, u)$.
-    terminal_cost_func : Callable[[ca.MX], ca.MX]
-        Terminal cost function $V(x)$.
+    dynamics_func : Callable
+        System dynamics f(x, u). Returns x_next if discrete, else dx/dt.
+    cost_func : Callable
+        Stage cost function L(x, u).
+    terminal_cost_func : Callable
+        Terminal cost function V(x).
     u_min, u_max : float or np.ndarray, optional
         Control input constraints.
     x_min, x_max : float or np.ndarray, optional
@@ -48,9 +56,9 @@ class CasadiNMPC:
         nu: int,
         horizon: int,
         dt: float,
-        dynamics_func: Callable[[ca.MX, ca.MX], ca.MX],
-        cost_func: Callable[[ca.MX, ca.MX], ca.MX],
-        terminal_cost_func: Callable[[ca.MX], ca.MX],
+        dynamics_func: Callable,
+        cost_func: Callable,
+        terminal_cost_func: Callable,
         u_min: float | np.ndarray | None = None,
         u_max: float | np.ndarray | None = None,
         x_min: float | np.ndarray | None = None,
@@ -58,6 +66,12 @@ class CasadiNMPC:
         discrete: bool = False,
     ) -> None:
         """Initialize and formulate the CasADi NLP problem."""
+        if not CASADI_AVAILABLE:
+            raise ImportError(
+                "CasADi is not installed. Please install with 'pip install opengnc[mpc]' "
+                "to use the CasadiNMPC controller."
+            )
+
         self.nx = int(nx)
         self.nu = int(nu)
         self.N = int(horizon)
@@ -182,7 +196,3 @@ class CasadiNMPC:
         # Extract controls (located after all state variables in decision vector)
         u_opt_flat = v_opt[self.nx * (self.N + 1):]
         return cast(np.ndarray, u_opt_flat.reshape((self.N, self.nu)))
-
-
-
-

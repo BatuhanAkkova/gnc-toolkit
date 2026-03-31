@@ -81,6 +81,11 @@
 pip install opengnc
 ```
 
+#### With MPC support (Optional)
+```bash
+pip install "opengnc[mpc]"
+```
+
 ### From Source (Development)
 ```bash
 git clone https://github.com/BatuhanAkkova/opengnc.git

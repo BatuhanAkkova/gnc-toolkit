@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monte Carlo Verification &mdash; OpenGNC  documentation</title>
+  <title>Tutorial 18: Monte Carlo Verification &mdash; OpenGNC  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -25,7 +25,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="opengnc" href="../api/modules.html" />
+    <link rel="next" title="Tutorial 19: Entry, Descent, and Landing (EDL)" href="19_edl_dynamics.html" />
     <link rel="prev" title="Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator" href="17_e2e_sim.html" /> 
 </head>
 
@@ -68,13 +68,16 @@
 <li class="toctree-l2"><a class="reference internal" href="15_attitude_control.html">Tutorial 15: Reaction Wheel &amp; Magnetorquer Slew Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="16_fdir.html">Tutorial 16: Fault Detection, Isolation, and Recovery (FDIR)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="17_e2e_sim.html">Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Monte Carlo Verification</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#running-a-monte-carlo-simulation">Running a Monte Carlo Simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#statistical-analysis-verification">Statistical Analysis &amp; Verification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#verification-suite-tool">Verification Suite Tool</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 18: Monte Carlo Verification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">1. Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-a-monte-carlo-simulation">2. Running a Monte Carlo Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#statistical-analysis-verification">3. Statistical Analysis &amp; Verification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verification-suite-tool">4. Verification Suite Tool</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="19_edl_dynamics.html">Tutorial 19: Entry, Descent, and Landing (EDL)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="20_ssa_conjunction.html">Tutorial 20: SSA and Conjunction Assessment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="21_ground_segment.html">Tutorial 21: Ground Segment and CCSDS</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/modules.html">opengnc</a></li>
@@ -95,9 +98,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
-      <li class="breadcrumb-item active">Monte Carlo Verification</li>
+      <li class="breadcrumb-item active">Tutorial 18: Monte Carlo Verification</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/tutorials/18_monte_carlo_verification.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/tutorials/18_monte_carlo_verification.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -105,56 +108,87 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="monte-carlo-verification">
-<h1>Monte Carlo Verification<a class="headerlink" href="#monte-carlo-verification" title="Link to this heading"></a></h1>
+  <section id="tutorial-18-monte-carlo-verification">
+<h1>Tutorial 18: Monte Carlo Verification<a class="headerlink" href="#tutorial-18-monte-carlo-verification" title="Link to this heading"></a></h1>
 <p>This tutorial demonstrates how to use the Monte Carlo Simulation harness and the statistical analyzer for GNC system verification.</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>For mission-critical spacecraft software, a single simulation run is insufficient to prove robustness.
-<strong>OpenGNC</strong> provides a high-performance Monte Carlo suite to analyze performance under stochastic variations in environment, sensor noise, and process disturbances.</p>
+<h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>For mission-critical spacecraft software, a single simulation run is insufficient to prove robustness. <strong>OpenGNC</strong> provides a high-performance Monte Carlo suite to analyze performance under stochastic variations in environment, sensor noise, and process disturbances.</p>
 </section>
 <section id="running-a-monte-carlo-simulation">
-<h2>Running a Monte Carlo Simulation<a class="headerlink" href="#running-a-monte-carlo-simulation" title="Link to this heading"></a></h2>
+<h2>2. Running a Monte Carlo Simulation<a class="headerlink" href="#running-a-monte-carlo-simulation" title="Link to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">MonteCarloSim</span></code> class facilitates parallel execution of multiple trials.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.simulation.monte_carlo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonteCarloSim</span>
+<blockquote>
+<div><p>[!IMPORTANT]
+<strong>Windows &amp; Jupyter Note</strong>: To avoid hangs when using multiprocessing on Windows, simulator functions must be defined in a separate <code class="docutils literal notranslate"><span class="pre">.py</span></code> file and imported. This allows child processes to cleanly import the function.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.simulation.monte_carlo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonteCarloSim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mc_worker</span><span class="w"> </span><span class="kn">import</span> <span class="n">fast_simulator</span>  <span class="c1"># Imported from external file for Windows compatibility</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">my_simulator</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="c1"># Initialize your MissionSimulator with the given seed</span>
-    <span class="n">sim</span> <span class="o">=</span> <span class="n">MySimulator</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="n">MonteCarloSim</span><span class="p">(</span><span class="n">fast_simulator</span><span class="p">)</span>
 
-<span class="n">mc</span> <span class="o">=</span> <span class="n">MonteCarloSim</span><span class="p">(</span><span class="n">my_simulator</span><span class="p">)</span>
-<span class="c1"># Run 100 trials in parallel</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">run_parallel</span><span class="p">(</span><span class="n">num_runs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="c1"># Execute 100 trials using all available CPU cores</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting parallel Monte Carlo (100 runs)...&quot;</span><span class="p">)</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">run_parallel</span><span class="p">(</span><span class="n">num_runs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials in </span><span class="si">{</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting parallel Monte Carlo (100 runs)...
+Completed 100 trials in 0.01 seconds.
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="statistical-analysis-verification">
-<h2>Statistical Analysis &amp; Verification<a class="headerlink" href="#statistical-analysis-verification" title="Link to this heading"></a></h2>
+<h2>3. Statistical Analysis &amp; Verification<a class="headerlink" href="#statistical-analysis-verification" title="Link to this heading"></a></h2>
 <p>Once the trials are complete, you can use the <code class="docutils literal notranslate"><span class="pre">MonteCarloAnalyzer</span></code> to calculate performance margins.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">analyzer</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">get_analyzer</span><span class="p">()</span>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyzer</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">get_analyzer</span><span class="p">()</span>
 
 <span class="c1"># 1. Calculate 3-Sigma Bounds</span>
 <span class="n">pos_stats</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">get_aggregate_stats</span><span class="p">(</span><span class="s2">&quot;pos_error&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Mean Error: </span><span class="si">{</span><span class="n">pos_stats</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;3-Sigma Bound: </span><span class="si">{</span><span class="n">pos_stats</span><span class="p">[</span><span class="s1">&#39;sigma_3_upper&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># 2. Covariance Consistency Check (NIS)</span>
-<span class="n">consistency</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">check_covariance_consistency</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;cov&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Consistency Ratio: </span><span class="si">{</span><span class="n">consistency</span><span class="p">[</span><span class="s1">&#39;consistency_ratio&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Mean Error: </span><span class="si">{</span><span class="n">pos_stats</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final 1-Sigma: </span><span class="si">{</span><span class="n">pos_stats</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;3-Sigma Upper Bound: </span><span class="si">{</span><span class="n">pos_stats</span><span class="p">[</span><span class="s1">&#39;sigma_3_upper&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
 
-<span class="c1"># 3. Reliability Analysis</span>
-<span class="c1"># Define a failure criteria (e.g. error &gt; 1 meter)</span>
-<span class="n">failure_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;pos_error&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">1.0</span>
+<span class="c1"># 2. Reliability Analysis (criteria: error &lt; 2.0m)</span>
+<span class="n">failure_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;pos_error&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">)</span>
 <span class="n">summary</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">summarize_failures</span><span class="p">(</span><span class="n">failure_func</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reliability Score: </span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;reliability&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum allowable error: 2.0m&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successful Trials: </span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;total_runs&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;failures&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;total_runs&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reliability Score: </span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;reliability&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final Mean Error: 1.0030 m
+Final 1-Sigma: 0.0546 m
+3-Sigma Upper Bound: 1.1668 m
+Maximum allowable error: 2.0m
+Successful Trials: 100 / 100
+Reliability Score: 100.0%
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="verification-suite-tool">
-<h2>Verification Suite Tool<a class="headerlink" href="#verification-suite-tool" title="Link to this heading"></a></h2>
+<h2>4. Verification Suite Tool<a class="headerlink" href="#verification-suite-tool" title="Link to this heading"></a></h2>
 <p>A pre-configured verification suite is available at <code class="docutils literal notranslate"><span class="pre">benchmarks/run_verification.py</span></code> for standard proof-of-mission analysis.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$env</span>:PYTHONPATH<span class="o">=</span><span class="s2">&quot;src&quot;</span><span class="p">;</span><span class="w"> </span>python<span class="w"> </span>benchmarks/run_verification.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>benchmarks/run_verification.py
 </pre></div>
 </div>
 </section>
@@ -165,7 +199,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="17_e2e_sim.html" class="btn btn-neutral float-left" title="Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api/modules.html" class="btn btn-neutral float-right" title="opengnc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="19_edl_dynamics.html" class="btn btn-neutral float-right" title="Tutorial 19: Entry, Descent, and Landing (EDL)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,0 +1,219 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 21: Ground Segment and CCSDS &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="opengnc" href="../api/modules.html" />
+    <link rel="prev" title="Tutorial 20: SSA and Conjunction Assessment" href="20_ssa_conjunction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_introduction.html">Tutorial 01: Introduction to OpenGNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_frames.html">Tutorial 02: Coordinate Systems &amp; Frame Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_state_conversions.html">Tutorial 03: State Vectors &amp; Orbital Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_spherical_harmonics.html">Tutorial 04: EGM2008 &amp; Mass Gravity Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_orbital_propagators.html">Tutorial 05: Comparison: Cowell vs Encke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06_environment.html">Tutorial 06: Environmental Perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_iod_determination.html">Tutorial 07: Initial Orbit Determination and Lambert’s Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08_sensors.html">Tutorial 08: Sensor Artifacts &amp; Biases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09_linear_kf.html">Tutorial 09: Linear Kalman Filter and EKF Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_mekf.html">Tutorial 10: Multiplicative Extended Kalman Filter (MEKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_ukf.html">Tutorial 11: Unscented Kalman Filter (UKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_orbital_maneuvers.html">Tutorial 12: Analytical Orbital Maneuvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_rendezvous.html">Tutorial 13: Rendezvous &amp; CW Equation Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="14_optimal_control.html">Tutorial 14: Indirect &amp; Direct Collocation Optimal Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="15_attitude_control.html">Tutorial 15: Reaction Wheel &amp; Magnetorquer Slew Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="16_fdir.html">Tutorial 16: Fault Detection, Isolation, and Recovery (FDIR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="17_e2e_sim.html">Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="18_monte_carlo_verification.html">Tutorial 18: Monte Carlo Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="19_edl_dynamics.html">Tutorial 19: Entry, Descent, and Landing (EDL)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="20_ssa_conjunction.html">Tutorial 20: SSA and Conjunction Assessment</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 21: Ground Segment and CCSDS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ccsds-space-packet">1. CCSDS Space Packet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#telemetry-decommutation">2. Telemetry Decommutation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Tutorial 21: Ground Segment and CCSDS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/21_ground_segment.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-21-ground-segment-and-ccsds">
+<h1>Tutorial 21: Ground Segment and CCSDS<a class="headerlink" href="#tutorial-21-ground-segment-and-ccsds" title="Link to this heading"></a></h1>
+<p>This tutorial explains how to format spacecraft telemetry using the CCSDS (Consultative Committee for Space Data Systems) standard for ground-to-satellite communication.</p>
+<section id="ccsds-space-packet">
+<h2>1. CCSDS Space Packet<a class="headerlink" href="#ccsds-space-packet" title="Link to this heading"></a></h2>
+<p>Every CCSDS Space Packet consists of a 6-byte Primary Header followed by the Packet Data Field. The header defines the Application Process ID (APID), packet type, sequence flags, and sequence count.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.ground_segment.ccsds</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpacePacket</span><span class="p">,</span> <span class="n">PacketType</span><span class="p">,</span> <span class="n">SequenceFlags</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># 1. Create a Space Packet</span>
+<span class="c1"># APID: 0x123 (291), Sequence Count: 42</span>
+<span class="n">packet</span> <span class="o">=</span> <span class="n">SpacePacket</span><span class="p">(</span>
+    <span class="n">apid</span><span class="o">=</span><span class="mh">0x123</span><span class="p">,</span> 
+    <span class="n">packet_type</span><span class="o">=</span><span class="n">PacketType</span><span class="o">.</span><span class="n">TELEMETRY</span><span class="p">,</span> 
+    <span class="n">seq_count</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+
+<span class="c1"># 2. Append some payload data (two float32 values)</span>
+<span class="c1"># CCSDS standards use Big-Endian (Network Byte Order)</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.1</span><span class="p">,</span> <span class="mf">20.2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&gt;f4&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+<span class="n">packet</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">payload</span>
+
+<span class="c1"># 3. Pack the full packet to binary</span>
+<span class="n">raw_bytes</span> <span class="o">=</span> <span class="n">packet</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Full Packet (hex): </span><span class="si">{</span><span class="n">raw_bytes</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Header (hex): </span><span class="si">{</span><span class="n">raw_bytes</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Packet Length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw_bytes</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full Packet (hex): 0123c02a00074121999a41a1999a
+Header (hex): 0123c02a0007
+Total Packet Length: 14 bytes
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="telemetry-decommutation">
+<h2>2. Telemetry Decommutation<a class="headerlink" href="#telemetry-decommutation" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">decom</span></code> module handles extracting fields from binary telemetry streams based on a parameter map. We use the <code class="docutils literal notranslate"><span class="pre">DecomEngine</span></code> to convert the raw octets back into engineering units.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.ground_segment.decom</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecomEngine</span>
+
+<span class="c1"># Define the structure of the data inside the CCSDS packet data field</span>
+<span class="c1"># &#39;f&#39; corresponds to a 32-bit float (4 bytes)</span>
+<span class="n">parameter_config</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;voltage&quot;</span><span class="p">,</span> <span class="s2">&quot;data_type&quot;</span><span class="p">:</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;current&quot;</span><span class="p">,</span> <span class="s2">&quot;data_type&quot;</span><span class="p">:</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># Initialize the DecomEngine</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">DecomEngine</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">parameter_config</span><span class="p">)</span>
+
+<span class="c1"># Extract data from the packed bytes (skipping the 6-byte CCSDS header)</span>
+<span class="n">data_field</span> <span class="o">=</span> <span class="n">raw_bytes</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">decommutate</span><span class="p">(</span><span class="n">data_field</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decommutated Telemetry (Big-Endian): </span><span class="si">{</span><span class="n">results</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Measured Voltage: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;voltage&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> V&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Measured Current: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;current&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> A&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Decommutated Telemetry (Big-Endian): {&#39;voltage&#39;: 10.100000381469727, &#39;current&#39;: 20.200000762939453}
+Measured Voltage: 10.10 V
+Measured Current: 20.20 A
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="20_ssa_conjunction.html" class="btn btn-neutral float-left" title="Tutorial 20: SSA and Conjunction Assessment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/modules.html" class="btn btn-neutral float-right" title="opengnc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

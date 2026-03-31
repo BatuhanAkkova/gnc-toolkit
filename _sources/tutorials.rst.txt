@@ -23,5 +23,8 @@ Tutorials
    tutorials/16_fdir
    tutorials/17_e2e_sim
    tutorials/18_monte_carlo_verification
+   tutorials/19_edl_dynamics
+   tutorials/20_ssa_conjunction
+   tutorials/21_ground_segment
 
 

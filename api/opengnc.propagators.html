@@ -267,12 +267,12 @@ Keplerian elements.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
-<li><p><strong>state</strong> (<em>np.ndarray</em>) – $[a, e, i, Omega, omega,  heta]$.</p></li>
+<li><p><strong>state</strong> (<em>np.ndarray</em>) – $[a, e, i, Omega, omega, theta]$.</p></li>
 <li><p><strong>perturbation_func</strong> (<em>Callable</em>) – RIC acceleration function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>$[da, de, di, dOmega, domega, d   heta]$.</p>
+<dd class="field-even"><p>$[da, de, di, dOmega, domega, dtheta]$.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
@@ -288,7 +288,7 @@ Keplerian elements.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>t0</strong> (<em>float</em>) – Initial time (s).</p></li>
-<li><p><strong>state0</strong> (<em>np.ndarray</em>) – Initial Keplerian elements $[a, e, i, Omega, omega,       heta]$.</p></li>
+<li><p><strong>state0</strong> (<em>np.ndarray</em>) – Initial Keplerian elements $[a, e, i, Omega, omega, theta]$.</p></li>
 <li><p><strong>dt</strong> (<em>float</em>) – Time step (s).</p></li>
 <li><p><strong>perturbation_func</strong> (<em>Callable</em>) – Function returning acceleration vector $[a_r, a_s, a_w]$ in RIC frame.</p></li>
 </ul>

@@ -1,0 +1,131 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Tutorial 20: SSA and Conjunction Assessment\n",
+    "\n",
+    "This tutorial demonstrates how to perform Space Situational Awareness (SSA) tasks, including TLE-to-TLE conjunction assessment and planning collision avoidance (COLA) maneuvers.\n",
+    "\n",
+    "## 1. Conjunction Assessment\n",
+    "A conjunction occurs when two space objects pass within a defined safety volume. We use the `conjunction` module to find the Time of Closest Approach (TCA)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Time of Closest Approach (TCA): 0.04 seconds after epoch\n",
+      "Minimum Separation Distance: 7.665 km\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "from datetime import datetime, timedelta\n",
+    "from opengnc.ssa.conjunction import find_tca, compute_pc_chan\n",
+    "from opengnc.ssa.tle_interface import TLEEntity\n",
+    "from opengnc.propagators.sgp4_propagator import Sgp4Propagator\n",
+    "\n",
+    "# 1. Define two satellites using TLEs (simplified ISS data and debris)\n",
+    "tle1 = TLEEntity(\"ISS\", \n",
+    "                 \"1 25544U 98067A   24001.00000000  .00016717  00000-0  10270-3 0  9011\",\n",
+    "                 \"2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.50030391432358\")\n",
+    "tle2 = TLEEntity(\"DEBRIS\", \n",
+    "                 \"1 99999U 24001A   24001.00000000  .00000000  00000-0  00000-0 0  9990\",\n",
+    "                 \"2 99999  51.6420 247.4630 0006700 130.5000 325.0000 15.50000000000000\")\n",
+    "\n",
+    "# 2. Setup Propagators\n",
+    "prop1 = tle1.get_propagator()\n",
+    "prop2 = tle2.get_propagator()\n",
+    "\n",
+    "# Define position functions for find_tca (takes time in seconds from TLE epoch)\n",
+    "# Note: Sgp4Propagator.propagate requires dummy r_i, v_i as they are defined in the base class\n",
+    "def pos1(t): return prop1.propagate(np.zeros(3), np.zeros(3), t)[0]\n",
+    "def pos2(t): return prop2.propagate(np.zeros(3), np.zeros(3), t)[0]\n",
+    "\n",
+    "# 3. Find TCA within a 24-hour window\n",
+    "tca = find_tca(pos1, pos2, 0, 86400)\n",
+    "dist = np.linalg.norm(pos1(tca) - pos2(tca))\n",
+    "\n",
+    "print(f\"Time of Closest Approach (TCA): {tca:.2f} seconds after epoch\")\n",
+    "print(f\"Minimum Separation Distance: {dist / 1000.0:.3f} km\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. Collision Avoidance Maneuver (COLA)\n",
+    "If the distance is below a threshold (e.g., 5 km), a maneuver is required. We can plan an impulsive Delta-V pulse to minimize the probability of collision (Pc)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Required COLA Delta-V Vector (m/s): [-1.28871853e-05 -3.66698348e-05  4.52790680e-06]\n",
+      "Total Magnitude: 0.0000 m/s\n",
+      "Final Pc: 3.94e-259\n"
+     ]
+    }
+   ],
+   "source": [
+    "from opengnc.ssa.collision_avoidance import plan_collision_avoidance_maneuver\n",
+    "\n",
+    "# 1. Get states at TCA for both objects\n",
+    "r1, v1 = pos1(tca), prop1.propagate(np.zeros(3), np.zeros(3), tca)[1]\n",
+    "r2, v2 = pos2(tca), prop2.propagate(np.zeros(3), np.zeros(3), tca)[1]\n",
+    "\n",
+    "# 2. Assume some covariances (Diagonal 100m - 200m sigma)\n",
+    "cov1 = 100.0**2 * np.eye(3)\n",
+    "cov2 = 200.0**2 * np.eye(3)\n",
+    "\n",
+    "# 3. Plan maneuver 12 hours (43200s) before TCA\n",
+    "dv, final_pc = plan_collision_avoidance_maneuver(\n",
+    "    r1, v1, cov1, \n",
+    "    r2, v2, cov2, \n",
+    "    hbr=10.0,            # Combined Hard Body Radius (m)\n",
+    "    t_man_before_tca=43200, \n",
+    "    pc_limit=1e-6\n",
+    ")\n",
+    "\n",
+    "print(f\"Required COLA Delta-V Vector (m/s): {dv}\")\n",
+    "print(f\"Total Magnitude: {np.linalg.norm(dv):.4f} m/s\")\n",
+    "print(f\"Final Pc: {final_pc:.2e}\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.11"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

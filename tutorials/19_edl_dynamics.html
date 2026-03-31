@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 19: Entry, Descent, and Landing (EDL) &mdash; OpenGNC  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/thebelab-helper.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+      <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}})</script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 20: SSA and Conjunction Assessment" href="20_ssa_conjunction.html" />
+    <link rel="prev" title="Tutorial 18: Monte Carlo Verification" href="18_monte_carlo_verification.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenGNC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_introduction.html">Tutorial 01: Introduction to OpenGNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_frames.html">Tutorial 02: Coordinate Systems &amp; Frame Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_state_conversions.html">Tutorial 03: State Vectors &amp; Orbital Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_spherical_harmonics.html">Tutorial 04: EGM2008 &amp; Mass Gravity Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_orbital_propagators.html">Tutorial 05: Comparison: Cowell vs Encke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06_environment.html">Tutorial 06: Environmental Perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_iod_determination.html">Tutorial 07: Initial Orbit Determination and Lambert’s Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08_sensors.html">Tutorial 08: Sensor Artifacts &amp; Biases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09_linear_kf.html">Tutorial 09: Linear Kalman Filter and EKF Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_mekf.html">Tutorial 10: Multiplicative Extended Kalman Filter (MEKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_ukf.html">Tutorial 11: Unscented Kalman Filter (UKF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_orbital_maneuvers.html">Tutorial 12: Analytical Orbital Maneuvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_rendezvous.html">Tutorial 13: Rendezvous &amp; CW Equation Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="14_optimal_control.html">Tutorial 14: Indirect &amp; Direct Collocation Optimal Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="15_attitude_control.html">Tutorial 15: Reaction Wheel &amp; Magnetorquer Slew Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="16_fdir.html">Tutorial 16: Fault Detection, Isolation, and Recovery (FDIR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="17_e2e_sim.html">Tutorial 17: Full CubeSat Spacecraft End-to-End (E2E) Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="18_monte_carlo_verification.html">Tutorial 18: Monte Carlo Verification</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 19: Entry, Descent, and Landing (EDL)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ballistic-entry-dynamics">1. Ballistic Entry Dynamics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aerodynamic-heating-and-g-loads">2. Aerodynamic Heating and G-Loads</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="20_ssa_conjunction.html">Tutorial 20: SSA and Conjunction Assessment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="21_ground_segment.html">Tutorial 21: Ground Segment and CCSDS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">opengnc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenGNC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Tutorial 19: Entry, Descent, and Landing (EDL)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/19_edl_dynamics.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-19-entry-descent-and-landing-edl">
+<h1>Tutorial 19: Entry, Descent, and Landing (EDL)<a class="headerlink" href="#tutorial-19-entry-descent-and-landing-edl" title="Link to this heading"></a></h1>
+<p>This tutorial covers the dynamics of atmospheric entry, including ballistic and lifting flight paths, and aerodynamic heating estimation.</p>
+<section id="ballistic-entry-dynamics">
+<h2>1. Ballistic Entry Dynamics<a class="headerlink" href="#ballistic-entry-dynamics" title="Link to this heading"></a></h2>
+<p>A ballistic entry occurs when a vehicle has no lift (<span class="math notranslate nohighlight">\(L/D = 0\)</span>). The trajectory is determined by gravity and drag.</p>
+<div class="math notranslate nohighlight">
+\[\dot{v} = -\frac{\mu}{r^2} \hat{r} - \frac{1}{2}\rho v^2 \frac{C_d A}{m} \hat{v}\]</div>
+<p>We will simulate a simplified entry from 120 km altitude.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.edl</span><span class="w"> </span><span class="kn">import</span> <span class="n">ballistic_entry_dynamics</span><span class="p">,</span> <span class="n">sutton_grave_heating</span><span class="p">,</span> <span class="n">calculate_g_load</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opengnc.environment.density</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+
+<span class="c1"># 1. Setup Vehicle Parameters</span>
+<span class="n">mass</span> <span class="o">=</span> <span class="mf">1000.0</span>  <span class="c1"># kg</span>
+<span class="n">area</span> <span class="o">=</span> <span class="mf">2.5</span>     <span class="c1"># m^2</span>
+<span class="n">cd</span> <span class="o">=</span> <span class="mf">1.5</span>       <span class="c1"># Hypersonic drag coefficient</span>
+<span class="n">rn</span> <span class="o">=</span> <span class="mf">0.5</span>       <span class="c1"># Nose radius (m) for heating</span>
+
+<span class="c1"># 2. Initial State (120 km altitude, 7.5 km/s velocity)</span>
+<span class="n">alt_init</span> <span class="o">=</span> <span class="mf">120000.0</span>
+<span class="n">r_planet</span> <span class="o">=</span> <span class="mf">6371000.0</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="n">r_planet</span> <span class="o">+</span> <span class="n">alt_init</span>
+<span class="n">v0</span> <span class="o">=</span> <span class="mf">7500.0</span>
+<span class="n">fpa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">)</span> <span class="c1"># Flight path angle</span>
+
+<span class="n">state0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="n">r0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>                      <span class="c1"># Position (m)</span>
+    <span class="n">v0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">fpa</span><span class="p">),</span> <span class="n">v0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">fpa</span><span class="p">),</span> <span class="mi">0</span> <span class="c1"># Velocity (m/s)</span>
+<span class="p">])</span>
+
+<span class="c1"># 3. Simulation</span>
+<span class="c1"># Note: Exponential density parameters (h0, H) are in kilometers!</span>
+<span class="n">density_model</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">rho0</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">derivatives</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ballistic_entry_dynamics</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cd</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">rho_model</span><span class="o">=</span><span class="n">density_model</span><span class="p">,</span> <span class="n">r_planet</span><span class="o">=</span><span class="n">r_planet</span><span class="p">)</span>
+
+<span class="c1"># Define an event to stop at ground impact</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ground_impact</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="n">r_planet</span>
+<span class="n">ground_impact</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">ground_impact</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">derivatives</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">state0</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">ground_impact</span><span class="p">)</span>
+
+<span class="c1"># 4. Post-processing</span>
+<span class="n">r_mags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">alts</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_mags</span> <span class="o">-</span> <span class="n">r_planet</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="c1"># km</span>
+<span class="n">vels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">alts</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Altitude vs Time&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Altitude (km)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vels</span><span class="p">,</span> <span class="n">alts</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Velocity vs Altitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Velocity (m/s)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Altitude (km)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4f7e64fd41112243f0f0168bc0d6ef9651929cbac5632cffa5c4c9901e246bcc.png" src="../_images/4f7e64fd41112243f0f0168bc0d6ef9651929cbac5632cffa5c4c9901e246bcc.png" />
+</div>
+</div>
+</section>
+<section id="aerodynamic-heating-and-g-loads">
+<h2>2. Aerodynamic Heating and G-Loads<a class="headerlink" href="#aerodynamic-heating-and-g-loads" title="Link to this heading"></a></h2>
+<p>During hypersonic entry, the vehicle experiences extreme thermal loads. We can estimate the stagnation point heat flux using the Sutton-Grave correlation and monitoring the G-loads.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_dots</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">g_loads</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)):</span>
+    <span class="n">r_vec</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">v_vec</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">v_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v_vec</span><span class="p">)</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">density_model</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    
+    <span class="c1"># Heating (W/m^2 to W/cm^2)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">sutton_grave_heating</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">v_mag</span><span class="p">,</span> <span class="n">rn</span><span class="p">)</span>
+    <span class="n">q_dots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span> <span class="o">/</span> <span class="mf">10000.0</span><span class="p">)</span>
+    
+    <span class="c1"># G-load (based on non-gravitational acceleration)</span>
+    <span class="c1"># The integrator derivative returns total acceleration (gravity + drag)</span>
+    <span class="n">total_acc</span> <span class="o">=</span> <span class="n">derivatives</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])[</span><span class="mi">3</span><span class="p">:]</span>
+    <span class="c1"># Subtract gravity to get net aero acceleration for G-load</span>
+    <span class="n">r_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="mf">3.986e14</span>
+    <span class="n">grav_acc</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="n">r_mag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_vec</span>
+    <span class="n">aero_acc</span> <span class="o">=</span> <span class="n">total_acc</span> <span class="o">-</span> <span class="n">grav_acc</span>
+    <span class="n">g_loads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calculate_g_load</span><span class="p">(</span><span class="n">aero_acc</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Peak Heat Flux: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">q_dots</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> W/cm^2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Peak G-Load: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">g_loads</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> g&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Velocity at Impact: </span><span class="si">{</span><span class="n">vels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Peak Heat Flux: 152.27 W/cm^2
+Peak G-Load: 8.80 g
+Final Velocity at Impact: 65.39 m/s
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="18_monte_carlo_verification.html" class="btn btn-neutral float-left" title="Tutorial 18: Monte Carlo Verification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="20_ssa_conjunction.html" class="btn btn-neutral float-right" title="Tutorial 20: SSA and Conjunction Assessment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

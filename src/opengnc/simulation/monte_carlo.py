@@ -27,7 +27,11 @@ class MonteCarloSim:
         """Internal worker for a single Monte Carlo trial."""
         seed = kwargs.pop("seed")
         sim = self.simulator_factory(seed, **kwargs)
-        return sim.run()
+        # If the factory returns an object with a run() method, use it.
+        # Otherwise, assume the factory returned the result directly.
+        if hasattr(sim, "run") and callable(sim.run):
+            return sim.run()
+        return sim
 
     def run_sequential(self, num_runs: int, **kwargs: Any) -> list[Any]:
         """
@@ -82,8 +86,18 @@ class MonteCarloSim:
             params["seed"] = i
             pool_kwargs.append(params)
 
-        with mp.Pool(processes) as pool:
-            self.results = pool.map(self._run_single, pool_kwargs)
+        # Attempt to use joblib for superior robustness in interactive environments (Jupyter)
+        try:
+            from joblib import Parallel, delayed
+            self.results = Parallel(n_jobs=processes, backend="loky")(
+                delayed(self._run_single)(p) for p in pool_kwargs
+            )
+        except ImportError:
+            # Fallback to standard multiprocessing
+            import multiprocessing as mp
+            # Use 'spawn' or default context based on OS
+            with mp.Pool(processes) as pool:
+                self.results = pool.map(self._run_single, pool_kwargs)
 
         return self.results
 

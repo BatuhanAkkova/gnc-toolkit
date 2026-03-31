@@ -56,6 +56,8 @@
 - **FDIR (Fault Detection)**: Parity Space methods, Residual Generation, and Safe Mode logic.
 - **SSA (Space Situational Awareness)**: Conjunction Assessment (CAT), Maneuver Detection, and TLE interface.
 - **Mission Design**: $\Delta v$ Budgeting, Communication Link Budgets, and Ground Station Coverage tools.
+- **EDL (Entry, Descent, Landing)**: Ballistic & Lifting entry dynamics, heating models, and Aerocapture guidance.
+- **Ground Segment**: CCSDS packet formatting, decommutation, and telemetry data-link layers.
 
 ### Visualization & Analysis
 - **3D Trajectories**: Interactive Plotly-based orbital trajectory and attitude visualization.
@@ -121,6 +123,8 @@ mekf = MEKF(q_init=np.array([0, 0, 0, 1]), covariance=1e-3 * np.eye(6))
 | **MEKF Estimation** | High-fidelity orientation tracking fusing star tracker & gyro. | ![Attitude Estimation](assets/attitude_est.png) | [05_attitude_estimation_mekf.py](examples/05_attitude_estimation_mekf.py) |
 | **VLEO Maintenance** | Altitude keeping in high-drag orbits using electric propulsion. | ![VLEO Orbit Maintenance](assets/vleo_maintenance.png) | [02_vleo_orbit_maintenance.py](examples/02_vleo_orbit_maintenance.py) |
 | **Gauss IOD** | Initial Orbit Determination from 3-LoS vectors. | ![Gauss IOD](assets/gauss_iod_results.png) | [10_gauss_iod_determination.py](examples/10_gauss_iod_determination.py) |
+| **Viz & Plots** | Comprehensive orbital and attitude visualization demo. | ![Visualization](assets/orbit_viz.png) | [11_visualization_demo.py](examples/11_visualization_demo.py) |
+| **Mission Sim** | Core demonstration of the simulation and logging framework. | - | [example_simulation.py](examples/example_simulation.py) |
 
 ---
 

@@ -38,7 +38,30 @@ def test_monte_carlo_parallel(mock_pool_class):
     results = sorted(mc.results, key=lambda x: x["seed"])
     for i in range(4):
         assert results[i] == {"seed": i, "param": "parallel"}
+def functional_factory(seed, **kwargs):
+    return {"seed": seed, "param": kwargs.get("param")}
 
+def test_monte_carlo_functional():
+    mc = MonteCarloSim(functional_factory)
+    mc.run_sequential(num_runs=2, param="func")
+    
+    assert len(mc.results) == 2
+    assert mc.results[0] == {"seed": 0, "param": "func"}
+    assert mc.results[1] == {"seed": 1, "param": "func"}
 
-
+@patch("opengnc.simulation.monte_carlo.mp.Pool")
+def test_monte_carlo_parallel_functional(mock_pool_class):
+    mock_pool = MagicMock()
+    mock_pool_class.return_value.__enter__.return_value = mock_pool
+    
+    mc = MonteCarloSim(functional_factory)
+    
+    def mock_map(func, iterable):
+        return [func(x) for x in iterable]
+    mock_pool.map.side_effect = mock_map
+    
+    mc.run_parallel(num_runs=2, param="parallel_func")
+    
+    assert len(mc.results) == 2
+    assert mc.results[0] == {"seed": 0, "param": "parallel_func"}
 

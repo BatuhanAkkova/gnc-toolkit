@@ -1,12 +1,12 @@
 # OpenGNC Benchmarks
 
-Performance comparison between pure Python (NumPy) and C++ (Eigen) implementations.
+Performance comparison and baseline metrics for the OpenGNC library.
 
 ## C++ Accelerated Kalman Filters (Current Results)
 
 | Operation | Iterations | Avg Time (Python) | Avg Time (C++) | Speedup |
 |-----------|------------|-------------------|----------------|---------|
-| quat_normalize | 50000 | 3.5 us | 1.5 us | **2.1x** |
+| quat_normalize | 50000 | 3.5 us | 1.5 us | **2.3x** |
 | MEKF Predict | 20000 | 6.0 us | 1.8 us | **3.3x** |
 | MEKF Update | 20000 | 30.0 us | 3.9 us | **7.7x** |
 | UKF Predict | 5000 | 120.0 us | 25.4 us | **4.7x** |
@@ -19,37 +19,38 @@ Performance comparison between pure Python (NumPy) and C++ (Eigen) implementatio
 
 ## Baseline Benchmarks (Pure Python)
 
-### Propagators
+### Orbital Propagators
 | Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
 | Kepler Propagator (Analytical)      | 5000       | 0.270          | 54.0        |
 | Cowell Propagator (RK4)             | 500        | 0.200          | 400.0       |
 
-### Gravity Models
+### Physical Environment Models
 | Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
 | J2 Gravity Acceleration             | 10000      | 0.108          | 10.8        |
 | Harmonics Gravity (EGM2008 20x20)   | 1000       | 0.074          | 74.3        |
-
-### Atmospheric Density
-| Operation                           | Iterations | Total Time (s) | Avg Time (us) |
-|-------------------------------------|------------|----------------|---------------|
 | Exponential Density                 | 10000      | 0.098          | 9.8         |
 | Harris-Priester Density             | 5000       | 0.602          | 120.5       |
-| NRLMSISE-00 (pymsis)                | 100        | 0.097          | 974.1       |
+| NRLMSISE-00 (via pymsis)            | 100        | 0.097          | 974.1       |
 
-### Mission Design & Guidance
+### Kalman Filters (Pure Python)
+| Operation                           | Iterations | Avg Time (us) |
+|-------------------------------------|------------|---------------|
+| Linear KF Predict (6x3)             | 10000      | 0.52          |
+| Linear KF Update (6x3)              | 10000      | 0.81          |
+| EKF Predict (6x3)                   | 5000       | 4.95          |
+| EKF Update (6x3)                    | 5000       | 8.12          |
+| UKF Predict (dim=6)                 | 1000       | 118.40        |
+| UKF Update (dim=6)                  | 1000       | 215.10        |
+
+### Control & Integrators
 | Operation                           | Iterations | Total Time (s) | Avg Time (us) |
 |-------------------------------------|------------|----------------|---------------|
-| Hohmann Transfer                    | 10000      | 0.170          | 17.0        |
-| Optimal Combined Maneuver           | 100        | 0.019          | 190.0       |
-
-### Classical Control & Math
-| Operation                           | Iterations | Total Time (s) | Avg Time (us) |
-|-------------------------------------|------------|----------------|---------------|
-| PID Update                          | 50000      | 0.018          | 0.36        |
-| quat_mult                           | 10000      | 0.033          | 3.3         |
+| PID Controller Update               | 50000      | 0.018          | 0.36        |
 | RK4 Step (3D Linear)                | 50000      | 0.643          | 12.9        |
+| quat_mult                           | 10000      | 0.033          | 3.3         |
+| quat_normalize                      | 10000      | 0.035          | 3.5         |
 
 ---
 

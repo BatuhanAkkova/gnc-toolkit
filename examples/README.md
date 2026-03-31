@@ -100,6 +100,21 @@ This directory contains a suite of high-fidelity simulations designed to showcas
 
 ![Gauss IOD Results](../assets/gauss_iod_results.png)
 
+## 11. Visualization & Plotting
+**Script:** `11_visualization_demo.py`
+**Scenario:** Interactive demonstration of the `opengnc.visualization` suite.
+**GNC Focus:**
+*   **Orbits:** 3D ECI trajectory plotting.
+*   **Attitude:** Vector trace on a unit sphere.
+*   **Ground Track:** Lat/Lon mapping with time-offsets.
+*   **Coverage:** Heatmap generation for sensor access.
 
+![Visualization](../assets/orbit_viz.png)
 
-
+## 12. Mission Simulator Core
+**Script:** `example_simulation.py`
+**Scenario:** A 1D double-integrator mission with scheduled events and logging.
+**GNC Focus:**
+*   **Architecture:** Use of `MissionSimulator` and `ScenarioConfig`.
+*   **Events:** Scheduling mid-simulation parameter changes.
+*   **Telemetry:** CSV logging and history tracking.

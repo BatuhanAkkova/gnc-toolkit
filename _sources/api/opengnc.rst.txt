@@ -12,6 +12,7 @@ Subpackages
    opengnc.attitude_dynamics
    opengnc.classical_control
    opengnc.disturbances
+   opengnc.edl
    opengnc.environment
    opengnc.fdir
    opengnc.guidance
@@ -26,17 +27,6 @@ Subpackages
    opengnc.ssa
    opengnc.utils
    opengnc.visualization
-
-Submodules
-----------
-
-opengnc.edl module
-------------------
-
-.. automodule:: opengnc.edl
-   :members:
-   :show-inheritance:
-   :undoc-members:
 
 Module contents
 ---------------

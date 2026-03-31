@@ -34,8 +34,8 @@ This roadmap outlines the strategic development of **OpenGNC** to provide a high
 
 ### Phase 3: Flight Implementation & Embedded Software
 *Converting high-fidelity simulations into deterministic, flight-ready artifacts.*
-- [ ] **C++ Acceleration**: Porting core filters (MEKF, UKF) and control laws to header-only, C++17/20 templates.
-- [ ] **Hardware-in-the-Loop (HIL)**: Generic SIM-to-Hardware bridge supporting Serial, UDP, and ROS2 protocols.
+- [x] **C++ Acceleration**: Porting core filters (MEKF, UKF) and control laws to header-only, C++17/20 templates.
+- [x] **Hardware-in-the-Loop (HIL)**: Generic SIM-to-Hardware bridge with Serial and UDP (Packet Framing & CRC).
 - [ ] **Real-Time Performance**: Enforce static memory allocation and lock-free message passing for mission-critical paths.
 - [ ] **Verification**: Automated Monte Carlo analysis suite for robust stability and performance margin proofs.
 

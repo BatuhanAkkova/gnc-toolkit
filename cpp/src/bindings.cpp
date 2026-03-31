@@ -7,6 +7,8 @@
 #include <opengnc/kalman_filters/mekf.hpp>
 #include <opengnc/kalman_filters/ukf_attitude.hpp>
 #include <opengnc/comm/udp_interface.hpp>
+#include <opengnc/comm/serial_interface.hpp>
+#include <opengnc/comm/comm_bridge.hpp>
 
 namespace py = pybind11;
 using namespace opengnc::utils;
@@ -14,7 +16,7 @@ using namespace opengnc::kalman_filters;
 using namespace opengnc::comm;
 
 PYBIND11_MODULE(opengnc_py, m) {
-    m.doc() = "OpenGNC Python bindings for high-performance C++ filters";
+    m.doc() = "OpenGNC Python bindings for high-performance C++ filters & HIL";
 
     // --- Quaternion Utilities ---
     m.def("quat_normalize", &quat_normalize, "Normalize a [x,y,z,w] quaternion");
@@ -61,12 +63,43 @@ PYBIND11_MODULE(opengnc_py, m) {
         .def_readwrite("Q", &UKFAtt::Q)
         .def_readwrite("R", &UKFAtt::R);
 
-    // --- UDP Communication ---
-    py::class_<UDPInterface>(m, "UDPInterface")
-        .def(py::init<const std::string&, int, int>())
-        .def("open", &UDPInterface::open)
-        .def("close", &UDPInterface::close)
-        .def("send", &UDPInterface::send)
-        .def("receive", &UDPInterface::receive)
-        .def_property_readonly("is_open", &UDPInterface::is_open);
+    // --- Communication Interfaces (Polymorphic) ---
+    py::class_<CommInterface, std::shared_ptr<CommInterface>>(m, "CommInterface")
+        .def("open", &CommInterface::open)
+        .def("close", &CommInterface::close)
+        .def("send", [](CommInterface& self, const std::vector<uint8_t>& data) {
+            return self.send(data);
+        })
+        .def("receive", [](CommInterface& self, size_t max_length) {
+            std::vector<uint8_t> buffer;
+            int len = self.receive(buffer, max_length);
+            return py::make_tuple(len, buffer);
+        })
+        .def_property_readonly("is_open", &CommInterface::is_open)
+        .def("available", &CommInterface::available);
+
+    py::class_<UDPInterface, CommInterface>(m, "UDPInterface")
+        .def(py::init<const std::string&, int, int>());
+
+    py::class_<SerialInterface, CommInterface>(m, "SerialInterface")
+        .def(py::init<const std::string&, unsigned int>(), py::arg("port"), py::arg("baud") = 115200)
+        .def("set_baud_rate", &SerialInterface::set_baud_rate);
+
+    // --- HIL Bridge & Packet Framing ---
+    py::class_<CommBridge>(m, "CommBridge")
+        .def(py::init<std::shared_ptr<CommInterface>>())
+        .def("send_packet", [](CommBridge& self, uint8_t id, py::bytes payload) {
+            std::string s = payload;
+            return self.send_packet(id, reinterpret_cast<const uint8_t*>(s.data()), static_cast<uint8_t>(s.size()));
+        })
+        .def("receive_packet", [](CommBridge& self) -> py::object {
+            uint8_t id, length;
+            uint8_t payload[256];
+            if (self.receive_packet(id, payload, length)) {
+                return py::make_tuple(id, py::bytes(reinterpret_cast<char*>(payload), length));
+            }
+            return py::none();
+        })
+        .def("is_open", &CommBridge::is_open)
+        .def("close", &CommBridge::close);
 }

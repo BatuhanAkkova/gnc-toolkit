@@ -13,6 +13,9 @@ namespace comm {
  */
 class UDPInterface : public CommInterface {
 public:
+    using CommInterface::send;
+    using CommInterface::receive;
+
     /**
      * @param remote_ip External target address.
      * @param remote_port External target port.
@@ -53,10 +56,10 @@ public:
         is_open_ = false;
     }
 
-    bool send(const std::vector<uint8_t>& data) override {
+    bool send(const uint8_t* data, size_t length) override {
         if (!is_open_) return false;
         try {
-            socket_.send_to(asio::buffer(data), remote_endpoint_);
+            socket_.send_to(asio::buffer(data, length), remote_endpoint_);
             return true;
         } catch (const std::exception& e) {
             std::cerr << "[UDPInterface] Send Error: " << e.what() << std::endl;
@@ -64,13 +67,11 @@ public:
         }
     }
 
-    int receive(std::vector<uint8_t>& buffer, size_t max_length) override {
+    int receive(uint8_t* buffer, size_t max_length) override {
         if (!is_open_) return 0;
         try {
-            buffer.resize(max_length);
             asio::ip::udp::endpoint sender_endpoint;
-            size_t len = socket_.receive_from(asio::buffer(buffer), sender_endpoint);
-            buffer.resize(len);
+            size_t len = socket_.receive_from(asio::buffer(buffer, max_length), sender_endpoint);
             return static_cast<int>(len);
         } catch (const asio::system_error& e) {
             // asio::error::would_block is common in non-blocking mode

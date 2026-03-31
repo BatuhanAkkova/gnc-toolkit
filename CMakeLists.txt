@@ -48,6 +48,11 @@ target_include_directories(opengnc INTERFACE
 target_link_libraries(opengnc INTERFACE Eigen3::Eigen)
 target_compile_definitions(opengnc INTERFACE ASIO_STANDALONE)
 
+if(WIN32)
+    target_compile_definitions(opengnc INTERFACE _WIN32_WINNT=0x0601)
+    target_link_libraries(opengnc INTERFACE ws2_32 mswsock)
+endif()
+
 # --- Tests ---
 option(BUILD_TESTING "Build C++ unit tests" ON)
 if(BUILD_TESTING)
@@ -58,8 +63,7 @@ if(BUILD_TESTING)
     target_link_libraries(test_runner PRIVATE opengnc)
     
     if(WIN32)
-        target_compile_definitions(test_runner PRIVATE _WIN32_WINNT=0x0601)
-        target_link_libraries(test_runner PRIVATE ws2_32 mswsock)
+        # Inherited from opengnc interface
     endif()
     
     add_test(NAME AllTests COMMAND test_runner)
